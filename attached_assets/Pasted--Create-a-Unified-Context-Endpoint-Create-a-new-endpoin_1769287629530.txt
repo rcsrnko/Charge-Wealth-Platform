@@ -1,0 +1,479 @@
+ Create a Unified Context Endpoint
+Create a new endpoint that returns ALL user financial data in one call, which ALL modules can use.
+Create/Update server/routes/context.ts:
+typescriptimport type { Express, RequestHandler } from "express";
+import { storage } from "../storage";
+import { buildFinancialContext, buildContextPrompt } from "../documentContext";
+
+export function registerContextRoutes(app: Express, isAuthenticated: RequestHandler) {
+  
+  // Unified context endpoint - returns EVERYTHING
+  app.get('/api/unified-context', isAuthenticated, async (req: any, res) => {
+    try {
+      const userId = req.user.claims.sub;
+      
+      // Fetch all data in parallel
+      const [
+        profile,
+        taxReturns,
+        positions,
+        documents,
+        liquidityProfile,
+        priceAlerts
+      ] = await Promise.all([
+        storage.getFinancialProfile(userId),
+        storage.getTaxReturns(userId),
+        storage.getPortfolioPositions(userId),
+        storage.getFinancialDocuments(userId),
+        storage.getLiquidityProfile(userId),
+        storage.getPriceAlerts(userId)
+      ]);
+      
+      // Calculate derived metrics
+      const portfolioValue = positions?.reduce((sum, p) => 
+        sum + (parseFloat(String(p.currentValue)) || 0), 0) || 0;
+      
+      const totalUnrealizedGain = positions?.reduce((sum, p) => 
+        sum + (parseFloat(String(p.unrealizedGain)) || 0), 0) || 0;
+      
+      const latestTaxReturn = taxReturns?.[0];
+      const marginalBracket = latestTaxReturn?.marginalTaxBracket 
+        ? parseFloat(latestTaxReturn.marginalTaxBracket) 
+        : null;
+      
+      // Identify cross-module opportunities
+      const opportunities = [];
+      
+      // Tax-loss harvesting opportunity (combines tax + portfolio)
+      if (marginalBracket && positions) {
+        const losingPositions = positions.filter(p => 
+          (parseFloat(String(p.unrealizedGain)) || 0) < 0
+        );
+        const totalLosses = losingPositions.reduce((sum, p) => 
+          sum + Math.abs(parseFloat(String(p.unrealizedGain)) || 0), 0);
+        
+        if (totalLosses > 0) {
+          const taxSavings = totalLosses * (marginalBracket / 100);
+          opportunities.push({
+            type: 'tax_loss_harvest',
+            title: 'Tax-Loss Harvesting Available',
+            description: `You have ${losingPositions.length} positions with losses totaling $${totalLosses.toLocaleString()}. Harvesting these could save ~$${taxSavings.toFixed(0)} in taxes.`,
+            impact: taxSavings,
+            affectedPositions: losingPositions.map(p => p.symbol),
+            priority: 'high'
+          });
+        }
+      }
+      
+      // 401k maxout opportunity (combines tax + profile)
+      if (marginalBracket && profile?.annualIncome) {
+        const income = parseFloat(String(profile.annualIncome)) || 0;
+        const max401k = 23000; // 2024 limit
+        const potentialSavings = max401k * (marginalBracket / 100);
+        
+        opportunities.push({
+          type: 'retirement_contribution',
+          title: 'Maximize 401(k) Contributions',
+          description: `At your ${marginalBracket}% marginal rate, maxing your 401(k) at $${max401k.toLocaleString()} saves $${potentialSavings.toFixed(0)} in taxes.`,
+          impact: potentialSavings,
+          priority: income > 150000 ? 'high' : 'medium'
+        });
+      }
+      
+      // Portfolio concentration warning (portfolio analysis)
+      if (positions && positions.length > 0 && portfolioValue > 0) {
+        const sortedByValue = [...positions].sort((a, b) => 
+          (parseFloat(String(b.currentValue)) || 0) - (parseFloat(String(a.currentValue)) || 0)
+        );
+        const topHolding = sortedByValue[0];
+        const topWeight = (parseFloat(String(topHolding.currentValue)) || 0) / portfolioValue * 100;
+        
+        if (topWeight > 25) {
+          opportunities.push({
+            type: 'concentration_risk',
+            title: `High Concentration in ${topHolding.symbol}`,
+            description: `${topHolding.symbol} is ${topWeight.toFixed(1)}% of your portfolio. Consider rebalancing to reduce single-stock risk.`,
+            impact: parseFloat(String(topHolding.currentValue)) || 0,
+            priority: topWeight > 40 ? 'high' : 'medium'
+          });
+        }
+      }
+      
+      // Build the unified response
+      res.json({
+        // Raw data
+        profile: profile ? {
+          annualIncome: profile.annualIncome,
+          filingStatus: profile.filingStatus,
+          stateOfResidence: profile.stateOfResidence,
+          dependents: profile.dependents,
+          netWorth: profile.netWorth,
+          riskTolerance: profile.riskTolerance,
+          primaryGoal: profile.primaryGoal
+        } : null,
+        
+        tax: latestTaxReturn ? {
+          taxYear: latestTaxReturn.taxYear,
+          totalIncome: parseFloat(latestTaxReturn.totalIncome || '0'),
+          agi: parseFloat(latestTaxReturn.agi || '0'),
+          taxableIncome: parseFloat(latestTaxReturn.taxableIncome || '0'),
+          totalFederalTax: parseFloat(latestTaxReturn.totalFederalTax || '0'),
+          effectiveTaxRate: parseFloat(latestTaxReturn.effectiveTaxRate || '0'),
+          marginalTaxBracket: marginalBracket,
+          filingStatus: latestTaxReturn.filingStatus,
+          deductionUsed: latestTaxReturn.deductionUsed,
+          capitalGainsLongTerm: parseFloat(latestTaxReturn.capitalGainsLongTerm || '0'),
+          capitalGainsShortTerm: parseFloat(latestTaxReturn.capitalGainsShortTerm || '0')
+        } : null,
+        
+        portfolio: positions && positions.length > 0 ? {
+          totalValue: portfolioValue,
+          totalUnrealizedGain,
+          positionCount: positions.length,
+          positions: positions.map(p => ({
+            id: p.id,
+            symbol: p.symbol,
+            shares: parseFloat(String(p.shares)) || 0,
+            costBasis: parseFloat(String(p.costBasis)) || 0,
+            currentValue: parseFloat(String(p.currentValue)) || 0,
+            unrealizedGain: parseFloat(String(p.unrealizedGain)) || 0,
+            unrealizedGainPercent: parseFloat(String(p.unrealizedGainPercent)) || 0,
+            holdingPeriod: p.holdingPeriod
+          }))
+        } : null,
+        
+        liquidity: liquidityProfile ? {
+          currentCash: parseFloat(String(liquidityProfile.currentCash)) || 0,
+          monthlyExpenses: parseFloat(String(liquidityProfile.monthlyEssentialExpenses)) || 0,
+          targetReserveMonths: liquidityProfile.targetReserveMonths
+        } : null,
+        
+        documents: {
+          count: documents?.length || 0,
+          analyzed: documents?.filter(d => d.extractionStatus === 'completed').length || 0,
+          types: documents?.map(d => d.documentType) || []
+        },
+        
+        alerts: priceAlerts || [],
+        
+        // Computed insights that combine data across modules
+        opportunities,
+        
+        // Status flags for UI
+        status: {
+          hasProfile: !!profile && (profile.annualIncome || profile.filingStatus),
+          hasTaxData: taxReturns && taxReturns.length > 0,
+          hasPortfolio: positions && positions.length > 0,
+          hasLiquidity: !!liquidityProfile,
+          hasAnalyzedDocuments: documents?.some(d => d.extractionStatus === 'completed') || false
+        },
+        
+        // For AI context building
+        contextPrompt: buildContextPrompt(await buildFinancialContext(userId)),
+        
+        lastUpdated: new Date().toISOString()
+      });
+    } catch (error) {
+      console.error("Error fetching unified context:", error);
+      res.status(500).json({ message: "Failed to fetch financial context" });
+    }
+  });
+}
+
+PART 2: Update Portfolio Analysis to Use Tax Data
+Update server/routes/allocation.ts → /api/allocation/analyze:
+typescriptapp.post('/api/allocation/analyze', isAuthenticated, async (req: any, res) => {
+  try {
+    const userId = req.user.claims.sub;
+    const { symbol } = req.body;
+    
+    // Fetch ALL relevant data, not just profile and positions
+    const [profile, positions, taxReturns, documents] = await Promise.all([
+      storage.getFinancialProfile(userId),
+      storage.getPortfolioPositions(userId),
+      storage.getTaxReturns(userId),
+      storage.getFinancialDocuments(userId)
+    ]);
+    
+    // Get the specific position being analyzed
+    const position = positions?.find(p => p.symbol === symbol);
+    const positionValue = parseFloat(String(position?.currentValue)) || 0;
+    const positionGain = parseFloat(String(position?.unrealizedGain)) || 0;
+    const costBasis = parseFloat(String(position?.costBasis)) || 0;
+    
+    // Get tax data for accurate tax impact calculations
+    const latestTax = taxReturns?.[0];
+    const marginalBracket = latestTax?.marginalTaxBracket 
+      ? parseFloat(latestTax.marginalTaxBracket) 
+      : 24; // Default assumption if no tax data
+    const effectiveRate = latestTax?.effectiveTaxRate
+      ? parseFloat(latestTax.effectiveTaxRate)
+      : 18;
+    const hasLongTermGains = parseFloat(latestTax?.capitalGainsLongTerm || '0') > 0;
+    
+    // Calculate portfolio metrics
+    const portfolioValue = positions?.reduce((sum, p) => 
+      sum + (parseFloat(String(p.currentValue)) || 0), 0) || 0;
+    const positionWeight = portfolioValue > 0 
+      ? (positionValue / portfolioValue * 100).toFixed(1) 
+      : '0';
+    
+    // Build comprehensive context for AI
+    const portfolioContext = positions?.map(p => 
+      `${p.symbol}: ${p.shares} shares, $${parseFloat(String(p.currentValue)).toLocaleString()}, ${parseFloat(String(p.unrealizedGainPercent)).toFixed(1)}% gain`
+    ).join('\n') || 'No positions';
+    
+    const taxContext = latestTax ? `
+Tax Profile:
+- Marginal Bracket: ${marginalBracket}%
+- Effective Rate: ${effectiveRate}%
+- Filing Status: ${latestTax.filingStatus}
+- Has Capital Gains: ${hasLongTermGains ? 'Yes' : 'No'}
+- AGI: $${parseFloat(latestTax.agi || '0').toLocaleString()}
+` : 'No tax data available - using 24% marginal bracket assumption';
+
+    const systemPrompt = `You are a CFA-level portfolio analyst with deep tax expertise. Analyze this position using the user's ACTUAL financial data.
+
+USER'S TAX SITUATION:
+${taxContext}
+
+USER'S PORTFOLIO:
+Total Value: $${portfolioValue.toLocaleString()}
+${portfolioContext}
+
+POSITION BEING ANALYZED: ${symbol}
+- Current Value: $${positionValue.toLocaleString()}
+- Weight in Portfolio: ${positionWeight}%
+- Cost Basis: $${costBasis.toLocaleString()}
+- Unrealized Gain/Loss: $${positionGain.toLocaleString()}
+- Holding Period: ${position?.holdingPeriod || 'Unknown'}
+
+USER PROFILE:
+- Income: $${profile?.annualIncome || 'Unknown'}
+- Primary Goal: ${profile?.primaryGoal || 'Wealth building'}
+- Risk Tolerance: ${profile?.riskTolerance || 'Moderate'}
+
+IMPORTANT TAX CALCULATION RULES:
+1. If gain is positive and holding period > 1 year: Use 15% LTCG rate (20% if AGI > $500k)
+2. If gain is positive and holding period < 1 year: Use ${marginalBracket}% ordinary income rate
+3. If loss: Can offset gains, then up to $3,000 ordinary income at ${marginalBracket}%
+
+Generate JSON response with ACCURATE tax calculations based on their actual bracket:
+{
+  "symbol": "${symbol}",
+  "thesis": "[Detailed analysis connecting this position to their overall financial picture]",
+  "portfolioContext": {
+    "weight": ${positionWeight},
+    "isOverweight": ${parseFloat(positionWeight) > 10},
+    "diversificationImpact": "[How this affects portfolio diversification]"
+  },
+  "riskFactors": [
+    { "factor": "[risk name]", "severity": "high|medium|low", "description": "[specific explanation]" }
+  ],
+  "taxConsiderations": {
+    "holdingPeriod": "${position?.holdingPeriod || 'Unknown'}",
+    "unrealizedGain": ${positionGain},
+    "applicableTaxRate": "[Use actual rate: ${marginalBracket}% for short-term, 15/20% for long-term]",
+    "estimatedTaxIfSold": [calculate: gain × applicable rate],
+    "taxImpact": "[Specific impact in dollars using their actual tax bracket]",
+    "taxStrategy": "[Specific recommendation considering their overall tax situation]"
+  },
+  "profileFitScore": [1-100 based on their stated goals and risk tolerance],
+  "profileFitNotes": "[Reference their specific goals: ${profile?.primaryGoal || 'wealth building'}]",
+  "actionRecommendation": {
+    "action": "hold|trim|accumulate|exit",
+    "reasoning": "[Based on their ${profile?.riskTolerance || 'moderate'} risk tolerance and ${profile?.primaryGoal || 'wealth building'} goal]",
+    "taxOptimalTiming": "[When to act for best tax outcome]"
+  }
+}`;
+
+    const openaiResponse = await fetchApi(`${process.env.AI_INTEGRATIONS_OPENAI_BASE_URL}/chat/completions`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${process.env.AI_INTEGRATIONS_OPENAI_API_KEY}`,
+      },
+      body: JSON.stringify({
+        model: 'gpt-4o',
+        messages: [
+          { role: 'system', content: systemPrompt },
+          { role: 'user', content: `Analyze ${symbol} position with full tax and portfolio context.` }
+        ],
+        max_tokens: 1500,
+        temperature: 0.3,
+      }),
+    });
+
+    // ... rest of the handler (parse response, return)
+  } catch (error) {
+    console.error("Error analyzing position:", error);
+    res.status(500).json({ message: "Failed to analyze position" });
+  }
+});
+
+PART 3: Update Tax Analysis to Include Portfolio Data
+Update server/routes/taxintel.ts → /api/tax-intel/analyze:
+Add portfolio data to the tax analysis prompt:
+typescript// In the analyze endpoint, add portfolio fetch:
+const [profile, positions, documents] = await Promise.all([
+  storage.getFinancialProfile(userId),
+  storage.getPortfolioPositions(userId),
+  storage.getFinancialDocuments(userId)
+]);
+
+// Calculate portfolio tax exposure
+const totalUnrealizedGains = positions?.reduce((sum, p) => {
+  const gain = parseFloat(String(p.unrealizedGain)) || 0;
+  return sum + (gain > 0 ? gain : 0);
+}, 0) || 0;
+
+const totalUnrealizedLosses = positions?.reduce((sum, p) => {
+  const gain = parseFloat(String(p.unrealizedGain)) || 0;
+  return sum + (gain < 0 ? Math.abs(gain) : 0);
+}, 0) || 0;
+
+const portfolioContext = positions && positions.length > 0 ? `
+PORTFOLIO TAX EXPOSURE:
+- Total Unrealized Gains: $${totalUnrealizedGains.toLocaleString()}
+- Total Unrealized Losses: $${totalUnrealizedLosses.toLocaleString()}
+- Net Tax Exposure: $${(totalUnrealizedGains - totalUnrealizedLosses).toLocaleString()}
+- Positions with Losses (tax-loss harvesting candidates): ${positions.filter(p => (parseFloat(String(p.unrealizedGain)) || 0) < 0).map(p => p.symbol).join(', ') || 'None'}
+
+This data should inform tax strategies like:
+1. Harvest losses to offset gains: Could save $${(Math.min(totalUnrealizedLosses, totalUnrealizedGains) * 0.24).toFixed(0)} at 24% bracket
+2. Time gain realization based on holding periods
+3. Consider qualified dividends vs ordinary income
+` : 'No portfolio data available';
+
+// Add to the system prompt
+const systemPrompt = `...existing prompt...
+
+${portfolioContext}
+
+GENERATE TAX STRATEGIES THAT CONSIDER PORTFOLIO:
+- If they have unrealized losses, recommend tax-loss harvesting
+- If they have concentrated positions with large gains, recommend staged selling
+- Calculate actual tax savings using their marginal rate
+`;
+
+PART 4: Update Frontend to Use Unified Context
+Create client/src/hooks/useFinancialContext.ts:
+typescriptimport { useState, useEffect, useCallback } from 'react';
+
+export interface FinancialContext {
+  profile: any | null;
+  tax: any | null;
+  portfolio: any | null;
+  liquidity: any | null;
+  documents: { count: number; analyzed: number; types: string[] };
+  opportunities: Array<{
+    type: string;
+    title: string;
+    description: string;
+    impact: number;
+    priority: string;
+  }>;
+  status: {
+    hasProfile: boolean;
+    hasTaxData: boolean;
+    hasPortfolio: boolean;
+    hasLiquidity: boolean;
+    hasAnalyzedDocuments: boolean;
+  };
+  contextPrompt: string;
+  lastUpdated: string;
+}
+
+export function useFinancialContext() {
+  const [context, setContext] = useState<FinancialContext | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  const fetchContext = useCallback(async () => {
+    setLoading(true);
+    try {
+      const response = await fetch('/api/unified-context', { credentials: 'include' });
+      if (response.ok) {
+        const data = await response.json();
+        setContext(data);
+        setError(null);
+      } else {
+        throw new Error('Failed to fetch context');
+      }
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Unknown error');
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    fetchContext();
+  }, [fetchContext]);
+
+  // Refresh function that modules can call after making changes
+  const refresh = useCallback(() => {
+    fetchContext();
+  }, [fetchContext]);
+
+  return { context, loading, error, refresh };
+}
+Update Dashboard.tsx to use unified context:
+typescriptimport { useFinancialContext } from '../hooks/useFinancialContext';
+
+export default function Dashboard() {
+  const { context, loading, refresh } = useFinancialContext();
+  
+  // Now all modules can use the same context
+  const userData = context?.status || {
+    hasTaxData: false,
+    hasPositions: false,
+    hasProfile: false,
+    hasCashFlow: false
+  };
+  
+  // Pass refresh function to child modules so they can trigger updates
+  return (
+    // ... 
+    <ChargeAI onDataChange={refresh} />
+    <ChargeTaxIntel onDataChange={refresh} />
+    <ChargeAllocation onDataChange={refresh} />
+  );
+}
+
+PART 5: Add Cross-Module Opportunity Display
+Update Command Center to show unified opportunities:
+In Dashboard.tsx, after the WealthReadiness component, add:
+tsx{context?.opportunities && context.opportunities.length > 0 && (
+  <div className={styles.opportunitiesSection}>
+    <h3 className={styles.sectionTitle}>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+        <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+        <path d="M2 17l10 5 10-5"/>
+        <path d="M2 12l10 5 10-5"/>
+      </svg>
+      AI-Detected Opportunities
+    </h3>
+    <div className={styles.opportunitiesList}>
+      {context.opportunities.map((opp, i) => (
+        <div key={i} className={`${styles.opportunityCard} ${styles[opp.priority]}`}>
+          <div className={styles.oppHeader}>
+            <span className={`${styles.oppBadge} ${styles[opp.type]}`}>
+              {opp.type === 'tax_loss_harvest' ? '📊 Tax' : 
+               opp.type === 'retirement_contribution' ? '💰 401k' :
+               opp.type === 'concentration_risk' ? '⚠️ Risk' : '💡'}
+            </span>
+            <span className={styles.oppImpact}>
+              {opp.impact > 0 ? `Save $${opp.impact.toLocaleString()}` : 'Action Needed'}
+            </span>
+          </div>
+          <h4>{opp.title}</h4>
+          <p>{opp.description}</p>
+          <button className={styles.oppAction}>
+            Take Action →
+          </button>
+        </div>
+      ))}
+    </div>
+  </div>
+)}

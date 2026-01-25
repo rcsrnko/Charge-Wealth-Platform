@@ -1,0 +1,39 @@
+.container {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.checkmark {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  stroke-width: 2;
+  stroke-miterlimit: 10;
+}
+
+.circle {
+  stroke-dasharray: 166;
+  stroke-dashoffset: 166;
+  animation: circleAnim 0.6s cubic-bezier(0.65, 0, 0.45, 1) forwards;
+}
+
+.check {
+  stroke-dasharray: 48;
+  stroke-dashoffset: 48;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  animation: checkAnim 0.3s cubic-bezier(0.65, 0, 0.45, 1) 0.4s forwards;
+}
+
+@keyframes circleAnim {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes checkAnim {
+  to {
+    stroke-dashoffset: 0;
+  }
+}

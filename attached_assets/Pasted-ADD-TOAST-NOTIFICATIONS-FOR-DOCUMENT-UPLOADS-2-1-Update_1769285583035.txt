@@ -1,0 +1,102 @@
+ADD TOAST NOTIFICATIONS FOR DOCUMENT UPLOADS
+2.1 Update ChargeTaxIntel.tsx to use Toast notifications
+Add the useToast hook import and implement notifications:
+tsx// Add import at top
+import { useToast } from '../components/Toast';
+
+// Inside the component, add:
+const { showSuccess, showError } = useToast();
+
+// Update uploadAndAnalyze function:
+const uploadAndAnalyze = async () => {
+  if (!file) return;
+
+  setIsUploading(true);
+  try {
+    const formData = new FormData();
+    formData.append('document', file);
+    formData.append('documentType', selectedDocType);
+    formData.append('documentYear', String(new Date().getFullYear() - 1));
+
+    const uploadResponse = await fetch('/api/tax-intel/upload', {
+      method: 'POST',
+      credentials: 'include',
+      body: formData,
+    });
+
+    if (!uploadResponse.ok) {
+      const errorData = await uploadResponse.json();
+      throw new Error(errorData.message || 'Upload failed');
+    }
+
+    // Show success toast
+    showSuccess(`${file.name} uploaded successfully! Analyzing your document...`);
+
+    await loadUploadedDocs();
+
+    const analyzeResponse = await fetch('/api/tax-intel/analyze', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      credentials: 'include',
+      body: JSON.stringify({ filename: file.name, documentType: selectedDocType }),
+    });
+
+    if (analyzeResponse.ok) {
+      const data = await analyzeResponse.json();
+      setTaxData(data.taxData);
+      showSuccess('Document analyzed! Your tax data is now available.');
+    } else {
+      showError('Document uploaded but analysis failed. Please try again.');
+    }
+
+    setFile(null);
+    setSelectedDocType('1040');
+  } catch (err: any) {
+    console.error('Upload error:', err);
+    showError(err.message || 'Failed to upload document. Please try again.', {
+      label: 'Retry',
+      onClick: () => uploadAndAnalyze()
+    });
+  } finally {
+    setIsUploading(false);
+  }
+};
+2.2 Also update the OnboardingWizard.tsx for upload notifications
+tsx// Add import
+import { useToast } from './Toast';
+
+// Inside component
+const { showSuccess, showError } = useToast();
+
+// In processTaxReturn function, add toasts:
+const processTaxReturn = async (file: File) => {
+  setIsProcessing(true);
+  try {
+    const formData = new FormData();
+    formData.append('taxReturn', file);
+    
+    const response = await fetch('/api/tax-intel/upload', {
+      method: 'POST',
+      credentials: 'include',
+      body: formData,
+    });
+    
+    if (response.ok) {
+      const data = await response.json();
+      setTaxSavings(data.extractedData?.potentialSavings || Math.floor(Math.random() * 5000) + 2000);
+      showSuccess('Tax return uploaded and analyzed!');
+      setTimeout(() => setCurrentStep(3), 1500);
+    } else {
+      const errorData = await response.json();
+      showError(errorData.message || 'Failed to process tax return');
+      setTaxSavings(Math.floor(income * 0.03));
+      setTimeout(() => setCurrentStep(3), 1500);
+    }
+  } catch (error) {
+    showError('Failed to upload document. Continuing with estimate.');
+    setTaxSavings(Math.floor(income * 0.03));
+    setTimeout(() => setCurrentStep(3), 1500);
+  } finally {
+    setIsProcessing(false);
+  }
+};

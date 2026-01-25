@@ -1,0 +1,67 @@
+.errorContainer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 300px;
+  padding: 2rem;
+}
+
+.errorContent {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  max-width: 320px;
+}
+
+.errorIcon {
+  width: 64px;
+  height: 64px;
+  margin-bottom: 1.5rem;
+  color: var(--soft-gold, #C9A962);
+  opacity: 0.8;
+}
+
+.errorIcon svg {
+  width: 100%;
+  height: 100%;
+}
+
+.errorTitle {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: var(--porcelain, #F5F5F5);
+  margin: 0 0 0.5rem 0;
+}
+
+.errorSubtitle {
+  font-size: 0.9375rem;
+  color: var(--muted-gray, #94A3B8);
+  margin: 0 0 1.5rem 0;
+  line-height: 1.5;
+}
+
+.retryButton {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  background: linear-gradient(135deg, var(--soft-gold, #C9A962) 0%, #B8963F 100%);
+  border: none;
+  border-radius: 8px;
+  color: var(--midnight-blue, #0F172A);
+  font-size: 0.9375rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.retryButton:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 16px rgba(201, 169, 98, 0.3);
+}
+
+.retryButton svg {
+  width: 18px;
+  height: 18px;
+}

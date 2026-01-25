@@ -1,0 +1,16 @@
+Add New FAQ Questions (Add to existing FAQ section)
+Add these 7 new FAQ items to the existing FAQ section:
+Q: Do I have to log in every day?
+A: Nope. Charge monitors your finances 24/7 and emails you only when there's something worth your attention. Most members get 1-3 alerts per week during tax season, and 2-4 per month otherwise. You can always ask questions in the AI Advisor, but you never have to.
+Q: How does Charge know what to look for?
+A: We analyze your tax returns, W2s, paystubs, investment accounts, and 401(k) contributions to build a complete financial picture. Then we run daily checks for expiring opportunities (tax-loss harvesting windows, contribution deadlines), changing circumstances (stock price drops, salary changes), and new strategies you're now eligible for (backdoor Roth, mega backdoor, etc.).
+Q: What if I don't want to get daily emails?
+A: You control the frequency. Choose daily, weekly, monthly, or "urgent only" (e.g., tax deadlines, major opportunities >$1K). Most members prefer weekly recaps with urgent alerts as-needed.
+Q: When will I get my first alert?
+A: Most members get their first meaningful alert within 48 hours of connecting accounts. During setup, we scan your tax return and current portfolio for immediate opportunities. If you're near a tax deadline (like Dec 31 for tax-loss harvesting), you'll get urgent alerts right away.
+Q: What happens after I pay $279?
+A: You'll get immediate access to connect your accounts and upload your tax return. Within 48 hours, you'll receive your first Financial Health Report showing opportunities we've identified. From there, you'll get automated alerts whenever new opportunities appear or deadlines approach. Ask the AI Advisor unlimited questions anytime.
+Q: How is this different from a financial advisor? (Update existing FAQ)
+A: Advisors make money when you give them your assets to manage (1% AUM fees). That creates a conflict—they're incentivized to keep your money in managed accounts, discourage paying down debt, and delay Social Security. Charge doesn't manage your money or sell products. We give you the analysis automatically and let you decide. You get the insight without the sales pitch, conflicts, or quarterly meeting delays.
+Q: How is this different from Betterment or Wealthfront? (Update existing FAQ)
+A: Robo-advisors automate basic portfolio allocation and require you to move your money to them. That's it. They can't help you optimize taxes across multiple accounts, tell you when to exercise ISOs, or explain complex decisions. Charge works with your existing accounts, handles the complex strategies that move the needle for high earners, and proactively alerts you—no login required.

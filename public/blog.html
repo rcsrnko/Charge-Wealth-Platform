@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Financial Insights Blog | Charge Wealth</title>
+    <meta name="description" content="Expert tax optimization strategies, investment insights, and wealth-building tips for high earners. Learn how to save $3K-15K annually.">
+    <meta name="keywords" content="tax optimization blog, financial planning tips, high earner tax strategies, 401k guide, HSA tips">
+    <link rel="canonical" href="https://chargewealth.com/blog">
+    
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Financial Insights Blog | Charge Wealth">
+    <meta property="og:description" content="Expert tax optimization strategies and wealth-building tips for high earners.">
+    <meta property="og:url" content="https://chargewealth.com/blog">
+    
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
+    
+    <style>
+        :root {
+            --midnight-blue: #0F1117;
+            --deep-navy: #1A1D28;
+            --gold-sand: #C9A962;
+            --gold-muted: #A68B4A;
+            --porcelain: #F4F5F7;
+            --charcoal-slate: #242B38;
+            --muted-gray: #6B7280;
+        }
+        
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background: var(--midnight-blue);
+            color: var(--porcelain);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+        
+        header {
+            background: rgba(15, 17, 23, 0.95);
+            border-bottom: 1px solid rgba(201, 169, 98, 0.15);
+            padding: 1rem 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(10px);
+        }
+        
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            color: var(--gold-sand);
+            font-size: 1.5rem;
+            font-weight: 700;
+            text-decoration: none;
+            letter-spacing: 0.05em;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+        }
+        
+        .nav-links a {
+            color: var(--porcelain);
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: color 0.2s;
+        }
+        
+        .nav-links a:hover {
+            color: var(--gold-sand);
+        }
+        
+        .hero {
+            text-align: center;
+            padding: 4rem 2rem;
+            background: linear-gradient(180deg, var(--midnight-blue) 0%, var(--deep-navy) 100%);
+        }
+        
+        .hero h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+        
+        .hero h1 span {
+            color: var(--gold-sand);
+        }
+        
+        .hero p {
+            color: var(--muted-gray);
+            font-size: 1.1rem;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        main {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 3rem 2rem;
+        }
+        
+        .categories {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+        
+        .category-btn {
+            background: var(--deep-navy);
+            color: var(--porcelain);
+            border: 1px solid rgba(201, 169, 98, 0.2);
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: all 0.2s;
+        }
+        
+        .category-btn:hover, .category-btn.active {
+            background: var(--gold-sand);
+            color: var(--midnight-blue);
+            border-color: var(--gold-sand);
+        }
+        
+        .posts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 2rem;
+        }
+        
+        .post-card {
+            background: var(--deep-navy);
+            border: 1px solid rgba(201, 169, 98, 0.1);
+            border-radius: 12px;
+            overflow: hidden;
+            transition: transform 0.2s, border-color 0.2s;
+        }
+        
+        .post-card:hover {
+            transform: translateY(-4px);
+            border-color: var(--gold-sand);
+        }
+        
+        .post-card a {
+            text-decoration: none;
+            color: inherit;
+        }
+        
+        .post-content {
+            padding: 1.5rem;
+        }
+        
+        .post-category {
+            color: var(--gold-sand);
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 0.5rem;
+        }
+        
+        .post-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--porcelain);
+            margin-bottom: 0.75rem;
+            line-height: 1.3;
+        }
+        
+        .post-excerpt {
+            color: var(--muted-gray);
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+        }
+        
+        .post-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: var(--muted-gray);
+            font-size: 0.8rem;
+        }
+        
+        .read-more {
+            color: var(--gold-sand);
+            font-weight: 500;
+        }
+        
+        .newsletter-section {
+            background: linear-gradient(135deg, rgba(201, 169, 98, 0.1) 0%, rgba(201, 169, 98, 0.02) 100%);
+            border-top: 1px solid rgba(201, 169, 98, 0.2);
+            border-bottom: 1px solid rgba(201, 169, 98, 0.2);
+            padding: 4rem 2rem;
+            text-align: center;
+        }
+        
+        .newsletter-content {
+            max-width: 500px;
+            margin: 0 auto;
+        }
+        
+        .newsletter-content h2 {
+            font-size: 1.75rem;
+            margin-bottom: 0.75rem;
+            color: var(--porcelain);
+        }
+        
+        .newsletter-content p {
+            color: var(--muted-gray);
+            margin-bottom: 1.5rem;
+        }
+        
+        .newsletter-form {
+            display: flex;
+            gap: 0.5rem;
+            max-width: 400px;
+            margin: 0 auto;
+        }
+        
+        .newsletter-form input {
+            flex: 1;
+            padding: 0.875rem 1rem;
+            border: 1px solid rgba(201, 169, 98, 0.3);
+            border-radius: 8px;
+            background: var(--deep-navy);
+            color: var(--porcelain);
+            font-size: 0.9rem;
+        }
+        
+        .newsletter-form input::placeholder {
+            color: var(--muted-gray);
+        }
+        
+        .newsletter-form button {
+            background: var(--gold-sand);
+            color: var(--midnight-blue);
+            border: none;
+            padding: 0.875rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            white-space: nowrap;
+        }
+        
+        .newsletter-form button:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(201, 169, 98, 0.3);
+        }
+        
+        .newsletter-note {
+            font-size: 0.75rem !important;
+            margin-top: 0.75rem !important;
+            margin-bottom: 0 !important;
+        }
+        
+        footer {
+            background: var(--deep-navy);
+            border-top: 1px solid rgba(201, 169, 98, 0.1);
+            padding: 3rem 2rem;
+        }
+        
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+        }
+        
+        .footer-section h3 {
+            color: var(--gold-sand);
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        
+        .footer-section a {
+            display: block;
+            color: var(--muted-gray);
+            text-decoration: none;
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+            transition: color 0.2s;
+        }
+        
+        .footer-section a:hover {
+            color: var(--porcelain);
+        }
+        
+        .footer-bottom {
+            max-width: 1200px;
+            margin: 2rem auto 0;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(201, 169, 98, 0.1);
+            text-align: center;
+            color: var(--muted-gray);
+            font-size: 0.85rem;
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 3rem;
+            color: var(--muted-gray);
+        }
+        
+        @media (max-width: 768px) {
+            .posts-grid {
+                grid-template-columns: 1fr;
+            }
+            .hero h1 {
+                font-size: 1.75rem;
+            }
+            .nav-links {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <a href="/" class="logo">Charge Wealth</a>
+            <nav class="nav-links">
+                <a href="/">Home</a>
+                <a href="/blog">Blog</a>
+                <a href="/dashboard">Dashboard</a>
+            </nav>
+        </div>
+    </header>
+    
+    <section class="hero">
+        <h1>Financial <span>Insights</span></h1>
+        <p>Expert tax strategies, investment insights, and wealth-building tips for high earners ($200K+)</p>
+    </section>
+    
+    <main>
+        <div class="categories" id="categories">
+            <button class="category-btn active" data-category="all">All Posts</button>
+        </div>
+        
+        <div class="posts-grid" id="posts-grid">
+            <div class="loading">Loading articles...</div>
+        </div>
+    </main>
+    
+    <section class="newsletter-section">
+        <div class="newsletter-content">
+            <h2>Get Smarter About Money</h2>
+            <p>Join 5,000+ high earners getting weekly tax strategies and investment insights.</p>
+            <form class="newsletter-form" id="newsletterForm">
+                <input type="email" name="email" placeholder="Enter your email" required>
+                <button type="submit">Subscribe Free</button>
+            </form>
+            <p class="newsletter-note">No spam. Unsubscribe anytime.</p>
+        </div>
+    </section>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>Product</h3>
+                <a href="/dashboard/ai">AI Advisor</a>
+                <a href="/dashboard/tax-intel">Tax Advisor</a>
+                <a href="/dashboard/allocation">Portfolio Engine</a>
+                <a href="/dashboard/playbooks">Playbooks</a>
+            </div>
+            <div class="footer-section">
+                <h3>Resources</h3>
+                <a href="/blog">Blog</a>
+                <a href="/blog/how-to-save-10k-taxes-2026">Tax Savings Guide</a>
+                <a href="/blog/hsa-triple-tax-advantage-explained">HSA Strategy</a>
+                <a href="/blog/401k-vs-roth-ira-which-saves-more">401k vs Roth</a>
+            </div>
+            <div class="footer-section">
+                <h3>Company</h3>
+                <a href="/terms.html">Terms of Service</a>
+                <a href="/privacy.html">Privacy Policy</a>
+                <a href="/disclaimers.html">Disclaimers</a>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>No 1% AUM fees. No sales. No BS.</p>
+            <p style="margin-top: 0.5rem;">&copy; 2026 Charge Wealth. All rights reserved.</p>
+        </div>
+    </footer>
+    
+    <script>
+        async function loadPosts(category = null) {
+            const grid = document.getElementById('posts-grid');
+            grid.innerHTML = '<div class="loading">Loading articles...</div>';
+            
+            try {
+                const url = category && category !== 'all' 
+                    ? `/api/blog/posts?category=${category}` 
+                    : '/api/blog/posts';
+                const res = await fetch(url);
+                const data = await res.json();
+                
+                if (data.posts.length === 0) {
+                    grid.innerHTML = '<p class="loading">No articles found.</p>';
+                    return;
+                }
+                
+                grid.innerHTML = data.posts.map(post => `
+                    <article class="post-card">
+                        <a href="/blog/${post.slug}">
+                            <div class="post-content">
+                                <div class="post-category">${formatCategory(post.category)}</div>
+                                <h2 class="post-title">${post.title}</h2>
+                                <p class="post-excerpt">${post.excerpt || post.meta_description || ''}</p>
+                                <div class="post-meta">
+                                    <span>${post.read_time_minutes || 5} min read</span>
+                                    <span class="read-more">Read More &rarr;</span>
+                                </div>
+                            </div>
+                        </a>
+                    </article>
+                `).join('');
+            } catch (err) {
+                grid.innerHTML = '<p class="loading">Failed to load articles.</p>';
+            }
+        }
+        
+        async function loadCategories() {
+            try {
+                const res = await fetch('/api/blog/categories');
+                const data = await res.json();
+                
+                const container = document.getElementById('categories');
+                data.categories.forEach(cat => {
+                    const btn = document.createElement('button');
+                    btn.className = 'category-btn';
+                    btn.dataset.category = cat.category;
+                    btn.textContent = formatCategory(cat.category) + ` (${cat.count})`;
+                    btn.onclick = () => {
+                        document.querySelectorAll('.category-btn').forEach(b => b.classList.remove('active'));
+                        btn.classList.add('active');
+                        loadPosts(cat.category);
+                    };
+                    container.appendChild(btn);
+                });
+            } catch (err) {
+                console.error('Failed to load categories:', err);
+            }
+        }
+        
+        function formatCategory(cat) {
+            if (!cat) return 'General';
+            return cat.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
+        }
+        
+        document.querySelector('.category-btn').onclick = () => {
+            document.querySelectorAll('.category-btn').forEach(b => b.classList.remove('active'));
+            document.querySelector('.category-btn').classList.add('active');
+            loadPosts();
+        };
+        
+        loadCategories();
+        loadPosts();
+        
+        // Newsletter form handler
+        document.getElementById('newsletterForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const btn = e.target.querySelector('button');
+            const email = e.target.querySelector('input[name="email"]').value;
+            btn.disabled = true;
+            btn.textContent = 'Subscribing...';
+            
+            try {
+                // If user has Beehiiv API key set up, this would subscribe them
+                // For now, redirect to main landing page newsletter
+                window.location.href = `/?newsletter=${encodeURIComponent(email)}`;
+            } catch (err) {
+                btn.textContent = 'Subscribe Free';
+                btn.disabled = false;
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,12 @@
+export { registerPublicRoutes } from './public';
+export { registerAuthRoutes } from './auth';
+export { registerReferralRoutes } from './referrals';
+export { registerStripeRoutes } from './stripe';
+export { registerFinancialRoutes } from './financial';
+export { registerBlogRoutes } from './blog';
+export { registerChargeAIRoutes } from './chargeai';
+export { registerTaxIntelRoutes } from './taxintel';
+export { registerCfoRoutes } from './cfo';
+export { registerAllocationRoutes } from './allocation';
+export { registerPlaybookRoutes } from './playbooks';
+export { registerContextRoutes } from './context';

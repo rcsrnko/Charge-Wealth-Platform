@@ -1,0 +1,120 @@
+FIX DOCUMENT UPLOAD FUNCTIONALITY
+3.1 Check server-side multer configuration
+In server/index.ts or wherever routes are configured, ensure multer is properly set up:
+typescriptimport multer from 'multer';
+
+// Configure multer for memory storage (for PDF parsing)
+const upload = multer({
+  storage: multer.memoryStorage(),
+  limits: {
+    fileSize: 10 * 1024 * 1024, // 10MB limit
+  },
+  fileFilter: (req, file, cb) => {
+    // Allow PDFs and images
+    const allowedTypes = ['application/pdf', 'image/jpeg', 'image/png', 'image/gif'];
+    if (allowedTypes.includes(file.mimetype)) {
+      cb(null, true);
+    } else {
+      cb(new Error('Invalid file type. Please upload a PDF or image.'));
+    }
+  }
+});
+
+// Pass upload to route registration
+registerTaxIntelRoutes(app, isAuthenticated, upload);
+3.2 Verify the upload endpoint in server/routes/taxintel.ts
+Ensure the field name matches what the frontend sends:
+typescript// The frontend sends: formData.append('document', file);
+// So the route should use: upload.single('document')
+
+app.post('/api/tax-intel/upload', isAuthenticated, upload.single('document'), async (req: any, res) => {
+  // ... existing code
+});
+3.3 Add better error handling and logging
+Update the upload route to provide more detailed error messages:
+typescriptapp.post('/api/tax-intel/upload', isAuthenticated, upload.single('document'), async (req: any, res) => {
+  try {
+    const userId = req.user.claims.sub;
+    const file = req.file;
+    
+    console.log('Upload request received:', {
+      userId,
+      hasFile: !!file,
+      fileName: file?.originalname,
+      fileSize: file?.size,
+      mimeType: file?.mimetype
+    });
+    
+    if (!file) {
+      return res.status(400).json({ 
+        message: "No file uploaded. Please select a file and try again.",
+        code: "NO_FILE"
+      });
+    }
+
+    if (file.size > 10 * 1024 * 1024) {
+      return res.status(400).json({
+        message: "File too large. Maximum size is 10MB.",
+        code: "FILE_TOO_LARGE"
+      });
+    }
+
+    // ... rest of existing upload logic
+    
+  } catch (error: any) {
+    console.error("Upload error:", error);
+    res.status(500).json({ 
+      message: error.message || "Failed to upload document. Please try again.",
+      code: "UPLOAD_ERROR"
+    });
+  }
+});
+3.4 Frontend - Add upload progress and better error display
+In ChargeTaxIntel.tsx, add upload state feedback:
+tsx// Add state for upload progress feedback
+const [uploadStatus, setUploadStatus] = useState<'idle' | 'uploading' | 'analyzing' | 'success' | 'error'>('idle');
+const [uploadError, setUploadError] = useState<string | null>(null);
+
+const uploadAndAnalyze = async () => {
+  if (!file) return;
+
+  setIsUploading(true);
+  setUploadStatus('uploading');
+  setUploadError(null);
+  
+  try {
+    const formData = new FormData();
+    formData.append('document', file);  // Make sure this matches server expectation
+    formData.append('documentType', selectedDocType);
+    formData.append('documentYear', String(new Date().getFullYear() - 1));
+
+    console.log('Uploading file:', file.name, file.size, file.type);
+
+    const uploadResponse = await fetch('/api/tax-intel/upload', {
+      method: 'POST',
+      credentials: 'include',
+      body: formData,
+    });
+
+    const responseData = await uploadResponse.json();
+    
+    if (!uploadResponse.ok) {
+      throw new Error(responseData.message || 'Upload failed');
+    }
+
+    setUploadStatus('analyzing');
+    showSuccess(`${file.name} uploaded! Analyzing...`);
+
+    // ... rest of the function
+    
+    setUploadStatus('success');
+    
+  } catch (err: any) {
+    console.error('Upload error:', err);
+    setUploadStatus('error');
+    setUploadError(err.message);
+    showError(err.message || 'Upload failed. Please try again.');
+  } finally {
+    setIsUploading(false);
+  }
+};

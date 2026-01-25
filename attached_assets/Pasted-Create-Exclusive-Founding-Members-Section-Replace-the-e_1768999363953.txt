@@ -1,0 +1,162 @@
+Create Exclusive Founding Members Section
+Replace the existing testimonials section (after the three engines) with a new "Founding Members" section.
+
+Section Layout and Copy:
+Main Heading: "Become a Founding Member"
+Subheading: "Join the first 250 members building the future of AI-powered wealth management"
+Intro Paragraph:
+"We're looking for 250 founding members who want more than just software—you want a seat at the table. As a founding member, you're not just a customer. You're part of the team shaping how AI changes personal finance forever."
+
+Founding Members Offer Card
+Badge at top: "LIMITED TO 250 MEMBERS"
+Pricing Display:
+
+Strikethrough: "$499 Regular Price"
+Large prominent text: "$279 Lifetime Access"
+Subtext: "Founding Member Price — Lock in before we hit 250 members"
+
+Progress Indicator:
+"🔥 187/250 spots claimed — Only 63 remaining"
+
+What Founding Members Get (Split into two columns)
+Column 1: Core Platform Benefits
+Heading: "Everything in Lifetime Access"
+
+✓ AI CFO monitoring your finances 24/7
+✓ Automated daily/weekly alerts when opportunities appear
+✓ Unlimited AI Advisor questions
+✓ Full Tax Optimizer with 10+ strategies
+✓ Portfolio Engine with specific recommendations
+✓ All future features (mobile app, auto-execution, etc.)
+✓ Priority email support
+
+Column 2: Founding Member Exclusives
+Heading: "Plus Founding Member Perks"
+🎯 Direct Access to Founders
+Join our private Telegram channel where you can chat directly with the founding team. Ask questions, share feedback, and get insider updates before anyone else.
+🚀 Shape Future Features
+Vote on our product roadmap. The features you want get built first. Your input directly influences what we build next—from mobile app features to new AI capabilities.
+💎 Founding Member Badge
+Exclusive badge on your account showing you were here from day one. Access to founder-only features as we launch them.
+🔓 Lifetime Feature Unlocks
+Every premium feature we ever launch is automatically included in your membership. No upgrades. No upsells. Ever.
+🏆 Founding Member Recognition
+Your username (optional) listed on our "Founding Members" page. Be recognized as someone who believed in the vision early.
+
+Why We're Doing This Section
+Heading: "Why Only 250?"
+Paragraph:
+"We're limiting founding memberships because we want to build this the right way—with deep engagement from our early community. At 250 members, we can personally respond to feedback, host meaningful strategy sessions, and ensure every founding member gets white-glove treatment. Once we hit 250, the price increases to $499 and founder perks close forever."
+
+Founding Member Commitment Section
+Heading: "What We Expect From Founding Members"
+Paragraph:
+"This isn't a passive membership. We're looking for engaged members who will:"
+
+💬 Share honest feedback (both positive and critical)
+🧪 Test new features before public launch
+📣 Help us understand what high earners actually need
+🤝 Participate in our private community
+⭐ Leave a review after your first 30 days (if you love it)
+
+Callout text:
+"If you just want the software without engagement, wait for the public launch at $499. Founding membership is for people who want to be part of building this."
+
+Social Proof Mini-Grid (Below commitment section)
+Heading: "Founding Members Are Already Saving"
+Create a compact grid with quick wins:
+Card 1:
+"Found $4,200 in tax savings in first week"
+— Tech Executive, Joined 12 days ago
+Card 2:
+"The Telegram channel is gold. Asked about RSU tax strategy and got a response in 20 minutes"
+— Startup CFO, Joined 8 days ago
+Card 3:
+"Voted on the mobile app feature list yesterday. This is exactly what I wanted—input that actually matters"
+— Product Manager, Joined 15 days ago
+Card 4:
+"The founder access alone is worth it. No other financial platform gives you this level of transparency"
+— Engineering Manager, Joined 6 days ago
+Card 5:
+"Got early access to the portfolio rebalancing feature. It's not even public yet and already saved me from a concentration risk issue"
+— Small Business Owner, Joined 18 days ago
+
+Final CTA Section
+Heading: "Claim Your Founding Member Spot"
+Urgency text (in colored box):
+"⏰ Once we hit 250 members, founding benefits close permanently. Price increases to $499 with no founder perks."
+Large CTA Button:
+"Join as Founding Member — $279"
+Below button:
+"30-Day Money-Back Guarantee — If you're not actively saving money, we'll refund you, no questions asked"
+Under guarantee:
+"🔒 Secure payment • ⚡ Instant access • 💳 One-time payment, never recurring"
+
+FAQ Items to Add (Specific to Founding Members)
+Q: What happens after 250 founding members?
+A: The founding member program closes permanently. New members will pay $499 for lifetime access but won't get founder perks like Telegram access, voting rights, quarterly sessions, or the founding member badge. You can't buy these perks later—they're exclusive to the first 250.
+Q: How active is the Telegram channel?
+A: Very. Our founding team posts daily updates, responds to questions within hours, and shares market insights as they happen. Current members are active too—you'll get peer advice from other high earners, not just our team. Think of it as a private financial strategy group.
+Q: Can I really influence what features get built?
+A: Absolutely. We run monthly polls where founding members vote on the roadmap. Top 3 features get built first. Recent example: Mobile push notifications won the December vote, so that's in development now. Your vote carries real weight.
+Q: What if I don't want to be in the Telegram or participate?
+A: That's fine, but honestly, you should just wait for the public launch at $499. Founding membership is designed for engaged members who want to be part of the process. If you just want the software, it'll still be great at $499—but you'll miss the community and input opportunities.
+Q: How long do I have to decide?
+A: Until we hit 250 members. We're currently at 187/250. At our current pace, that's about 2-3 weeks. Once we hit 250, founding member perks close forever and the price increases. Don't wait.
+Q: Is the $279 price really lifetime?
+A: Yes. One payment, lifetime access to everything. No subscriptions, no renewals, no surprise charges. Even when we launch new premium features or raise prices to $499+, you're locked in forever. We honor founding member pricing for life.
+
+Design Notes for Replit Agent:
+
+Make the "LIMITED TO 250 MEMBERS" badge prominent and eye-catching (bright color, maybe pulsing animation)
+The progress indicator "187/250 spots claimed" should update dynamically (you'll need to implement counter logic)
+Use a two-column layout for "What Founding Members Get" on desktop, stack on mobile
+Founding member exclusive perks should visually stand out (different background color, icons, or border)
+The urgency box before final CTA should be visually distinct (colored background, maybe red/orange accent)
+Social proof mini-grid should be compact cards, not full testimonials
+Add subtle animations to the CTA button (hover effect, maybe a slight pulse)
+
+
+Scarcity/Urgency Elements to Emphasize:
+
+The "187/250" counter (make it prominent)
+"Only 63 remaining" language
+"Closes permanently" messaging
+"Price increases to $499" contrast
+Timeline urgency: "2-3 weeks at current pace"
+
+
+Tone Guidelines:
+
+Exclusive but not elitist
+Collaborative ("building together") not transactional
+Honest about expectations (you need to participate)
+Emphasize value of community + input, not just software
+Make it clear these perks can NEVER be purchased later
+Use social proof from existing founding members
+Create FOMO but don't be manipulative
+
+
+Implementation Checklist:
+
+ Remove old testimonials section completely
+ Add new Founding Members section after three engines
+ Implement progress counter (187/250) with dynamic updates
+ Add Telegram/founder access descriptions
+ Include voting/roadmap influence details
+ Create mini social proof grid (5 cards)
+ Update all pricing mentions to include "Founding Member" context
+ Add 4 new FAQ items about founding program
+ Ensure CTA button links to correct signup with founding member flag
+ Add urgency elements (counter, timeline, closing language)
+ Style founding member badge/perks distinctly from regular features
+ Test on mobile (two columns should stack properly)
+
+
+BONUS: Update Pricing Section CTA
+Also update the main pricing section to reference founding members:
+Change the pricing badge from "EARLY ACCESS OFFER" to:
+"FOUNDING MEMBER PROGRAM — 63 SPOTS LEFT"
+Add text above the $279 price:
+"Lock in founding member benefits before we hit 250 members and close this program forever"
+This creates consistency between the dedicated founding members section and the pricing section.

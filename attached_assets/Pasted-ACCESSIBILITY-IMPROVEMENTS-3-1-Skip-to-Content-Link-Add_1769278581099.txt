@@ -1,0 +1,157 @@
+ACCESSIBILITY IMPROVEMENTS
+3.1 Skip to Content Link
+Add to client/src/App.tsx at the top of the rendered content:
+tsx<a href="#main-content" className="skip-link">
+  Skip to main content
+</a>
+Add to index.css:
+css.skip-link {
+  position: absolute;
+  top: -100px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 1rem 2rem;
+  background: var(--soft-gold);
+  color: var(--midnight-blue);
+  font-weight: 600;
+  border-radius: 0 0 8px 8px;
+  z-index: 9999;
+  transition: top 0.2s ease;
+}
+
+.skip-link:focus {
+  top: 0;
+  outline: 2px solid var(--porcelain);
+  outline-offset: 2px;
+}
+Add id to main content in Dashboard.tsx:
+tsx<div id="main-content" className={styles.pageContent}>
+3.2 ARIA Labels for Icon Buttons
+Update all icon-only buttons across components. Example for Sidebar.tsx:
+tsx// Toggle button
+<button
+  className={styles.toggleBtn}
+  onClick={toggleCollapse}
+  aria-label={isCollapsed ? 'Expand navigation sidebar' : 'Collapse navigation sidebar'}
+  aria-expanded={!isCollapsed}
+>
+
+// Nav items
+<Link href={item.path}>
+  <a 
+    className={styles.navItem}
+    aria-label={`${item.label}: ${item.description}`}
+    aria-current={isPathActive(item.path) ? 'page' : undefined}
+  >
+Update ChargeAI.tsx send button:
+tsx<button 
+  onClick={sendMessage} 
+  className={styles.sendButton}
+  disabled={!input.trim() || isLoading}
+  aria-label="Send message"
+>
+Update ChargeAllocation.tsx close button:
+tsx<button 
+  className={styles.closeButton}
+  onClick={() => { setSelectedPosition(null); setThesis(null); }}
+  aria-label="Close analysis panel"
+>
+3.3 Keyboard Navigation for Sidebar
+Update Sidebar.tsx:
+tsx// Add keyboard handler
+const handleKeyDown = (e: React.KeyboardEvent, item: NavItem) => {
+  if (e.key === 'Enter' || e.key === ' ') {
+    e.preventDefault();
+    if (!isItemLocked(item)) {
+      window.location.href = item.path;
+    }
+  }
+};
+
+// Update nav items
+<a 
+  className={styles.navItem}
+  onClick={(e) => handleLockedClick(e, item)}
+  onKeyDown={(e) => handleKeyDown(e, item)}
+  tabIndex={0}
+  role="menuitem"
+  aria-disabled={isItemLocked(item)}
+>
+Add to Sidebar.module.css:
+css.navItem:focus-visible {
+  outline: 2px solid var(--soft-gold);
+  outline-offset: 2px;
+  border-radius: 8px;
+}
+
+.nav {
+  role: navigation;
+}
+3.4 Color Contrast Fix
+Update the muted gray color in index.css for better contrast:
+css:root {
+  /* Improve contrast - old: #9BA3B5, new: #A8B0C5 */
+  --muted-gray: #A8B0C5;
+  --text-secondary: #A8B0C5;
+  
+  /* Ensure gold has enough contrast on dark backgrounds */
+  --soft-gold: #D4B873; /* Slightly lighter for better readability */
+  --gold-text: #E5CA84; /* Use for text on dark backgrounds */
+}
+3.5 Focus Visible States
+Add to index.css:
+css/* Focus visible for keyboard users only */
+*:focus {
+  outline: none;
+}
+
+*:focus-visible {
+  outline: 2px solid var(--soft-gold);
+  outline-offset: 2px;
+}
+
+/* Specific button focus */
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+  outline: 2px solid var(--soft-gold);
+  outline-offset: 2px;
+  box-shadow: 0 0 0 4px rgba(201, 169, 98, 0.2);
+}
+3.6 Screen Reader Improvements
+Add visually hidden utility class to index.css:
+css.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+Use in components for context. Example in WealthReadiness.tsx:
+tsx<div className={styles.scoreValue}>
+  <span className="sr-only">Your wealth readiness score is</span>
+  <span className={styles.scoreNumber}>{animatedScore}</span>
+  <span className={styles.scorePercent}>%</span>
+</div>
+3.7 Reduced Motion Support
+Add to index.css:
+css@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  
+  .card:hover,
+  .btn:hover {
+    transform: none !important;
+  }
+}

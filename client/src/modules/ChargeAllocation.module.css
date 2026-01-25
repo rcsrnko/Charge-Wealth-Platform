@@ -1,0 +1,1299 @@
+.container {
+  min-height: calc(100vh - 60px);
+  background: var(--midnight-blue);
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.5rem 2rem;
+  border-bottom: 1px solid var(--border);
+  background: var(--deep-navy);
+}
+
+.headerContent {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--porcelain);
+  margin: 0;
+}
+
+.subtitle {
+  font-size: 0.875rem;
+  color: var(--muted-gray);
+  margin: 0;
+}
+
+.addButton {
+  padding: 0.5rem 1rem;
+  background: var(--soft-gold);
+  color: var(--midnight-blue);
+  border: none;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.addButton:hover {
+  background: #b8983f;
+}
+
+.content {
+  display: flex;
+  height: calc(100vh - 140px);
+}
+
+.mainPanel {
+  flex: 1;
+  padding: 2rem;
+  overflow-y: auto;
+}
+
+.summaryCards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.summaryCard {
+  display: flex;
+  flex-direction: column;
+  padding: 1.25rem;
+  background: var(--deep-navy);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+}
+
+.summaryLabel {
+  font-size: 0.75rem;
+  color: var(--muted-gray);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 0.5rem;
+}
+
+.summaryValue {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--porcelain);
+}
+
+.summaryValue.positive {
+  color: #4ADE80;
+}
+
+.summaryValue.warning {
+  color: #FBBF24;
+}
+
+.summaryChange {
+  font-size: 0.75rem;
+  color: #4ADE80;
+  font-weight: 500;
+  margin-top: 0.25rem;
+}
+
+.summarySubtext {
+  font-size: 0.75rem;
+  color: var(--muted-gray);
+  margin-top: 0.25rem;
+}
+
+.sectionTitle {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--porcelain);
+  margin: 0 0 1rem 0;
+}
+
+.insightsSection {
+  margin-bottom: 2rem;
+}
+
+.insightsList {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.insightCard {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem 1.25rem;
+  background: var(--deep-navy);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  border-left: 4px solid var(--muted-gray);
+}
+
+.insightCard.warning {
+  border-left-color: #FBBF24;
+}
+
+.insightCard.opportunity {
+  border-left-color: #4ADE80;
+}
+
+.insightCard.action {
+  border-left-color: var(--soft-gold);
+}
+
+.insightContent {
+  flex: 1;
+}
+
+.insightContent h4 {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--porcelain);
+  margin: 0 0 0.25rem 0;
+}
+
+.insightContent p {
+  font-size: 0.813rem;
+  color: var(--muted-gray);
+  margin: 0;
+  line-height: 1.4;
+}
+
+.insightAction {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.5rem;
+}
+
+.insightImpact {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #4ADE80;
+}
+
+.insightCta {
+  padding: 0.5rem 1rem;
+  background: var(--soft-gold);
+  border: none;
+  border-radius: 6px;
+  color: var(--midnight-blue);
+  font-size: 0.75rem;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.insightCta:hover {
+  background: #b8983f;
+}
+
+.allocationSection {
+  margin-bottom: 2rem;
+}
+
+.allocationContent {
+  background: var(--deep-navy);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 1.25rem;
+}
+
+.positionsHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.positionsCount {
+  font-size: 0.813rem;
+  color: var(--muted-gray);
+}
+
+.valueCell, .gainCell, .weightCell {
+  display: flex;
+  flex-direction: column;
+}
+
+.valueCell small, .gainCell small, .weightCell small {
+  font-size: 0.75rem;
+  color: var(--muted-gray);
+}
+
+.weightWarning {
+  color: #FBBF24 !important;
+}
+
+.highRisk {
+  border-color: #e74c3c;
+}
+
+.highRisk .summaryValue {
+  color: #e74c3c;
+}
+
+.mediumRisk {
+  border-color: #f39c12;
+}
+
+.mediumRisk .summaryValue {
+  color: #f39c12;
+}
+
+.lowRisk {
+  border-color: #27ae60;
+}
+
+.lowRisk .summaryValue {
+  color: #27ae60;
+}
+
+.allocationBar {
+  display: flex;
+  height: 12px;
+  border-radius: 6px;
+  overflow: hidden;
+  background: var(--charcoal-slate);
+  margin-bottom: 1rem;
+}
+
+.equitySegment { background: var(--soft-gold); }
+.fixedSegment { background: #6c5ce7; }
+.cashSegment { background: #95a5a6; }
+.altSegment { background: #9b59b6; }
+
+.allocationLegend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+  font-size: 0.813rem;
+  color: var(--muted-gray);
+  margin-bottom: 2rem;
+}
+
+.allocationLegend span {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.equityDot, .fixedDot, .cashDot, .altDot {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+}
+
+.equityDot { background: var(--soft-gold); }
+.fixedDot { background: #6c5ce7; }
+.cashDot { background: #95a5a6; }
+.altDot { background: #9b59b6; }
+
+.positionsSection h3 {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: var(--porcelain);
+  margin: 0 0 1rem 0;
+}
+
+.positionsTable {
+  background: var(--deep-navy);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.tableHeader {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr 100px;
+  gap: 1rem;
+  padding: 1rem 1.25rem;
+  background: var(--charcoal-slate);
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--muted-gray);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.tableRow {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr 100px;
+  gap: 1rem;
+  padding: 1rem 1.25rem;
+  align-items: center;
+  border-bottom: 1px solid var(--border);
+  font-size: 0.938rem;
+  color: var(--porcelain);
+  transition: background 0.2s;
+}
+
+.tableRow:last-child {
+  border-bottom: none;
+}
+
+.tableRow:hover {
+  background: var(--charcoal-slate);
+}
+
+.tableRow.selected {
+  background: rgba(201, 169, 98, 0.08);
+}
+
+.symbolCell {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.symbolCell strong {
+  font-weight: 600;
+}
+
+.symbolCell small {
+  font-size: 0.75rem;
+  color: var(--muted-gray);
+}
+
+.tableRow .positive {
+  color: #27ae60;
+}
+
+.tableRow .negative {
+  color: #e74c3c;
+}
+
+.tableRow span small {
+  display: block;
+  font-size: 0.75rem;
+  opacity: 0.8;
+}
+
+.analyzeButton {
+  padding: 0.375rem 0.75rem;
+  background: var(--charcoal-slate);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  font-size: 0.813rem;
+  color: var(--porcelain);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.analyzeButton:hover {
+  background: var(--soft-gold);
+  color: var(--midnight-blue);
+  border-color: var(--soft-gold);
+}
+
+.emptyState {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 4rem 2rem;
+}
+
+.emptyIcon {
+  width: 80px;
+  height: 80px;
+  background: rgba(201, 169, 98, 0.1);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1.5rem;
+}
+
+.emptyIcon svg {
+  width: 40px;
+  height: 40px;
+  color: var(--soft-gold);
+}
+
+.emptyState h3 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--porcelain);
+  margin: 0 0 0.5rem 0;
+}
+
+.emptyState p {
+  font-size: 0.938rem;
+  color: var(--muted-gray);
+  margin: 0 0 1.5rem 0;
+  max-width: 400px;
+  line-height: 1.5;
+}
+
+.emptyBenefits {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.emptyBenefits span {
+  padding: 0.375rem 0.75rem;
+  background: rgba(201, 169, 98, 0.1);
+  border-radius: 16px;
+  font-size: 0.75rem;
+  color: var(--soft-gold);
+}
+
+.addButtonLarge {
+  padding: 0.875rem 2rem;
+  background: var(--soft-gold);
+  color: var(--midnight-blue);
+  border: none;
+  border-radius: 10px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.addButtonLarge:hover {
+  background: #b8983f;
+}
+
+.emptyFootnote {
+  font-size: 0.75rem;
+  color: var(--muted-gray);
+  margin-top: 1rem;
+}
+
+.addPositionModal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modalContent {
+  background: var(--deep-navy);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 2rem;
+  width: 400px;
+  max-width: 90vw;
+}
+
+.modalSubtext {
+  font-size: 0.875rem;
+  color: var(--muted-gray);
+  margin: 0 0 1.5rem 0;
+}
+
+.modalContent h3 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--porcelain);
+  margin: 0 0 1.5rem 0;
+}
+
+.formGrid {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.formGrid label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  font-size: 0.875rem;
+  color: var(--porcelain);
+}
+
+.formGrid input,
+.formGrid select {
+  padding: 0.75rem;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  font-size: 1rem;
+  background: var(--charcoal-slate);
+  color: var(--porcelain);
+}
+
+.formGrid input:focus,
+.formGrid select:focus {
+  outline: none;
+  border-color: var(--soft-gold);
+}
+
+.modalActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+}
+
+.modalActions button {
+  padding: 0.625rem 1.25rem;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  cursor: pointer;
+}
+
+.modalActions button:first-child {
+  background: var(--charcoal-slate);
+  border: 1px solid var(--border);
+  color: var(--porcelain);
+}
+
+.primaryButton {
+  background: var(--soft-gold) !important;
+  color: var(--midnight-blue) !important;
+  border: none !important;
+}
+
+.analysisPanel {
+  width: 420px;
+  background: var(--deep-navy);
+  border-left: 1px solid var(--border);
+  overflow-y: auto;
+}
+
+.analysisPanelHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.25rem 1.5rem;
+  border-bottom: 1px solid var(--border);
+  position: sticky;
+  top: 0;
+  background: var(--deep-navy);
+}
+
+.analysisPanelHeader h3 {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: var(--porcelain);
+  margin: 0;
+}
+
+.closeButton {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  color: var(--muted-gray);
+  cursor: pointer;
+}
+
+.loadingState {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem;
+}
+
+.spinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid var(--charcoal-slate);
+  border-top-color: var(--soft-gold);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.loadingState p {
+  margin-top: 1rem;
+  font-size: 0.938rem;
+  color: var(--muted-gray);
+}
+
+.thesisContent {
+  padding: 1.5rem;
+}
+
+.fitScore {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 1.5rem;
+}
+
+.fitScoreCircle {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--soft-gold), #b8983f);
+  color: var(--midnight-blue);
+}
+
+.fitScoreValue {
+  font-size: 2rem;
+  font-weight: 700;
+}
+
+.fitScoreLabel {
+  font-size: 0.75rem;
+  opacity: 0.9;
+}
+
+.thesisSection {
+  margin-bottom: 1.5rem;
+}
+
+.thesisSection h4 {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--porcelain);
+  margin: 0 0 0.75rem 0;
+}
+
+.thesisSection p {
+  font-size: 0.938rem;
+  color: var(--muted-gray);
+  line-height: 1.6;
+  margin: 0;
+}
+
+.riskList {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.riskItem {
+  padding: 0.75rem;
+  background: var(--charcoal-slate);
+  border-radius: 8px;
+  border-left: 3px solid var(--muted-gray);
+}
+
+.riskItem.high {
+  border-left-color: #e74c3c;
+}
+
+.riskItem.medium {
+  border-left-color: #f39c12;
+}
+
+.riskItem.low {
+  border-left-color: #27ae60;
+}
+
+.riskFactor {
+  font-size: 0.813rem;
+  font-weight: 600;
+  color: var(--porcelain);
+  display: block;
+  margin-bottom: 0.25rem;
+}
+
+.riskItem p {
+  font-size: 0.813rem;
+  color: var(--muted-gray);
+  margin: 0;
+}
+
+.taxInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  background: var(--charcoal-slate);
+  border-radius: 8px;
+  padding: 1rem;
+}
+
+.taxRow {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.813rem;
+  color: var(--muted-gray);
+}
+
+.taxRow .taxValue {
+  color: var(--porcelain);
+  font-weight: 500;
+}
+
+.taxLabel {
+  display: block;
+  font-size: 0.75rem;
+  color: var(--muted-gray);
+  margin-bottom: 0.25rem;
+}
+
+.taxValue {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--porcelain);
+}
+
+.fitScoreDescription {
+  font-size: 0.813rem;
+  color: var(--muted-gray);
+  text-align: center;
+  margin-top: 0.5rem;
+}
+
+.disclaimer {
+  font-size: 0.75rem;
+  color: var(--muted-gray);
+  font-style: italic;
+  padding-top: 1rem;
+  border-top: 1px solid var(--border);
+  margin-top: 1.5rem;
+}
+
+@media (max-width: 1024px) {
+  .content {
+    flex-direction: column;
+    height: auto;
+  }
+  
+  .analysisPanel {
+    width: 100%;
+    border-left: none;
+    border-top: 1px solid var(--border);
+  }
+}
+
+@media (max-width: 768px) {
+  .header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+  
+  .addButton {
+    width: 100%;
+  }
+  
+  .mainPanel {
+    padding: 1rem;
+  }
+  
+  .summaryCards {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .tableHeader,
+  .tableRow {
+    grid-template-columns: 1fr 1fr 80px;
+  }
+  
+  .tableHeader span:nth-child(3),
+  .tableHeader span:nth-child(4),
+  .tableRow span:nth-child(3),
+  .tableRow span:nth-child(4) {
+    display: none;
+  }
+  
+  .taxInfo {
+    grid-template-columns: 1fr;
+  }
+}
+
+.headerActions {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.refreshStatus {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.refreshingBadge {
+  font-size: 0.75rem;
+  color: var(--soft-gold);
+  animation: pulse 1s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+.lastRefresh {
+  font-size: 0.75rem;
+  color: var(--muted-gray);
+}
+
+.refreshButton {
+  padding: 0.375rem 0.75rem;
+  background: transparent;
+  color: var(--muted-gray);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  font-size: 0.75rem;
+  cursor: pointer;
+}
+
+.refreshButton:hover:not(:disabled) {
+  color: var(--porcelain);
+  border-color: var(--porcelain);
+}
+
+.refreshButton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.alertButton {
+  padding: 0.5rem 1rem;
+  background: transparent;
+  color: var(--soft-gold);
+  border: 1px solid var(--soft-gold);
+  border-radius: 8px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.alertButton:hover {
+  background: var(--soft-gold);
+  color: var(--midnight-blue);
+}
+
+.alertsSection {
+  margin-bottom: 2rem;
+}
+
+.alertsList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.alertItem {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 0.75rem;
+  background: var(--deep-navy);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+}
+
+.alertSymbol {
+  font-weight: 600;
+  color: var(--soft-gold);
+}
+
+.alertCondition {
+  font-size: 0.813rem;
+  color: var(--muted-gray);
+}
+
+.alertDelete {
+  padding: 0.125rem 0.375rem;
+  background: transparent;
+  color: var(--muted-gray);
+  border: none;
+  font-size: 0.875rem;
+  cursor: pointer;
+}
+
+.alertDelete:hover {
+  color: #EF4444;
+}
+
+.priceCell {
+  display: flex;
+  flex-direction: column;
+}
+
+.priceCell span:first-child {
+  font-weight: 500;
+  color: var(--porcelain);
+}
+
+.sourceLabel {
+  font-size: 0.625rem;
+  color: var(--muted-gray);
+  text-transform: uppercase;
+}
+
+.dailyCell {
+  display: flex;
+  flex-direction: column;
+}
+
+.dailyCell.positive span:first-child {
+  color: #4ADE80;
+}
+
+.dailyCell.negative span:first-child {
+  color: #EF4444;
+}
+
+.dailyCell small {
+  font-size: 0.75rem;
+}
+
+.dailyCell.positive small {
+  color: #4ADE80;
+}
+
+.dailyCell.negative small {
+  color: #EF4444;
+}
+
+.priceChartSection {
+  padding: 1rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.chartHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.chartHeader h4 {
+  margin: 0;
+  font-size: 0.875rem;
+  color: var(--porcelain);
+}
+
+.chartPeriodButtons {
+  display: flex;
+  gap: 0.25rem;
+}
+
+.chartPeriodButtons button {
+  padding: 0.25rem 0.5rem;
+  background: transparent;
+  color: var(--muted-gray);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  font-size: 0.75rem;
+  cursor: pointer;
+}
+
+.chartPeriodButtons button:hover {
+  color: var(--porcelain);
+  border-color: var(--porcelain);
+}
+
+.chartPeriodButtons button.active {
+  background: var(--soft-gold);
+  color: var(--midnight-blue);
+  border-color: var(--soft-gold);
+}
+
+.chartContainer {
+  width: 100%;
+  height: 200px;
+}
+
+.chartLoading,
+.noChartData {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 200px;
+  color: var(--muted-gray);
+  font-size: 0.875rem;
+}
+
+.summaryChange.positive {
+  color: #4ADE80;
+}
+
+.summaryChange.negative {
+  color: #EF4444;
+}
+
+.blurredChartPreview {
+  position: relative;
+  width: 180px;
+  height: 180px;
+  margin: 0 auto 1.5rem;
+}
+
+.samplePieChart {
+  width: 100%;
+  height: 100%;
+  filter: blur(3px);
+  animation: rotateChart 20s linear infinite;
+}
+
+@keyframes rotateChart {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.chartOverlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(15, 23, 42, 0.5);
+  border-radius: 50%;
+}
+
+.lockChartIcon {
+  width: 32px;
+  height: 32px;
+  color: var(--soft-gold);
+}
+
+.hiddenFeesHook {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1rem;
+  margin: 1rem 0;
+  background: linear-gradient(135deg, rgba(201, 169, 98, 0.1) 0%, rgba(201, 169, 98, 0.05) 100%);
+  border: 1px solid rgba(201, 169, 98, 0.2);
+  border-radius: 8px;
+  color: var(--soft-gold);
+  font-size: 0.9375rem;
+  font-weight: 500;
+}
+
+.hiddenFeesHook svg {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+}
+
+/* Mobile card view for positions */
+.positionCard {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .header {
+    padding: 1rem;
+    padding-left: 4rem;
+  }
+  
+  .title {
+    font-size: 1.25rem;
+  }
+  
+  .headerActions {
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+  
+  .addButton,
+  .alertButton,
+  .refreshButton {
+    min-height: 44px;
+  }
+  
+  .positionsTable .tableHeader,
+  .positionsTable .tableRow {
+    display: none;
+  }
+  
+  .positionCard {
+    display: flex;
+    flex-direction: column;
+    background: var(--deep-navy);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 1rem;
+    margin-bottom: 0.75rem;
+  }
+  
+  .positionCardHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 0.75rem;
+  }
+  
+  .positionCardSymbol {
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: var(--porcelain);
+  }
+  
+  .positionCardShares {
+    font-size: 0.75rem;
+    color: var(--muted-gray);
+    display: block;
+    margin-top: 0.125rem;
+  }
+  
+  .positionCardPrice {
+    text-align: right;
+  }
+  
+  .positionCardCurrentPrice {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--porcelain);
+  }
+  
+  .positionCardChange {
+    font-size: 0.75rem;
+    display: block;
+  }
+  
+  .positionCardChange.positive {
+    color: #4ADE80;
+  }
+  
+  .positionCardChange.negative {
+    color: #EF4444;
+  }
+  
+  .positionCardStats {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.75rem;
+    padding-top: 0.75rem;
+    border-top: 1px solid var(--border);
+  }
+  
+  .positionCardStat {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .positionCardStatLabel {
+    font-size: 0.625rem;
+    color: var(--muted-gray);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  
+  .positionCardStatValue {
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--porcelain);
+  }
+  
+  .positionCardStatValue.positive {
+    color: #4ADE80;
+  }
+  
+  .positionCardStatValue.negative {
+    color: #EF4444;
+  }
+  
+  .positionCardActions {
+    margin-top: 0.75rem;
+  }
+  
+  .positionCardActions .analyzeButton {
+    width: 100%;
+    min-height: 44px;
+    justify-content: center;
+  }
+  
+  .allocationLegend {
+    flex-wrap: wrap;
+    gap: 0.75rem;
+  }
+  
+  .insightCard {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .insightAction {
+    flex-direction: row;
+    justify-content: space-between;
+    margin-top: 0.75rem;
+    padding-top: 0.75rem;
+    border-top: 1px solid var(--border);
+  }
+  
+  .insightCta {
+    min-height: 44px;
+  }
+}
+
+@media (max-width: 480px) {
+  .header {
+    padding: 0.75rem;
+    padding-left: 3.5rem;
+  }
+  
+  .headerActions {
+    width: 100%;
+    justify-content: space-between;
+  }
+  
+  .addButton,
+  .alertButton {
+    flex: 1;
+    text-align: center;
+    justify-content: center;
+  }
+  
+  .refreshStatus {
+    width: 100%;
+    justify-content: center;
+    order: -1;
+  }
+  
+  .summaryCards {
+    grid-template-columns: 1fr 1fr;
+    gap: 0.75rem;
+  }
+  
+  .summaryCard {
+    padding: 1rem;
+  }
+  
+  .summaryValue {
+    font-size: 1rem;
+  }
+  
+  .mainPanel {
+    padding: 1rem;
+  }
+  
+  .positionCardStats {
+    grid-template-columns: 1fr 1fr;
+  }
+  
+  .modalContent {
+    padding: 1.5rem;
+    margin: 1rem;
+  }
+  
+  .formGrid label input,
+  .formGrid label select {
+    min-height: 48px;
+  }
+  
+  .modalActions button {
+    min-height: 48px;
+    flex: 1;
+  }
+}

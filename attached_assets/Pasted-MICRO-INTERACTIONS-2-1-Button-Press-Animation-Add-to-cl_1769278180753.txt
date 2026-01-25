@@ -1,0 +1,224 @@
+MICRO-INTERACTIONS
+2.1 Button Press Animation
+Add to client/src/index.css:
+css/* Button press effect */
+.btn, button {
+  transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.btn:active, button:active {
+  transform: scale(0.97);
+}
+
+/* Primary button enhanced */
+.btn-primary {
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-primary::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to right,
+    transparent,
+    rgba(255, 255, 255, 0.1),
+    transparent
+  );
+  transform: translateX(-100%);
+  transition: transform 0.5s ease;
+}
+
+.btn-primary:hover::after {
+  transform: translateX(100%);
+}
+2.2 Card Lift Effect (Standardized)
+Add utility class in index.css:
+css.card-interactive {
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.card-interactive:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(201, 169, 98, 0.2);
+}
+
+.card-interactive:active {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
+}
+2.3 Success Checkmark Animation
+Create client/src/components/SuccessCheck.tsx:
+tsximport styles from './SuccessCheck.module.css';
+
+interface SuccessCheckProps {
+  size?: number;
+  color?: string;
+}
+
+export default function SuccessCheck({ size = 48, color = '#C9A962' }: SuccessCheckProps) {
+  return (
+    <div className={styles.container} style={{ width: size, height: size }}>
+      <svg viewBox="0 0 52 52" className={styles.checkmark}>
+        <circle 
+          className={styles.circle} 
+          cx="26" 
+          cy="26" 
+          r="24" 
+          fill="none"
+          stroke={color}
+        />
+        <path 
+          className={styles.check} 
+          fill="none"
+          stroke={color}
+          d="M14 27l7 7 16-16"
+        />
+      </svg>
+    </div>
+  );
+}
+Create client/src/components/SuccessCheck.module.css:
+css.container {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.checkmark {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  stroke-width: 2;
+  stroke-miterlimit: 10;
+}
+
+.circle {
+  stroke-dasharray: 166;
+  stroke-dashoffset: 166;
+  animation: circleAnim 0.6s cubic-bezier(0.65, 0, 0.45, 1) forwards;
+}
+
+.check {
+  stroke-dasharray: 48;
+  stroke-dashoffset: 48;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  animation: checkAnim 0.3s cubic-bezier(0.65, 0, 0.45, 1) 0.4s forwards;
+}
+
+@keyframes circleAnim {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes checkAnim {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+2.4 Page Transition Animation
+Update client/src/pages/Dashboard.tsx:
+tsx// Add to imports
+import { useEffect, useState } from 'react';
+
+// Add transition state
+const [isTransitioning, setIsTransitioning] = useState(false);
+const [displayLocation, setDisplayLocation] = useState(location);
+
+useEffect(() => {
+  if (location !== displayLocation) {
+    setIsTransitioning(true);
+    const timer = setTimeout(() => {
+      setDisplayLocation(location);
+      setIsTransitioning(false);
+    }, 150);
+    return () => clearTimeout(timer);
+  }
+}, [location, displayLocation]);
+
+// Wrap page content
+<div className={`${styles.pageContent} ${isTransitioning ? styles.transitioning : ''}`}>
+  {/* existing Switch content */}
+</div>
+Add to Dashboard.module.css:
+css.pageContent {
+  flex: 1;
+  padding: 2rem;
+  animation: pageEnter 0.3s ease-out;
+}
+
+.pageContent.transitioning {
+  opacity: 0.5;
+  transform: translateY(8px);
+}
+
+@keyframes pageEnter {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+2.5 Ripple Effect for Buttons
+Add to index.css:
+css.btn-ripple {
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-ripple::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  transition: width 0.6s ease, height 0.6s ease, opacity 0.6s ease;
+  opacity: 0;
+}
+
+.btn-ripple:active::before {
+  width: 300px;
+  height: 300px;
+  opacity: 0;
+}
+2.6 Loading Pulse Animation
+Add to index.css:
+css@keyframes goldPulse {
+  0%, 100% {
+    opacity: 0.4;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+.skeleton {
+  background: linear-gradient(
+    90deg,
+    rgba(201, 169, 98, 0.1) 25%,
+    rgba(201, 169, 98, 0.2) 50%,
+    rgba(201, 169, 98, 0.1) 75%
+  );
+  background-size: 200% 100%;
+  animation: skeletonShimmer 1.5s ease-in-out infinite;
+  border-radius: 8px;
+}
+
+@keyframes skeletonShimmer {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}

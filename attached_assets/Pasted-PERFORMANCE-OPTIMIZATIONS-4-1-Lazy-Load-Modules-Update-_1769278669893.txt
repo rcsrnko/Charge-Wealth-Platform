@@ -1,0 +1,235 @@
+PERFORMANCE OPTIMIZATIONS
+4.1 Lazy Load Modules
+Update client/src/pages/Dashboard.tsx:
+tsximport { lazy, Suspense } from 'react';
+
+// Replace direct imports with lazy imports
+const ChargeAI = lazy(() => import('../modules/ChargeAI'));
+const ChargeTaxIntel = lazy(() => import('../modules/ChargeTaxIntel'));
+const ChargeAllocation = lazy(() => import('../modules/ChargeAllocation'));
+const Playbooks = lazy(() => import('../modules/Playbooks'));
+const ReferralDashboard = lazy(() => import('../modules/ReferralDashboard'));
+
+// Create loading fallback component
+function ModuleLoader() {
+  return (
+    <div className={styles.moduleLoader}>
+      <div className={styles.loaderSpinner} />
+      <span>Loading...</span>
+    </div>
+  );
+}
+
+// Wrap routes with Suspense
+<Route path="/dashboard/ai">
+  <Suspense fallback={<ModuleLoader />}>
+    <ChargeAI />
+  </Suspense>
+</Route>
+
+<Route path="/dashboard/tax-intel">
+  <Suspense fallback={<ModuleLoader />}>
+    {isModuleLocked('tax-intel') ? (
+      <LockedModule ... />
+    ) : (
+      <ChargeTaxIntel />
+    )}
+  </Suspense>
+</Route>
+
+// ... same pattern for other routes
+Add loader styles to Dashboard.module.css:
+css.moduleLoader {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 400px;
+  gap: 1rem;
+  color: var(--muted-gray);
+}
+
+.loaderSpinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid rgba(201, 169, 98, 0.2);
+  border-top-color: var(--soft-gold);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+4.2 Memoize Components
+Update client/src/components/Sidebar.tsx:
+tsximport { memo, useState, useCallback } from 'react';
+
+// Memoize nav item to prevent re-renders
+const NavItem = memo(function NavItem({ 
+  item, 
+  isActive, 
+  isLocked, 
+  isCollapsed,
+  onLockedClick 
+}: NavItemProps) {
+  return (
+    <Link href={isLocked ? '#' : item.path}>
+      <a 
+        className={`${styles.navItem} ${isActive ? styles.active : ''} ${isLocked ? styles.locked : ''}`}
+        onClick={(e) => onLockedClick(e, item)}
+      >
+        {/* ... existing content */}
+      </a>
+    </Link>
+  );
+});
+
+// In main component, use useCallback for handlers
+const handleLockedClick = useCallback((e: React.MouseEvent, item: NavItem) => {
+  if (isItemLocked(item)) {
+    e.preventDefault();
+  }
+}, [wealthScore]);
+
+// Export memoized component
+export default memo(Sidebar);
+Apply similar pattern to other frequently re-rendered components:
+
+WealthReadiness.tsx
+CfoRecommendations.tsx
+OnboardingChecklist.tsx
+
+4.3 Optimize Recharts Loading
+Update client/src/modules/ChargeAllocation.tsx:
+tsximport { lazy, Suspense, useMemo } from 'react';
+
+// Lazy load Recharts only when needed
+const LazyLineChart = lazy(() => 
+  import('recharts').then(module => ({ default: module.LineChart }))
+);
+const LazyLine = lazy(() => 
+  import('recharts').then(module => ({ default: module.Line }))
+);
+// ... other chart components
+
+// Only render chart when position is selected AND we have data
+{selectedPosition && priceHistory.length > 0 && (
+  <Suspense fallback={<div className={styles.chartLoading}>Loading chart...</div>}>
+    <div className={styles.chartContainer}>
+      {/* Chart content */}
+    </div>
+  </Suspense>
+)}
+
+// Memoize chart data processing
+const processedChartData = useMemo(() => {
+  return priceHistory.map(item => ({
+    ...item,
+    date: new Date(item.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
+  }));
+}, [priceHistory]);
+4.4 API Response Caching
+Create client/src/lib/apiCache.ts:
+tsxconst cache = new Map<string, { data: any; timestamp: number }>();
+const CACHE_DURATION = 5 * 60 * 1000; // 5 minutes
+
+export async function cachedFetch(url: string, options?: RequestInit) {
+  const cacheKey = `${url}-${JSON.stringify(options?.body || '')}`;
+  const cached = cache.get(cacheKey);
+  
+  if (cached && Date.now() - cached.timestamp < CACHE_DURATION) {
+    return cached.data;
+  }
+  
+  const response = await fetch(url, { 
+    ...options, 
+    credentials: 'include' 
+  });
+  
+  if (!response.ok) {
+    throw new Error(`API error: ${response.status}`);
+  }
+  
+  const data = await response.json();
+  cache.set(cacheKey, { data, timestamp: Date.now() });
+  
+  return data;
+}
+
+export function invalidateCache(urlPattern?: string) {
+  if (urlPattern) {
+    for (const key of cache.keys()) {
+      if (key.includes(urlPattern)) {
+        cache.delete(key);
+      }
+    }
+  } else {
+    cache.clear();
+  }
+}
+Use in components:
+tsximport { cachedFetch } from '../lib/apiCache';
+
+// In ChargeAllocation.tsx
+const loadPortfolio = useCallback(async () => {
+  try {
+    const data = await cachedFetch('/api/allocation/portfolio');
+    setPortfolio(data.portfolio);
+  } catch (err) {
+    console.error('Failed to load portfolio:', err);
+  }
+}, []);
+4.5 Virtual Scrolling for Large Lists
+Install and use react-window for position lists (if needed):
+Update ChargeAllocation.tsx for large portfolios:
+tsximport { FixedSizeList as List } from 'react-window';
+
+// Only use virtual list if more than 20 positions
+{portfolio.positions.length > 20 ? (
+  <List
+    height={600}
+    itemCount={portfolio.positions.length}
+    itemSize={80}
+    width="100%"
+  >
+    {({ index, style }) => (
+      <div style={style}>
+        <PositionRow position={portfolio.positions[index]} />
+      </div>
+    )}
+  </List>
+) : (
+  // Regular rendering for small lists
+  portfolio.positions.map((position) => (
+    <PositionRow key={position.id} position={position} />
+  ))
+)}
+4.6 Debounce Search/Input
+Create client/src/hooks/useDebounce.ts:
+tsximport { useState, useEffect } from 'react';
+
+export function useDebounce<T>(value: T, delay: number): T {
+  const [debouncedValue, setDebouncedValue] = useState<T>(value);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedValue(value);
+    }, delay);
+
+    return () => {
+      clearTimeout(timer);
+    };
+  }, [value, delay]);
+
+  return debouncedValue;
+}
+Use in ChargeAI.tsx for typing indicator:
+tsximport { useDebounce } from '../hooks/useDebounce';
+
+const [input, setInput] = useState('');
+const debouncedInput = useDebounce(input, 300);
+
+// Use debouncedInput for any API calls or heavy processing

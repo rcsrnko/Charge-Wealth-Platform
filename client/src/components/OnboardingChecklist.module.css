@@ -1,0 +1,275 @@
+.checklist {
+  background: var(--card-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.header {
+  margin-bottom: 1.25rem;
+}
+
+.headerTop {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.75rem;
+}
+
+.header h3 {
+  margin: 0;
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.progressText {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+}
+
+.progressBarContainer {
+  height: 6px;
+  background: var(--bg-tertiary);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.progressBar {
+  height: 100%;
+  background: linear-gradient(90deg, var(--ocean-teal) 0%, var(--gold-sand) 100%);
+  border-radius: 3px;
+  transition: width 0.5s ease;
+}
+
+.items {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.item {
+  background: var(--bg-secondary);
+  border-radius: 8px;
+  border: 1px solid var(--border-color);
+  transition: all 0.2s ease;
+  overflow: hidden;
+}
+
+.item:hover:not(.complete) {
+  border-color: var(--ocean-teal);
+}
+
+.item.complete {
+  opacity: 0.7;
+  background: transparent;
+  border-color: transparent;
+}
+
+.item.expanded {
+  border-color: var(--ocean-teal);
+}
+
+.itemHeader {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  padding: 1rem;
+  cursor: pointer;
+}
+
+.item.complete .itemHeader {
+  cursor: default;
+}
+
+.itemIcon {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg-tertiary);
+  border-radius: 8px;
+  font-size: 1.25rem;
+  flex-shrink: 0;
+}
+
+.item.complete .itemIcon {
+  background: var(--ocean-teal);
+}
+
+.checkmark {
+  color: white;
+  font-weight: bold;
+}
+
+.itemContent {
+  flex: 1;
+  min-width: 0;
+}
+
+.itemTitle {
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 0.25rem;
+}
+
+.item.complete .itemTitle {
+  text-decoration: line-through;
+  color: var(--text-secondary);
+}
+
+.itemDescription {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  margin-bottom: 0.25rem;
+}
+
+.itemUnlocks {
+  font-size: 0.75rem;
+  color: var(--ocean-teal);
+  font-style: italic;
+}
+
+.itemAction {
+  padding: 0.5rem 1rem;
+  background: var(--ocean-teal);
+  color: white;
+  border-radius: 6px;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: background 0.2s ease;
+  flex-shrink: 0;
+}
+
+.itemAction:hover {
+  background: var(--ocean-teal-dark, #4a9199);
+}
+
+.loading {
+  text-align: center;
+  padding: 2rem;
+  color: var(--text-secondary);
+}
+
+.expandBtn {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  color: var(--text-secondary);
+  font-size: 1.25rem;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: all 0.2s ease;
+}
+
+.expandBtn:hover {
+  background: var(--ocean-teal);
+  color: white;
+  border-color: var(--ocean-teal);
+}
+
+.formSection {
+  padding: 1rem 1rem 1.5rem 1rem;
+  background: var(--bg-tertiary);
+  border-top: 1px solid var(--border-color);
+}
+
+.inlineForm {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.formRow {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.formField {
+  display: flex;
+  flex-direction: column;
+  gap: 0.375rem;
+}
+
+.formField label {
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: var(--text-secondary);
+}
+
+.formField input,
+.formField select {
+  padding: 0.625rem 0.75rem;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  color: var(--text-primary);
+  font-size: 0.875rem;
+}
+
+.formField input:focus,
+.formField select:focus {
+  outline: none;
+  border-color: var(--ocean-teal);
+}
+
+.formField input::placeholder {
+  color: var(--text-muted);
+}
+
+.formError {
+  background: rgba(239, 68, 68, 0.1);
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  color: #ef4444;
+  padding: 0.5rem 0.75rem;
+  border-radius: 6px;
+  font-size: 0.8125rem;
+}
+
+.formSubmit {
+  background: var(--ocean-teal);
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 0.75rem 1.5rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s ease;
+  align-self: flex-start;
+}
+
+.formSubmit:hover:not(:disabled) {
+  background: #4a9199;
+}
+
+.formSubmit:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+@media (max-width: 768px) {
+  .checklist {
+    padding: 1rem;
+  }
+
+  .formRow {
+    grid-template-columns: 1fr;
+  }
+
+  .itemAction {
+    width: 100%;
+    text-align: center;
+    margin-top: 0.5rem;
+  }
+}

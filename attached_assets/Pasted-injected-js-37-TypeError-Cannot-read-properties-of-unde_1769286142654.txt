@@ -1,0 +1,155 @@
+injected.js:37 TypeError: Cannot read properties of undefined (reading 'wages')
+    at fs (ChargeTaxIntel-CIQICljQ.js:1:19811)
+    at _o (index-Dh3rxc2A.js:49:48041)
+    at qo (index-Dh3rxc2A.js:49:70846)
+    at tf (index-Dh3rxc2A.js:49:81178)
+    at Nf (index-Dh3rxc2A.js:49:116929)
+    at Wy (index-Dh3rxc2A.js:49:115975)
+    at lu (index-Dh3rxc2A.js:49:115807)
+    at jf (index-Dh3rxc2A.js:49:112605)
+    at Qf (index-Dh3rxc2A.js:49:124397)
+    at MessagePort.He (index-Dh3rxc2A.js:26:1624)
+(anonymous) @ injected.js:37
+Ld @ index-Dh3rxc2A.js:49
+Hd @ index-Dh3rxc2A.js:49
+Gd.m.componentDidCatch.e.callback @ index-Dh3rxc2A.js:49
+Yh @ index-Dh3rxc2A.js:49
+Ph @ index-Dh3rxc2A.js:49
+sf @ index-Dh3rxc2A.js:49
+hf @ index-Dh3rxc2A.js:49
+_n @ index-Dh3rxc2A.js:49
+hf @ index-Dh3rxc2A.js:49
+_n @ index-Dh3rxc2A.js:49
+hf @ index-Dh3rxc2A.js:49
+_n @ index-Dh3rxc2A.js:49
+hf @ index-Dh3rxc2A.js:49
+_n @ index-Dh3rxc2A.js:49
+hf @ index-Dh3rxc2A.js:49
+_n @ index-Dh3rxc2A.js:49
+hf @ index-Dh3rxc2A.js:49
+_n @ index-Dh3rxc2A.js:49
+hf @ index-Dh3rxc2A.js:49
+_n @ index-Dh3rxc2A.js:49
+hf @ index-Dh3rxc2A.js:49
+_n @ index-Dh3rxc2A.js:49
+hf @ index-Dh3rxc2A.js:49
+_n @ index-Dh3rxc2A.js:49
+hf @ index-Dh3rxc2A.js:49
+_n @ index-Dh3rxc2A.js:49
+hf @ index-Dh3rxc2A.js:49
+_n @ index-Dh3rxc2A.js:49
+hf @ index-Dh3rxc2A.js:49
+_n @ index-Dh3rxc2A.js:49
+hf @ index-Dh3rxc2A.js:49
+_n @ index-Dh3rxc2A.js:49
+hf @ index-Dh3rxc2A.js:49
+_n @ index-Dh3rxc2A.js:49
+hf @ index-Dh3rxc2A.js:49
+_n @ index-Dh3rxc2A.js:49
+hf @ index-Dh3rxc2A.js:49
+_n @ index-Dh3rxc2A.js:49
+hf @ index-Dh3rxc2A.js:49
+_n @ index-Dh3rxc2A.js:49
+hf @ index-Dh3rxc2A.js:49
+_n @ index-Dh3rxc2A.js:49
+hf @ index-Dh3rxc2A.js:49
+_n @ index-Dh3rxc2A.js:49
+hf @ index-Dh3rxc2A.js:49
+_n @ index-Dh3rxc2A.js:49
+hf @ index-Dh3rxc2A.js:49
+_n @ index-Dh3rxc2A.js:49
+hf @ index-Dh3rxc2A.js:49
+_n @ index-Dh3rxc2A.js:49
+hf @ index-Dh3rxc2A.js:49
+Bf @ index-Dh3rxc2A.js:49
+Mf @ index-Dh3rxc2A.js:49
+Af @ index-Dh3rxc2A.js:49
+jf @ index-Dh3rxc2A.js:49
+Qf @ index-Dh3rxc2A.js:49
+He @ index-Dh3rxc2A.js:26Understand this error
+injected.js:37 Error caught by boundary: Cannot read properties of undefined (reading 'wages') TypeError: Cannot read properties of undefined (reading 'wages')
+    at fs (https://b4a52fa0-2b32-4197-a7c3-e099497ba2e7-00-17sm3owh28rv8.picard.replit.dev/assets/ChargeTaxIntel-CIQICljQ.js:1:19811)
+    at _o (https://b4a52fa0-2b32-4197-a7c3-e099497ba2e7-00-17sm3owh28rv8.picard.replit.dev/assets/index-Dh3rxc2A.js:49:48041)
+    at qo (https://b4a52fa0-2b32-4197-a7c3-e099497ba2e7-00-17sm3owh28rv8.picard.replit.dev/assets/index-Dh3rxc2A.js:49:70846)
+    at tf (https://b4a52fa0-2b32-4197-a7c3-e099497ba2e7-00-17sm3owh28rv8.picard.replit.dev/assets/index-Dh3rxc2A.js:49:81178)
+    at Nf (https://b4a52fa0-2b32-4197-a7c3-e099497ba2e7-00-17sm3owh28rv8.picard.replit.dev/assets/index-Dh3rxc2A.js:49:116929)
+    at Wy (https://b4a52fa0-2b32-4197-a7c3-e099497ba2e7-00-17sm3owh28rv8.picard.replit.dev/assets/index-Dh3rxc2A.js:49:115975)
+    at lu (https://b4a52fa0-2b32-4197-a7c3-e099497ba2e7-00-17sm3owh28rv8.picard.replit.dev/assets/index-Dh3rxc2A.js:49:115807)
+    at jf (https://b4a52fa0-2b32-4197-a7c3-e099497ba2e7-00-17sm3owh28rv8.picard.replit.dev/assets/index-Dh3rxc2A.js:49:112605)
+    at Qf (https://b4a52fa0-2b32-4197-a7c3-e099497ba2e7-00-17sm3owh28rv8.picard.replit.dev/assets/index-Dh3rxc2A.js:49:124397)
+    at MessagePort.He (https://b4a52fa0-2b32-4197-a7c3-e099497ba2e7-00-17sm3owh28rv8.picard.replit.dev/assets/index-Dh3rxc2A.js:26:1624)
+(anonymous) @ injected.js:37
+componentDidCatch @ index-Dh3rxc2A.js:100
+Gd.m.componentDidCatch.e.callback @ index-Dh3rxc2A.js:49
+Yh @ index-Dh3rxc2A.js:49
+Ph @ index-Dh3rxc2A.js:49
+sf @ index-Dh3rxc2A.js:49
+hf @ index-Dh3rxc2A.js:49
+_n @ index-Dh3rxc2A.js:49
+hf @ index-Dh3rxc2A.js:49
+_n @ index-Dh3rxc2A.js:49
+hf @ index-Dh3rxc2A.js:49
+_n @ index-Dh3rxc2A.js:49
+hf @ index-Dh3rxc2A.js:49
+_n @ index-Dh3rxc2A.js:49
+hf @ index-Dh3rxc2A.js:49
+_n @ index-Dh3rxc2A.js:49
+hf @ index-Dh3rxc2A.js:49
+_n @ index-Dh3rxc2A.js:49
+hf @ index-Dh3rxc2A.js:49
+_n @ index-Dh3rxc2A.js:49
+hf @ index-Dh3rxc2A.js:49
+_n @ index-Dh3rxc2A.js:49
+hf @ index-Dh3rxc2A.js:49
+_n @ index-Dh3rxc2A.js:49
+hf @ index-Dh3rxc2A.js:49
+_n @ index-Dh3rxc2A.js:49
+hf @ index-Dh3rxc2A.js:49
+_n @ index-Dh3rxc2A.js:49
+hf @ index-Dh3rxc2A.js:49
+_n @ index-Dh3rxc2A.js:49
+hf @ index-Dh3rxc2A.js:49
+_n @ index-Dh3rxc2A.js:49
+hf @ index-Dh3rxc2A.js:49
+_n @ index-Dh3rxc2A.js:49
+hf @ index-Dh3rxc2A.js:49
+_n @ index-Dh3rxc2A.js:49
+hf @ index-Dh3rxc2A.js:49
+_n @ index-Dh3rxc2A.js:49
+hf @ index-Dh3rxc2A.js:49
+_n @ index-Dh3rxc2A.js:49
+hf @ index-Dh3rxc2A.js:49
+_n @ index-Dh3rxc2A.js:49
+hf @ index-Dh3rxc2A.js:49
+_n @ index-Dh3rxc2A.js:49
+hf @ index-Dh3rxc2A.js:49
+_n @ index-Dh3rxc2A.js:49
+hf @ index-Dh3rxc2A.js:49
+_n @ index-Dh3rxc2A.js:49
+hf @ index-Dh3rxc2A.js:49
+_n @ index-Dh3rxc2A.js:49
+hf @ index-Dh3rxc2A.js:49
+Bf @ index-Dh3rxc2A.js:49
+Mf @ index-Dh3rxc2A.js:49
+Af @ index-Dh3rxc2A.js:49
+jf @ index-Dh3rxc2A.js:49
+Qf @ index-Dh3rxc2A.js:49
+He @ index-Dh3rxc2A.js:26Understand this error
+injected.js:37 Component stack: 
+    at fs (https://b4a52fa0-2b32-4197-a7c3-e099497ba2e7-00-17sm3owh28rv8.picard.replit.dev/assets/ChargeTaxIntel-CIQICljQ.js:1:6127)
+    at Suspense (<anonymous>)
+    at ja (https://b4a52fa0-2b32-4197-a7c3-e099497ba2e7-00-17sm3owh28rv8.picard.replit.dev/assets/index-Dh3rxc2A.js:100:85952)
+    at Tn (https://b4a52fa0-2b32-4197-a7c3-e099497ba2e7-00-17sm3owh28rv8.picard.replit.dev/assets/index-Dh3rxc2A.js:58:3283)
+    at tv (https://b4a52fa0-2b32-4197-a7c3-e099497ba2e7-00-17sm3owh28rv8.picard.replit.dev/assets/index-Dh3rxc2A.js:58:4081)
+    at div (<anonymous>)
+    at div (<anonymous>)
+    at div (<anonymous>)
+    at Np (https://b4a52fa0-2b32-4197-a7c3-e099497ba2e7-00-17sm3owh28rv8.picard.replit.dev/assets/index-Dh3rxc2A.js:100:90941)
+    at Tn (https://b4a52fa0-2b32-4197-a7c3-e099497ba2e7-00-17sm3owh28rv8.picard.replit.dev/assets/index-Dh3rxc2A.js:58:3283)
+    at tv (https://b4a52fa0-2b32-4197-a7c3-e099497ba2e7-00-17sm3owh28rv8.picard.replit.dev/assets/index-Dh3rxc2A.js:58:4081)
+    at bx (https://b4a52fa0-2b32-4197-a7c3-e099497ba2e7-00-17sm3owh28rv8.picard.replit.dev/assets/index-Dh3rxc2A.js:100:104019)
+    at ja (https://b4a52fa0-2b32-4197-a7c3-e099497ba2e7-00-17sm3owh28rv8.picard.replit.dev/assets/index-Dh3rxc2A.js:100:85952)
+    at Z2 (https://b4a52fa0-2b32-4197-a7c3-e099497ba2e7-00-17sm3owh28rv8.picard.replit.dev/assets/index-Dh3rxc2A.js:100:68804)
+    at d_ (https://b4a52fa0-2b32-4197-a7c3-e099497ba2e7-00-17sm3owh28rv8.picard.replit.dev/assets/index-Dh3rxc2A.js:58:4458)
+    at R0 (https://b4a52fa0-2b32-4197-a7c3-e099497ba2e7-00-17sm3owh28rv8.picard.replit.dev/assets/index-Dh3rxc2A.js:50:68432)
+    at yx (<anonymous>)

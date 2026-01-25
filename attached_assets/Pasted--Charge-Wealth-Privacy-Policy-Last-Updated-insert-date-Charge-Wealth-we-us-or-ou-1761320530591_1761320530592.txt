@@ -1,0 +1,87 @@
+⚡ Charge Wealth — Privacy Policy
+
+Last Updated: {{ insert date }}
+
+Charge Wealth (“we,” “us,” or “our”) values your privacy. This Privacy Policy explains how we collect, use, and protect your information when you visit chargewealth.co (the “Site”) or interact with our services, tools, or communications.
+
+1. Information We Collect
+
+We may collect:
+	•	Personal Information such as your name, email address, and any details you voluntarily submit through forms or surveys.
+	•	Usage Information such as IP address, browser type, device data, referral URLs, and activity on our Site.
+	•	Cookies and Pixels for analytics, ad performance, and conversion tracking.
+
+2. How We Use Your Information
+
+We use your information to:
+	•	Provide and improve our Site, content, and tools.
+	•	Send you educational emails, newsletters, and product updates.
+	•	Analyze engagement and optimize our services.
+	•	Comply with legal and regulatory requirements.
+
+We do not sell or rent your personal data.
+
+3. Email Communications
+
+By submitting your email, you consent to receive educational or marketing communications from Charge Wealth. You may unsubscribe anytime via the link in each email.
+
+4. Data Security
+
+We use encryption, access controls, and secure hosting to protect your data. However, no system is 100% secure; use of the Site is at your own risk.
+
+5. Third-Party Services
+
+We may use third-party providers (e.g., ConvertKit, Formspree, Make.com, Google Analytics, Meta Pixel) to process data, send communications, or measure engagement. These providers handle data according to their own privacy policies.
+
+6. Educational Nature of Content
+
+Charge Wealth provides educational financial tools and general information only. Nothing on this Site constitutes investment, tax, or legal advice. Always consult a qualified professional for personalized guidance.
+
+7. Your Rights
+
+You may request access, correction, or deletion of your personal data by contacting privacy@chargewealth.co.
+
+8. Updates
+
+We may update this Privacy Policy periodically. Updates will be posted on this page with a new “Last Updated” date.
+
+⸻
+
+⚡ Charge Wealth — Terms of Use
+
+Effective Date: {{ insert date }}
+
+Welcome to Charge Wealth. By accessing or using chargewealth.co, you agree to these Terms of Use. Please read them carefully.
+
+1. Use of the Site
+
+The Site and all content are provided for educational and informational purposes only. You agree not to rely on this information for financial, investment, or tax decisions.
+
+2. No Professional Advice
+
+Charge Wealth is not an investment adviser, broker-dealer, or fiduciary.
+All content, dashboards, tools, and communications are for general education and self-directed planning support.
+
+3. User Accounts
+
+If you create an account, you are responsible for maintaining confidentiality of your credentials and for all activities that occur under your account.
+
+4. Intellectual Property
+
+All content, graphics, and software on this Site are owned by Charge Wealth or its licensors. You may not copy, reproduce, or distribute without written permission.
+
+5. Limitation of Liability
+
+Charge Wealth and its affiliates are not liable for any direct, indirect, incidental, or consequential damages arising from your use of the Site or reliance on any content or tools provided.
+
+6. Links to Third Parties
+
+The Site may include links to external websites. We do not endorse or control these third-party sites and are not responsible for their content or policies.
+
+7. Modifications
+
+We may update or modify these Terms at any time. Your continued use of the Site constitutes acceptance of the revised Terms.
+
+8. Contact
+
+Questions regarding these Terms may be sent to legal@chargewealth.co.

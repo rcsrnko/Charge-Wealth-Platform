@@ -1,0 +1,154 @@
+injected.js:37 TypeError: Cannot read properties of null (reading 'toFixed')
+    at S (ChargeTaxIntel-BS8Ph8E3.js:1:10118)
+    at fs (ChargeTaxIntel-BS8Ph8E3.js:1:19262)
+    at _o (index-BMmI9XHU.js:49:48041)
+    at qo (index-BMmI9XHU.js:49:70846)
+    at tf (index-BMmI9XHU.js:49:81178)
+    at Nf (index-BMmI9XHU.js:49:116929)
+    at Wy (index-BMmI9XHU.js:49:115975)
+    at lu (index-BMmI9XHU.js:49:115807)
+    at jf (index-BMmI9XHU.js:49:112605)
+    at Qf (index-BMmI9XHU.js:49:124397)
+(anonymous) @ injected.js:37
+Ld @ index-BMmI9XHU.js:49
+Hd @ index-BMmI9XHU.js:49
+Gd.m.componentDidCatch.e.callback @ index-BMmI9XHU.js:49
+Yh @ index-BMmI9XHU.js:49
+Ph @ index-BMmI9XHU.js:49
+sf @ index-BMmI9XHU.js:49
+hf @ index-BMmI9XHU.js:49
+_n @ index-BMmI9XHU.js:49
+hf @ index-BMmI9XHU.js:49
+_n @ index-BMmI9XHU.js:49
+hf @ index-BMmI9XHU.js:49
+_n @ index-BMmI9XHU.js:49
+hf @ index-BMmI9XHU.js:49
+_n @ index-BMmI9XHU.js:49
+hf @ index-BMmI9XHU.js:49
+_n @ index-BMmI9XHU.js:49
+hf @ index-BMmI9XHU.js:49
+_n @ index-BMmI9XHU.js:49
+hf @ index-BMmI9XHU.js:49
+_n @ index-BMmI9XHU.js:49
+hf @ index-BMmI9XHU.js:49
+_n @ index-BMmI9XHU.js:49
+hf @ index-BMmI9XHU.js:49
+_n @ index-BMmI9XHU.js:49
+hf @ index-BMmI9XHU.js:49
+_n @ index-BMmI9XHU.js:49
+hf @ index-BMmI9XHU.js:49
+_n @ index-BMmI9XHU.js:49
+hf @ index-BMmI9XHU.js:49
+_n @ index-BMmI9XHU.js:49
+hf @ index-BMmI9XHU.js:49
+_n @ index-BMmI9XHU.js:49
+hf @ index-BMmI9XHU.js:49
+_n @ index-BMmI9XHU.js:49
+hf @ index-BMmI9XHU.js:49
+_n @ index-BMmI9XHU.js:49
+hf @ index-BMmI9XHU.js:49
+_n @ index-BMmI9XHU.js:49
+hf @ index-BMmI9XHU.js:49
+_n @ index-BMmI9XHU.js:49
+hf @ index-BMmI9XHU.js:49
+_n @ index-BMmI9XHU.js:49
+hf @ index-BMmI9XHU.js:49
+_n @ index-BMmI9XHU.js:49
+hf @ index-BMmI9XHU.js:49
+_n @ index-BMmI9XHU.js:49
+hf @ index-BMmI9XHU.js:49
+_n @ index-BMmI9XHU.js:49
+hf @ index-BMmI9XHU.js:49
+_n @ index-BMmI9XHU.js:49
+hf @ index-BMmI9XHU.js:49
+Bf @ index-BMmI9XHU.js:49
+Mf @ index-BMmI9XHU.js:49
+Af @ index-BMmI9XHU.js:49
+jf @ index-BMmI9XHU.js:49
+Qf @ index-BMmI9XHU.js:49
+He @ index-BMmI9XHU.js:26Understand this error
+injected.js:37 Error caught by boundary: Cannot read properties of null (reading 'toFixed') TypeError: Cannot read properties of null (reading 'toFixed')
+    at S (https://b4a52fa0-2b32-4197-a7c3-e099497ba2e7-00-17sm3owh28rv8.picard.replit.dev/assets/ChargeTaxIntel-BS8Ph8E3.js:1:10118)
+    at fs (https://b4a52fa0-2b32-4197-a7c3-e099497ba2e7-00-17sm3owh28rv8.picard.replit.dev/assets/ChargeTaxIntel-BS8Ph8E3.js:1:19262)
+    at _o (https://b4a52fa0-2b32-4197-a7c3-e099497ba2e7-00-17sm3owh28rv8.picard.replit.dev/assets/index-BMmI9XHU.js:49:48041)
+    at qo (https://b4a52fa0-2b32-4197-a7c3-e099497ba2e7-00-17sm3owh28rv8.picard.replit.dev/assets/index-BMmI9XHU.js:49:70846)
+    at tf (https://b4a52fa0-2b32-4197-a7c3-e099497ba2e7-00-17sm3owh28rv8.picard.replit.dev/assets/index-BMmI9XHU.js:49:81178)
+    at Nf (https://b4a52fa0-2b32-4197-a7c3-e099497ba2e7-00-17sm3owh28rv8.picard.replit.dev/assets/index-BMmI9XHU.js:49:116929)
+    at Wy (https://b4a52fa0-2b32-4197-a7c3-e099497ba2e7-00-17sm3owh28rv8.picard.replit.dev/assets/index-BMmI9XHU.js:49:115975)
+    at lu (https://b4a52fa0-2b32-4197-a7c3-e099497ba2e7-00-17sm3owh28rv8.picard.replit.dev/assets/index-BMmI9XHU.js:49:115807)
+    at jf (https://b4a52fa0-2b32-4197-a7c3-e099497ba2e7-00-17sm3owh28rv8.picard.replit.dev/assets/index-BMmI9XHU.js:49:112605)
+    at Qf (https://b4a52fa0-2b32-4197-a7c3-e099497ba2e7-00-17sm3owh28rv8.picard.replit.dev/assets/index-BMmI9XHU.js:49:124397)
+(anonymous) @ injected.js:37
+componentDidCatch @ index-BMmI9XHU.js:100
+Gd.m.componentDidCatch.e.callback @ index-BMmI9XHU.js:49
+Yh @ index-BMmI9XHU.js:49
+Ph @ index-BMmI9XHU.js:49
+sf @ index-BMmI9XHU.js:49
+hf @ index-BMmI9XHU.js:49
+_n @ index-BMmI9XHU.js:49
+hf @ index-BMmI9XHU.js:49
+_n @ index-BMmI9XHU.js:49
+hf @ index-BMmI9XHU.js:49
+_n @ index-BMmI9XHU.js:49
+hf @ index-BMmI9XHU.js:49
+_n @ index-BMmI9XHU.js:49
+hf @ index-BMmI9XHU.js:49
+_n @ index-BMmI9XHU.js:49
+hf @ index-BMmI9XHU.js:49
+_n @ index-BMmI9XHU.js:49
+hf @ index-BMmI9XHU.js:49
+_n @ index-BMmI9XHU.js:49
+hf @ index-BMmI9XHU.js:49
+_n @ index-BMmI9XHU.js:49
+hf @ index-BMmI9XHU.js:49
+_n @ index-BMmI9XHU.js:49
+hf @ index-BMmI9XHU.js:49
+_n @ index-BMmI9XHU.js:49
+hf @ index-BMmI9XHU.js:49
+_n @ index-BMmI9XHU.js:49
+hf @ index-BMmI9XHU.js:49
+_n @ index-BMmI9XHU.js:49
+hf @ index-BMmI9XHU.js:49
+_n @ index-BMmI9XHU.js:49
+hf @ index-BMmI9XHU.js:49
+_n @ index-BMmI9XHU.js:49
+hf @ index-BMmI9XHU.js:49
+_n @ index-BMmI9XHU.js:49
+hf @ index-BMmI9XHU.js:49
+_n @ index-BMmI9XHU.js:49
+hf @ index-BMmI9XHU.js:49
+_n @ index-BMmI9XHU.js:49
+hf @ index-BMmI9XHU.js:49
+_n @ index-BMmI9XHU.js:49
+hf @ index-BMmI9XHU.js:49
+_n @ index-BMmI9XHU.js:49
+hf @ index-BMmI9XHU.js:49
+_n @ index-BMmI9XHU.js:49
+hf @ index-BMmI9XHU.js:49
+_n @ index-BMmI9XHU.js:49
+hf @ index-BMmI9XHU.js:49
+_n @ index-BMmI9XHU.js:49
+hf @ index-BMmI9XHU.js:49
+Bf @ index-BMmI9XHU.js:49
+Mf @ index-BMmI9XHU.js:49
+Af @ index-BMmI9XHU.js:49
+jf @ index-BMmI9XHU.js:49
+Qf @ index-BMmI9XHU.js:49
+He @ index-BMmI9XHU.js:26Understand this error
+injected.js:37 Component stack: 
+    at fs (https://b4a52fa0-2b32-4197-a7c3-e099497ba2e7-00-17sm3owh28rv8.picard.replit.dev/assets/ChargeTaxIntel-BS8Ph8E3.js:1:6127)
+    at Suspense (<anonymous>)
+    at ja (https://b4a52fa0-2b32-4197-a7c3-e099497ba2e7-00-17sm3owh28rv8.picard.replit.dev/assets/index-BMmI9XHU.js:100:85952)
+    at Tn (https://b4a52fa0-2b32-4197-a7c3-e099497ba2e7-00-17sm3owh28rv8.picard.replit.dev/assets/index-BMmI9XHU.js:58:3283)
+    at tv (https://b4a52fa0-2b32-4197-a7c3-e099497ba2e7-00-17sm3owh28rv8.picard.replit.dev/assets/index-BMmI9XHU.js:58:4081)
+    at div (<anonymous>)
+    at div (<anonymous>)
+    at div (<anonymous>)
+    at Np (https://b4a52fa0-2b32-4197-a7c3-e099497ba2e7-00-17sm3owh28rv8.picard.replit.dev/assets/index-BMmI9XHU.js:100:90941)
+    at Tn (https://b4a52fa0-2b32-4197-a7c3-e099497ba2e7-00-17sm3owh28rv8.picard.replit.dev/assets/index-BMmI9XHU.js:58:3283)
+    at tv (https://b4a52fa0-2b32-4197-a7c3-e099497ba2e7-00-17sm3owh28rv8.picard.replit.dev/assets/index-BMmI9XHU.js:58:4081)
+    at bx (https://b4a52fa0-2b32-4197-a7c3-e099497ba2e7-00-17sm3owh28rv8.picard.replit.dev/assets/index-BMmI9XHU.js:100:104019)
+    at ja (https://b4a52fa0-2b32-4197-a7c3-e099497ba2e7-00-17sm3owh28rv8.picard.replit.dev/assets/index-BMmI9XHU.js:100:85952)
+    at Z2 (https://b4a52fa0-2b32-4197-a7c3-e099497ba2e7-00-17sm3owh28rv8.picard.replit.dev/assets/index-BMmI9XHU.js:100:68804)
+    at d_ (https://b4a52fa0-2b32-4197-a7c3-e099497ba2e7-00-17sm3owh28rv8.picard.replit.dev/assets/index-BMmI9XHU.js:58:4458)
+    at R0 (https://b4a52fa0-2b32-4197-a7c3-e099497ba2e7-00-17sm3owh28rv8.picard.replit.dev/assets/index-BMmI9XHU.js:50:68432)

@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Coming Soon • Charge Wealth</title>
+    <style>
+        :root {
+            --midnight-blue: #1C1F33;
+            --gold-sand: #D7B98C;
+            --ocean-teal: #58A4B0;
+            --snow-white: #FAFAFA;
+            --porcelain: #F4F5F7;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, var(--midnight-blue) 0%, #252945 100%);
+            color: var(--snow-white);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+        }
+        
+        .container {
+            max-width: 600px;
+            text-align: center;
+        }
+        
+        .lock-icon {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 2rem;
+            opacity: 0.6;
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            color: var(--gold-sand);
+            margin-bottom: 1rem;
+            font-weight: 700;
+        }
+        
+        p {
+            font-size: 1.25rem;
+            line-height: 1.8;
+            color: rgba(250, 250, 250, 0.9);
+            margin-bottom: 1.5rem;
+        }
+        
+        .highlight {
+            color: var(--ocean-teal);
+            font-weight: 600;
+        }
+        
+        .cta-button {
+            display: inline-block;
+            background: var(--gold-sand);
+            color: var(--midnight-blue);
+            padding: 1rem 2.5rem;
+            font-size: 1.125rem;
+            font-weight: 600;
+            border-radius: 6px;
+            text-decoration: none;
+            margin-top: 1rem;
+            transition: all 0.3s;
+            border: 2px solid var(--gold-sand);
+        }
+        
+        .cta-button:hover {
+            background: transparent;
+            color: var(--gold-sand);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(215, 185, 140, 0.5);
+        }
+        
+        .back-link {
+            display: block;
+            margin-top: 2rem;
+            color: rgba(250, 250, 250, 0.7);
+            text-decoration: underline;
+            font-size: 1rem;
+        }
+        
+        .back-link:hover {
+            color: var(--ocean-teal);
+        }
+        
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2rem;
+            }
+            
+            p {
+                font-size: 1.125rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <svg class="lock-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75">
+            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+            <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+        </svg>
+        
+        <h1>Member Portal Coming Soon</h1>
+        
+        <p>
+            We're building something special for our <span class="highlight">Founding 200 members</span>.
+        </p>
+        
+        <p>
+            Your Command Dashboard will launch once we reach our founding member goal. Join the waitlist now to secure your exclusive spot and lifetime benefits.
+        </p>
+        
+        <a href="/#signup" class="cta-button">Join the Founding Waitlist</a>
+        
+        <a href="/" class="back-link">← Back to Home</a>
+    </div>
+</body>
+</html>

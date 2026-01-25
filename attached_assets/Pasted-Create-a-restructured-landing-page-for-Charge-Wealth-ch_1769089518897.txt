@@ -1,0 +1,118 @@
+Create a restructured landing page for Charge Wealth (chargewealth.co) with two versions: one for the Founding Members phase and one for post-250 regular pricing.
+
+CURRENT ISSUES TO FIX:
+- Page is too long (~8,000 words, needs to be ~2,500)
+- Navigation doesn't match actual page sections
+- Redundant content (two "three engines" sections, scattered CTAs)
+- Tax calculator buried mid-page (should be higher)
+- Founding Members section is 1,500+ words (needs to be ~300)
+
+NAVIGATION (sticky):
+Version 1 (Founding Members active): Home | Tax Calculator | How It Works | Founding Members | Take Charge | FAQ
+Version 2 (Post-250): Home | Tax Calculator | How It Works | Pricing | Take Charge | FAQ
+
+NOTE: "Take Charge" is a Beehiiv newsletter (https://takecharge.chargewealth.co) - keep this link in nav as an alternative engagement channel
+
+PAGE STRUCTURE (both versions):
+
+1. HERO
+- Keep current: "Your AI CFO finds savings while you sleep"
+- REMOVE the fake social proof (2,847 members, $9.2M saved)
+- Single CTA button
+- Keep the 4 trust badges (encryption, no products, built by CFPs, first alert 48hrs)
+
+2. TAX CALCULATOR (move up from current position)
+- Keep the interactive calculator exactly as is
+- Place immediately after hero or after "How It Works"
+- CTA after calculation changes per version
+
+3. HOW IT WORKS (keep current 4-step section)
+- "Connect accounts → AI analyzes daily → Get alerts → Execute"
+- Keep current copy, this is good
+
+4. COMPARISON TABLE (keep current)
+- "Why High Earners Choose Charge Over Traditional Advisors"
+- This section is strong, keep as is
+
+5. THREE ENGINES (CONDENSE from two sections to one)
+- Keep ONLY the overview section "Three Decision Engines. Zero Conflicts"
+- Remove the detailed interactive examples at the bottom (fake AI chat demos)
+- Each engine: icon/heading + 2-3 sentences max
+- AI Advisor | Tax Advisor | Portfolio Engine
+
+6. FOUNDING MEMBERS or PRICING (version-specific)
+
+VERSION 1 - FOUNDING MEMBERS SECTION (~300 words total):
+- Header: "Become a Founding Member"
+- Subhead: "Join the first 250 members building the future"
+- Counter: "187/250 spots claimed"
+- Price: ~~$499~~ $279 Lifetime Access
+- What's included (bullet list):
+  * AI CFO monitoring 24/7
+  * Unlimited AI Advisor questions
+  * Full Tax Optimizer
+  * Portfolio Engine
+  * All future features
+  * Priority support
+- Founding perks (condensed to bullets only):
+  * 🎯 Direct founder access via Telegram
+  * 🚀 Vote on product roadmap
+  * 💎 Founding member badge
+  * 🔓 Lifetime feature unlocks
+- Why only 250: "We're limiting to 250 so we can personally respond to feedback and ensure white-glove treatment. Once we hit 250, price increases to $499 and founder perks close forever."
+- Single CTA: "Join as Founding Member — $279"
+- 30-day money back guarantee
+
+REMOVE from Founding Members:
+- All testimonials
+- "What we expect from founding members" section
+- "Built for you if / Not for you if" section  
+- Detailed perks explanations
+- "Founding Members Are Already Saving" section
+
+VERSION 2 - PRICING SECTION (replaces Founding Members after 250):
+Use the current pricing table:
+- Monthly: $49/mo
+- 3 Months: $99 ($33/mo, save 33%)
+- 6 Months: $200 ($33/mo, best value)
+- Lifetime: $499 (one payment, forever access)
+- Feature list (bullets):
+  * Unlimited AI Advisor questions
+  * Proactive insights delivered without asking
+  * Full Tax Advisor with 10+ strategies
+  * Portfolio Engine with specific recommendations
+  * All future updates included
+- Note above pricing: "Founding member pricing ($279) ended at member #250"
+- CTA on each plan card
+- 30-day money back guarantee
+
+7. FAQ (keep current section exactly as is)
+
+8. FOOTER (keep current)
+- Keep "Take Charge" newsletter link in footer as well
+- Keep all blog links
+
+SECTIONS TO COMPLETELY REMOVE:
+- The second "three engines" section at bottom with interactive fake chat examples
+- All founding member testimonials
+- "What we expect from founding members"
+- "Built for you if / Not for you if"
+- Any redundant CTAs not in main sections
+- Social proof numbers from hero (2,847 members saving $9.2M)
+
+TECHNICAL REQUIREMENTS:
+- Smooth scroll to anchor links in navigation (except "Take Charge" which is external link)
+- Sticky navigation bar
+- Keep all current styling/design
+- Maintain mobile responsiveness
+- Add a simple toggle/feature flag to switch between Version 1 and Version 2
+- Keep current form handling, analytics, tracking pixels
+- Ensure "Take Charge" link opens in new tab (target="_blank")
+
+MAINTAIN:
+- All current animations and transitions
+- Color scheme and branding
+- Form functionality
+- Analytics/tracking setup
+- All blog links in footer
+- Take Charge newsletter integration (https://takecharge.chargewealth.co)

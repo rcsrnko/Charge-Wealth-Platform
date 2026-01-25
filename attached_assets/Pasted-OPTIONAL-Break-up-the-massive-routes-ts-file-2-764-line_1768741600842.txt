@@ -1,0 +1,99 @@
+OPTIONAL: Break up the massive routes.ts file (2,764 lines) into modular route files for better organization and maintainability.
+
+This is NOT required for fixing the onboarding duplication but will make the codebase much easier to maintain long-term.
+
+CREATE new directory: server/routes/
+
+CREATE these new files:
+
+FILE: server/routes/auth.ts
+```tsx
+import type { Express } from "express";
+
+export function registerAuthRoutes(app: Express) {
+  // Move all auth-related endpoints here:
+  // - /api/test-login
+  // - /api/logout
+  // - /api/auth/callback
+  // - /api/user
+}
+```
+
+FILE: server/routes/financial.ts
+```tsx
+import type { Express } from "express";
+import { storage } from "../storage";
+
+export function registerFinancialRoutes(app: Express) {
+  // Move all financial profile endpoints:
+  // - /api/financial-profile
+  // - /api/portfolio
+  // - /api/allocation/*
+}
+```
+
+FILE: server/routes/chargeai.ts
+```tsx
+import type { Express } from "express";
+
+export function registerChargeAIRoutes(app: Express) {
+  // Move all AI advisor endpoints:
+  // - /api/charge-ai/chat
+  // - /api/charge-ai/context
+  // - /api/charge-ai/proactive-analysis
+}
+```
+
+FILE: server/routes/taxintel.ts
+```tsx
+import type { Express } from "express";
+
+export function registerTaxIntelRoutes(app: Express) {
+  // Move all tax-related endpoints:
+  // - /api/tax-intel/*
+  // - /api/tax-optimization
+}
+```
+
+FILE: server/routes/documents.ts
+```tsx
+import type { Express } from "express";
+import multer from "multer";
+
+export function registerDocumentRoutes(app: Express, upload: multer.Multer) {
+  // Move all document endpoints:
+  // - /api/documents/upload
+  // - /api/documents/parse
+  // - /api/documents/search
+}
+```
+
+Then MODIFY server/routes.ts:
+```tsx
+import { registerAuthRoutes } from './routes/auth';
+import { registerFinancialRoutes } from './routes/financial';
+import { registerChargeAIRoutes } from './routes/chargeai';
+import { registerTaxIntelRoutes } from './routes/taxintel';
+import { registerDocumentRoutes } from './routes/documents';
+
+export async function registerRoutes(app: Express): Promise<Server> {
+  await setupAuth(app);
+  
+  // Configure multer
+  const upload = multer({ ... });
+  
+  // Register all route modules
+  registerAuthRoutes(app);
+  registerFinancialRoutes(app);
+  registerChargeAIRoutes(app);
+  registerTaxIntelRoutes(app);
+  registerDocumentRoutes(app, upload);
+  
+  // Public routes (waitlist, etc.)
+  app.post('/api/waitlist', async (req, res) => { ... });
+  
+  return httpServer;
+}
+```
+
+This reduces routes.ts from 2,764 lines to ~200 lines and makes it much easier to find and maintain specific endpoints.

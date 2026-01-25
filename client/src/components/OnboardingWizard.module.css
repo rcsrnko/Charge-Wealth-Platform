@@ -1,0 +1,601 @@
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 17, 23, 0.95);
+  backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  padding: 1rem;
+}
+
+.wizard {
+  background: linear-gradient(135deg, #1A1D28 0%, #0F1117 100%);
+  border: 1px solid rgba(201, 169, 98, 0.2);
+  border-radius: 16px;
+  max-width: 560px;
+  width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
+  position: relative;
+}
+
+.progressBar {
+  height: 4px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 4px 4px 0 0;
+  overflow: hidden;
+}
+
+.progressFill {
+  height: 100%;
+  background: linear-gradient(90deg, #C9A962, #E0C170);
+  transition: width 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.progressText {
+  text-align: center;
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.5);
+  padding: 0.75rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.stepContent {
+  padding: 2rem;
+}
+
+.stepHeader {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.stepNumber {
+  width: 40px;
+  height: 40px;
+  background: rgba(201, 169, 98, 0.15);
+  border: 1px solid rgba(201, 169, 98, 0.3);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #C9A962;
+  font-weight: 600;
+  font-size: 1.125rem;
+  flex-shrink: 0;
+}
+
+.stepHeader h2 {
+  font-size: 1.375rem;
+  font-weight: 600;
+  color: #FAFAFA;
+  margin: 0;
+  line-height: 1.3;
+}
+
+.stepTime {
+  font-size: 0.8125rem;
+  color: rgba(255, 255, 255, 0.5);
+  margin-top: 0.25rem;
+}
+
+.inputGroup {
+  margin-bottom: 1.25rem;
+}
+
+.inputGroup label {
+  display: block;
+  font-size: 0.8125rem;
+  color: rgba(255, 255, 255, 0.6);
+  margin-bottom: 0.5rem;
+}
+
+.sliderValue {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #C9A962;
+  margin-bottom: 0.5rem;
+}
+
+.slider {
+  width: 100%;
+  height: 6px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 3px;
+  outline: none;
+  -webkit-appearance: none;
+  cursor: pointer;
+}
+
+.slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 20px;
+  height: 20px;
+  background: #C9A962;
+  border-radius: 50%;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(201, 169, 98, 0.4);
+}
+
+.slider::-moz-range-thumb {
+  width: 20px;
+  height: 20px;
+  background: #C9A962;
+  border-radius: 50%;
+  cursor: pointer;
+  border: none;
+}
+
+.select,
+.input {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  background: var(--input-bg);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  color: var(--text-primary);
+  font-size: 0.9375rem;
+  font-family: inherit;
+  outline: none;
+  transition: border-color 0.2s ease;
+}
+
+.select:focus,
+.input:focus {
+  border-color: #C9A962;
+}
+
+.select option {
+  background: #0F1117;
+  color: #FAFAFA;
+}
+
+.inputRow {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.primaryButton {
+  width: 100%;
+  background: linear-gradient(135deg, #C9A962 0%, #D4B87A 100%);
+  color: #0F1117;
+  font-size: 1rem;
+  font-weight: 600;
+  padding: 1rem 2rem;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  margin-top: 1rem;
+}
+
+.primaryButton:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 32px rgba(201, 169, 98, 0.3);
+}
+
+.primaryButton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.skipButton {
+  display: block;
+  width: 100%;
+  background: none;
+  border: none;
+  color: rgba(255, 255, 255, 0.4);
+  font-size: 0.8125rem;
+  padding: 1rem;
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.skipButton:hover {
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.resultCard {
+  background: rgba(201, 169, 98, 0.08);
+  border: 1px solid rgba(201, 169, 98, 0.2);
+  border-radius: 12px;
+  padding: 1.25rem;
+  margin-top: 1.5rem;
+  text-align: center;
+}
+
+.resultHighlight {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #C9A962;
+  margin-bottom: 0.5rem;
+}
+
+.resultCard p {
+  font-size: 0.9375rem;
+  color: rgba(255, 255, 255, 0.7);
+  line-height: 1.5;
+  margin: 0;
+}
+
+.savingsHighlight {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #2ECC71;
+  margin-bottom: 0.5rem;
+}
+
+.thesisHighlight {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #C9A962;
+  margin-bottom: 0.75rem;
+}
+
+.dropzone {
+  border: 2px dashed rgba(201, 169, 98, 0.3);
+  border-radius: 12px;
+  padding: 3rem 2rem;
+  text-align: center;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.dropzone:hover,
+.dragging {
+  border-color: #C9A962;
+  background: rgba(201, 169, 98, 0.05);
+}
+
+.dropzone svg {
+  color: rgba(255, 255, 255, 0.3);
+  margin-bottom: 1rem;
+}
+
+.dropzone p {
+  font-size: 1rem;
+  color: rgba(255, 255, 255, 0.7);
+  margin-bottom: 0.5rem;
+}
+
+.dropzone span {
+  font-size: 0.8125rem;
+  color: rgba(255, 255, 255, 0.4);
+  display: block;
+  margin-bottom: 0.5rem;
+}
+
+.fileButton {
+  display: inline-block;
+  background: rgba(201, 169, 98, 0.15);
+  border: 1px solid rgba(201, 169, 98, 0.3);
+  color: #C9A962;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.fileButton:hover {
+  background: rgba(201, 169, 98, 0.25);
+}
+
+.fileInfo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  color: #C9A962;
+}
+
+.fileInfo svg {
+  color: #C9A962;
+}
+
+.fileInfo p {
+  color: #C9A962;
+  font-weight: 500;
+}
+
+.processing {
+  text-align: center;
+  padding: 2rem;
+}
+
+.processing p {
+  font-size: 0.9375rem;
+  color: rgba(255, 255, 255, 0.6);
+  margin-top: 1rem;
+}
+
+.spinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid rgba(201, 169, 98, 0.2);
+  border-top-color: #C9A962;
+  border-radius: 50%;
+  margin: 0 auto;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.chatPreview {
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  padding: 1.5rem;
+}
+
+.userMessage,
+.aiMessage {
+  margin-bottom: 1rem;
+}
+
+.userMessage:last-child,
+.aiMessage:last-child {
+  margin-bottom: 0;
+}
+
+.messageLabel {
+  display: block;
+  font-size: 0.6875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+}
+
+.userMessage .messageLabel {
+  color: rgba(255, 255, 255, 0.4);
+}
+
+.aiMessage .messageLabel {
+  color: #C9A962;
+}
+
+.userMessage p {
+  background: rgba(255, 255, 255, 0.05);
+  padding: 0.875rem 1rem;
+  border-radius: 8px;
+  font-size: 0.9375rem;
+  color: rgba(255, 255, 255, 0.9);
+  line-height: 1.5;
+  margin: 0;
+}
+
+.aiMessage p {
+  background: rgba(201, 169, 98, 0.08);
+  border: 1px solid rgba(201, 169, 98, 0.15);
+  padding: 0.875rem 1rem;
+  border-radius: 8px;
+  font-size: 0.9375rem;
+  color: rgba(255, 255, 255, 0.85);
+  line-height: 1.6;
+  margin: 0;
+}
+
+.completedIcon {
+  width: 64px;
+  height: 64px;
+  background: rgba(46, 204, 113, 0.15);
+  border: 2px solid rgba(46, 204, 113, 0.3);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #2ECC71;
+  flex-shrink: 0;
+}
+
+.completionSummary {
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  padding: 1.25rem;
+  margin-bottom: 1.5rem;
+}
+
+.summaryItem {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.5rem 0;
+  font-size: 0.9375rem;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.checkIcon {
+  color: #2ECC71;
+  font-weight: bold;
+}
+
+.documentOptions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.optionsLabel {
+  font-size: 0.875rem;
+  color: rgba(255, 255, 255, 0.6);
+  margin-bottom: 0.5rem;
+}
+
+.documentOption {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem 1.25rem;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-align: left;
+  color: inherit;
+}
+
+.documentOption:hover {
+  background: rgba(201, 169, 98, 0.08);
+  border-color: rgba(201, 169, 98, 0.3);
+}
+
+.documentOption svg {
+  color: #C9A962;
+  flex-shrink: 0;
+}
+
+.documentOption div {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.documentOption strong {
+  font-size: 0.9375rem;
+  color: #FAFAFA;
+}
+
+.documentOption span {
+  font-size: 0.8125rem;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.backButton {
+  background: none;
+  border: none;
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 0.875rem;
+  cursor: pointer;
+  padding: 0;
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.backButton:hover {
+  color: #C9A962;
+}
+
+@media (max-width: 768px) {
+  .wizard {
+    max-height: 100vh;
+    border-radius: 0;
+  }
+  
+  .stepContent {
+    padding: 1.5rem;
+  }
+  
+  .inputRow {
+    grid-template-columns: 1fr;
+  }
+  
+  .stepHeader h2 {
+    font-size: 1.25rem;
+  }
+  
+  .select,
+  .input {
+    min-height: 48px;
+    padding: 0.875rem 1rem;
+    font-size: 1rem;
+  }
+  
+  .slider::-webkit-slider-thumb {
+    width: 28px;
+    height: 28px;
+  }
+  
+  .slider::-moz-range-thumb {
+    width: 28px;
+    height: 28px;
+  }
+  
+  .primaryButton {
+    min-height: 52px;
+    font-size: 1.0625rem;
+    padding: 1rem 1.5rem;
+  }
+  
+  .skipButton {
+    min-height: 48px;
+    font-size: 0.9375rem;
+  }
+  
+  .documentOption {
+    min-height: 56px;
+    padding: 1rem 1.25rem;
+  }
+  
+  .fileButton {
+    min-height: 48px;
+    padding: 0.75rem 1.5rem;
+    font-size: 1rem;
+  }
+  
+  .dropzone {
+    padding: 2rem 1.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .overlay {
+    padding: 0;
+  }
+  
+  .stepContent {
+    padding: 1.25rem;
+  }
+  
+  .stepHeader {
+    flex-direction: column;
+    text-align: center;
+    gap: 0.75rem;
+  }
+  
+  .stepNumber {
+    width: 48px;
+    height: 48px;
+    font-size: 1.25rem;
+  }
+  
+  .stepHeader h2 {
+    font-size: 1.125rem;
+  }
+  
+  .sliderValue {
+    font-size: 1.5rem;
+  }
+  
+  .resultHighlight,
+  .savingsHighlight {
+    font-size: 1.25rem;
+  }
+  
+  .summaryItem {
+    font-size: 1rem;
+    padding: 0.625rem 0;
+  }
+  
+  .completedIcon {
+    width: 56px;
+    height: 56px;
+  }
+  
+  .completedIcon svg {
+    width: 36px;
+    height: 36px;
+  }
+}

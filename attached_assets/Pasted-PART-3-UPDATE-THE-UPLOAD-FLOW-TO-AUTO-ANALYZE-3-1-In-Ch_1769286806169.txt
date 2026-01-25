@@ -1,0 +1,68 @@
+PART 3: UPDATE THE UPLOAD FLOW TO AUTO-ANALYZE
+3.1 In ChargeTaxIntel.tsx, update uploadAndAnalyze to properly chain the analysis
+typescriptconst uploadAndAnalyze = async () => {
+  if (!file) return;
+
+  setIsUploading(true);
+  try {
+    const formData = new FormData();
+    formData.append('document', file);
+    formData.append('documentType', selectedDocType);
+    formData.append('documentYear', String(new Date().getFullYear() - 1));
+
+    console.log('Uploading file:', file.name, file.size, file.type);
+
+    // Step 1: Upload and extract data
+    const uploadResponse = await fetch('/api/tax-intel/upload', {
+      method: 'POST',
+      credentials: 'include',
+      body: formData,
+    });
+
+    if (!uploadResponse.ok) {
+      const errorData = await uploadResponse.json();
+      throw new Error(errorData.message || 'Upload failed');
+    }
+
+    const uploadResult = await uploadResponse.json();
+    showSuccess(`${file.name} uploaded! Extracted ${Object.keys(uploadResult.extractedData?.extractedLines || {}).length} data points. Now analyzing...`);
+    
+    await loadUploadedDocs();
+
+    // Step 2: Analyze with AI using the extracted data
+    const analyzeResponse = await fetch('/api/tax-intel/analyze', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      credentials: 'include',
+      body: JSON.stringify({ 
+        documentId: uploadResult.documentId,
+        documentType: selectedDocType 
+      }),
+    });
+
+    if (analyzeResponse.ok) {
+      const data = await analyzeResponse.json();
+      setTaxData(data.taxData);
+      
+      const savingsAmount = data.taxData?.totalPotentialSavings || 0;
+      if (savingsAmount > 0) {
+        showSuccess(`Analysis complete! Found ${formatCurrency(savingsAmount)} in potential tax savings.`);
+      } else {
+        showSuccess('Analysis complete! Your personalized tax strategies are ready.');
+      }
+    } else {
+      // Even if analysis fails, try to show extracted data
+      showError('AI analysis failed, but your data was extracted. Try refreshing.');
+      await loadTaxData();
+    }
+
+    setFile(null);
+    setSelectedDocType('1040');
+  } catch (err) {
+    console.error('Upload error:', err);
+    const errorMessage = err instanceof Error ? err.message : 'Failed to upload document';
+    showError(errorMessage);
+  } finally {
+    setIsUploading(false);
+  }
+};

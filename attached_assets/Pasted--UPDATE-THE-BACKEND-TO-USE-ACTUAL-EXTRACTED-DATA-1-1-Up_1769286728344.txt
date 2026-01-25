@@ -1,0 +1,453 @@
+ UPDATE THE BACKEND TO USE ACTUAL EXTRACTED DATA
+1.1 Update /api/tax-intel/upload to store extractedData properly and trigger analysis
+In server/routes/taxintel.ts, modify the upload endpoint to return more data and optionally trigger immediate analysis:
+typescriptapp.post('/api/tax-intel/upload', isAuthenticated, upload.single('document'), async (req: any, res) => {
+  try {
+    const userId = req.user.claims.sub;
+    const file = req.file;
+    
+    console.log('Upload request received:', {
+      userId,
+      hasFile: !!file,
+      fileName: file?.originalname,
+      fileSize: file?.size,
+      mimeType: file?.mimetype
+    });
+    
+    if (!file) {
+      return res.status(400).json({ 
+        message: "No file uploaded. Please select a file and try again.",
+        code: "NO_FILE"
+      });
+    }
+
+    if (file.size > 10 * 1024 * 1024) {
+      return res.status(400).json({
+        message: "File too large. Maximum size is 10MB.",
+        code: "FILE_TOO_LARGE"
+      });
+    }
+
+    const documentType = req.body.documentType || 'tax_return';
+    const documentYear = req.body.documentYear ? parseInt(req.body.documentYear) : new Date().getFullYear() - 1;
+
+    const docRecord = await storage.createFinancialDocument({
+      userId,
+      documentType,
+      documentYear,
+      fileName: file.originalname,
+      fileSize: file.size,
+      mimeType: file.mimetype,
+      extractionStatus: 'processing',
+    });
+
+    let extractedData: any = {};
+    let rawText = '';
+
+    try {
+      if (file.mimetype === 'application/pdf') {
+        rawText = await parsePdfDocument(file.buffer);
+        extractedData = extractTaxDataFromText(rawText);
+        
+        console.log('Extracted tax data:', {
+          taxYear: extractedData.taxYear,
+          totalIncome: extractedData.totalIncome,
+          agi: extractedData.agi,
+          taxableIncome: extractedData.taxableIncome,
+          filingStatus: extractedData.filingStatus,
+          extractedLinesCount: Object.keys(extractedData.extractedLines || {}).length
+        });
+      } else {
+        return res.status(400).json({ 
+          message: "Image OCR support coming soon. Please upload a PDF for now." 
+        });
+      }
+
+      // Store full extracted data including raw text for AI analysis
+      await storage.updateFinancialDocument(docRecord.id, {
+        extractedData: { 
+          ...extractedData, 
+          rawText: rawText.substring(0, 50000) // Store more text for AI context
+        },
+        extractionStatus: 'completed',
+      });
+
+      // Create or update tax return record with extracted values
+      if (extractedData.totalIncome || extractedData.agi) {
+        await storage.createTaxReturn({
+          userId,
+          documentId: docRecord.id,
+          taxYear: extractedData.taxYear || documentYear,
+          wagesIncome: extractedData.wagesIncome?.toString(),
+          interestIncome: extractedData.interestIncome?.toString(),
+          dividendIncome: extractedData.dividendIncome?.toString(),
+          qualifiedDividends: extractedData.qualifiedDividends?.toString(),
+          capitalGainsLongTerm: extractedData.capitalGainsLongTerm?.toString(),
+          businessIncome: extractedData.businessIncome?.toString(),
+          totalIncome: extractedData.totalIncome?.toString(),
+          adjustmentsToIncome: extractedData.adjustmentsToIncome?.toString(),
+          agi: extractedData.agi?.toString(),
+          standardDeduction: extractedData.standardDeduction?.toString(),
+          itemizedDeductions: extractedData.itemizedDeductions?.toString(),
+          deductionUsed: extractedData.deductionUsed,
+          taxableIncome: extractedData.taxableIncome?.toString(),
+          totalFederalTax: extractedData.totalFederalTax?.toString(),
+          stateTaxPaid: extractedData.stateTaxPaid?.toString(),
+          effectiveTaxRate: extractedData.effectiveTaxRate?.toString(),
+          marginalTaxBracket: extractedData.marginalTaxBracket?.toString(),
+          filingStatus: extractedData.filingStatus,
+        });
+      }
+
+      res.json({
+        success: true,
+        documentId: docRecord.id,
+        extractedData: {
+          taxYear: extractedData.taxYear,
+          totalIncome: extractedData.totalIncome,
+          agi: extractedData.agi,
+          taxableIncome: extractedData.taxableIncome,
+          totalFederalTax: extractedData.totalFederalTax,
+          effectiveTaxRate: extractedData.effectiveTaxRate,
+          marginalTaxBracket: extractedData.marginalTaxBracket,
+          filingStatus: extractedData.filingStatus,
+          wagesIncome: extractedData.wagesIncome,
+          dividendIncome: extractedData.dividendIncome,
+          capitalGainsLongTerm: extractedData.capitalGainsLongTerm,
+          businessIncome: extractedData.businessIncome,
+          standardDeduction: extractedData.standardDeduction,
+          itemizedDeductions: extractedData.itemizedDeductions,
+          deductionUsed: extractedData.deductionUsed,
+          extractedLines: extractedData.extractedLines,
+        },
+        message: "Document parsed successfully!",
+      });
+    } catch (parseError) {
+      console.error("Document parsing error:", parseError);
+      await storage.updateFinancialDocument(docRecord.id, {
+        extractionStatus: 'failed',
+      });
+      res.status(500).json({ message: "Failed to parse document. Please ensure it's a valid tax return PDF." });
+    }
+  } catch (error) {
+    console.error("Error uploading document:", error);
+    res.status(500).json({ message: "Failed to upload document" });
+  }
+});
+1.2 CRITICAL: Update /api/tax-intel/analyze to use ACTUAL extracted data
+This is the key fix. The analyze endpoint must:
+
+Retrieve the actual extracted data from the most recent uploaded document
+Pass that real data to the AI for analysis
+Return structured insights based on the REAL numbers
+
+typescriptapp.post('/api/tax-intel/analyze', isAuthenticated, async (req: any, res) => {
+  try {
+    const userId = req.user.claims.sub;
+    
+    // Get the actual uploaded documents with extracted data
+    const documents = await storage.getFinancialDocuments(userId);
+    const completedDocs = documents.filter(d => d.extractionStatus === 'completed');
+    
+    if (completedDocs.length === 0) {
+      return res.status(400).json({ 
+        message: "No analyzed documents found. Please upload a tax document first." 
+      });
+    }
+    
+    // Get the most recent completed document
+    const latestDoc = completedDocs[0];
+    const extractedData = latestDoc.extractedData as any;
+    
+    if (!extractedData) {
+      return res.status(400).json({ 
+        message: "Document data not found. Please re-upload your document." 
+      });
+    }
+    
+    // Get user profile for additional context
+    const [profile, positions] = await Promise.all([
+      storage.getFinancialProfile(userId),
+      storage.getPortfolioPositions(userId)
+    ]);
+    
+    const userState = profile?.stateOfResidence || 'CA';
+    const filingStatus = extractedData.filingStatus || profile?.filingStatus || 'single';
+    const hasPortfolio = positions && positions.length > 0;
+    
+    // State tax rates for context
+    const stateTaxRates: Record<string, { marginal: number, name: string, hasLocalTax: boolean }> = {
+      'CA': { marginal: 13.3, name: 'California', hasLocalTax: false },
+      'NY': { marginal: 10.9, name: 'New York', hasLocalTax: true },
+      'NJ': { marginal: 10.75, name: 'New Jersey', hasLocalTax: false },
+      'TX': { marginal: 0, name: 'Texas', hasLocalTax: false },
+      'FL': { marginal: 0, name: 'Florida', hasLocalTax: false },
+      'WA': { marginal: 0, name: 'Washington', hasLocalTax: false },
+      'NV': { marginal: 0, name: 'Nevada', hasLocalTax: false },
+      'IL': { marginal: 4.95, name: 'Illinois', hasLocalTax: true },
+      'PA': { marginal: 3.07, name: 'Pennsylvania', hasLocalTax: true },
+      'MA': { marginal: 9.0, name: 'Massachusetts', hasLocalTax: false },
+      'CT': { marginal: 6.99, name: 'Connecticut', hasLocalTax: false },
+      'CO': { marginal: 4.4, name: 'Colorado', hasLocalTax: false },
+    };
+    
+    const stateInfo = stateTaxRates[userState] || { marginal: 5.0, name: userState, hasLocalTax: false };
+    
+    // Build the AI prompt with ACTUAL extracted data
+    const systemPrompt = `You are a tax optimization expert analyzing a user's ACTUAL tax return data. Based on their real numbers, provide specific, actionable strategies to reduce their tax burden.
+
+## USER'S ACTUAL TAX DATA (from their uploaded ${latestDoc.documentType}):
+
+Tax Year: ${extractedData.taxYear || 'Unknown'}
+Filing Status: ${filingStatus}
+State: ${stateInfo.name}
+
+### INCOME:
+- Total Income: $${extractedData.totalIncome?.toLocaleString() || 'Not found'}
+- Wages/Salary: $${extractedData.wagesIncome?.toLocaleString() || 'Not found'}
+- Interest Income: $${extractedData.interestIncome?.toLocaleString() || '0'}
+- Dividend Income: $${extractedData.dividendIncome?.toLocaleString() || '0'}
+- Capital Gains: $${extractedData.capitalGainsLongTerm?.toLocaleString() || '0'}
+- Business Income: $${extractedData.businessIncome?.toLocaleString() || '0'}
+
+### TAX CALCULATIONS:
+- Adjusted Gross Income (AGI): $${extractedData.agi?.toLocaleString() || 'Not found'}
+- Taxable Income: $${extractedData.taxableIncome?.toLocaleString() || 'Not found'}
+- Total Federal Tax Paid: $${extractedData.totalFederalTax?.toLocaleString() || 'Not found'}
+- State Tax Paid: $${extractedData.stateTaxPaid?.toLocaleString() || 'Unknown'}
+- Effective Tax Rate: ${extractedData.effectiveTaxRate?.toFixed(1) || 'Unknown'}%
+- Marginal Tax Bracket: ${extractedData.marginalTaxBracket || 'Unknown'}%
+
+### DEDUCTIONS:
+- Deduction Type Used: ${extractedData.deductionUsed || 'Standard'}
+- Standard Deduction: $${extractedData.standardDeduction?.toLocaleString() || 'Unknown'}
+- Itemized Deductions: $${extractedData.itemizedDeductions?.toLocaleString() || 'N/A'}
+
+### ADDITIONAL CONTEXT:
+- State Top Marginal Rate: ${stateInfo.marginal}%
+- Has Investment Portfolio: ${hasPortfolio}
+
+Based on this ACTUAL data, generate a JSON response with specific tax-saving strategies. Calculate real dollar savings based on their marginal rates.
+
+IMPORTANT STRATEGY CATEGORIES TO ANALYZE:
+1. **Retirement Contributions**: Calculate how much more they could contribute to 401(k)/IRA and the exact tax savings at their marginal rate
+2. **Withholding Adjustment**: If they got a refund or owed money, suggest W-4 adjustments
+3. **Deduction Optimization**: Compare standard vs itemized, suggest strategies to push over standard deduction threshold
+4. **Tax-Advantaged Accounts**: HSA, FSA, Dependent Care FSA opportunities
+5. **Capital Gains Planning**: If they have gains, suggest tax-loss harvesting or holding period strategies
+6. **Income Timing**: For self-employed/business income, suggest timing strategies
+7. **Tax Credits**: Check if they might qualify for education credits, child tax credit, etc.
+
+Return JSON in this exact format:
+{
+  "taxYear": ${extractedData.taxYear || new Date().getFullYear() - 1},
+  "totalIncome": ${extractedData.totalIncome || 0},
+  "agi": ${extractedData.agi || 0},
+  "taxableIncome": ${extractedData.taxableIncome || 0},
+  "totalFederalTax": ${extractedData.totalFederalTax || 0},
+  "effectiveTaxRate": ${extractedData.effectiveTaxRate || 0},
+  "marginalTaxBracket": ${extractedData.marginalTaxBracket || 22},
+  "filingStatus": "${filingStatus}",
+  "incomeBreakdown": {
+    "wages": ${extractedData.wagesIncome || 0},
+    "dividends": ${extractedData.dividendIncome || 0},
+    "capitalGains": ${extractedData.capitalGainsLongTerm || 0},
+    "business": ${extractedData.businessIncome || 0},
+    "other": ${(extractedData.totalIncome || 0) - (extractedData.wagesIncome || 0) - (extractedData.dividendIncome || 0) - (extractedData.capitalGainsLongTerm || 0) - (extractedData.businessIncome || 0)}
+  },
+  "currentDeductions": {
+    "type": "${extractedData.deductionUsed || 'standard'}",
+    "amount": ${extractedData.deductionUsed === 'itemized' ? extractedData.itemizedDeductions : extractedData.standardDeduction} || 14600
+  },
+  "taxStrategies": [
+    {
+      "strategy": "Strategy Name",
+      "currentSituation": "Plain English explanation of their current situation",
+      "recommendation": "Specific action to take",
+      "potentialSavings": [calculated dollar amount],
+      "howToImplement": "Step-by-step instructions",
+      "priority": "high|medium|low",
+      "category": "retirement|deductions|withholding|investments|credits|timing"
+    }
+  ],
+  "insights": [
+    {
+      "type": "immediate_action|opportunity|warning|info",
+      "severity": "high|medium|low",
+      "title": "Plain English title",
+      "description": "Detailed explanation anyone can understand",
+      "potentialImpact": [dollar amount],
+      "action": "What to do"
+    }
+  ],
+  "paycheckOptimization": {
+    "currentWithholding": "Based on their effective rate, estimate if over/under withheld",
+    "suggestedW4Changes": "Specific W-4 adjustment recommendations",
+    "monthlyImpact": [dollar amount change per paycheck]
+  },
+  "totalPotentialSavings": [sum of all strategy savings],
+  "summaryRecommendation": "2-3 sentences summarizing the top 1-2 things they should do immediately"
+}
+
+CRITICAL: Use their ACTUAL numbers to calculate savings. For example:
+- If they're in the 24% bracket and can contribute $5,000 more to 401(k), savings = $5,000 × 0.24 = $1,200
+- If they're using standard deduction at $14,600 but could itemize at $16,000, savings = ($16,000 - $14,600) × marginal rate`;
+
+    const openaiResponse = await fetchApi(`${process.env.AI_INTEGRATIONS_OPENAI_BASE_URL}/chat/completions`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${process.env.AI_INTEGRATIONS_OPENAI_API_KEY}`,
+      },
+      body: JSON.stringify({
+        model: 'gpt-4o',
+        messages: [
+          { role: 'system', content: systemPrompt },
+          { role: 'user', content: 'Analyze this tax data and provide specific, actionable strategies with calculated dollar savings.' }
+        ],
+        max_tokens: 2500,
+        temperature: 0.3, // Lower temperature for more consistent calculations
+      }),
+    });
+
+    if (!openaiResponse.ok) {
+      const errorText = await openaiResponse.text();
+      console.error('OpenAI API error:', errorText);
+      throw new Error(`OpenAI API error: ${openaiResponse.statusText}`);
+    }
+
+    const data = await openaiResponse.json();
+    const content = data.choices[0]?.message?.content || '';
+    
+    let taxData;
+    try {
+      // Extract JSON from the response
+      const jsonMatch = content.match(/\{[\s\S]*\}/);
+      if (jsonMatch) {
+        taxData = JSON.parse(jsonMatch[0]);
+      } else {
+        throw new Error('No JSON found in response');
+      }
+    } catch (parseError) {
+      console.error('Failed to parse AI response:', parseError);
+      console.log('AI response content:', content);
+      
+      // Fallback with actual extracted data
+      taxData = {
+        taxYear: extractedData.taxYear || new Date().getFullYear() - 1,
+        totalIncome: extractedData.totalIncome || 0,
+        agi: extractedData.agi || 0,
+        taxableIncome: extractedData.taxableIncome || 0,
+        totalFederalTax: extractedData.totalFederalTax || 0,
+        effectiveTaxRate: extractedData.effectiveTaxRate || 0,
+        marginalTaxBracket: extractedData.marginalTaxBracket || 22,
+        filingStatus: filingStatus,
+        incomeBreakdown: {
+          wages: extractedData.wagesIncome || 0,
+          dividends: extractedData.dividendIncome || 0,
+          capitalGains: extractedData.capitalGainsLongTerm || 0,
+          business: extractedData.businessIncome || 0,
+          other: 0
+        },
+        insights: [
+          {
+            type: "info",
+            severity: "medium",
+            title: "Tax Data Uploaded Successfully",
+            description: `We've extracted your tax data from your ${latestDoc.documentType}. Your total income was $${(extractedData.totalIncome || 0).toLocaleString()} and you paid $${(extractedData.totalFederalTax || 0).toLocaleString()} in federal taxes.`,
+            potentialImpact: 0,
+            action: "Review your data below"
+          },
+          {
+            type: "opportunity",
+            severity: "high", 
+            title: "Maximize Retirement Contributions",
+            description: `At your ${extractedData.marginalTaxBracket || 22}% marginal rate, every $1,000 you contribute to a traditional 401(k) or IRA saves you $${((extractedData.marginalTaxBracket || 22) * 10).toFixed(0)} in taxes.`,
+            potentialImpact: (extractedData.marginalTaxBracket || 22) * 230, // Max 401k contribution savings
+            action: "Increase 401(k) contributions"
+          }
+        ],
+        taxStrategies: [],
+        totalPotentialSavings: 0,
+        summaryRecommendation: "Your tax data has been analyzed. Check back for personalized strategies."
+      };
+    }
+
+    // Store the analysis results
+    await storage.createTaxReturn({
+      userId,
+      taxYear: taxData.taxYear,
+      totalIncome: taxData.totalIncome?.toString(),
+      agi: taxData.agi?.toString(),
+      taxableIncome: taxData.taxableIncome?.toString(),
+      totalFederalTax: taxData.totalFederalTax?.toString(),
+      effectiveTaxRate: taxData.effectiveTaxRate?.toString(),
+      marginalTaxBracket: taxData.marginalTaxBracket?.toString(),
+      filingStatus: taxData.filingStatus?.toLowerCase().replace(/ /g, '_'),
+    });
+
+    res.json({ taxData });
+  } catch (error) {
+    console.error("Error analyzing tax return:", error);
+    res.status(500).json({ message: "Failed to analyze tax return" });
+  }
+});
+1.3 Update /api/tax-intel/current to return richer data
+typescriptapp.get('/api/tax-intel/current', isAuthenticated, async (req: any, res) => {
+  try {
+    const userId = req.user.claims.sub;
+    const taxReturns = await storage.getTaxReturns(userId);
+    const documents = await storage.getFinancialDocuments(userId);
+    
+    // Get the most recent completed document's extracted data
+    const completedDocs = documents.filter(d => d.extractionStatus === 'completed');
+    const latestDoc = completedDocs[0];
+    const extractedData = latestDoc?.extractedData as any;
+    
+    // If we have a tax return, enrich it with income breakdown
+    let taxData = null;
+    if (taxReturns.length > 0) {
+      const latestReturn = taxReturns[0];
+      taxData = {
+        taxYear: latestReturn.taxYear,
+        totalIncome: parseFloat(latestReturn.totalIncome || '0'),
+        agi: parseFloat(latestReturn.agi || '0'),
+        taxableIncome: parseFloat(latestReturn.taxableIncome || '0'),
+        totalFederalTax: parseFloat(latestReturn.totalFederalTax || '0'),
+        effectiveTaxRate: parseFloat(latestReturn.effectiveTaxRate || '0'),
+        marginalTaxBracket: parseFloat(latestReturn.marginalTaxBracket || '0'),
+        filingStatus: latestReturn.filingStatus,
+        incomeBreakdown: {
+          wages: parseFloat(latestReturn.wagesIncome || '0'),
+          dividends: parseFloat(latestReturn.dividendIncome || '0'),
+          capitalGains: parseFloat(latestReturn.capitalGainsLongTerm || '0'),
+          business: parseFloat(latestReturn.businessIncome || '0'),
+          other: parseFloat(latestReturn.interestIncome || '0')
+        },
+        // Include any stored insights or generate default ones
+        insights: extractedData?.insights || [
+          {
+            type: "info",
+            severity: "medium",
+            title: "Tax Data Available",
+            description: "Your tax information has been loaded. Run an analysis to get personalized savings strategies.",
+            potentialImpact: 0,
+            action: "Analyze Now"
+          }
+        ],
+        taxStrategies: extractedData?.taxStrategies || [],
+        totalPotentialSavings: extractedData?.totalPotentialSavings || 0
+      };
+    }
+    
+    res.json({ 
+      taxData,
+      taxReturns,
+      documentCount: documents.length,
+      hasAnalyzedDocuments: completedDocs.length > 0,
+    });
+  } catch (error) {
+    console.error("Error fetching tax data:", error);
+    res.status(500).json({ message: "Failed to fetch tax data" });
+  }
+});

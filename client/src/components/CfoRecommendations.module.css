@@ -1,0 +1,425 @@
+.container {
+  background: linear-gradient(135deg, #1A1D28 0%, #242B38 100%);
+  border-radius: 16px;
+  padding: 24px;
+  border: 1px solid rgba(201, 169, 98, 0.15);
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 20px;
+}
+
+.headerLeft {
+  flex: 1;
+}
+
+.title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #fff;
+  font-size: 18px;
+  font-weight: 600;
+  margin: 0 0 4px 0;
+}
+
+.title svg {
+  width: 22px;
+  height: 22px;
+  color: #C9A962;
+}
+
+.subtitle {
+  color: #9ca3af;
+  font-size: 13px;
+  margin: 0;
+}
+
+.pointsBadge {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: linear-gradient(135deg, #C9A962 0%, #B8954F 100%);
+  border-radius: 12px;
+  padding: 10px 16px;
+  min-width: 70px;
+}
+
+.pointsValue {
+  font-size: 24px;
+  font-weight: 700;
+  color: #0F1117;
+  line-height: 1;
+}
+
+.pointsLabel {
+  font-size: 11px;
+  color: #0F1117;
+  opacity: 0.8;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.progressSection {
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 20px;
+}
+
+.levelInfo {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.levelBadge {
+  background: linear-gradient(135deg, #C9A962 0%, #B8954F 100%);
+  color: #0F1117;
+  font-weight: 600;
+  font-size: 12px;
+  padding: 4px 12px;
+  border-radius: 20px;
+}
+
+.levelProgress {
+  color: #9ca3af;
+  font-size: 12px;
+}
+
+.progressBar {
+  height: 6px;
+  background: var(--bg-tertiary);
+  border-radius: 3px;
+  overflow: hidden;
+  margin-bottom: 12px;
+}
+
+.progressFill {
+  height: 100%;
+  background: linear-gradient(90deg, #C9A962, #E0C088);
+  border-radius: 3px;
+  transition: width 0.5s ease;
+}
+
+.statsRow {
+  display: flex;
+  gap: 20px;
+}
+
+.stat {
+  display: flex;
+  flex-direction: column;
+}
+
+.statValue {
+  font-size: 20px;
+  font-weight: 600;
+  color: #fff;
+}
+
+.statLabel {
+  font-size: 11px;
+  color: #6b7280;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.loading {
+  text-align: center;
+  color: #9ca3af;
+  padding: 40px;
+}
+
+.emptyState {
+  text-align: center;
+  padding: 40px 20px;
+}
+
+.emptyState svg {
+  width: 48px;
+  height: 48px;
+  color: #C9A962;
+  margin-bottom: 16px;
+}
+
+.emptyState h4 {
+  color: #fff;
+  font-size: 16px;
+  margin: 0 0 8px 0;
+}
+
+.emptyState p {
+  color: #9ca3af;
+  font-size: 14px;
+  margin: 0 0 20px 0;
+}
+
+.generateButton {
+  background: linear-gradient(135deg, #C9A962 0%, #B8954F 100%);
+  color: #0F1117;
+  font-weight: 600;
+  font-size: 14px;
+  padding: 12px 24px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.generateButton:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(201, 169, 98, 0.3);
+}
+
+.generateButton:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.section {
+  margin-bottom: 20px;
+}
+
+.sectionTitle {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #9ca3af;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin: 0 0 12px 0;
+}
+
+.sectionTitle svg {
+  width: 14px;
+  height: 14px;
+  color: #22c55e;
+}
+
+.recList {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.recCard {
+  background: var(--input-bg);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+  transition: border-color 0.2s;
+}
+
+.recCard:hover {
+  border-color: var(--card-border-hover);
+}
+
+.recCard.expanded {
+  border-color: var(--soft-gold);
+}
+
+.recHeader {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px;
+  cursor: pointer;
+}
+
+.recIcon {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg-tertiary);
+  border-radius: 10px;
+  flex-shrink: 0;
+}
+
+.recIcon svg {
+  width: 20px;
+  height: 20px;
+}
+
+.recInfo {
+  flex: 1;
+  min-width: 0;
+}
+
+.recTitle {
+  color: #fff;
+  font-size: 14px;
+  font-weight: 500;
+  margin: 0 0 6px 0;
+  line-height: 1.3;
+}
+
+.recMeta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.recPriority {
+  font-size: 10px;
+  font-weight: 600;
+  color: #fff;
+  padding: 2px 8px;
+  border-radius: 4px;
+  text-transform: uppercase;
+}
+
+.recSavings {
+  font-size: 12px;
+  color: #22c55e;
+  font-weight: 500;
+}
+
+.recPoints {
+  font-size: 12px;
+  color: #C9A962;
+  font-weight: 600;
+}
+
+.expandIcon {
+  width: 20px;
+  height: 20px;
+  color: #6b7280;
+  transition: transform 0.2s;
+  flex-shrink: 0;
+}
+
+.recCard.expanded .expandIcon {
+  transform: rotate(180deg);
+}
+
+.recDetails {
+  padding: 0 16px 16px;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.recDescription {
+  color: #d1d5db;
+  font-size: 14px;
+  line-height: 1.6;
+  margin: 16px 0;
+}
+
+.cfpNote {
+  background: rgba(201, 169, 98, 0.1);
+  border-left: 3px solid #C9A962;
+  padding: 12px 16px;
+  font-size: 13px;
+  color: #d1d5db;
+  border-radius: 0 8px 8px 0;
+  margin-bottom: 16px;
+}
+
+.cfpNote strong {
+  color: #C9A962;
+  display: block;
+  margin-bottom: 4px;
+}
+
+.recActions {
+  display: flex;
+  gap: 12px;
+}
+
+.completeButton {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+  color: #fff;
+  font-weight: 500;
+  font-size: 13px;
+  padding: 10px 16px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.completeButton:hover {
+  transform: translateY(-1px);
+}
+
+.completeButton svg {
+  width: 16px;
+  height: 16px;
+}
+
+.dismissButton {
+  background: transparent;
+  color: #6b7280;
+  font-size: 13px;
+  padding: 10px 16px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: border-color 0.2s, color 0.2s;
+}
+
+.dismissButton:hover {
+  border-color: rgba(255, 255, 255, 0.2);
+  color: #9ca3af;
+}
+
+.completedList {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.completedItem {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 14px;
+  background: rgba(34, 197, 94, 0.08);
+  border-radius: 8px;
+}
+
+.completedTitle {
+  color: #9ca3af;
+  font-size: 13px;
+  text-decoration: line-through;
+}
+
+.completedPoints {
+  color: #22c55e;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.refreshButton {
+  width: 100%;
+  background: rgba(255, 255, 255, 0.05);
+  color: #9ca3af;
+  font-size: 13px;
+  padding: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+}
+
+.refreshButton:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.08);
+  color: #fff;
+}
+
+.refreshButton:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}

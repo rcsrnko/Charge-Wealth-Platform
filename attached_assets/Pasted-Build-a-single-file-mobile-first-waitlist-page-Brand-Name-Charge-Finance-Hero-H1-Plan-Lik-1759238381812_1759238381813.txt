@@ -1,0 +1,54 @@
+Build a single-file, mobile-first waitlist page.
+
+Brand
+	•	Name: Charge Finance
+	•	Hero H1: Plan Like the Wealthy. Without the $10M Net Worth.
+	•	Subhead: “Exclusive strategies normally reserved for family offices — simplified and delivered monthly.”
+	•	Price signal: $78/month
+	•	Palette: Slate Navy #0E2239, Charcoal #1C1F24, Off-White #F7F7F5, Gold #C9A86A
+	•	Typography: System stack; headings “institutional” via size/letter-spacing; body modern sans.
+
+File & stack
+	•	One file only: index.html with embedded CSS/JS. No frameworks.
+
+Layout (single scroll + sticky minimal nav)
+	1.	Header (sticky, dark navy)
+	•	Left: Charge Finance wordmark.
+	•	Right: What You Get • Why • FAQ • Join.
+	2.	Hero (dark navy with gold CTA)
+	•	H1 + Sub above.
+	•	Primary CTA: “Join the Charge Waitlist” (scroll to signup).
+	3.	What You Get (4 cards)
+	•	Tax Strategies — “Roth ladders, charitable trusts, advanced deductions.”
+	•	Estate & Legacy — “Trust flowcharts, family entity structures, dynasty planning.”
+	•	Alternative Insights — “Private credit, 1031s, DSTs, premium-finance playbooks.”
+	•	Editable Tools — “Calculators, dashboards, allocation templates.”
+	4.	Why Charge Finance
+	•	“Backed by CFPs with over a decade of experience.”
+	•	“No meetings, no upsells. Education-only.”
+	•	“$78/month — a fraction of what family offices pay.”
+	5.	Exclusivity / Founding Cohort
+	•	Headline: “Membership is Limited.”
+	•	Copy about locking lifetime pricing for the Founding Cohort.
+	6.	FAQ (4 items)
+	•	Advice? → Education-only, not individualized; consult your professionals.
+	•	Who is this for? → High-income earners, business owners, professionals.
+	•	Monthly deliverables? → Wealth Playbook PDF + companion calculator/template + curated notes.
+	•	Why $78? → CFP-vetted depth, far below advisory retainers.
+	7.	Signup (email waitlist)
+	•	Headline: Take Charge of Your Wealth.
+	•	Sub: “Join the waitlist. Founding Members lock lifetime pricing.”
+	•	Fields: Email (required), Income band ($150–250k / $250–500k / $500k+), Primary goal (Wealth growth / Tax reduction / Estate planning / Alternative investments).
+	•	Form handling: Formspree placeholder with JS fetch success swap; hidden project:"charge_finance".
+	8.	Compliance Footer (prominent)
+	•	“Education-Only Disclaimer: Charge Finance provides general educational information and tools. We do not provide individualized investment, legal, or tax advice, and we do not recommend specific securities. Consult your own advisor/CPA/attorney before taking action.”
+	•	Auto year.
+
+Polish & a11y
+	•	Dark navy hero, gold accent CTAs, faint grid lines, generous spacing.
+	•	Smooth scroll; clear focus states; high contrast.
+
+SEO & social
+	•	<title>Charge Finance • Family-Office Playbooks for $78/mo</title>
+	•	Meta description + OG tags; ⚡ favicon placeholder.
+	•	TODO comments for pixel/analytics + swapping Formspree ID.

@@ -1,0 +1,286 @@
+VISUAL POLISH
+1.1 Sidebar Improvements (client/src/components/Sidebar.tsx and Sidebar.module.css)
+Replace the toggle button (← →) with a modern chevron icon:
+tsx// Replace the toggle button content with:
+<button
+  className={styles.toggleBtn}
+  onClick={toggleCollapse}
+  aria-label={isCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}
+>
+  <svg 
+    viewBox="0 0 24 24" 
+    fill="none" 
+    stroke="currentColor" 
+    strokeWidth="2"
+    className={`${styles.toggleIcon} ${isCollapsed ? styles.rotated : ''}`}
+  >
+    <path d="M15 18l-6-6 6-6"/>
+  </svg>
+</button>
+Add CSS for smooth toggle animation:
+css.toggleBtn {
+  width: 32px;
+  height: 32px;
+  background: rgba(201, 169, 98, 0.1);
+  border: 1px solid rgba(201, 169, 98, 0.2);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.toggleBtn:hover {
+  background: rgba(201, 169, 98, 0.2);
+  border-color: rgba(201, 169, 98, 0.4);
+}
+
+.toggleIcon {
+  width: 18px;
+  height: 18px;
+  color: var(--soft-gold);
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.toggleIcon.rotated {
+  transform: rotate(180deg);
+}
+Make sidebar logo clickable:
+tsx// Wrap logo in Link
+<Link href="/dashboard">
+  <a className={styles.logoLink}>
+    <h1 className={styles.logo}>Charge</h1>
+    <span className={styles.tagline}>Wealth</span>
+  </a>
+</Link>
+1.2 Header User Menu (client/src/pages/Dashboard.tsx and Dashboard.module.css)
+Replace plain "Sign Out" with user avatar dropdown:
+tsx// Add state for dropdown
+const [showUserMenu, setShowUserMenu] = useState(false);
+
+// Replace userSection with:
+<div className={styles.userSection}>
+  <button 
+    className={styles.userMenuTrigger}
+    onClick={() => setShowUserMenu(!showUserMenu)}
+    aria-expanded={showUserMenu}
+    aria-haspopup="true"
+  >
+    <div className={styles.userAvatar}>
+      {(user?.firstName?.[0] || user?.email?.[0] || 'U').toUpperCase()}
+    </div>
+    <span className={styles.userName}>
+      {user?.firstName || user?.email?.split('@')[0]}
+    </span>
+    <svg 
+      className={`${styles.chevron} ${showUserMenu ? styles.open : ''}`}
+      viewBox="0 0 24 24" 
+      fill="none" 
+      stroke="currentColor" 
+      strokeWidth="2"
+    >
+      <path d="M6 9l6 6 6-6"/>
+    </svg>
+  </button>
+  
+  {showUserMenu && (
+    <div className={styles.userDropdown}>
+      <div className={styles.dropdownHeader}>
+        <span className={styles.dropdownEmail}>{user?.email}</span>
+      </div>
+      <div className={styles.dropdownDivider} />
+      <a href="/dashboard/referrals" className={styles.dropdownItem}>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+          <path d="M16 21v-2a4 4 0 00-4-4H6a4 4 0 00-4 4v2"/>
+          <circle cx="9" cy="7" r="4"/>
+          <path d="M22 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/>
+        </svg>
+        Refer & Earn $50
+      </a>
+      <button onClick={handleLogout} className={styles.dropdownItem}>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+          <path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4M16 17l5-5-5-5M21 12H9"/>
+        </svg>
+        Sign Out
+      </button>
+    </div>
+  )}
+</div>
+Add dropdown CSS:
+css.userMenuTrigger {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+  padding: 0.5rem 0.75rem;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.userMenuTrigger:hover {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(201, 169, 98, 0.3);
+}
+
+.userAvatar {
+  width: 32px;
+  height: 32px;
+  background: linear-gradient(135deg, var(--soft-gold) 0%, #B8963D 100%);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--midnight-blue);
+}
+
+.chevron {
+  width: 16px;
+  height: 16px;
+  color: var(--muted-gray);
+  transition: transform 0.2s ease;
+}
+
+.chevron.open {
+  transform: rotate(180deg);
+}
+
+.userDropdown {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  width: 240px;
+  background: var(--deep-navy);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+  overflow: hidden;
+  animation: dropdownFadeIn 0.15s ease-out;
+  z-index: 100;
+}
+
+@keyframes dropdownFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.dropdownHeader {
+  padding: 1rem;
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.dropdownEmail {
+  font-size: 0.8125rem;
+  color: var(--muted-gray);
+}
+
+.dropdownDivider {
+  height: 1px;
+  background: var(--border);
+}
+
+.dropdownItem {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  width: 100%;
+  padding: 0.875rem 1rem;
+  background: transparent;
+  border: none;
+  color: var(--porcelain);
+  font-size: 0.875rem;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.dropdownItem:hover {
+  background: rgba(201, 169, 98, 0.1);
+}
+
+.dropdownItem svg {
+  width: 18px;
+  height: 18px;
+  color: var(--muted-gray);
+}
+1.3 Standardize Card Borders (Global)
+Update client/src/index.css to ensure consistent borders:
+css/* Add to :root */
+--card-border: rgba(201, 169, 98, 0.12);
+--card-border-hover: rgba(201, 169, 98, 0.25);
+
+/* Update .card class */
+.card {
+  background: var(--card-bg);
+  padding: 1.5rem;
+  border-radius: 12px;
+  border: 1px solid var(--card-border);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.card:hover {
+  border-color: var(--card-border-hover);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+  transform: translateY(-2px);
+}
+1.4 Enhanced Form Focus States
+Update client/src/index.css:
+cssinput, select, textarea {
+  width: 100%;
+  padding: 0.875rem 1rem;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--border);
+  color: var(--porcelain);
+  font-size: 0.9375rem;
+  border-radius: 10px;
+  font-family: inherit;
+  min-height: 48px;
+  transition: all 0.2s ease;
+}
+
+input:hover, select:hover, textarea:hover {
+  border-color: rgba(201, 169, 98, 0.3);
+  background: rgba(255, 255, 255, 0.04);
+}
+
+input:focus, select:focus, textarea:focus {
+  outline: none;
+  border-color: var(--soft-gold);
+  background: rgba(201, 169, 98, 0.05);
+  box-shadow: 0 0 0 3px rgba(201, 169, 98, 0.15), 0 0 20px rgba(201, 169, 98, 0.1);
+}
+
+input::placeholder, textarea::placeholder {
+  color: var(--muted-gray);
+  opacity: 0.7;
+}
+1.5 Table Row Hover States
+Add to each module's CSS that has tables (ChargeAllocation.module.css, ChargeTaxIntel.module.css):
+css.tableRow {
+  display: grid;
+  /* existing grid styles */
+  padding: 1rem;
+  border-radius: 8px;
+  transition: background 0.15s ease;
+  cursor: pointer;
+}
+
+.tableRow:hover {
+  background: rgba(201, 169, 98, 0.06);
+}
+
+.tableRow.selected {
+  background: rgba(201, 169, 98, 0.1);
+  border: 1px solid rgba(201, 169, 98, 0.2);
+}

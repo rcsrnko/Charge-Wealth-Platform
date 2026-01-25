@@ -1,0 +1,94 @@
+.errorState {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem 2rem;
+  text-align: center;
+}
+
+.errorIcon {
+  width: 56px;
+  height: 56px;
+  margin-bottom: 1.25rem;
+  color: var(--soft-gold, #C9A962);
+  opacity: 0.7;
+}
+
+.errorIcon svg {
+  width: 100%;
+  height: 100%;
+}
+
+.errorMessage {
+  font-size: 1.0625rem;
+  font-weight: 600;
+  color: var(--porcelain, #F5F5F5);
+  margin: 0 0 0.5rem 0;
+}
+
+.errorHint {
+  font-size: 0.875rem;
+  color: var(--muted-gray, #94A3B8);
+  margin: 0 0 1.25rem 0;
+}
+
+.retryButton {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.625rem 1.25rem;
+  background: transparent;
+  border: 1px solid var(--soft-gold, #C9A962);
+  border-radius: 8px;
+  color: var(--soft-gold, #C9A962);
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.retryButton:hover {
+  background: rgba(201, 169, 98, 0.1);
+}
+
+.retryButton svg {
+  width: 16px;
+  height: 16px;
+}
+
+.compactError {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1rem;
+  background: rgba(239, 68, 68, 0.1);
+  border: 1px solid rgba(239, 68, 68, 0.2);
+  border-radius: 8px;
+  color: var(--porcelain, #F5F5F5);
+  font-size: 0.875rem;
+}
+
+.compactError svg {
+  width: 18px;
+  height: 18px;
+  color: #EF4444;
+  flex-shrink: 0;
+}
+
+.compactRetry {
+  margin-left: auto;
+  padding: 0.25rem 0.75rem;
+  background: transparent;
+  border: 1px solid var(--soft-gold, #C9A962);
+  border-radius: 4px;
+  color: var(--soft-gold, #C9A962);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.compactRetry:hover {
+  background: rgba(201, 169, 98, 0.1);
+}

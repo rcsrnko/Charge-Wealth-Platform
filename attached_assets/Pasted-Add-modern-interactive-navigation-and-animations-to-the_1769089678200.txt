@@ -1,0 +1,71 @@
+Add modern interactive navigation and animations to the Charge Wealth landing page to make it feel more engaging and app-like.
+
+INSTALL DEPENDENCIES:
+- framer-motion (for animations)
+- react-intersection-observer (for scroll detection)
+
+TIER 1 ANIMATIONS (Must Have):
+
+1. SCROLL-TRIGGERED FADE-INS
+- Each major section fades up as user scrolls to it
+- Use Framer Motion's viewport detection
+- Stagger child elements (fade in sequentially, not all at once)
+- Sections to animate: Hero, Tax Calculator, How It Works, Comparison Table, Three Engines, Founding Members/Pricing, FAQ
+- Animation: opacity 0→1, translateY 50px→0, duration 0.6s, ease out
+- Trigger when section is 20% in viewport
+
+2. ACTIVE NAVIGATION HIGHLIGHTING  
+- Use Intersection Observer to detect which section is currently in view
+- Highlight the corresponding nav item (underline, color change, or background)
+- Smooth transition between active states
+- Should work for: Tax Calculator, How It Works, Founding Members/Pricing, FAQ sections
+
+3. SMOOTH SCROLL BEHAVIOR
+- Clicking nav items smoothly scrolls to section (not instant jump)
+- Add offset for sticky nav (don't hide section header behind nav bar)
+- Duration: 800ms with ease-in-out
+- Native CSS smooth scroll as fallback
+
+TIER 2 ANIMATIONS (High Impact):
+
+4. TAX CALCULATOR LIVE ANIMATIONS
+- When sliders move, numbers count up/down smoothly (not instant jump)
+- Total savings number has emphasis animation when it updates (scale pulse)
+- Use counting animation library or custom hook
+- Duration: 400ms for smooth feel
+
+5. STICKY CTA BAR (appears after scrolling past hero)
+- After user scrolls past hero section, sticky bar appears at bottom
+- Contains: "Join Founding Members — $279 | Only 63 Spots Left" + CTA button
+- Slides up from bottom with smooth animation
+- Disappears when user scrolls back to top
+- Semi-transparent background with backdrop blur
+- Should not block content on mobile
+
+6. MAGNETIC CTA BUTTONS
+- Primary CTA buttons slightly follow cursor on hover
+- Subtle effect (max 10px movement)
+- Only on desktop (disable on mobile/touch devices)
+- Apply to: Main hero CTA, Founding Members CTA, pricing card CTAs
+- Smooth spring animation with Framer Motion
+
+TIER 3 ANIMATIONS (Nice to Have):
+
+7. NUMBER COUNTER ANIMATIONS
+- If keeping any statistics, animate them counting up when section appears
+- Example: "187/250 spots claimed" counts from 0→187
+- Only animate once per page load (not on every scroll)
+- Pause animation if user scrolls away before complete
+
+8. HOVER STATE ENHANCEMENTS
+- Three Engines cards: subtle lift + shadow on hover
+- Pricing cards: scale 1.02 + glow effect on hover
+- FAQ items: smooth expand/collapse with height animation
+- Navigation links: underline slide-in effect on hover
+
+9. SCROLL PROGRESS INDICATOR
+- Thin line at very top of page showing scroll progress (0-100%)
+- Fixed position, z-index above everything
+- Color matches brand (gradient preferred)
+- 2-3px height
+- Updates smoothly as user scrolls

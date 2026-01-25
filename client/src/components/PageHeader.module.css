@@ -1,0 +1,153 @@
+.pageHeader {
+  margin-bottom: 2rem;
+}
+
+.breadcrumbs {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+  font-size: 0.875rem;
+}
+
+.breadcrumbItem {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.breadcrumbLink {
+  color: var(--ocean-teal);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.breadcrumbLink:hover {
+  color: #4A8F9A;
+  text-decoration: underline;
+}
+
+.breadcrumbCurrent {
+  color: var(--muted-gray);
+}
+
+.breadcrumbSeparator {
+  color: var(--muted-gray);
+}
+
+.titleRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.title {
+  font-size: 2rem;
+  font-weight: 600;
+  color: var(--midnight-blue);
+  margin: 0;
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.helpContainer {
+  position: relative;
+}
+
+.helpButton {
+  background: rgba(88, 164, 176, 0.1);
+  border: 1px solid rgba(88, 164, 176, 0.3);
+  color: var(--ocean-teal);
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.helpButton:hover {
+  background: rgba(88, 164, 176, 0.2);
+  transform: scale(1.05);
+}
+
+.helpTooltip {
+  position: absolute;
+  top: calc(100% + 0.5rem);
+  right: 0;
+  background: var(--midnight-blue);
+  color: var(--snow-white);
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  line-height: 1.5;
+  max-width: 280px;
+  z-index: 1000;
+  box-shadow: 0 4px 12px rgba(28, 31, 51, 0.2);
+  animation: fadeIn 0.2s ease;
+}
+
+.helpTooltip::before {
+  content: '';
+  position: absolute;
+  top: -6px;
+  right: 12px;
+  width: 12px;
+  height: 12px;
+  background: var(--midnight-blue);
+  transform: rotate(45deg);
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.playbookButton {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  font-size: 0.9375rem;
+}
+
+@media (max-width: 768px) {
+  .title {
+    font-size: 1.5rem;
+  }
+
+  .titleRow {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .actions {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .helpTooltip {
+    right: auto;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+
+  .helpTooltip::before {
+    left: 50%;
+    transform: translateX(-50%) rotate(45deg);
+  }
+}

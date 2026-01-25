@@ -1,0 +1,171 @@
+.container {
+  background: var(--deep-navy, #1A1D28);
+  border: 1px solid var(--border, #2A3142);
+  border-radius: 12px;
+  padding: 20px;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 16px;
+}
+
+.title {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--off-white, #F4F5F7);
+  margin-bottom: 2px;
+}
+
+.subtitle {
+  font-size: 12px;
+  color: var(--text-muted, #8B92A5);
+}
+
+.totals {
+  display: flex;
+  gap: 16px;
+}
+
+.totalItem {
+  text-align: right;
+}
+
+.totalValue {
+  display: block;
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--error);
+}
+
+.totalLabel {
+  font-size: 10px;
+  color: var(--text-muted, #8B92A5);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.costsList {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.costCard {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  padding: 12px;
+  background: var(--bg-tertiary);
+  border-radius: 8px;
+  border-left: 3px solid var(--error);
+}
+
+.costInfo {
+  flex: 1;
+  min-width: 0;
+}
+
+.costHeader {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 4px;
+}
+
+.costTitle {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--off-white, #F4F5F7);
+}
+
+.daysCounter {
+  padding: 2px 6px;
+  background: rgba(239, 68, 68, 0.15);
+  border-radius: 4px;
+  font-size: 10px;
+  color: var(--error);
+  font-weight: 500;
+}
+
+.costDescription {
+  font-size: 12px;
+  color: var(--text-muted, #8B92A5);
+  line-height: 1.4;
+}
+
+.costImpact {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 8px;
+}
+
+.costValue {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--error);
+}
+
+.costAction {
+  padding: 6px 12px;
+  background: var(--gold, #C9A962);
+  border: none;
+  border-radius: 6px;
+  color: var(--midnight, #0F1117);
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.costAction:hover {
+  background: var(--gold-light, #D4B873);
+}
+
+.footer {
+  margin-top: 16px;
+  padding-top: 12px;
+  border-top: 1px solid var(--border, #2A3142);
+  text-align: center;
+}
+
+.footerText {
+  font-size: 12px;
+  color: var(--text-muted, #8B92A5);
+}
+
+.footerText strong {
+  color: var(--error);
+}
+
+/* Empty State */
+.emptyState {
+  text-align: center;
+  padding: 24px 16px;
+}
+
+.emptyText {
+  font-size: 13px;
+  color: var(--text-muted, #8B92A5);
+  margin-bottom: 12px;
+}
+
+.emptyHighlight {
+  display: inline-block;
+  padding: 6px 12px;
+  background: rgba(201, 169, 98, 0.15);
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--gold-sand);
+}
+
+.lockedPlaceholder {
+  min-height: 200px;
+  opacity: 0.3;
+  pointer-events: none;
+}
