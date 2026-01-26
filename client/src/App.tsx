@@ -5,6 +5,7 @@ import { ThemeProvider } from './contexts/ThemeContext';
 import { useSupabaseAuth } from './hooks/useSupabaseAuth';
 import { useAuth } from './hooks/useAuth';
 import Dashboard from './pages/Dashboard';
+import DemoDashboard from './pages/DemoDashboard';
 import OnboardingWizard from './components/OnboardingWizard';
 import { ToastProvider } from './components/Toast';
 import ErrorBoundary from './components/ErrorBoundary';
@@ -18,9 +19,18 @@ function App() {
           <a href="#main-content" className="skip-link">
             Skip to main content
           </a>
-          <ErrorBoundary moduleName="default">
-            <AppRoutes />
-          </ErrorBoundary>
+          <Switch>
+            <Route path="/demo">
+              <ErrorBoundary moduleName="demo">
+                <DemoDashboard />
+              </ErrorBoundary>
+            </Route>
+            <Route>
+              <ErrorBoundary moduleName="default">
+                <AppRoutes />
+              </ErrorBoundary>
+            </Route>
+          </Switch>
         </ToastProvider>
       </ThemeProvider>
     </QueryClientProvider>
