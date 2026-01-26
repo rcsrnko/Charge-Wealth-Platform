@@ -1,6 +1,7 @@
 import type { Express, RequestHandler } from "express";
 import { storage } from "../storage";
 import { getMultipleQuotes, getHistoricalPrices } from "../marketDataService";
+import { aiLimiter } from "../middleware/rateLimit";
 
 const fetchApi = globalThis.fetch;
 
@@ -150,7 +151,7 @@ export function registerAllocationRoutes(app: Express, isAuthenticated: RequestH
     }
   });
 
-  app.post('/api/allocation/analyze', isAuthenticated, async (req: any, res) => {
+  app.post('/api/allocation/analyze', aiLimiter, isAuthenticated, async (req: any, res) => {
     try {
       const userId = req.user.claims.sub;
       const { symbol } = req.body;
@@ -246,7 +247,7 @@ Be specific, use real data patterns, and connect analysis to the user's actual s
     }
   });
 
-  app.post('/api/allocation/recommendations', isAuthenticated, async (req: any, res) => {
+  app.post('/api/allocation/recommendations', aiLimiter, isAuthenticated, async (req: any, res) => {
     try {
       const userId = req.user.claims.sub;
       

@@ -2,6 +2,7 @@ import type { Express, RequestHandler } from "express";
 import { sql } from "drizzle-orm";
 import { storage } from "../storage";
 import { db } from "../db";
+import { authLimiter } from "../middleware/rateLimit";
 
 // Demo credentials from environment (never hardcode)
 const TEST_USER = {
@@ -10,7 +11,7 @@ const TEST_USER = {
 };
 
 export function registerAuthRoutes(app: Express, isAuthenticated: RequestHandler) {
-  app.post('/api/test-login', async (req, res) => {
+  app.post('/api/test-login', authLimiter, async (req, res) => {
     if (process.env.ENABLE_DEMO_LOGIN !== 'true') {
       return res.status(404).json({ message: 'Not found' });
     }

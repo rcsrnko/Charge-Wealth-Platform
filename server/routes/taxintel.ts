@@ -3,6 +3,7 @@ import multer from "multer";
 import { storage } from "../storage";
 import { parsePdfDocument, extractTaxDataFromText, extractPaystubDataFromText, extractW2DataFromText, searchTaxDocument } from "../documentParser";
 import { buildFinancialContext, buildContextPrompt } from "../documentContext";
+import { aiLimiter } from "../middleware/rateLimit";
 
 const fetchApi = globalThis.fetch;
 
@@ -280,7 +281,7 @@ export function registerTaxIntelRoutes(app: Express, isAuthenticated: RequestHan
     }
   });
 
-  app.post('/api/tax-intel/query', isAuthenticated, async (req: any, res) => {
+  app.post('/api/tax-intel/query', aiLimiter, isAuthenticated, async (req: any, res) => {
     try {
       const userId = req.user.claims.sub;
       const { question } = req.body;
@@ -370,7 +371,7 @@ ${allDocsText}`
     }
   });
 
-  app.post('/api/tax-intel/analyze', isAuthenticated, async (req: any, res) => {
+  app.post('/api/tax-intel/analyze', aiLimiter, isAuthenticated, async (req: any, res) => {
     try {
       const userId = req.user.claims.sub;
       const { filename, documentType } = req.body;
@@ -612,7 +613,7 @@ CRITICAL REQUIREMENTS:
     }
   });
 
-  app.post('/api/tax-intel/run-scenario', isAuthenticated, async (req: any, res) => {
+  app.post('/api/tax-intel/run-scenario', aiLimiter, isAuthenticated, async (req: any, res) => {
     try {
       const { scenarioType, inputs } = req.body;
 

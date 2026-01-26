@@ -1,6 +1,7 @@
 import type { Express, RequestHandler } from "express";
 import { storage } from "../storage";
 import { buildFinancialContext, buildContextPrompt } from "../documentContext";
+import { aiLimiter, expensiveLimiter } from "../middleware/rateLimit";
 
 const fetchApi = globalThis.fetch;
 
@@ -47,7 +48,7 @@ export function registerChargeAIRoutes(app: Express, isAuthenticated: RequestHan
     }
   });
 
-  app.post('/api/charge-ai/chat', isAuthenticated, async (req: any, res) => {
+  app.post('/api/charge-ai/chat', aiLimiter, isAuthenticated, async (req: any, res) => {
     try {
       const userId = req.user.claims.sub;
       const { message, conversationHistory } = req.body;
@@ -145,7 +146,7 @@ OUTPUT FORMAT FOR COMPLEX ANALYSIS (only when data is available):
     }
   });
 
-  app.post('/api/charge-ai/generate-memo', isAuthenticated, async (req: any, res) => {
+  app.post('/api/charge-ai/generate-memo', aiLimiter, isAuthenticated, async (req: any, res) => {
     try {
       const { messages } = req.body;
 
@@ -225,7 +226,7 @@ Format the output as JSON with these fields: title, summary, keyFindings (array)
     }
   });
 
-  app.get('/api/charge-ai/proactive-analysis', isAuthenticated, async (req: any, res) => {
+  app.get('/api/charge-ai/proactive-analysis', expensiveLimiter, isAuthenticated, async (req: any, res) => {
     try {
       const userId = req.user.claims.sub;
       
@@ -342,7 +343,7 @@ CRITICAL:
     }
   });
 
-  app.post('/api/charge-ai/generate-recap', isAuthenticated, async (req: any, res) => {
+  app.post('/api/charge-ai/generate-recap', expensiveLimiter, isAuthenticated, async (req: any, res) => {
     try {
       const userId = req.user.claims.sub;
       const { period } = req.body;
