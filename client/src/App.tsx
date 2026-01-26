@@ -1,11 +1,12 @@
 import { QueryClientProvider, useQuery } from '@tanstack/react-query';
 import { queryClient } from './lib/queryClient';
-import { Route, Switch, Redirect } from 'wouter';
+import { Route, Switch, Redirect, useLocation } from 'wouter';
 import { ThemeProvider } from './contexts/ThemeContext';
 import { useSupabaseAuth } from './hooks/useSupabaseAuth';
 import { useAuth } from './hooks/useAuth';
 import Dashboard from './pages/Dashboard';
 import DemoDashboard from './pages/DemoDashboard';
+import TestLogin from './pages/TestLogin';
 import OnboardingWizard from './components/OnboardingWizard';
 import { ToastProvider } from './components/Toast';
 import ErrorBoundary from './components/ErrorBoundary';
@@ -23,6 +24,11 @@ function App() {
             <Route path="/demo">
               <ErrorBoundary moduleName="demo">
                 <DemoDashboard />
+              </ErrorBoundary>
+            </Route>
+            <Route path="/test-login">
+              <ErrorBoundary moduleName="test-login">
+                <TestLoginPage />
               </ErrorBoundary>
             </Route>
             <Route>
@@ -105,9 +111,32 @@ function LoginPage() {
         }}>
           No 1% AUM fees. No sales. No BS.
         </p>
+        <a
+          href="/test-login"
+          style={{
+            display: 'block',
+            marginTop: '1.5rem',
+            fontSize: '0.8125rem',
+            color: 'rgba(255, 255, 255, 0.5)',
+            textDecoration: 'underline',
+          }}
+        >
+          Dev Login (Testing)
+        </a>
       </div>
     </div>
   );
+}
+
+function TestLoginPage() {
+  const [, setLocation] = useLocation();
+  
+  const handleLogin = () => {
+    queryClient.invalidateQueries();
+    setLocation('/dashboard');
+  };
+  
+  return <TestLogin onLogin={handleLogin} />;
 }
 
 function LoadingPage() {
