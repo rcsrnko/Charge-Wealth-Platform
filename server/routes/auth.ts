@@ -3,9 +3,10 @@ import { sql } from "drizzle-orm";
 import { storage } from "../storage";
 import { db } from "../db";
 
+// Demo credentials from environment (never hardcode)
 const TEST_USER = {
-  username: 'testuser',
-  password: 'charge2026'
+  username: process.env.DEMO_USERNAME || '',
+  password: process.env.DEMO_PASSWORD || ''
 };
 
 export function registerAuthRoutes(app: Express, isAuthenticated: RequestHandler) {

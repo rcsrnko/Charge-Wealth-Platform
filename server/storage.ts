@@ -420,11 +420,8 @@ export class DatabaseStorage implements IStorage {
     const [playbook] = await db
       .select()
       .from(playbooks)
-      .where(eq(playbooks.id, id));
-    if (playbook && playbook.userId === userId) {
-      return playbook;
-    }
-    return undefined;
+      .where(and(eq(playbooks.id, id), eq(playbooks.userId, userId)));
+    return playbook;
   }
   
   async createPlaybook(playbookData: InsertPlaybook): Promise<Playbook> {
@@ -439,20 +436,17 @@ export class DatabaseStorage implements IStorage {
     const [playbook] = await db
       .update(playbooks)
       .set({ ...updates, updatedAt: new Date() })
-      .where(eq(playbooks.id, id))
+      .where(and(eq(playbooks.id, id), eq(playbooks.userId, userId)))
       .returning();
-    if (playbook && playbook.userId === userId) {
-      return playbook;
-    }
-    return undefined;
+    return playbook;
   }
   
   async deletePlaybook(id: number, userId: string): Promise<boolean> {
     const result = await db
       .delete(playbooks)
-      .where(eq(playbooks.id, id))
+      .where(and(eq(playbooks.id, id), eq(playbooks.userId, userId)))
       .returning();
-    return result.length > 0 && result[0].userId === userId;
+    return result.length > 0;
   }
   
   async getPlaybookTemplates(): Promise<PlaybookTemplate[]> {
