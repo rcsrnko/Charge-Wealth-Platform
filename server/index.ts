@@ -109,11 +109,14 @@ app.use('/assets', express.static(path.join(__dirname, '../dist/assets')));
   startPriceAlertChecker(60 * 60 * 1000);
   console.log('Price alert checker started');
   
-  app.use('/dashboard', (req, res, next) => {
-    if (req.path.startsWith('/api')) {
-      return next();
-    }
-    res.sendFile(path.join(__dirname, '../dist/index.html'));
+  const clientRoutes = ['/dashboard', '/demo', '/test-login'];
+  clientRoutes.forEach(route => {
+    app.use(route, (req, res, next) => {
+      if (req.path.startsWith('/api')) {
+        return next();
+      }
+      res.sendFile(path.join(__dirname, '../dist/index.html'));
+    });
   });
 
   const PORT = parseInt(process.env.PORT || '5000', 10);
