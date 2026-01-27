@@ -344,7 +344,7 @@
                 <p class="compare">Advisors charge <s>$3,000+/year</s> for less</p>
             </div>
             
-            <a href="/signup" class="cta-button">Claim Your Spot →</a>
+            <a href="#" class="cta-button" onclick="startCheckout(); return false;">Claim Your Spot →</a>
             
             <p class="guarantee"><span>✓</span> 30-day money-back guarantee</p>
         </section>
@@ -424,7 +424,7 @@
         <!-- Final CTA -->
         <section class="final-cta">
             <p><span class="urgency" id="spots-urgency">250 founding spots.</span> Once they're gone, this price is gone.</p>
-            <a href="/signup" class="cta-button">Become a Founding Member →</a>
+            <a href="#" class="cta-button" onclick="startCheckout(); return false;">Become a Founding Member →</a>
         </section>
         
         <!-- Footer -->
@@ -462,6 +462,40 @@
     }
     
     loadFoundingStats();
+    
+    async function startCheckout() {
+        try {
+            // Disable buttons while processing
+            document.querySelectorAll('.cta-button').forEach(btn => {
+                btn.style.opacity = '0.7';
+                btn.style.pointerEvents = 'none';
+                btn.textContent = 'Redirecting to checkout...';
+            });
+            
+            const res = await fetch('/api/stripe/checkout', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ planType: 'lifetime' })
+            });
+            
+            const data = await res.json();
+            
+            if (data.url) {
+                window.location.href = data.url;
+            } else {
+                throw new Error(data.message || 'Failed to create checkout session');
+            }
+        } catch (err) {
+            console.error('Checkout error:', err);
+            alert('Something went wrong. Please try again.');
+            // Re-enable buttons
+            document.querySelectorAll('.cta-button').forEach(btn => {
+                btn.style.opacity = '1';
+                btn.style.pointerEvents = 'auto';
+                btn.textContent = 'Claim Your Spot →';
+            });
+        }
+    }
 </script>
 </body>
 </html>
