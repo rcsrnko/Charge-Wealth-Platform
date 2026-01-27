@@ -561,6 +561,20 @@ export class DatabaseStorage implements IStorage {
     await db.insert(testimonials).values(sampleTestimonials);
   }
   
+  // Member Stats
+  async getMemberStats(): Promise<{ memberCount: number; totalSavings: number }> {
+    const userCount = await db.select({ count: count() }).from(users);
+    const actualCount = userCount[0].count || 0;
+    const displayCount = Math.max(actualCount, 10);
+    const avgSavingsPerMember = 3250;
+    const totalSavings = displayCount * avgSavingsPerMember;
+    
+    return {
+      memberCount: displayCount,
+      totalSavings
+    };
+  }
+  
   // ============================================
   // REFERRAL PROGRAM
   // ============================================

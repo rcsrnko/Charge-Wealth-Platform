@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef, lazy, Suspense } from 'react';
 import { useAuth } from '../hooks/useAuth';
+import { useSupabaseAuth } from '../hooks/useSupabaseAuth';
 import { useTheme } from '../contexts/ThemeContext';
 import { Route, Switch, useLocation } from 'wouter';
 import Sidebar from '../components/Sidebar';
@@ -61,7 +62,16 @@ interface UserDataState {
 }
 
 export default function Dashboard() {
-  const { user } = useAuth();
+  const { user: replitUser } = useAuth();
+  const { user: supabaseUser } = useSupabaseAuth();
+  
+  // Combine user data from both auth sources
+  const user = replitUser || (supabaseUser ? {
+    firstName: supabaseUser.user_metadata?.full_name?.split(' ')[0] || supabaseUser.user_metadata?.name?.split(' ')[0] || '',
+    lastName: supabaseUser.user_metadata?.full_name?.split(' ').slice(1).join(' ') || '',
+    email: supabaseUser.email,
+  } : null);
+  
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [showUserMenu, setShowUserMenu] = useState(false);
   const userMenuRef = useRef<HTMLDivElement>(null);
@@ -178,7 +188,14 @@ export default function Dashboard() {
     document.title = titles[location] || 'Charge Wealth';
   }, [location]);
 
-  const handleLogout = () => {
+  const { signOut: supabaseSignOut } = useSupabaseAuth();
+  
+  const handleLogout = async () => {
+    try {
+      await supabaseSignOut();
+    } catch (e) {
+      // Ignore Supabase signout errors
+    }
     window.location.href = '/api/logout';
   };
 

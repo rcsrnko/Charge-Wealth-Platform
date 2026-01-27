@@ -40,6 +40,12 @@ export const users = pgTable("users", {
   referralCount: integer("referral_count").default(0),
   referralEarnings: decimal("referral_earnings", { precision: 10, scale: 2 }).default('0'),
   referredBy: varchar("referred_by", { length: 20 }),
+  // Subscription/Membership fields
+  subscriptionStatus: varchar("subscription_status", { length: 20 }).default('none'), // none, active, cancelled, expired
+  subscriptionType: varchar("subscription_type", { length: 20 }), // monthly, quarterly, biannual, lifetime
+  stripeCustomerId: varchar("stripe_customer_id"),
+  subscriptionStartDate: timestamp("subscription_start_date"),
+  subscriptionEndDate: timestamp("subscription_end_date"),
   createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at").defaultNow(),
 });

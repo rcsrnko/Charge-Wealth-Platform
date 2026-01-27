@@ -1685,7 +1685,7 @@
                 <p class="hero-subline">
                     Charge Wealth monitors your finances 24/7 and sends you actionable alerts when it finds money you're leaving on the table. Tax optimization. Portfolio rebalancing. Retirement moves. All automated.
                 </p>
-                <a href="#founding-members" class="cta-primary">Get Started — $279 Lifetime Access</a>
+                <a href="#" onclick="startCheckout('lifetime'); return false;" class="cta-primary">Get Started — $279 Lifetime Access</a>
                 <div class="hero-trust-badges">
                     <div class="hero-badge"><span class="hero-badge-icon">🔒</span> Bank-level encryption</div>
                     <div class="hero-badge"><span class="hero-badge-icon">🚫</span> No products sold</div>
@@ -1993,7 +1993,7 @@
                     <strong>Why only 250?</strong> We're limiting founding memberships so we can personally respond to feedback and ensure white-glove treatment. Once we hit 250, price increases to $499 and founder perks close forever.
                 </p>
 
-                <a href="/dashboard?plan=lifetime&founding=true" class="founding-cta-button animate-child">Join as Founding Member — $279</a>
+                <a href="#" onclick="startCheckout('lifetime'); return false;" class="founding-cta-button animate-child">Join as Founding Member — $279</a>
                 <p class="founding-guarantee animate-child">30-day money-back guarantee. No questions asked.</p>
             </div>
         </section>
@@ -2016,7 +2016,7 @@
                             <span class="period">/mo</span>
                         </div>
                         <p class="pricing-context">Try it out. Cancel anytime.</p>
-                        <a href="/dashboard?plan=monthly" class="pricing-card-cta">Get Started</a>
+                        <a href="#" onclick="startCheckout('monthly'); return false;" class="pricing-card-cta">Get Started</a>
                     </div>
                     
                     <div class="pricing-card">
@@ -2026,7 +2026,7 @@
                             <span class="number">99</span>
                         </div>
                         <p class="pricing-context">$33/mo — Save 33%</p>
-                        <a href="/dashboard?plan=quarterly" class="pricing-card-cta">Get 3 Months</a>
+                        <a href="#" onclick="startCheckout('quarterly'); return false;" class="pricing-card-cta">Get 3 Months</a>
                     </div>
                     
                     <div class="pricing-card popular">
@@ -2036,7 +2036,7 @@
                             <span class="number">200</span>
                         </div>
                         <p class="pricing-context">$33/mo — Save $94</p>
-                        <a href="/dashboard?plan=biannual" class="pricing-card-cta">Get 6 Months</a>
+                        <a href="#" onclick="startCheckout('biannual'); return false;" class="pricing-card-cta">Get 6 Months</a>
                     </div>
                     
                     <div class="pricing-card">
@@ -2046,7 +2046,7 @@
                             <span class="number">499</span>
                         </div>
                         <p class="pricing-context">One payment. Forever access.</p>
-                        <a href="/dashboard?plan=lifetime" class="pricing-card-cta">Get Lifetime</a>
+                        <a href="#" onclick="startCheckout('lifetime'); return false;" class="pricing-card-cta">Get Lifetime</a>
                     </div>
                 </div>
                 
@@ -2176,7 +2176,7 @@
     <div class="sticky-cta-bar" id="stickyCta">
         <div class="sticky-cta-inner">
             <span class="sticky-cta-text">Join Founding Members — $279 | <span id="stickySpots">Only 63 spots left</span></span>
-            <a href="#founding-members" class="sticky-cta-button">Claim Your Spot</a>
+            <a href="#" onclick="startCheckout('lifetime'); return false;" class="sticky-cta-button">Claim Your Spot</a>
         </div>
     </div>
 
@@ -2213,8 +2213,30 @@
         // VERSION TOGGLE: Set to false after 250 members
         // ============================================
         const FOUNDING_MEMBERS_ACTIVE = true;
-        const FOUNDING_COUNT = 187;
+        let FOUNDING_COUNT = 10; // Default, will be fetched from API
         const TOTAL_SPOTS = 250;
+        
+        // Fetch actual member count from API
+        async function fetchMemberCount() {
+            try {
+                const res = await fetch('/api/stats/members');
+                if (res.ok) {
+                    const data = await res.json();
+                    FOUNDING_COUNT = Math.min(data.memberCount, TOTAL_SPOTS - 1);
+                    updateSpotsDisplay();
+                }
+            } catch (e) {
+                console.log('Using default member count');
+            }
+        }
+        
+        function updateSpotsDisplay() {
+            const spotsRemaining = TOTAL_SPOTS - FOUNDING_COUNT;
+            const stickySpots = document.getElementById('stickySpots');
+            if (stickySpots) stickySpots.textContent = `Only ${spotsRemaining} spots left`;
+        }
+        
+        fetchMemberCount();
         
         // Toggle sections based on version
         function initVersionToggle() {
@@ -2584,6 +2606,38 @@
         const foundingSection = document.getElementById('founding-members');
         if (foundingSection) {
             foundingObserver.observe(foundingSection);
+        }
+        
+        // ============================================
+        // STRIPE CHECKOUT
+        // ============================================
+        async function startCheckout(planType) {
+            // Check for referral code in URL
+            const urlParams = new URLSearchParams(window.location.search);
+            const referralCode = urlParams.get('ref') || '';
+            
+            try {
+                const res = await fetch('/api/stripe/checkout', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ planType, referralCode })
+                });
+                
+                if (res.ok) {
+                    const data = await res.json();
+                    if (data.url) {
+                        window.location.href = data.url;
+                    } else {
+                        alert('Checkout failed. Please try again.');
+                    }
+                } else {
+                    const errData = await res.json().catch(() => ({}));
+                    alert(errData.message || 'Checkout failed. Please try again.');
+                }
+            } catch (e) {
+                console.error('Checkout error:', e);
+                alert('Checkout failed. Please try again.');
+            }
         }
         
         // ============================================

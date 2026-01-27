@@ -41,59 +41,65 @@ export function registerStripeRoutes(app: Express, isAuthenticated: RequestHandl
 
   app.post('/api/stripe/checkout', async (req, res) => {
     try {
-      const { priceId, email, referralCode } = req.body;
+      const { planType, email, referralCode } = req.body;
       
-      if (!priceId) {
-        return res.status(400).json({ message: "Price ID is required" });
-      }
+      // Define pricing for each plan type
+      const planConfig: Record<string, { name: string; amount: number; description: string }> = {
+        'lifetime': { name: 'Charge Wealth Lifetime Access', amount: 27900, description: 'One-time payment for lifetime access' },
+        'monthly': { name: 'Charge Wealth Monthly', amount: 4900, description: 'Monthly subscription' },
+        'quarterly': { name: 'Charge Wealth 3 Months', amount: 9900, description: '3-month access' },
+        'biannual': { name: 'Charge Wealth 6 Months', amount: 20000, description: '6-month access' },
+      };
+      
+      const plan = planConfig[planType] || planConfig['lifetime'];
 
       const stripe = await getUncachableStripeClient();
-      const baseUrl = `https://${process.env.REPLIT_DOMAINS?.split(',')[0]}`;
+      const baseUrl = process.env.NODE_ENV === 'production' 
+        ? 'https://chargewealth.co' 
+        : `https://${process.env.REPLIT_DOMAINS?.split(',')[0] || 'chargewealth.co'}`;
       
       let hasReferralDiscount = false;
       let referrer = null;
+      let finalAmount = plan.amount;
       
-      if (referralCode) {
+      if (referralCode && planType === 'lifetime') {
         referrer = await storage.getUserByReferralCode(referralCode);
         if (referrer) {
           hasReferralDiscount = true;
+          finalAmount = 24900; // $30 off lifetime
         }
       }
       
       const sessionParams: any = {
         payment_method_types: ['card'],
         mode: 'payment',
-        success_url: `${baseUrl}/dashboard?payment=success${referralCode ? `&ref=${referralCode}` : ''}`,
+        success_url: `${baseUrl}/dashboard?payment=success&plan=${planType}${referralCode ? `&ref=${referralCode}` : ''}`,
         cancel_url: `${baseUrl}/?payment=cancelled`,
         allow_promotion_codes: !hasReferralDiscount,
         metadata: {
+          planType: planType || 'lifetime',
           referralCode: referralCode || '',
           referrerId: referrer?.id || '',
         },
-      };
-      
-      if (hasReferralDiscount) {
-        sessionParams.line_items = [{
+        line_items: [{
           price_data: {
             currency: 'usd',
             product_data: {
-              name: 'Charge Wealth Lifetime Access (Referral Discount)',
-              description: '$30 off with referral - normally $279',
+              name: hasReferralDiscount ? `${plan.name} (Referral Discount)` : plan.name,
+              description: hasReferralDiscount ? '$30 off with referral' : plan.description,
             },
-            unit_amount: 24900,
+            unit_amount: finalAmount,
           },
           quantity: 1,
-        }];
-      } else {
-        sessionParams.line_items = [{ price: priceId, quantity: 1 }];
-      }
+        }],
+      };
 
       if (email) {
         sessionParams.customer_email = email;
       }
 
       const session = await stripe.checkout.sessions.create(sessionParams);
-      res.json({ url: session.url, hasReferralDiscount, finalPrice: hasReferralDiscount ? 249 : 279 });
+      res.json({ url: session.url, hasReferralDiscount, finalPrice: finalAmount / 100 });
     } catch (error) {
       console.error("Checkout error:", error);
       res.status(500).json({ message: "Failed to create checkout session" });
