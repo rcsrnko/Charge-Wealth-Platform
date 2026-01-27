@@ -870,3 +870,326 @@
     align-items: center;
   }
 }
+
+.dashboardContainer {
+  display: flex;
+  min-height: 100vh;
+  background: var(--bg-primary);
+  padding-top: 36px;
+}
+
+.sidebar {
+  width: 240px;
+  background: var(--midnight-blue);
+  border-right: 1px solid var(--subtle-border);
+  padding: 1.5rem 1rem;
+  position: fixed;
+  top: 36px;
+  left: 0;
+  bottom: 0;
+  overflow-y: auto;
+  z-index: 100;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 2rem;
+  padding: 0 0.5rem;
+}
+
+.logo h1 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--porcelain);
+  margin: 0;
+}
+
+.logo h1 span {
+  color: var(--gold);
+}
+
+.navList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.navItem {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+  background: transparent;
+  border: none;
+  color: var(--muted-gray);
+  font-size: 0.9375rem;
+  cursor: pointer;
+  width: 100%;
+  text-align: left;
+  transition: all 0.2s ease;
+}
+
+.navItem:hover {
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--porcelain);
+}
+
+.navItem.active {
+  background: rgba(201, 169, 98, 0.15);
+  color: var(--gold);
+}
+
+.navIcon {
+  font-size: 1.125rem;
+}
+
+.dashboardContainer .mainContent {
+  flex: 1;
+  margin-left: 240px;
+  min-height: 100vh;
+}
+
+.demoBanner {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  background: linear-gradient(90deg, #C9A962 0%, #B8943E 100%);
+  color: #0F1117;
+  text-align: center;
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  z-index: 1000;
+}
+
+.demoBanner span {
+  font-weight: 700;
+}
+
+.demoBanner a {
+  color: #0F1117;
+  text-decoration: underline;
+  margin-left: 0.5rem;
+}
+
+.demoTag {
+  background: rgba(201, 169, 98, 0.2);
+  color: var(--gold);
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  margin-left: 0.5rem;
+}
+
+.overviewContainer {
+  padding: 2rem;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.overviewHeader {
+  margin-bottom: 2rem;
+}
+
+.overviewHeader h2 {
+  font-size: 1.75rem;
+  font-weight: 600;
+  color: var(--porcelain);
+  margin: 0 0 0.5rem;
+}
+
+.subtitle {
+  color: var(--muted-gray);
+  font-size: 1rem;
+  margin: 0;
+}
+
+.statsGrid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.5rem;
+  margin-bottom: 2.5rem;
+}
+
+.statCard {
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: 12px;
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.statLabel {
+  font-size: 0.875rem;
+  color: var(--muted-gray);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.statValue {
+  font-size: 1.75rem;
+  font-weight: 600;
+  color: var(--porcelain);
+}
+
+.statValue.positive {
+  color: var(--success);
+}
+
+.statValue.negative {
+  color: var(--error);
+}
+
+.statSubtext {
+  font-size: 0.875rem;
+  color: var(--muted-gray);
+}
+
+.opportunitiesSection {
+  margin-bottom: 2.5rem;
+}
+
+.opportunitiesSection h3 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--porcelain);
+  margin: 0 0 1rem;
+}
+
+.opportunitiesList {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1rem;
+}
+
+.opportunityCard {
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: 12px;
+  padding: 1.25rem;
+}
+
+.opportunityCard.high {
+  border-left: 3px solid var(--gold);
+}
+
+.opportunityCard.medium {
+  border-left: 3px solid var(--info);
+}
+
+.oppHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.75rem;
+}
+
+.oppBadge {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--gold);
+}
+
+.oppImpact {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--success);
+}
+
+.opportunityCard h4 {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--porcelain);
+  margin: 0 0 0.5rem;
+}
+
+.opportunityCard p {
+  font-size: 0.875rem;
+  color: var(--muted-gray);
+  line-height: 1.5;
+  margin: 0;
+}
+
+.portfolioPreview {
+  margin-bottom: 2rem;
+}
+
+.portfolioPreview h3 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--porcelain);
+  margin: 0 0 1rem;
+}
+
+.positionsTable {
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.tableHeader {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1.5fr;
+  padding: 1rem 1.5rem;
+  background: rgba(255, 255, 255, 0.03);
+  border-bottom: 1px solid var(--card-border);
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--muted-gray);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.tableRow {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1.5fr;
+  padding: 1rem 1.5rem;
+  border-bottom: 1px solid var(--card-border);
+  font-size: 0.9375rem;
+  color: var(--porcelain);
+}
+
+.tableRow:last-child {
+  border-bottom: none;
+}
+
+.symbol {
+  font-weight: 600;
+  color: var(--gold);
+}
+
+.positive {
+  color: var(--success);
+}
+
+.negative {
+  color: var(--error);
+}
+
+@media (max-width: 1024px) {
+  .statsGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .statsGrid {
+    grid-template-columns: 1fr;
+  }
+  
+  .tableHeader,
+  .tableRow {
+    grid-template-columns: 1fr 1fr;
+  }
+}

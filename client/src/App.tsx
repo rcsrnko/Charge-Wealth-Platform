@@ -1,10 +1,12 @@
 import { QueryClientProvider, useQuery } from '@tanstack/react-query';
 import { queryClient } from './lib/queryClient';
-import { Route, Switch, Redirect } from 'wouter';
+import { Route, Switch, Redirect, useLocation } from 'wouter';
 import { ThemeProvider } from './contexts/ThemeContext';
 import { useSupabaseAuth } from './hooks/useSupabaseAuth';
 import { useAuth } from './hooks/useAuth';
 import Dashboard from './pages/Dashboard';
+import DemoDashboard from './pages/DemoDashboard';
+import TestLogin from './pages/TestLogin';
 import { ToolsPage } from './pages/ToolsPage';
 import { TakeChargeBlog } from './pages/TakeChargeBlog';
 import OnboardingWizard from './components/OnboardingWizard';
@@ -20,9 +22,44 @@ function App() {
           <a href="#main-content" className="skip-link">
             Skip to main content
           </a>
-          <ErrorBoundary moduleName="default">
-            <AppRoutes />
-          </ErrorBoundary>
+          <Switch>
+            {/* Public routes - no auth required */}
+            <Route path="/tools/:rest*">
+              <ErrorBoundary moduleName="tools">
+                <ToolsPage />
+              </ErrorBoundary>
+            </Route>
+            <Route path="/tools">
+              <ErrorBoundary moduleName="tools">
+                <ToolsPage />
+              </ErrorBoundary>
+            </Route>
+            <Route path="/take-charge/:rest*">
+              <ErrorBoundary moduleName="blog">
+                <TakeChargeBlog />
+              </ErrorBoundary>
+            </Route>
+            <Route path="/take-charge">
+              <ErrorBoundary moduleName="blog">
+                <TakeChargeBlog />
+              </ErrorBoundary>
+            </Route>
+            <Route path="/demo">
+              <ErrorBoundary moduleName="demo">
+                <DemoDashboard />
+              </ErrorBoundary>
+            </Route>
+            <Route path="/test-login">
+              <ErrorBoundary moduleName="test-login">
+                <TestLoginPage />
+              </ErrorBoundary>
+            </Route>
+            <Route>
+              <ErrorBoundary moduleName="default">
+                <AppRoutes />
+              </ErrorBoundary>
+            </Route>
+          </Switch>
         </ToastProvider>
       </ThemeProvider>
     </QueryClientProvider>
@@ -97,9 +134,32 @@ function LoginPage() {
         }}>
           No 1% AUM fees. No sales. No BS.
         </p>
+        <a
+          href="/test-login"
+          style={{
+            display: 'block',
+            marginTop: '1.5rem',
+            fontSize: '0.8125rem',
+            color: 'rgba(255, 255, 255, 0.5)',
+            textDecoration: 'underline',
+          }}
+        >
+          Dev Login (Testing)
+        </a>
       </div>
     </div>
   );
+}
+
+function TestLoginPage() {
+  const [, setLocation] = useLocation();
+  
+  const handleLogin = () => {
+    queryClient.invalidateQueries();
+    setLocation('/dashboard');
+  };
+  
+  return <TestLogin onLogin={handleLogin} />;
 }
 
 function LoadingPage() {
@@ -135,18 +195,6 @@ function AppRoutes() {
     queryKey: ['/api/user/onboarding-status'],
     enabled: isAuthenticated,
   });
-
-  // Public routes (no auth required) - Tools for lead generation
-  const isToolsRoute = window.location.pathname.startsWith('/tools');
-  if (isToolsRoute) {
-    return <ToolsPage />;
-  }
-
-  // Public routes - Take Charge Blog
-  const isBlogRoute = window.location.pathname.startsWith('/take-charge');
-  if (isBlogRoute) {
-    return <TakeChargeBlog />;
-  }
 
   if (isLoading) {
     return <LoadingPage />;
