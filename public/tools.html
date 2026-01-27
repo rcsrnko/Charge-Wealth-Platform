@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Financial Tools | Charge Wealth</title>
+    <meta name="description" content="Free financial calculators and tools for high earners. Tax calculators, retirement planning tools, and wealth-building resources.">
+    <meta name="keywords" content="tax calculator, retirement calculator, financial planning tools, wealth calculator, investment calculator">
+    <link rel="canonical" href="https://chargewealth.co/tools">
+    
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Financial Tools | Charge Wealth">
+    <meta property="og:description" content="Free financial calculators and tools for high earners.">
+    <meta property="og:url" content="https://chargewealth.co/tools">
+    
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
+    
+    <style>
+        :root {
+            --midnight-blue: #0F1117;
+            --deep-navy: #1A1D28;
+            --gold-sand: #C9A962;
+            --gold-muted: #A68B4A;
+            --porcelain: #F4F5F7;
+            --charcoal-slate: #242B38;
+            --muted-gray: #6B7280;
+        }
+        
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background: var(--midnight-blue);
+            color: var(--porcelain);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+        
+        header {
+            background: rgba(15, 17, 23, 0.95);
+            border-bottom: 1px solid rgba(201, 169, 98, 0.15);
+            padding: 1rem 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(10px);
+        }
+        
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            color: var(--gold-sand);
+            font-size: 1.5rem;
+            font-weight: 700;
+            text-decoration: none;
+            letter-spacing: 0.05em;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+        }
+        
+        .nav-links a {
+            color: var(--porcelain);
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: color 0.2s;
+        }
+        
+        .nav-links a:hover {
+            color: var(--gold-sand);
+        }
+        
+        .nav-links .btn-login {
+            background: var(--gold-sand);
+            color: var(--midnight-blue);
+            padding: 0.5rem 1.25rem;
+            border-radius: 6px;
+            font-weight: 600;
+        }
+        
+        .nav-links .btn-login:hover {
+            background: var(--gold-muted);
+            color: var(--midnight-blue);
+        }
+        
+        .mobile-menu-toggle {
+            display: none;
+            background: none;
+            border: none;
+            color: var(--porcelain);
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+        
+        .hero {
+            text-align: center;
+            padding: 4rem 2rem;
+            background: linear-gradient(180deg, var(--midnight-blue) 0%, var(--deep-navy) 100%);
+        }
+        
+        .hero h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+        
+        .hero h1 span {
+            color: var(--gold-sand);
+        }
+        
+        .hero p {
+            color: var(--muted-gray);
+            font-size: 1.1rem;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .tools-grid {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 3rem 2rem;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 2rem;
+        }
+        
+        .tool-card {
+            background: var(--charcoal-slate);
+            border: 1px solid rgba(201, 169, 98, 0.15);
+            border-radius: 12px;
+            padding: 2rem;
+            transition: all 0.3s ease;
+        }
+        
+        .tool-card:hover {
+            border-color: var(--gold-sand);
+            transform: translateY(-4px);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3);
+        }
+        
+        .tool-icon {
+            width: 56px;
+            height: 56px;
+            background: rgba(201, 169, 98, 0.15);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.75rem;
+            margin-bottom: 1.25rem;
+        }
+        
+        .tool-card h3 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+            color: var(--porcelain);
+        }
+        
+        .tool-card p {
+            color: var(--muted-gray);
+            font-size: 0.95rem;
+            margin-bottom: 1.5rem;
+            line-height: 1.6;
+        }
+        
+        .tool-badge {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            background: rgba(201, 169, 98, 0.2);
+            color: var(--gold-sand);
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 1rem;
+        }
+        
+        .tool-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--gold-sand);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+        
+        .tool-link:hover {
+            text-decoration: underline;
+        }
+        
+        .tool-link svg {
+            width: 16px;
+            height: 16px;
+        }
+        
+        .cta-section {
+            background: linear-gradient(180deg, var(--deep-navy) 0%, var(--midnight-blue) 100%);
+            text-align: center;
+            padding: 4rem 2rem;
+            border-top: 1px solid rgba(201, 169, 98, 0.1);
+        }
+        
+        .cta-section h2 {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+        }
+        
+        .cta-section p {
+            color: var(--muted-gray);
+            max-width: 500px;
+            margin: 0 auto 2rem;
+        }
+        
+        .cta-button {
+            display: inline-block;
+            background: var(--gold-sand);
+            color: var(--midnight-blue);
+            padding: 1rem 2rem;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1rem;
+            transition: all 0.2s;
+        }
+        
+        .cta-button:hover {
+            background: var(--gold-muted);
+            transform: translateY(-2px);
+        }
+        
+        footer {
+            background: var(--midnight-blue);
+            border-top: 1px solid rgba(201, 169, 98, 0.1);
+            padding: 2rem;
+            text-align: center;
+        }
+        
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+        }
+        
+        .footer-links a {
+            color: var(--muted-gray);
+            text-decoration: none;
+            font-size: 0.875rem;
+        }
+        
+        .footer-links a:hover {
+            color: var(--gold-sand);
+        }
+        
+        .footer-copyright {
+            color: var(--muted-gray);
+            font-size: 0.8rem;
+        }
+        
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+            
+            .mobile-menu-toggle {
+                display: block;
+            }
+            
+            .hero h1 {
+                font-size: 1.75rem;
+            }
+            
+            .hero p {
+                font-size: 1rem;
+            }
+            
+            .tools-grid {
+                grid-template-columns: 1fr;
+                padding: 2rem 1rem;
+            }
+            
+            .tool-card {
+                padding: 1.5rem;
+            }
+            
+            .cta-section h2 {
+                font-size: 1.5rem;
+            }
+            
+            .footer-links {
+                flex-direction: column;
+                gap: 1rem;
+            }
+        }
+        
+        .mobile-menu-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(15, 17, 23, 0.98);
+            z-index: 200;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 1.5rem;
+        }
+        
+        .mobile-menu-overlay.active {
+            display: flex;
+        }
+        
+        .mobile-menu-overlay a {
+            color: var(--porcelain);
+            text-decoration: none;
+            font-size: 1.25rem;
+            padding: 0.5rem 1rem;
+        }
+        
+        .mobile-menu-overlay a:hover {
+            color: var(--gold-sand);
+        }
+        
+        .mobile-menu-overlay .btn-login {
+            background: var(--gold-sand);
+            color: var(--midnight-blue);
+            padding: 0.75rem 1.5rem;
+            border-radius: 6px;
+            font-weight: 600;
+        }
+        
+        .mobile-menu-close {
+            position: absolute;
+            top: 1rem;
+            right: 1.5rem;
+            background: none;
+            border: none;
+            color: var(--porcelain);
+            font-size: 2rem;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <a href="/" class="logo">Charge Wealth</a>
+            <nav class="nav-links">
+                <a href="/">Home</a>
+                <a href="/blog">Take Charge</a>
+                <a href="/tools">Tools</a>
+                <a href="/dashboard" class="btn-login">Sign In</a>
+            </nav>
+            <button class="mobile-menu-toggle" aria-label="Toggle menu">☰</button>
+        </div>
+    </header>
+    
+    <div class="mobile-menu-overlay" id="mobileMenu">
+        <button class="mobile-menu-close" id="mobileMenuClose" aria-label="Close menu">&times;</button>
+        <a href="/">Home</a>
+        <a href="/blog">Take Charge</a>
+        <a href="/tools">Tools</a>
+        <a href="/dashboard" class="btn-login">Sign In</a>
+    </div>
+
+    <main>
+        <section class="hero">
+            <h1>Financial <span>Tools</span></h1>
+            <p>Free calculators and resources to help you make smarter financial decisions. No signup required.</p>
+        </section>
+
+        <section class="tools-grid">
+            <article class="tool-card">
+                <div class="tool-icon">🧮</div>
+                <span class="tool-badge">Popular</span>
+                <h3>Tax Savings Calculator</h3>
+                <p>Estimate your potential tax savings with strategies like Mega Backdoor Roth, HSA optimization, and more. See real dollar amounts you could save.</p>
+                <a href="/#calculator" class="tool-link">
+                    Try Calculator
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                </a>
+            </article>
+
+            <article class="tool-card">
+                <div class="tool-icon">📊</div>
+                <span class="tool-badge">Free</span>
+                <h3>Effective Tax Rate Analyzer</h3>
+                <p>Calculate your true effective tax rate including federal, state, FICA, and investment taxes. Understand where your money actually goes.</p>
+                <a href="/#calculator" class="tool-link">
+                    Analyze Now
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                </a>
+            </article>
+
+            <article class="tool-card">
+                <div class="tool-icon">💼</div>
+                <span class="tool-badge">Member</span>
+                <h3>AI Tax Advisor</h3>
+                <p>Get personalized tax optimization recommendations powered by AI. Upload your tax return and receive actionable strategies tailored to your situation.</p>
+                <a href="/dashboard" class="tool-link">
+                    Access Tool
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                </a>
+            </article>
+
+            <article class="tool-card">
+                <div class="tool-icon">📈</div>
+                <span class="tool-badge">Member</span>
+                <h3>Portfolio Analyzer</h3>
+                <p>CFA-level analysis of your investment portfolio. Get recommendations on asset allocation, tax-loss harvesting opportunities, and rebalancing strategies.</p>
+                <a href="/dashboard" class="tool-link">
+                    Access Tool
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                </a>
+            </article>
+
+            <article class="tool-card">
+                <div class="tool-icon">🤖</div>
+                <span class="tool-badge">Member</span>
+                <h3>AI Financial Advisor</h3>
+                <p>Your 24/7 AI CFO. Ask questions, get proactive insights, and receive personalized financial guidance based on your complete financial picture.</p>
+                <a href="/dashboard" class="tool-link">
+                    Access Tool
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                </a>
+            </article>
+
+            <article class="tool-card">
+                <div class="tool-icon">📋</div>
+                <span class="tool-badge">Member</span>
+                <h3>Custom Playbooks</h3>
+                <p>Step-by-step action plans for specific financial goals. From backdoor Roth conversions to real estate investing strategies.</p>
+                <a href="/dashboard" class="tool-link">
+                    Access Tool
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                </a>
+            </article>
+        </section>
+
+        <section class="cta-section">
+            <h2>Unlock All Premium Tools</h2>
+            <p>Get lifetime access to AI-powered financial tools, personalized recommendations, and automated monitoring.</p>
+            <a href="/" class="cta-button">Get Started — $279 Lifetime</a>
+        </section>
+    </main>
+
+    <footer>
+        <div class="footer-links">
+            <a href="/">Home</a>
+            <a href="/blog">Take Charge Blog</a>
+            <a href="/tools">Tools</a>
+            <a href="/privacy">Privacy Policy</a>
+            <a href="/terms">Terms of Service</a>
+        </div>
+        <p class="footer-copyright">© 2026 Charge Wealth. All rights reserved.</p>
+    </footer>
+
+    <script>
+        const mobileToggle = document.querySelector('.mobile-menu-toggle');
+        const mobileMenu = document.getElementById('mobileMenu');
+        const mobileClose = document.getElementById('mobileMenuClose');
+        
+        mobileToggle.addEventListener('click', () => {
+            mobileMenu.classList.add('active');
+        });
+        
+        mobileClose.addEventListener('click', () => {
+            mobileMenu.classList.remove('active');
+        });
+        
+        mobileMenu.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', () => {
+                mobileMenu.classList.remove('active');
+            });
+        });
+    </script>
+</body>
+</html>
