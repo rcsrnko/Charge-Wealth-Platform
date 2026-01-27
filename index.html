@@ -2213,8 +2213,30 @@
         // VERSION TOGGLE: Set to false after 250 members
         // ============================================
         const FOUNDING_MEMBERS_ACTIVE = true;
-        const FOUNDING_COUNT = 187;
+        let FOUNDING_COUNT = 10; // Default, will be fetched from API
         const TOTAL_SPOTS = 250;
+        
+        // Fetch actual member count from API
+        async function fetchMemberCount() {
+            try {
+                const res = await fetch('/api/stats/members');
+                if (res.ok) {
+                    const data = await res.json();
+                    FOUNDING_COUNT = Math.min(data.memberCount, TOTAL_SPOTS - 1);
+                    updateSpotsDisplay();
+                }
+            } catch (e) {
+                console.log('Using default member count');
+            }
+        }
+        
+        function updateSpotsDisplay() {
+            const spotsRemaining = TOTAL_SPOTS - FOUNDING_COUNT;
+            const stickySpots = document.getElementById('stickySpots');
+            if (stickySpots) stickySpots.textContent = `Only ${spotsRemaining} spots left`;
+        }
+        
+        fetchMemberCount();
         
         // Toggle sections based on version
         function initVersionToggle() {

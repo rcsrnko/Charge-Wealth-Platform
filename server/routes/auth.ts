@@ -150,4 +150,41 @@ export function registerAuthRoutes(app: Express, isAuthenticated: RequestHandler
       res.status(500).json({ message: "Failed to fetch onboarding status" });
     }
   });
+
+  // Check membership/subscription status
+  app.get('/api/user/membership-status', isAuthenticated, async (req: any, res) => {
+    try {
+      const userId = req.user.claims.sub;
+      const user = await storage.getUser(userId);
+      
+      if (!user) {
+        return res.status(404).json({ message: 'User not found' });
+      }
+
+      // Test user always has access for development
+      const isTestUser = userId === 'test-user-001';
+      
+      // Check if subscription is active
+      const isActive = isTestUser || 
+        user.subscriptionStatus === 'active' ||
+        (user.subscriptionType === 'lifetime');
+      
+      // Check if subscription has expired (for non-lifetime)
+      let hasExpired = false;
+      if (user.subscriptionEndDate && user.subscriptionType !== 'lifetime') {
+        hasExpired = new Date(user.subscriptionEndDate) < new Date();
+      }
+
+      res.json({
+        hasMembership: isActive && !hasExpired,
+        subscriptionStatus: isTestUser ? 'active' : (user.subscriptionStatus || 'none'),
+        subscriptionType: isTestUser ? 'lifetime' : user.subscriptionType,
+        expiresAt: user.subscriptionEndDate,
+        isTestUser
+      });
+    } catch (error) {
+      console.error("Error fetching membership status:", error);
+      res.status(500).json({ message: "Failed to fetch membership status" });
+    }
+  });
 }
