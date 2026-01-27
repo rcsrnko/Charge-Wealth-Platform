@@ -2611,64 +2611,7 @@
         // ============================================
         // STRIPE CHECKOUT
         // ============================================
-        let stripeProducts = null;
-        
-        async function loadStripeProducts() {
-            try {
-                const res = await fetch('/api/stripe/products');
-                if (res.ok) {
-                    const data = await res.json();
-                    stripeProducts = data.products;
-                }
-            } catch (e) {
-                console.log('Failed to load Stripe products');
-            }
-        }
-        
         async function startCheckout(planType) {
-            // Get price ID based on plan type
-            let priceId = null;
-            
-            if (stripeProducts && stripeProducts.length > 0) {
-                // Find the right price based on plan type
-                const priceMap = {
-                    'lifetime': 27900,
-                    'monthly': 4900,
-                    'quarterly': 9900,
-                    'biannual': 20000
-                };
-                const targetAmount = priceMap[planType] || 27900;
-                const product = stripeProducts.find(p => p.unit_amount === targetAmount);
-                if (product) priceId = product.price_id;
-            }
-            
-            if (!priceId) {
-                // Fallback - fetch products fresh
-                try {
-                    const res = await fetch('/api/stripe/products');
-                    if (res.ok) {
-                        const data = await res.json();
-                        const priceMap = {
-                            'lifetime': 27900,
-                            'monthly': 4900,
-                            'quarterly': 9900,
-                            'biannual': 20000
-                        };
-                        const targetAmount = priceMap[planType] || 27900;
-                        const product = data.products.find(p => p.unit_amount === targetAmount);
-                        if (product) priceId = product.price_id;
-                    }
-                } catch (e) {
-                    alert('Unable to load pricing. Please try again.');
-                    return;
-                }
-            }
-            
-            if (!priceId) {
-                alert('Pricing not available. Please contact support.');
-                return;
-            }
-            
             // Check for referral code in URL
             const urlParams = new URLSearchParams(window.location.search);
             const referralCode = urlParams.get('ref') || '';
@@ -2677,24 +2620,25 @@
                 const res = await fetch('/api/stripe/checkout', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ priceId, referralCode })
+                    body: JSON.stringify({ planType, referralCode })
                 });
                 
                 if (res.ok) {
                     const data = await res.json();
                     if (data.url) {
                         window.location.href = data.url;
+                    } else {
+                        alert('Checkout failed. Please try again.');
                     }
                 } else {
-                    alert('Checkout failed. Please try again.');
+                    const errData = await res.json().catch(() => ({}));
+                    alert(errData.message || 'Checkout failed. Please try again.');
                 }
             } catch (e) {
                 console.error('Checkout error:', e);
                 alert('Checkout failed. Please try again.');
             }
         }
-        
-        loadStripeProducts();
         
         // ============================================
         // INITIALIZATION
