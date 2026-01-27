@@ -5,6 +5,8 @@ import { ThemeProvider } from './contexts/ThemeContext';
 import { useSupabaseAuth } from './hooks/useSupabaseAuth';
 import { useAuth } from './hooks/useAuth';
 import Dashboard from './pages/Dashboard';
+import { ToolsPage } from './pages/ToolsPage';
+import { TakeChargeBlog } from './pages/TakeChargeBlog';
 import OnboardingWizard from './components/OnboardingWizard';
 import { ToastProvider } from './components/Toast';
 import ErrorBoundary from './components/ErrorBoundary';
@@ -133,6 +135,18 @@ function AppRoutes() {
     queryKey: ['/api/user/onboarding-status'],
     enabled: isAuthenticated,
   });
+
+  // Public routes (no auth required) - Tools for lead generation
+  const isToolsRoute = window.location.pathname.startsWith('/tools');
+  if (isToolsRoute) {
+    return <ToolsPage />;
+  }
+
+  // Public routes - Take Charge Blog
+  const isBlogRoute = window.location.pathname.startsWith('/take-charge');
+  if (isBlogRoute) {
+    return <TakeChargeBlog />;
+  }
 
   if (isLoading) {
     return <LoadingPage />;
