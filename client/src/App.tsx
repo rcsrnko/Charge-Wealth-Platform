@@ -1,11 +1,10 @@
 import { QueryClientProvider, useQuery } from '@tanstack/react-query';
 import { queryClient } from './lib/queryClient';
-import { Route, Switch, Redirect, useLocation } from 'wouter';
+import { Route, Switch, Redirect } from 'wouter';
 import { ThemeProvider } from './contexts/ThemeContext';
 import { useSupabaseAuth } from './hooks/useSupabaseAuth';
 import Dashboard from './pages/Dashboard';
 import DemoDashboard from './pages/DemoDashboard';
-import TestLogin from './pages/TestLogin';
 import { ToolsPage } from './pages/ToolsPage';
 import { TakeChargeBlog } from './pages/TakeChargeBlog';
 import OnboardingWizard from './components/OnboardingWizard';
@@ -54,11 +53,6 @@ function App() {
             <Route path="/demo">
               <ErrorBoundary moduleName="demo">
                 <DemoDashboard />
-              </ErrorBoundary>
-            </Route>
-            <Route path="/test-login">
-              <ErrorBoundary moduleName="test-login">
-                <TestLoginPage />
               </ErrorBoundary>
             </Route>
             <Route>
@@ -142,6 +136,24 @@ function LoginPage() {
     
     setSigninLoading(true);
     try {
+      // Check for test account
+      if (signinData.email === 'testuser@test.com') {
+        const res = await fetch('/api/test-login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          credentials: 'include',
+          body: JSON.stringify({ email: signinData.email, password: signinData.password }),
+        });
+        const data = await res.json();
+        if (res.ok && data.success) {
+          window.location.href = '/dashboard';
+          return;
+        } else {
+          setSigninError(data.message || 'Sign in failed. Please check your credentials.');
+          setSigninLoading(false);
+          return;
+        }
+      }
       await signInWithEmail(signinData.email, signinData.password);
     } catch (error: any) {
       setSigninError(error.message || 'Sign in failed. Please check your credentials.');
@@ -483,17 +495,6 @@ function LoginPage() {
       </div>
     </div>
   );
-}
-
-function TestLoginPage() {
-  const [, setLocation] = useLocation();
-  
-  const handleLogin = () => {
-    queryClient.invalidateQueries();
-    setLocation('/dashboard');
-  };
-  
-  return <TestLogin onLogin={handleLogin} />;
 }
 
 function LoadingPage() {

@@ -6,10 +6,8 @@ import { authLimiter } from "../middleware/rateLimit";
 import { getUncachableStripeClient } from "../stripeClient";
 
 // Demo credentials from environment (never hardcode)
-const TEST_USER = {
-  username: process.env.DEMO_USERNAME || '',
-  password: process.env.DEMO_PASSWORD || ''
-};
+const TEST_EMAIL = 'testuser@test.com';
+const TEST_PASSWORD = process.env.DEMO_PASSWORD || '';
 
 export function registerAuthRoutes(app: Express, isAuthenticated: RequestHandler) {
   app.post('/api/test-login', authLimiter, async (req, res) => {
@@ -17,12 +15,12 @@ export function registerAuthRoutes(app: Express, isAuthenticated: RequestHandler
       return res.status(404).json({ message: 'Not found' });
     }
     try {
-      const { username, password } = req.body;
+      const { email, password } = req.body;
       
-      if (username === TEST_USER.username && password === TEST_USER.password) {
+      if (email === TEST_EMAIL && password === TEST_PASSWORD) {
         const testUser = await storage.upsertUser({
           id: 'test-user-001',
-          email: 'testuser@charge.test',
+          email: TEST_EMAIL,
           firstName: 'Test',
           lastName: 'User',
         });
