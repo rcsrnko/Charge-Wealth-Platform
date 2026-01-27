@@ -109,7 +109,7 @@ app.use('/assets', express.static(path.join(__dirname, '../dist/assets')));
   startPriceAlertChecker(60 * 60 * 1000);
   console.log('Price alert checker started');
   
-  const clientRoutes = ['/dashboard', '/demo', '/test-login'];
+  const clientRoutes = ['/dashboard', '/demo', '/test-login', '/tools', '/take-charge'];
   clientRoutes.forEach(route => {
     app.use(route, (req, res, next) => {
       if (req.path.startsWith('/api')) {
