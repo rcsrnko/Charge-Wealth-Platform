@@ -56,14 +56,30 @@ export function useSupabaseAuth() {
     if (error) throw error;
   };
 
-  const signInWithApple = async () => {
-    const { error } = await supabase.auth.signInWithOAuth({
-      provider: 'apple',
+  const signUpWithEmail = async (email: string, password: string, firstName: string, lastName: string) => {
+    const { data, error } = await supabase.auth.signUp({
+      email,
+      password,
       options: {
-        redirectTo: `${window.location.origin}/dashboard`,
+        data: {
+          full_name: `${firstName} ${lastName}`,
+          first_name: firstName,
+          last_name: lastName,
+        },
+        emailRedirectTo: `${window.location.origin}/dashboard`,
       }
     });
     if (error) throw error;
+    return data;
+  };
+
+  const signInWithEmail = async (email: string, password: string) => {
+    const { data, error } = await supabase.auth.signInWithPassword({
+      email,
+      password,
+    });
+    if (error) throw error;
+    return data;
   };
 
   const signOut = async () => {
@@ -78,7 +94,8 @@ export function useSupabaseAuth() {
     isLoading,
     isAuthenticated: !!session,
     signInWithGoogle,
-    signInWithApple,
+    signUpWithEmail,
+    signInWithEmail,
     signOut,
   };
 }

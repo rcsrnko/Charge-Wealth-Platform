@@ -1,5 +1,4 @@
 import { useState, useEffect, useRef, lazy, Suspense } from 'react';
-import { useAuth } from '../hooks/useAuth';
 import { useSupabaseAuth } from '../hooks/useSupabaseAuth';
 import { useTheme } from '../contexts/ThemeContext';
 import { Route, Switch, useLocation } from 'wouter';
@@ -62,15 +61,14 @@ interface UserDataState {
 }
 
 export default function Dashboard() {
-  const { user: replitUser } = useAuth();
   const { user: supabaseUser } = useSupabaseAuth();
   
-  // Combine user data from both auth sources
-  const user = replitUser || (supabaseUser ? {
-    firstName: supabaseUser.user_metadata?.full_name?.split(' ')[0] || supabaseUser.user_metadata?.name?.split(' ')[0] || '',
-    lastName: supabaseUser.user_metadata?.full_name?.split(' ').slice(1).join(' ') || '',
+  // Get user data from Supabase auth
+  const user = supabaseUser ? {
+    firstName: supabaseUser.user_metadata?.first_name || supabaseUser.user_metadata?.full_name?.split(' ')[0] || supabaseUser.user_metadata?.name?.split(' ')[0] || '',
+    lastName: supabaseUser.user_metadata?.last_name || supabaseUser.user_metadata?.full_name?.split(' ').slice(1).join(' ') || '',
     email: supabaseUser.email,
-  } : null);
+  } : null;
   
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [showUserMenu, setShowUserMenu] = useState(false);
