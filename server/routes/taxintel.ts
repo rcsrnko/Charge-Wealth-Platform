@@ -152,7 +152,7 @@ export function registerTaxIntelRoutes(app: Express, isAuthenticated: RequestHan
     }
   });
 
-  app.post('/api/tax-intel/upload', isAuthenticated, upload.single('document'), async (req: any, res) => {
+  app.post('/api/tax-intel/upload', isAuthenticated, upload.single('file'), async (req: any, res) => {
     try {
       const userId = req.user.claims.sub;
       const file = req.file;

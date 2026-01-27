@@ -48,7 +48,9 @@ export function registerStripeRoutes(app: Express, isAuthenticated: RequestHandl
       }
 
       const stripe = await getUncachableStripeClient();
-      const baseUrl = `https://${process.env.REPLIT_DOMAINS?.split(',')[0]}`;
+      const baseUrl = process.env.NODE_ENV === 'production' 
+        ? 'https://chargewealth.co' 
+        : `https://${process.env.REPLIT_DOMAINS?.split(',')[0] || 'chargewealth.co'}`;
       
       let hasReferralDiscount = false;
       let referrer = null;

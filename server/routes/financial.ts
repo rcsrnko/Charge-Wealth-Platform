@@ -2,6 +2,40 @@ import type { Express, RequestHandler } from "express";
 import { storage } from "../storage";
 
 export function registerFinancialRoutes(app: Express, isAuthenticated: RequestHandler) {
+  // GET routes for frontend compatibility
+  app.get('/api/financial-profile', isAuthenticated, async (req: any, res) => {
+    try {
+      const userId = req.user.claims.sub;
+      const profile = await storage.getFinancialProfile(userId);
+      res.json(profile || null);
+    } catch (error) {
+      console.error("Error fetching financial profile:", error);
+      res.status(500).json({ message: "Failed to fetch profile" });
+    }
+  });
+
+  app.get('/api/tax-returns', isAuthenticated, async (req: any, res) => {
+    try {
+      const userId = req.user.claims.sub;
+      const taxReturns = await storage.getTaxReturns(userId);
+      res.json(taxReturns || []);
+    } catch (error) {
+      console.error("Error fetching tax returns:", error);
+      res.status(500).json({ message: "Failed to fetch tax returns" });
+    }
+  });
+
+  app.get('/api/portfolio-positions', isAuthenticated, async (req: any, res) => {
+    try {
+      const userId = req.user.claims.sub;
+      const positions = await storage.getPortfolioPositions(userId);
+      res.json(positions || []);
+    } catch (error) {
+      console.error("Error fetching portfolio positions:", error);
+      res.status(500).json({ message: "Failed to fetch positions" });
+    }
+  });
+
   app.post('/api/financial-profile', isAuthenticated, async (req: any, res) => {
     try {
       const userId = req.user.claims.sub;

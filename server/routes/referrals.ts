@@ -6,7 +6,7 @@ export function registerReferralRoutes(app: Express, isAuthenticated: RequestHan
     try {
       const userId = req.user.claims.sub;
       const stats = await storage.getReferralStats(userId);
-      const baseUrl = `https://${process.env.REPLIT_DOMAINS?.split(',')[0]}`;
+      const baseUrl = 'https://chargewealth.co';
       
       res.json({
         referralCode: stats.referralCode,
@@ -25,7 +25,7 @@ export function registerReferralRoutes(app: Express, isAuthenticated: RequestHan
       const userId = req.user.claims.sub;
       const stats = await storage.getReferralStats(userId);
       const history = await storage.getReferralHistory(userId);
-      const baseUrl = `https://${process.env.REPLIT_DOMAINS?.split(',')[0]}`;
+      const baseUrl = 'https://chargewealth.co';
       
       res.json({
         ...stats,
