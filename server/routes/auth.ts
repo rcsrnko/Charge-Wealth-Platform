@@ -3,6 +3,7 @@ import { sql } from "drizzle-orm";
 import { storage } from "../storage";
 import { db } from "../db";
 import { authLimiter } from "../middleware/rateLimit";
+import { getUncachableStripeClient } from "../stripeClient";
 
 // Demo credentials from environment (never hardcode)
 const TEST_USER = {
@@ -185,6 +186,139 @@ export function registerAuthRoutes(app: Express, isAuthenticated: RequestHandler
     } catch (error) {
       console.error("Error fetching membership status:", error);
       res.status(500).json({ message: "Failed to fetch membership status" });
+    }
+  });
+
+  app.post('/api/auth/signup-checkout', async (req, res) => {
+    try {
+      const { firstName, lastName, email, referralCode } = req.body;
+      
+      if (!firstName || !lastName || !email) {
+        return res.status(400).json({ message: 'First name, last name, and email are required' });
+      }
+      
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(email)) {
+        return res.status(400).json({ message: 'Please enter a valid email address' });
+      }
+      
+      const existingUser = await storage.getUserByEmail(email);
+      if (existingUser && existingUser.subscriptionStatus === 'active') {
+        return res.status(400).json({ message: 'An account with this email already exists. Please sign in.' });
+      }
+      
+      const stripe = await getUncachableStripeClient();
+      const baseUrl = process.env.NODE_ENV === 'production' 
+        ? 'https://chargewealth.co' 
+        : `https://${process.env.REPLIT_DOMAINS?.split(',')[0] || 'chargewealth.co'}`;
+      
+      let hasReferralDiscount = false;
+      let referrer = null;
+      let finalAmount = 27900;
+      
+      if (referralCode) {
+        referrer = await storage.getUserByReferralCode(referralCode);
+        if (referrer) {
+          hasReferralDiscount = true;
+          finalAmount = 24900;
+        }
+      }
+      
+      const session = await stripe.checkout.sessions.create({
+        payment_method_types: ['card'],
+        mode: 'payment',
+        customer_email: email,
+        success_url: `${baseUrl}/api/auth/payment-success?session_id={CHECKOUT_SESSION_ID}`,
+        cancel_url: `${baseUrl}/dashboard?payment=cancelled`,
+        allow_promotion_codes: !hasReferralDiscount,
+        metadata: {
+          firstName,
+          lastName,
+          email,
+          planType: 'lifetime',
+          referralCode: referralCode || '',
+          referrerId: referrer?.id || '',
+        },
+        line_items: [{
+          price_data: {
+            currency: 'usd',
+            product_data: {
+              name: hasReferralDiscount ? 'Charge Wealth Lifetime Access (Referral Discount)' : 'Charge Wealth Lifetime Access',
+              description: hasReferralDiscount ? '$30 off with referral' : 'One-time payment for lifetime access',
+            },
+            unit_amount: finalAmount,
+          },
+          quantity: 1,
+        }],
+      });
+      
+      res.json({ url: session.url, hasReferralDiscount, finalPrice: finalAmount / 100 });
+    } catch (error) {
+      console.error('Signup checkout error:', error);
+      res.status(500).json({ message: 'Failed to start checkout' });
+    }
+  });
+
+  app.get('/api/auth/payment-success', async (req, res) => {
+    try {
+      const { session_id } = req.query;
+      
+      if (!session_id || typeof session_id !== 'string') {
+        return res.redirect('/dashboard?payment=error');
+      }
+      
+      const stripe = await getUncachableStripeClient();
+      const session = await stripe.checkout.sessions.retrieve(session_id);
+      
+      if (session.payment_status !== 'paid') {
+        return res.redirect('/dashboard?payment=failed');
+      }
+      
+      const { firstName, lastName, email, planType, referralCode, referrerId } = session.metadata || {};
+      
+      if (!email) {
+        return res.redirect('/dashboard?payment=error');
+      }
+      
+      const userId = `email-${email.replace(/[^a-zA-Z0-9]/g, '-')}-${Date.now()}`;
+      const user = await storage.upsertUser({
+        id: userId,
+        email,
+        firstName: firstName || '',
+        lastName: lastName || '',
+      });
+      
+      await storage.updateUserSubscription(user.id, {
+        subscriptionStatus: 'active',
+        subscriptionType: planType || 'lifetime',
+        stripeCustomerId: session.customer as string || null,
+        subscriptionStartDate: new Date(),
+        subscriptionEndDate: null,
+      });
+      
+      if (referralCode && referrerId) {
+        try {
+          await storage.completeReferral(referralCode, user.id, 30);
+        } catch (e) {
+          console.log('Referral completion skipped:', e);
+        }
+      }
+      
+      const sessionUser = {
+        claims: { sub: user.id },
+        expires_at: Math.floor(Date.now() / 1000) + 86400 * 30
+      };
+      
+      req.login(sessionUser, (err) => {
+        if (err) {
+          console.error('Login after payment error:', err);
+          return res.redirect('/dashboard?payment=success&login=pending');
+        }
+        res.redirect('/dashboard?payment=success');
+      });
+    } catch (error) {
+      console.error('Payment success handler error:', error);
+      res.redirect('/dashboard?payment=error');
     }
   });
 }

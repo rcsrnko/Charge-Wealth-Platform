@@ -113,6 +113,11 @@ export class DatabaseStorage implements IStorage {
     return user;
   }
 
+  async getUserByEmail(email: string): Promise<User | undefined> {
+    const [user] = await db.select().from(users).where(eq(users.email, email));
+    return user;
+  }
+
   async upsertUser(userData: UpsertUser): Promise<User> {
     const [user] = await db
       .insert(users)
@@ -124,6 +129,28 @@ export class DatabaseStorage implements IStorage {
           updatedAt: new Date(),
         },
       })
+      .returning();
+    return user;
+  }
+
+  async updateUserSubscription(userId: string, subscriptionData: {
+    subscriptionStatus: string;
+    subscriptionType: string;
+    stripeCustomerId?: string | null;
+    subscriptionStartDate?: Date | null;
+    subscriptionEndDate?: Date | null;
+  }): Promise<User | undefined> {
+    const [user] = await db
+      .update(users)
+      .set({
+        subscriptionStatus: subscriptionData.subscriptionStatus,
+        subscriptionType: subscriptionData.subscriptionType,
+        stripeCustomerId: subscriptionData.stripeCustomerId,
+        subscriptionStartDate: subscriptionData.subscriptionStartDate,
+        subscriptionEndDate: subscriptionData.subscriptionEndDate,
+        updatedAt: new Date(),
+      })
+      .where(eq(users.id, userId))
       .returning();
     return user;
   }
