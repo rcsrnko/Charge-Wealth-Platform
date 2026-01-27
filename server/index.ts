@@ -119,6 +119,11 @@ app.use('/assets', express.static(path.join(__dirname, '../dist/assets')));
     });
   });
 
+  // Static HTML pages
+  app.get('/founding', (req, res) => {
+    res.sendFile(path.join(__dirname, '../founding.html'));
+  });
+
   const PORT = parseInt(process.env.PORT || '5000', 10);
   server.listen(PORT, '0.0.0.0', () => {
     console.log(`Server running on port ${PORT}`);
