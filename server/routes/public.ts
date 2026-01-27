@@ -5,9 +5,6 @@ import { sendWelcomeSequence } from "../emailService";
 let testimonialsCache: { data: any[]; timestamp: number } | null = null;
 const TESTIMONIALS_CACHE_TTL = 60 * 60 * 1000;
 
-let memberStatsCache: { data: any; timestamp: number } | null = null;
-const MEMBER_STATS_CACHE_TTL = 5 * 60 * 1000;
-
 export function registerPublicRoutes(app: Express) {
   app.post('/api/waitlist', async (req, res) => {
     try {
@@ -49,23 +46,6 @@ export function registerPublicRoutes(app: Express) {
     } catch (error) {
       console.error('Testimonials error:', error);
       res.status(500).json({ message: 'Failed to load testimonials' });
-    }
-  });
-
-  app.get('/api/stats/members', async (_req, res) => {
-    try {
-      const now = Date.now();
-      
-      if (memberStatsCache && (now - memberStatsCache.timestamp) < MEMBER_STATS_CACHE_TTL) {
-        return res.json(memberStatsCache.data);
-      }
-      
-      const stats = await storage.getMemberStats();
-      memberStatsCache = { data: stats, timestamp: now };
-      res.json(stats);
-    } catch (error) {
-      console.error('Member stats error:', error);
-      res.status(500).json({ message: 'Failed to load stats' });
     }
   });
 }
