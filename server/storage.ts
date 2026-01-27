@@ -602,6 +602,18 @@ export class DatabaseStorage implements IStorage {
     };
   }
   
+  // Founding Member Stats
+  async getFoundingMemberCount(): Promise<number> {
+    const [result] = await db
+      .select({ count: count() })
+      .from(users)
+      .where(and(
+        eq(users.subscriptionType, 'lifetime'),
+        eq(users.subscriptionStatus, 'active')
+      ));
+    return result?.count || 0;
+  }
+  
   // ============================================
   // REFERRAL PROGRAM
   // ============================================

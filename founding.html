@@ -325,7 +325,7 @@
     <div class="container">
         <!-- Hero -->
         <section class="hero">
-            <div class="badge">⚡ Limited to 250 Founding Members</div>
+            <div class="badge" id="spots-badge">⚡ Loading...</div>
             <h1>Your Money's Working Against You</h1>
             <p class="subhead">Missed tax breaks. Cash sitting idle. Deadlines slipping by. You're bleeding money you don't even see.</p>
             <p class="stat-line">The average high earner leaves $8,400/year on the table.</p>
@@ -423,7 +423,7 @@
         
         <!-- Final CTA -->
         <section class="final-cta">
-            <p><span class="urgency">250 founding spots.</span> Once they're gone, this price is gone.</p>
+            <p><span class="urgency" id="spots-urgency">250 founding spots.</span> Once they're gone, this price is gone.</p>
             <a href="/signup" class="cta-button">Become a Founding Member →</a>
         </section>
         
@@ -432,5 +432,36 @@
             <p>© 2026 Charge Wealth · <a href="/privacy">Privacy</a> · <a href="/terms">Terms</a></p>
         </footer>
     </div>
+<script>
+    async function loadFoundingStats() {
+        try {
+            const res = await fetch('/api/stats/founding');
+            const data = await res.json();
+            
+            const badge = document.getElementById('spots-badge');
+            const urgency = document.getElementById('spots-urgency');
+            
+            if (data.remaining > 0) {
+                badge.textContent = `⚡ ${data.remaining} of ${data.total} Spots Left`;
+                urgency.textContent = `${data.remaining} spots left.`;
+            } else {
+                badge.textContent = '⚡ All Spots Claimed';
+                urgency.textContent = 'All founding spots claimed.';
+                // Disable CTAs
+                document.querySelectorAll('.cta-button').forEach(btn => {
+                    btn.style.opacity = '0.5';
+                    btn.style.pointerEvents = 'none';
+                    btn.textContent = 'Sold Out';
+                });
+            }
+        } catch (err) {
+            // Fallback to static text on error
+            document.getElementById('spots-badge').textContent = '⚡ Limited to 250 Founding Members';
+            document.getElementById('spots-urgency').textContent = '250 founding spots.';
+        }
+    }
+    
+    loadFoundingStats();
+</script>
 </body>
 </html>

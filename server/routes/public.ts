@@ -8,6 +8,9 @@ const TESTIMONIALS_CACHE_TTL = 60 * 60 * 1000;
 let memberStatsCache: { data: any; timestamp: number } | null = null;
 const MEMBER_STATS_CACHE_TTL = 5 * 60 * 1000;
 
+let foundingStatsCache: { data: any; timestamp: number } | null = null;
+const FOUNDING_STATS_CACHE_TTL = 60 * 1000; // 1 minute cache
+
 export function registerPublicRoutes(app: Express) {
   app.post('/api/waitlist', async (req, res) => {
     try {
@@ -66,6 +69,27 @@ export function registerPublicRoutes(app: Express) {
     } catch (error) {
       console.error('Member stats error:', error);
       res.status(500).json({ message: 'Failed to load stats' });
+    }
+  });
+
+  app.get('/api/stats/founding', async (_req, res) => {
+    try {
+      const now = Date.now();
+      
+      if (foundingStatsCache && (now - foundingStatsCache.timestamp) < FOUNDING_STATS_CACHE_TTL) {
+        return res.json(foundingStatsCache.data);
+      }
+      
+      const count = await storage.getFoundingMemberCount();
+      const total = 250;
+      const remaining = Math.max(0, total - count);
+      
+      const data = { total, claimed: count, remaining };
+      foundingStatsCache = { data, timestamp: now };
+      res.json(data);
+    } catch (error) {
+      console.error('Founding stats error:', error);
+      res.status(500).json({ message: 'Failed to load founding stats' });
     }
   });
 }
