@@ -400,8 +400,11 @@ function AppRoutes() {
   }
 
   // Show paywall if user doesn't have membership (after loading)
-  if (!membershipLoading && membershipStatus && !membershipStatus.hasMembership) {
-    return <PaywallPage />;
+  // CRITICAL: Show paywall unless we explicitly confirm membership
+  if (!membershipLoading) {
+    if (!membershipStatus || !membershipStatus.hasMembership) {
+      return <PaywallPage />;
+    }
   }
 
   const showWizard = (
