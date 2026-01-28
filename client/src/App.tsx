@@ -627,8 +627,8 @@ function AppRoutes() {
   const [wizardDismissed, setWizardDismissed] = useState(false);
 
   // Check for server-side session (for test user login)
-  const { data: serverUser, isLoading: serverAuthLoading } = useQuery({
-    queryKey: ['/api/auth/user'],
+  const { data: sessionData, isLoading: serverAuthLoading } = useQuery<{ authenticated: boolean; user?: any }>({
+    queryKey: ['/api/auth/session'],
     retry: false,
     staleTime: 1000 * 60 * 5,
   });
@@ -636,7 +636,7 @@ function AppRoutes() {
   const TESTING_MODE = false;
   
   const isLoading = TESTING_MODE ? false : (supabaseLoading || serverAuthLoading);
-  const serverAuth = !!(serverUser && (serverUser as any).id);
+  const serverAuth = !!(sessionData?.authenticated && sessionData?.user);
   const isAuthenticated = TESTING_MODE ? true : (supabaseAuth || serverAuth);
 
   const { data: onboardingStatus, isLoading: onboardingLoading, refetch } = useQuery<{ onboardingCompleted: boolean }>({

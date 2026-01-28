@@ -46,6 +46,23 @@ export function registerAuthRoutes(app: Express, isAuthenticated: RequestHandler
     }
   });
 
+  // Session check endpoint (no auth required) - for checking if user is logged in via server session
+  app.get('/api/auth/session', async (req: any, res) => {
+    try {
+      if (req.isAuthenticated && req.isAuthenticated() && req.user?.claims?.sub) {
+        const userId = req.user.claims.sub;
+        const user = await storage.getUser(userId);
+        if (user) {
+          return res.json({ authenticated: true, user });
+        }
+      }
+      res.json({ authenticated: false });
+    } catch (error) {
+      console.error('Session check error:', error);
+      res.json({ authenticated: false });
+    }
+  });
+
   app.post('/api/auth/supabase-sync', async (req, res) => {
     try {
       const { user } = req.body;
