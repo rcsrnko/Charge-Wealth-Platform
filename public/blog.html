@@ -346,10 +346,6 @@
     </section>
     
     <main>
-        <div class="categories" id="categories">
-            <button class="category-btn active" data-category="all">All Posts</button>
-        </div>
-        
         <div class="posts-grid" id="posts-grid">
             <div class="loading">Loading articles...</div>
         </div>
@@ -397,18 +393,15 @@
     </footer>
     
     <script>
-        async function loadPosts(category = null) {
+        async function loadPosts() {
             const grid = document.getElementById('posts-grid');
             grid.innerHTML = '<div class="loading">Loading articles...</div>';
             
             try {
-                const url = category && category !== 'all' 
-                    ? `/api/blog/posts?category=${category}` 
-                    : '/api/blog/posts';
-                const res = await fetch(url);
+                const res = await fetch('/api/blog/posts');
                 const data = await res.json();
                 
-                if (data.posts.length === 0) {
+                if (!data.posts || data.posts.length === 0) {
                     grid.innerHTML = '<p class="loading">No articles found.</p>';
                     return;
                 }
@@ -416,12 +409,12 @@
                 grid.innerHTML = data.posts.map(post => `
                     <article class="post-card">
                         <a href="/blog/${post.slug}">
+                            ${post.featured_image ? `<img src="${post.featured_image}" alt="${post.title}" style="width:100%;height:180px;object-fit:cover;">` : ''}
                             <div class="post-content">
-                                <div class="post-category">${formatCategory(post.category)}</div>
                                 <h2 class="post-title">${post.title}</h2>
-                                <p class="post-excerpt">${post.excerpt || post.meta_description || ''}</p>
+                                <p class="post-excerpt">${post.preview || ''}</p>
                                 <div class="post-meta">
-                                    <span>${post.read_time_minutes || 5} min read</span>
+                                    <span>${post.published_at ? new Date(post.published_at).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' }) : ''}</span>
                                     <span class="read-more">Read More &rarr;</span>
                                 </div>
                             </div>
@@ -429,45 +422,11 @@
                     </article>
                 `).join('');
             } catch (err) {
+                console.error('Failed to load posts:', err);
                 grid.innerHTML = '<p class="loading">Failed to load articles.</p>';
             }
         }
         
-        async function loadCategories() {
-            try {
-                const res = await fetch('/api/blog/categories');
-                const data = await res.json();
-                
-                const container = document.getElementById('categories');
-                data.categories.forEach(cat => {
-                    const btn = document.createElement('button');
-                    btn.className = 'category-btn';
-                    btn.dataset.category = cat.category;
-                    btn.textContent = formatCategory(cat.category) + ` (${cat.count})`;
-                    btn.onclick = () => {
-                        document.querySelectorAll('.category-btn').forEach(b => b.classList.remove('active'));
-                        btn.classList.add('active');
-                        loadPosts(cat.category);
-                    };
-                    container.appendChild(btn);
-                });
-            } catch (err) {
-                console.error('Failed to load categories:', err);
-            }
-        }
-        
-        function formatCategory(cat) {
-            if (!cat) return 'General';
-            return cat.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
-        }
-        
-        document.querySelector('.category-btn').onclick = () => {
-            document.querySelectorAll('.category-btn').forEach(b => b.classList.remove('active'));
-            document.querySelector('.category-btn').classList.add('active');
-            loadPosts();
-        };
-        
-        loadCategories();
         loadPosts();
         
         // Newsletter form handler

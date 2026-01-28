@@ -38,6 +38,7 @@ Preferred communication style: Simple, everyday language.
   - Modern animations: scroll-triggered fade-ins, active nav highlighting, sticky CTA bar after hero, scroll progress indicator, animated counters
   - Founding member counter: 187/250 spots (hardcoded values, update as needed)
   - Two pricing versions: Founding ($279 lifetime) and Regular ($49/mo, $99/3mo, $200/6mo, $499 lifetime)
+- **Blog:** Connected to Supabase blog_posts table. List view at /blog shows all posts (title, preview, date, featured image). Individual posts at /blog/[slug] display full content_html. Posts ordered by published_at descending.
 - **SEO:** Implemented with meta tags, Schema.org, a blog section with SEO-optimized articles, server-side rendered blog posts, and auto-generated sitemap.xml.
 
 ## External Dependencies

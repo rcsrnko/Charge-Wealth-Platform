@@ -1,71 +1,27 @@
 import type { Express } from "express";
-import { sql } from "drizzle-orm";
-import { db } from "../db";
+import { createClient } from "@supabase/supabase-js";
 
-function formatMarkdown(content: string): string {
-  if (!content) return '';
-  
-  return content
-    .replace(/^### (.*$)/gim, '<h3>$1</h3>')
-    .replace(/^## (.*$)/gim, '<h2>$1</h2>')
-    .replace(/^# (.*$)/gim, '<h2>$1</h2>')
-    .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
-    .replace(/\*(.*?)\*/g, '<em>$1</em>')
-    .replace(/\[(.*?)\]\((.*?)\)/g, '<a href="$2">$1</a>')
-    .replace(/^\- (.*$)/gim, '<li>$1</li>')
-    .replace(/^\d+\. (.*$)/gim, '<li>$1</li>')
-    .replace(/(<li>.*<\/li>)/s, '<ul>$1</ul>')
-    .replace(/\|(.+)\|/g, (match) => {
-      const cells = match.split('|').filter(c => c.trim());
-      if (cells.every(c => c.trim().match(/^-+$/))) return '';
-      const isHeader = cells.some(c => c.includes('---'));
-      if (isHeader) return '';
-      const tag = 'td';
-      return '<tr>' + cells.map(c => `<${tag}>${c.trim()}</${tag}>`).join('') + '</tr>';
-    })
-    .replace(/\n\n/g, '</p><p>')
-    .replace(/^(.+)$/gm, (line) => {
-      if (line.startsWith('<')) return line;
-      return line;
-    });
-}
+const supabaseUrl = process.env.SUPABASE_URL!;
+const supabaseAnonKey = process.env.SUPABASE_ANON_KEY!;
+const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
 export async function registerBlogRoutes(app: Express) {
-  const { getBeehiivPosts, getBeehiivPost } = await import('../beehiivService');
-
   app.get('/api/blog/posts', async (req, res) => {
     try {
-      const { limit = 20, source } = req.query;
+      const { limit = 20 } = req.query;
       
-      const beehiivPosts = await getBeehiivPosts(Number(limit));
+      const { data: posts, error } = await supabase
+        .from('blog_posts')
+        .select('id, slug, title, preview, featured_image, published_at')
+        .order('published_at', { ascending: false })
+        .limit(Number(limit));
       
-      if (beehiivPosts.length > 0 && source !== 'db') {
-        const posts = beehiivPosts.map(p => ({
-          id: p.id,
-          slug: p.slug,
-          title: p.title,
-          excerpt: p.subtitle,
-          meta_description: p.contentSnippet,
-          author: p.author,
-          published_at: p.publishedAt,
-          featured_image: p.thumbnail,
-          source: 'beehiiv',
-          link: p.link,
-        }));
-        return res.json({ posts, source: 'beehiiv' });
+      if (error) {
+        console.error('Supabase error:', error);
+        return res.status(500).json({ message: 'Failed to fetch posts' });
       }
       
-      const result = await db.execute(sql`
-        SELECT id, slug, title, meta_description, excerpt, category, tags, author,
-               featured_image, published_at, read_time_minutes
-        FROM blog_posts
-        WHERE is_published = true
-        ORDER BY published_at DESC
-        LIMIT ${Number(limit)}
-      `);
-      
-      const rows = Array.isArray(result) ? result : ((result as any).rows || []);
-      res.json({ posts: rows, source: 'database' });
+      res.json({ posts: posts || [], source: 'supabase' });
     } catch (error) {
       console.error('Get blog posts error:', error);
       res.status(500).json({ message: 'Failed to get blog posts' });
@@ -76,57 +32,20 @@ export async function registerBlogRoutes(app: Express) {
     try {
       const { slug } = req.params;
       
-      const beehiivPost = await getBeehiivPost(slug);
-      if (beehiivPost) {
-        return res.json({
-          post: {
-            id: beehiivPost.id,
-            slug: beehiivPost.slug,
-            title: beehiivPost.title,
-            content: beehiivPost.content,
-            excerpt: beehiivPost.subtitle,
-            meta_description: beehiivPost.contentSnippet,
-            author: beehiivPost.author,
-            published_at: beehiivPost.publishedAt,
-            featured_image: beehiivPost.thumbnail,
-            link: beehiivPost.link,
-            source: 'beehiiv',
-          },
-          source: 'beehiiv',
-        });
-      }
+      const { data: post, error } = await supabase
+        .from('blog_posts')
+        .select('*')
+        .eq('slug', slug)
+        .single();
       
-      const result = await db.execute(sql`
-        SELECT * FROM blog_posts WHERE slug = ${slug} AND is_published = true
-      `);
-      
-      const rows = Array.isArray(result) ? result : ((result as any).rows || []);
-      if (rows.length === 0) {
+      if (error || !post) {
         return res.status(404).json({ message: 'Post not found' });
       }
       
-      res.json({ post: rows[0], source: 'database' });
+      res.json({ post, source: 'supabase' });
     } catch (error) {
       console.error('Get blog post error:', error);
       res.status(500).json({ message: 'Failed to get blog post' });
-    }
-  });
-
-  app.get('/api/blog/categories', async (_req, res) => {
-    try {
-      const result = await db.execute(sql`
-        SELECT DISTINCT category, COUNT(*) as count
-        FROM blog_posts
-        WHERE is_published = true AND category IS NOT NULL
-        GROUP BY category
-        ORDER BY count DESC
-      `);
-      
-      const rows = Array.isArray(result) ? result : ((result as any).rows || []);
-      res.json({ categories: rows });
-    } catch (error) {
-      console.error('Get blog categories error:', error);
-      res.status(500).json({ message: 'Failed to get categories' });
     }
   });
 
@@ -139,34 +58,13 @@ export async function registerBlogRoutes(app: Express) {
       const { slug } = req.params;
       const baseUrl = 'https://chargewealth.com';
       
-      const beehiivPost = await getBeehiivPost(slug);
-      let post: any = null;
+      const { data: post, error } = await supabase
+        .from('blog_posts')
+        .select('*')
+        .eq('slug', slug)
+        .single();
       
-      if (beehiivPost) {
-        post = {
-          title: beehiivPost.title,
-          content: beehiivPost.content,
-          meta_description: beehiivPost.contentSnippet,
-          excerpt: beehiivPost.subtitle,
-          author: beehiivPost.author,
-          published_at: beehiivPost.publishedAt,
-          slug: beehiivPost.slug,
-          featured_image: beehiivPost.thumbnail,
-          link: beehiivPost.link,
-        };
-      } else {
-        const result = await db.execute(sql`
-          SELECT * FROM blog_posts WHERE slug = ${slug} AND is_published = true
-        `);
-        
-        const rows = Array.isArray(result) ? result : ((result as any).rows || []);
-        if (rows.length === 0) {
-          return res.redirect('/blog');
-        }
-        post = rows[0];
-      }
-      
-      if (!post) {
+      if (error || !post) {
         return res.redirect('/blog');
       }
       
@@ -176,18 +74,19 @@ export async function registerBlogRoutes(app: Express) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>${post.title} | Charge Wealth</title>
-    <meta name="description" content="${post.meta_description || post.excerpt || ''}">
-    <meta name="author" content="${post.author || 'Charge Wealth Team'}">
+    <meta name="description" content="${post.preview || ''}">
     <link rel="canonical" href="${baseUrl}/blog/${post.slug}">
     
     <meta property="og:type" content="article">
     <meta property="og:title" content="${post.title}">
-    <meta property="og:description" content="${post.meta_description || post.excerpt || ''}">
+    <meta property="og:description" content="${post.preview || ''}">
     <meta property="og:url" content="${baseUrl}/blog/${post.slug}">
+    ${post.featured_image ? `<meta property="og:image" content="${post.featured_image}">` : ''}
     
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="${post.title}">
-    <meta name="twitter:description" content="${post.meta_description || post.excerpt || ''}">
+    <meta name="twitter:description" content="${post.preview || ''}">
+    ${post.featured_image ? `<meta name="twitter:image" content="${post.featured_image}">` : ''}
     
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
     
@@ -196,10 +95,10 @@ export async function registerBlogRoutes(app: Express) {
       "@context": "https://schema.org",
       "@type": "BlogPosting",
       "headline": "${post.title}",
-      "description": "${post.meta_description || ''}",
+      "description": "${post.preview || ''}",
       "author": {
         "@type": "Organization",
-        "name": "${post.author || 'Charge Wealth'}"
+        "name": "Charge Wealth"
       },
       "publisher": {
         "@type": "Organization",
@@ -207,7 +106,6 @@ export async function registerBlogRoutes(app: Express) {
         "url": "${baseUrl}"
       },
       "datePublished": "${post.published_at ? new Date(post.published_at).toISOString() : ''}",
-      "dateModified": "${post.updated_at ? new Date(post.updated_at).toISOString() : ''}",
       "mainEntityOfPage": "${baseUrl}/blog/${post.slug}"
     }
     </script>
@@ -263,6 +161,13 @@ export async function registerBlogRoutes(app: Express) {
             margin-bottom: 2rem;
         }
         .breadcrumb a { color: var(--gold-sand); text-decoration: none; }
+        .featured-image {
+            width: 100%;
+            max-height: 400px;
+            object-fit: cover;
+            border-radius: 12px;
+            margin-bottom: 2rem;
+        }
         h1 {
             font-size: 2.5rem;
             font-weight: 700;
@@ -276,13 +181,6 @@ export async function registerBlogRoutes(app: Express) {
             display: flex;
             gap: 1.5rem;
             flex-wrap: wrap;
-        }
-        .category {
-            color: var(--gold-sand);
-            text-transform: uppercase;
-            font-size: 0.75rem;
-            font-weight: 600;
-            letter-spacing: 0.05em;
         }
         .content {
             font-size: 1.1rem;
@@ -302,23 +200,35 @@ export async function registerBlogRoutes(app: Express) {
         }
         .content li { margin-bottom: 0.5rem; }
         .content strong { color: var(--gold-sand); }
-        .content table {
-            width: 100%;
-            border-collapse: collapse;
+        .content blockquote {
+            border-left: 3px solid var(--gold-sand);
+            padding-left: 1.5rem;
             margin: 1.5rem 0;
+            color: var(--muted-gray);
+            font-style: italic;
         }
-        .content th, .content td {
-            border: 1px solid rgba(201, 169, 98, 0.2);
-            padding: 0.75rem;
-            text-align: left;
-        }
-        .content th {
+        .content pre {
             background: var(--deep-navy);
-            color: var(--gold-sand);
+            padding: 1rem;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin: 1rem 0;
+        }
+        .content code {
+            background: var(--deep-navy);
+            padding: 0.2rem 0.4rem;
+            border-radius: 4px;
+            font-size: 0.9em;
         }
         .content a {
             color: var(--gold-sand);
             text-decoration: underline;
+        }
+        .content img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            margin: 1.5rem 0;
         }
         .cta-box {
             background: var(--deep-navy);
@@ -371,26 +281,25 @@ export async function registerBlogRoutes(app: Express) {
     
     <main>
         <nav class="breadcrumb">
-            <a href="/">Home</a> / <a href="/blog">Blog</a> / ${post.title.substring(0, 40)}...
+            <a href="/">Home</a> / <a href="/blog">Blog</a> / ${post.title.substring(0, 40)}${post.title.length > 40 ? '...' : ''}
         </nav>
         
         <article>
-            <span class="category">${post.category ? post.category.replace(/-/g, ' ') : 'Financial Planning'}</span>
+            ${post.featured_image ? `<img src="${post.featured_image}" alt="${post.title}" class="featured-image">` : ''}
             <h1>${post.title}</h1>
             <div class="meta">
-                <span>${post.read_time_minutes || 5} min read</span>
                 <span>${post.published_at ? new Date(post.published_at).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }) : ''}</span>
-                <span>By ${post.author || 'Charge Wealth Team'}</span>
+                <span>By Charge Wealth Team</span>
             </div>
             
             <div class="content">
-                ${formatMarkdown(post.content)}
+                ${post.content_html}
             </div>
             
             <div class="cta-box">
                 <h3>Ready to optimize your finances?</h3>
                 <p>Join thousands of high earners saving $3K-15K annually with AI-powered tax strategies.</p>
-                <a href="/dashboard">Get Started — $279 Lifetime</a>
+                <a href="/dashboard">Get Started - $279 Lifetime</a>
             </div>
         </article>
     </main>
@@ -409,6 +318,7 @@ export async function registerBlogRoutes(app: Express) {
 </html>`;
       
       res.header('Content-Type', 'text/html');
+      res.header('Cache-Control', 'no-cache');
       res.send(htmlContent);
     } catch (error) {
       console.error('Blog post render error:', error);
@@ -420,11 +330,9 @@ export async function registerBlogRoutes(app: Express) {
     try {
       const baseUrl = 'https://chargewealth.com';
       
-      const blogResult = await db.execute(sql`
-        SELECT slug, updated_at FROM blog_posts WHERE is_published = true
-      `);
-      
-      const posts = Array.isArray(blogResult) ? blogResult : (blogResult.rows || []);
+      const { data: posts } = await supabase
+        .from('blog_posts')
+        .select('slug, published_at');
       
       let xml = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
@@ -454,8 +362,8 @@ export async function registerBlogRoutes(app: Express) {
     <priority>0.3</priority>
   </url>`;
       
-      for (const post of posts as any[]) {
-        const lastmod = post.updated_at ? new Date(post.updated_at).toISOString().split('T')[0] : new Date().toISOString().split('T')[0];
+      for (const post of (posts || []) as any[]) {
+        const lastmod = post.published_at ? new Date(post.published_at).toISOString().split('T')[0] : new Date().toISOString().split('T')[0];
         xml += `
   <url>
     <loc>${baseUrl}/blog/${post.slug}</loc>
