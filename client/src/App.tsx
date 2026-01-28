@@ -626,10 +626,18 @@ function AppRoutes() {
   const { isLoading: supabaseLoading, isAuthenticated: supabaseAuth } = useSupabaseAuth();
   const [wizardDismissed, setWizardDismissed] = useState(false);
 
+  // Check for server-side session (for test user login)
+  const { data: serverUser, isLoading: serverAuthLoading } = useQuery({
+    queryKey: ['/api/auth/user'],
+    retry: false,
+    staleTime: 1000 * 60 * 5,
+  });
+
   const TESTING_MODE = false;
   
-  const isLoading = TESTING_MODE ? false : supabaseLoading;
-  const isAuthenticated = TESTING_MODE ? true : supabaseAuth;
+  const isLoading = TESTING_MODE ? false : (supabaseLoading || serverAuthLoading);
+  const serverAuth = !!(serverUser && (serverUser as any).id);
+  const isAuthenticated = TESTING_MODE ? true : (supabaseAuth || serverAuth);
 
   const { data: onboardingStatus, isLoading: onboardingLoading, refetch } = useQuery<{ onboardingCompleted: boolean }>({
     queryKey: ['/api/user/onboarding-status'],
