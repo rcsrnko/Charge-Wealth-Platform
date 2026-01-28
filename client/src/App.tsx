@@ -654,9 +654,12 @@ function AppRoutes() {
     enabled: isAuthenticated,
   });
 
+  // For test user, check membership from stored data instead of API
+  const testUserHasMembership = testUserAuth?.subscriptionStatus === 'active';
+  
   const { data: membershipStatus, isLoading: membershipLoading } = useQuery<MembershipStatus>({
     queryKey: ['/api/user/membership-status'],
-    enabled: isAuthenticated,
+    enabled: isAuthenticated && !testUserAuth, // Skip API call for test user
   });
 
   if (isLoading) {
@@ -668,8 +671,12 @@ function AppRoutes() {
   }
 
   // Show paywall if user doesn't have membership (after loading)
-  // CRITICAL: Show paywall unless we explicitly confirm membership
-  if (!membershipLoading) {
+  // For test user, use stored subscription status
+  if (testUserAuth) {
+    if (!testUserHasMembership) {
+      return <PaywallPage />;
+    }
+  } else if (!membershipLoading) {
     if (!membershipStatus || !membershipStatus.hasMembership) {
       return <PaywallPage />;
     }
