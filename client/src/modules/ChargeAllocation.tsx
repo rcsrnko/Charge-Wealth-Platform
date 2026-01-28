@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback } from 'react';
 import styles from './ChargeAllocation.module.css';
 import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
 import LoadingSpinner from '../components/LoadingSpinner';
+import { fetchWithAuth } from '../lib/fetchWithAuth';
 
 interface Position {
   id: number;
@@ -158,7 +159,7 @@ export default function ChargeAllocation() {
   const loadPortfolio = useCallback(async (showRefreshing = false) => {
     if (showRefreshing) setIsRefreshing(true);
     try {
-      const response = await fetch('/api/allocation/portfolio', { credentials: 'include' });
+      const response = await fetchWithAuth('/api/allocation/portfolio');
       if (response.ok) {
         const data = await response.json();
         setPortfolio(data.portfolio);
@@ -173,7 +174,7 @@ export default function ChargeAllocation() {
 
   const loadPriceAlerts = useCallback(async () => {
     try {
-      const response = await fetch('/api/price-alerts', { credentials: 'include' });
+      const response = await fetchWithAuth('/api/price-alerts');
       if (response.ok) {
         const data = await response.json();
         setPriceAlerts(data.alerts);
@@ -186,7 +187,7 @@ export default function ChargeAllocation() {
   const loadPriceHistory = useCallback(async (symbol: string, days: number) => {
     setIsLoadingHistory(true);
     try {
-      const response = await fetch(`/api/allocation/history/${symbol}?days=${days}`, { credentials: 'include' });
+      const response = await fetchWithAuth(`/api/allocation/history/${symbol}?days=${days}`);
       if (response.ok) {
         const data = await response.json();
         setPriceHistory(data.history);
@@ -221,10 +222,9 @@ export default function ChargeAllocation() {
     setThesis(null);
 
     try {
-      const response = await fetch('/api/allocation/analyze', {
+      const response = await fetchWithAuth('/api/allocation/analyze', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        credentials: 'include',
         body: JSON.stringify({ symbol: position.symbol, positionId: position.id }),
       });
 
@@ -243,10 +243,9 @@ export default function ChargeAllocation() {
     if (!newPosition.symbol || !newPosition.shares) return;
 
     try {
-      const response = await fetch('/api/allocation/positions', {
+      const response = await fetchWithAuth('/api/allocation/positions', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        credentials: 'include',
         body: JSON.stringify({
           symbol: newPosition.symbol.toUpperCase(),
           shares: parseFloat(newPosition.shares),
@@ -268,10 +267,9 @@ export default function ChargeAllocation() {
     if (!newAlert.symbol || !newAlert.targetPrice) return;
 
     try {
-      const response = await fetch('/api/price-alerts', {
+      const response = await fetchWithAuth('/api/price-alerts', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        credentials: 'include',
         body: JSON.stringify({
           symbol: newAlert.symbol.toUpperCase(),
           alertType: newAlert.alertType,
@@ -291,9 +289,8 @@ export default function ChargeAllocation() {
 
   const deletePriceAlert = async (alertId: number) => {
     try {
-      await fetch(`/api/price-alerts/${alertId}`, {
+      await fetchWithAuth(`/api/price-alerts/${alertId}`, {
         method: 'DELETE',
-        credentials: 'include',
       });
       loadPriceAlerts();
     } catch (err) {

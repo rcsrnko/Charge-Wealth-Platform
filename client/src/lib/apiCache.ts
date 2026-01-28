@@ -1,3 +1,5 @@
+import { fetchWithAuth } from './fetchWithAuth';
+
 const cache = new Map<string, { data: any; timestamp: number }>();
 const CACHE_DURATION = 5 * 60 * 1000; // 5 minutes
 
@@ -9,10 +11,7 @@ export async function cachedFetch(url: string, options?: RequestInit) {
     return cached.data;
   }
   
-  const response = await fetch(url, { 
-    ...options, 
-    credentials: 'include' 
-  });
+  const response = await fetchWithAuth(url, options);
   
   if (!response.ok) {
     throw new Error(`API error: ${response.status}`);

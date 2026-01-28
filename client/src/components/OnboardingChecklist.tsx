@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import styles from './OnboardingChecklist.module.css';
+import { fetchWithAuth } from '../lib/fetchWithAuth';
 
 interface OnboardingStatus {
   financialProfile: boolean;
@@ -17,7 +18,7 @@ export default function OnboardingChecklist() {
   const { data: status, isLoading } = useQuery<OnboardingStatus>({
     queryKey: ['onboarding-status'],
     queryFn: async () => {
-      const res = await fetch('/api/onboarding/status', { credentials: 'include' });
+      const res = await fetchWithAuth('/api/onboarding/status');
       if (!res.ok) throw new Error('Failed to fetch onboarding status');
       return res.json();
     }
@@ -179,10 +180,9 @@ function FinancialProfileForm({ onComplete }: { onComplete: () => void }) {
     setError('');
     
     try {
-      const res = await fetch('/api/financial-profile', {
+      const res = await fetchWithAuth('/api/financial-profile', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        credentials: 'include',
         body: JSON.stringify(formData)
       });
       
@@ -280,10 +280,9 @@ function TaxReturnForm({ onComplete }: { onComplete: () => void }) {
     setError('');
     
     try {
-      const res = await fetch('/api/tax-returns', {
+      const res = await fetchWithAuth('/api/tax-returns', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        credentials: 'include',
         body: JSON.stringify(formData)
       });
       
@@ -391,10 +390,9 @@ function PortfolioForm({ onComplete }: { onComplete: () => void }) {
     setError('');
     
     try {
-      const res = await fetch('/api/portfolio-positions', {
+      const res = await fetchWithAuth('/api/portfolio-positions', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        credentials: 'include',
         body: JSON.stringify(formData)
       });
       
@@ -508,10 +506,9 @@ function CashFlowForm({ onComplete }: { onComplete: () => void }) {
     setError('');
     
     try {
-      const res = await fetch('/api/cash-flow', {
+      const res = await fetchWithAuth('/api/cash-flow', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        credentials: 'include',
         body: JSON.stringify(formData)
       });
       

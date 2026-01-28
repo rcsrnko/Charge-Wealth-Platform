@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { PieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip } from 'recharts';
 import styles from './CashFlowWizard.module.css';
+import { fetchWithAuth } from '../lib/fetchWithAuth';
 
 interface CashFlowData {
   income: {
@@ -76,10 +77,9 @@ export default function CashFlowWizard({ onClose, onComplete }: CashFlowWizardPr
   const generateInsights = async () => {
     setIsGenerating(true);
     try {
-      const response = await fetch('/api/advisor/cash-flow-insights', {
+      const response = await fetchWithAuth('/api/advisor/cash-flow-insights', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        credentials: 'include',
         body: JSON.stringify({
           totalIncome,
           totalExpenses,

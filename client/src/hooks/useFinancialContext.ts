@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
+import { fetchWithAuth } from '../lib/fetchWithAuth';
 
 export interface FinancialContext {
   profile: {
@@ -79,7 +80,7 @@ export function useFinancialContext() {
   const fetchContext = useCallback(async () => {
     setLoading(true);
     try {
-      const response = await fetch('/api/unified-context', { credentials: 'include' });
+      const response = await fetchWithAuth('/api/unified-context');
       if (response.ok) {
         const data = await response.json();
         setContext(data);

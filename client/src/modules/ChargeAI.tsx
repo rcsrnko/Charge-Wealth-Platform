@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
 import styles from './ChargeAI.module.css';
 import LoadingSpinner from '../components/LoadingSpinner';
+import { fetchWithAuth } from '../lib/fetchWithAuth';
 
 interface Message {
   role: 'user' | 'assistant';
@@ -72,7 +73,7 @@ export default function ChargeAI() {
 
   const loadContext = async () => {
     try {
-      const response = await fetch('/api/charge-ai/context', { credentials: 'include' });
+      const response = await fetchWithAuth('/api/charge-ai/context');
       if (response.ok) {
         const data = await response.json();
         setContextSummary(data);
@@ -84,7 +85,7 @@ export default function ChargeAI() {
 
   const loadMemos = async () => {
     try {
-      const response = await fetch('/api/charge-ai/memos', { credentials: 'include' });
+      const response = await fetchWithAuth('/api/charge-ai/memos');
       if (response.ok) {
         const data = await response.json();
         setSavedMemos(data.memos || []);
@@ -97,7 +98,7 @@ export default function ChargeAI() {
   const loadProactiveAnalysis = async () => {
     setLoadingAnalysis(true);
     try {
-      const response = await fetch('/api/charge-ai/proactive-analysis', { credentials: 'include' });
+      const response = await fetchWithAuth('/api/charge-ai/proactive-analysis');
       if (response.ok) {
         const data = await response.json();
         if (data.hasAnalysis && data.analysis) {
@@ -125,10 +126,9 @@ export default function ChargeAI() {
     setIsLoading(true);
 
     try {
-      const response = await fetch('/api/charge-ai/chat', {
+      const response = await fetchWithAuth('/api/charge-ai/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        credentials: 'include',
         body: JSON.stringify({ 
           message: userMessage.content,
           conversationHistory: messages.map(m => ({ role: m.role, content: m.content }))
@@ -164,10 +164,9 @@ export default function ChargeAI() {
 
     setIsLoading(true);
     try {
-      const response = await fetch('/api/charge-ai/generate-memo', {
+      const response = await fetchWithAuth('/api/charge-ai/generate-memo', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        credentials: 'include',
         body: JSON.stringify({ 
           messages: messages.map(m => ({ role: m.role, content: m.content }))
         }),

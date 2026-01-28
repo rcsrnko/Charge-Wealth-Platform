@@ -10,6 +10,7 @@ import LoadingSpinner from '../components/LoadingSpinner';
 import ErrorBoundary from '../components/ErrorBoundary';
 import FinancialProfileEditor from '../components/FinancialProfileEditor';
 import styles from './Dashboard.module.css';
+import { fetchWithAuth } from '../lib/fetchWithAuth';
 
 const ChargeAI = lazy(() => import('../modules/ChargeAI'));
 const ChargeTaxIntel = lazy(() => import('../modules/ChargeTaxIntel'));
@@ -91,9 +92,9 @@ export default function Dashboard() {
       setIsLoading(true);
       try {
         const [contextRes, portfolioRes, taxRes] = await Promise.all([
-          fetch('/api/charge-ai/context', { credentials: 'include' }),
-          fetch('/api/allocation/portfolio', { credentials: 'include' }),
-          fetch('/api/tax-intel/current', { credentials: 'include' })
+          fetchWithAuth('/api/charge-ai/context'),
+          fetchWithAuth('/api/allocation/portfolio'),
+          fetchWithAuth('/api/tax-intel/current')
         ]);
         
         const contextData = contextRes.ok ? await contextRes.json() : null;
@@ -237,7 +238,7 @@ export default function Dashboard() {
   const handleProfileSave = async () => {
     // Refresh user data after save
     try {
-      const contextRes = await fetch('/api/charge-ai/context', { credentials: 'include' });
+      const contextRes = await fetchWithAuth('/api/charge-ai/context');
       if (contextRes.ok) {
         const contextData = await contextRes.json();
         const hasCashFlow = !!(contextData?.profile?.monthlyExpenses && contextData?.profile?.currentCash);

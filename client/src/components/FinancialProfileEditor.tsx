@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import styles from './FinancialProfileEditor.module.css';
 import { useToast } from './Toast';
+import { fetchWithAuth } from '../lib/fetchWithAuth';
 
 interface FinancialProfile {
   annualIncome: number;
@@ -62,7 +63,7 @@ export default function FinancialProfileEditor({ isOpen, onClose, onSave }: Fina
   const loadProfile = async () => {
     setIsLoading(true);
     try {
-      const response = await fetch('/api/charge-ai/context', { credentials: 'include' });
+      const response = await fetchWithAuth('/api/charge-ai/context');
       if (response.ok) {
         const data = await response.json();
         if (data.profile) {
@@ -88,10 +89,9 @@ export default function FinancialProfileEditor({ isOpen, onClose, onSave }: Fina
     setIsSaving(true);
     try {
       // Save income/tax profile
-      const profileResponse = await fetch('/api/financial-profile', {
+      const profileResponse = await fetchWithAuth('/api/financial-profile', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        credentials: 'include',
         body: JSON.stringify({
           annualIncome: profile.annualIncome,
           filingStatus: profile.filingStatus,
@@ -102,10 +102,9 @@ export default function FinancialProfileEditor({ isOpen, onClose, onSave }: Fina
 
       // Save cash flow data if provided
       if (profile.monthlyExpenses && profile.monthlyExpenses > 0) {
-        await fetch('/api/cash-flow', {
+        await fetchWithAuth('/api/cash-flow', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          credentials: 'include',
           body: JSON.stringify({
             monthlyEssentialExpenses: profile.monthlyExpenses,
             currentCash: profile.currentCash || 0,

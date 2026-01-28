@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import styles from './OpportunityCostCounter.module.css';
+import { fetchWithAuth } from '../lib/fetchWithAuth';
 
 interface CostBreakdown {
   source: string;
@@ -71,10 +72,9 @@ export default function OpportunityCostCounter() {
     e.stopPropagation();
     setIsDismissed(true);
     localStorage.setItem('opportunityCostDismissed', new Date().toISOString());
-    fetch('/api/analytics/track', {
+    fetchWithAuth('/api/analytics/track', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      credentials: 'include',
       body: JSON.stringify({ event: 'opportunity_cost_dismissed' }),
     }).catch(() => {});
   };
@@ -183,10 +183,9 @@ export default function OpportunityCostCounter() {
 
   const handleClick = () => {
     setShowModal(true);
-    fetch('/api/analytics/track', {
+    fetchWithAuth('/api/analytics/track', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      credentials: 'include',
       body: JSON.stringify({ event: 'opportunity_cost_clicked', mode: displayMode }),
     }).catch(() => {});
   };

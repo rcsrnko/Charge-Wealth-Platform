@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import styles from './ChargeTaxIntel.module.css';
 import LoadingSpinner from '../components/LoadingSpinner';
 import { useToast } from '../components/Toast';
+import { fetchWithAuth } from '../lib/fetchWithAuth';
 
 interface TaxStrategy {
   strategy: string;
@@ -154,7 +155,7 @@ export default function ChargeTaxIntel() {
 
   const loadTaxData = async () => {
     try {
-      const response = await fetch('/api/tax-intel/current', { credentials: 'include' });
+      const response = await fetchWithAuth('/api/tax-intel/current');
       if (response.ok) {
         const data = await response.json();
         if (data.taxData) {
@@ -168,7 +169,7 @@ export default function ChargeTaxIntel() {
 
   const loadScenarios = async () => {
     try {
-      const response = await fetch('/api/tax-intel/scenarios', { credentials: 'include' });
+      const response = await fetchWithAuth('/api/tax-intel/scenarios');
       if (response.ok) {
         const data = await response.json();
         setScenarios(data.scenarios || []);
@@ -180,7 +181,7 @@ export default function ChargeTaxIntel() {
 
   const loadUploadedDocs = async () => {
     try {
-      const response = await fetch('/api/tax-intel/documents', { credentials: 'include' });
+      const response = await fetchWithAuth('/api/tax-intel/documents');
       if (response.ok) {
         const data = await response.json();
         setUploadedDocs(data.documents || []);
@@ -216,9 +217,8 @@ export default function ChargeTaxIntel() {
       console.log('Uploading file:', file.name, file.size, file.type);
 
       // Step 1: Upload and extract data
-      const uploadResponse = await fetch('/api/tax-intel/upload', {
+      const uploadResponse = await fetchWithAuth('/api/tax-intel/upload', {
         method: 'POST',
-        credentials: 'include',
         body: formData,
       });
 
@@ -234,10 +234,9 @@ export default function ChargeTaxIntel() {
       await loadUploadedDocs();
 
       // Step 2: Analyze with AI using the extracted data
-      const analyzeResponse = await fetch('/api/tax-intel/analyze', {
+      const analyzeResponse = await fetchWithAuth('/api/tax-intel/analyze', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        credentials: 'include',
         body: JSON.stringify({ 
           documentId: uploadResult.documentId,
           documentType: selectedDocType 
@@ -285,10 +284,9 @@ export default function ChargeTaxIntel() {
     setIsSendingMessage(true);
 
     try {
-      const response = await fetch('/api/tax-intel/query', {
+      const response = await fetchWithAuth('/api/tax-intel/query', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        credentials: 'include',
         body: JSON.stringify({ question: userMessage.content }),
       });
 
@@ -338,10 +336,9 @@ export default function ChargeTaxIntel() {
 
     setIsCalculating(true);
     try {
-      const response = await fetch('/api/tax-intel/run-scenario', {
+      const response = await fetchWithAuth('/api/tax-intel/run-scenario', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        credentials: 'include',
         body: JSON.stringify({
           scenarioType: activeScenario,
           inputs: scenarioInputs,

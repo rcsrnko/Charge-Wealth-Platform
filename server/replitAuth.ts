@@ -130,6 +130,13 @@ export async function setupAuth(app: Express) {
 export const isAuthenticated: RequestHandler = async (req, res, next) => {
   const user = req.user as any;
 
+  // Check for test user header (for Replit iframe where cookies don't work)
+  const testUserId = req.headers['x-test-user-id'];
+  if (testUserId === 'test-user-001' && process.env.ENABLE_DEMO_LOGIN === 'true') {
+    (req as any).user = { claims: { sub: 'test-user-001' } };
+    return next();
+  }
+
   if (!req.isAuthenticated() || !user?.expires_at) {
     return res.status(401).json({ message: "Unauthorized" });
   }

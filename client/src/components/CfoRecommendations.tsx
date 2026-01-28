@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import styles from './CfoRecommendations.module.css';
+import { fetchWithAuth } from '../lib/fetchWithAuth';
 
 interface Recommendation {
   id: number;
@@ -43,8 +44,8 @@ export default function CfoRecommendations() {
   const fetchData = async () => {
     try {
       const [recsRes, statsRes] = await Promise.all([
-        fetch('/api/cfo/recommendations', { credentials: 'include' }),
-        fetch('/api/cfo/stats', { credentials: 'include' })
+        fetchWithAuth('/api/cfo/recommendations'),
+        fetchWithAuth('/api/cfo/stats')
       ]);
       
       if (recsRes.ok) {
@@ -66,9 +67,8 @@ export default function CfoRecommendations() {
   const generateRecommendations = async () => {
     setGenerating(true);
     try {
-      const response = await fetch('/api/cfo/generate-recommendations', {
+      const response = await fetchWithAuth('/api/cfo/generate-recommendations', {
         method: 'POST',
-        credentials: 'include'
       });
       
       if (response.ok) {
@@ -83,10 +83,9 @@ export default function CfoRecommendations() {
 
   const updateStatus = async (id: number, status: string) => {
     try {
-      const response = await fetch(`/api/cfo/recommendations/${id}`, {
+      const response = await fetchWithAuth(`/api/cfo/recommendations/${id}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
-        credentials: 'include',
         body: JSON.stringify({ status })
       });
       

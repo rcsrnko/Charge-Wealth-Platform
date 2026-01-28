@@ -1,0 +1,58 @@
+ need you to fix several bugs and UX issues in my Charge Wealth dashboard app. Here's a comprehensive list of everything that needs to be addressed:
+
+🐛 HIGH PRIORITY BUGS
+1. Tax Advisor: Rates Showing 0.0%
+Problem: On the Tax Advisor page (/dashboard/tax-intel), the "Effective Rate" and "Next Dollar Rate" (marginal bracket) both display 0.0% even though the user has paid $35,500 in federal taxes.
+
+Expected Behavior:
+
+Effective Rate should be calculated as: (Total Tax Paid / Total Income) × 100
+Marginal Rate should show the user's current tax bracket based on their income
+Fix Required:
+
+Check the calculation logic in the tax-intel component
+Ensure the income data is being passed correctly to the rate calculation
+Handle edge cases where income might be 0 or undefined
+Display "N/A" or a loading state if data isn't available yet
+2. Portfolio Engine Page is Empty
+Problem: The Portfolio Engine page (/dashboard/allocation) loads with completely empty content - just the sidebar and nothing in the main area.
+
+Expected Behavior: Should display:
+
+Portfolio allocation pie/donut chart
+Holdings list with current values
+Risk analysis section
+Asset allocation breakdown (stocks, bonds, cash, etc.)
+Performance metrics
+Fix Required:
+
+Check if the component is rendering correctly
+Verify the API call to /api/allocation/portfolio is being made and data is being received
+Add proper loading state while data fetches
+Add empty state with helpful message if user hasn't connected accounts: "Connect your investment accounts to see your portfolio analysis"
+Check for any conditional rendering that might be hiding content
+3. Referrals Page is Empty
+Problem: The Referrals page (/dashboard/referrals) shows no content at all - no referral link, no "$50 per friend" information.
+
+Expected Behavior: Should display:
+
+User's unique referral link with copy button
+"$50 Per Friend" incentive explanation
+Stats: referrals sent, successful signups, earnings
+Social share buttons (Twitter, LinkedIn, Email)
+List of referred users and their status
+Fix Required:
+
+Check component rendering
+Ensure referral link is being generated/fetched
+Add the referral program content and UI
+Include one-click copy functionality for the referral link
+4. JavaScript Console Error
+Problem: Console shows error: Cannot access 'se' before initialization ReferenceError
+
+Fix Required:
+
+Search codebase for variable se or minified code that might reference it
+This is likely a variable hoisting issue or circular dependency
+Check import order in affected components
+Fix the initialization order
