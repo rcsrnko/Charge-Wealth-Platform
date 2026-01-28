@@ -10,3 +10,4 @@ export { registerCfoRoutes } from './cfo';
 export { registerAllocationRoutes } from './allocation';
 export { registerPlaybookRoutes } from './playbooks';
 export { registerContextRoutes } from './context';
+export { registerSettingsRoutes } from './settings';

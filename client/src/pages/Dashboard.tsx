@@ -17,6 +17,7 @@ const ChargeTaxIntel = lazy(() => import('../modules/ChargeTaxIntel'));
 const ChargeAllocation = lazy(() => import('../modules/ChargeAllocation'));
 const Playbooks = lazy(() => import('../modules/Playbooks'));
 const ReferralDashboard = lazy(() => import('../modules/ReferralDashboard'));
+const Settings = lazy(() => import('../modules/Settings'));
 
 function ModuleLoader() {
   return (
@@ -534,6 +535,13 @@ export default function Dashboard() {
               <ErrorBoundary moduleName="referrals">
                 <Suspense fallback={<ModuleLoader />}>
                   <ReferralDashboard />
+                </Suspense>
+              </ErrorBoundary>
+            </Route>
+            <Route path="/dashboard/settings">
+              <ErrorBoundary moduleName="settings">
+                <Suspense fallback={<ModuleLoader />}>
+                  <Settings />
                 </Suspense>
               </ErrorBoundary>
             </Route>

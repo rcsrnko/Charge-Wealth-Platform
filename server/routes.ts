@@ -15,6 +15,7 @@ import { registerCfoRoutes } from "./routes/cfo";
 import { registerAllocationRoutes } from "./routes/allocation";
 import { registerPlaybookRoutes } from "./routes/playbooks";
 import { registerContextRoutes } from "./routes/context";
+import { registerSettingsRoutes } from "./routes/settings";
 
 const upload = multer({
   storage: multer.memoryStorage(),
@@ -44,6 +45,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   registerAllocationRoutes(app, isAuthenticated);
   registerPlaybookRoutes(app, isAuthenticated);
   registerContextRoutes(app, isAuthenticated);
+  registerSettingsRoutes(app, isAuthenticated);
 
   const httpServer = createServer(app);
   return httpServer;

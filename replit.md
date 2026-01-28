@@ -13,13 +13,13 @@ Preferred communication style: Simple, everyday language.
 ### Frontend Architecture
 - **Technology Stack:** React 19 with TypeScript, Wouter for routing, Vite for building, TanStack Query for server state.
 - **Application Structure:** Separate landing page (static HTML), React SPA for the dashboard (`/dashboard/*`), and static HTML for legal pages.
-- **Route Structure:** Dedicated routes for Overview, AI Advisor, Tax Advisor, Portfolio Engine, and Custom Playbooks.
+- **Route Structure:** Dedicated routes for Overview, AI Advisor, Tax Advisor, Portfolio Engine, Custom Playbooks, Referrals, and Settings.
 - **Design System:** Premium dark theme with Midnight Blue, Deep Navy, and Gold accents, utilizing CSS modules for styling, and a mobile-first responsive design.
 - **Brand Voice:** Direct, confrontational, intelligent; anti-industry stance (criticizing high fees and commissioned products), targeting high earners experiencing decision paralysis.
 
 ### Backend Architecture
 - **Technology Stack:** Express.js 5 with TypeScript, TSX for execution, Drizzle ORM with PostgreSQL, session-based authentication (Replit Auth / OpenID Connect).
-- **Route Organization:** Modular structure with routes organized by feature (public, auth, referrals, stripe, financial, blog, chargeai, taxintel, cfo, allocation, playbooks).
+- **Route Organization:** Modular structure with routes organized by feature (public, auth, referrals, stripe, financial, blog, chargeai, taxintel, cfo, allocation, playbooks, settings).
 - **API Endpoints:** Comprehensive set of RESTful APIs for managing user data, financial profiles, AI interactions, tax analysis, portfolio management, referral systems, and playbooks.
 - **Database Schema:** Core tables for users, sessions, financial profiles, and documents, with dedicated tables for tax data, portfolio positions, AI sessions, planning memos, and playbooks.
 
@@ -29,6 +29,7 @@ Preferred communication style: Simple, everyday language.
 - **Portfolio Engine:** Offers CFA-level analysis of positions, AI-driven stock/ETF/crypto recommendations, opportunity signals, and tax-aware rebalancing. Includes real-time stock/crypto price tracking via Alpha Vantage and CoinGecko APIs, historical price charts (7D/1M/3M), and configurable price alerts with hourly checking.
 - **Custom Playbooks:** Step-by-step financial action plans for various categories, with progress tracking and pre-built templates.
 - **Gamified Wealth Readiness System:** AI-generated, CFP-vetted recommendations with point values, level progression, and a dashboard component.
+- **Settings:** User account management with tabs for Profile (name, email), Email Preferences, Connected Accounts (Google OAuth), Notifications, and Password Change.
 - **Onboarding Wizard:** A 5-step process for new users covering tax profile, tax return upload, portfolio setup, initial AI interaction, and a gamified Wealth Readiness score.
 - **Landing Page Features:** Streamlined ~2,500 word design with:
   - Interactive Tax Savings Calculator with real-time animated calculations
