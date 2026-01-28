@@ -189,6 +189,7 @@ export default function Dashboard() {
   const { signOut: supabaseSignOut } = useSupabaseAuth();
   
   const handleLogout = async () => {
+    localStorage.removeItem('testUserAuth');
     try {
       await supabaseSignOut();
     } catch (e) {

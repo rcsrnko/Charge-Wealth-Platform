@@ -523,10 +523,12 @@ function PaywallPage() {
   
   const handleSignOut = async () => {
     try {
+      localStorage.removeItem('testUserAuth');
       await signOut();
       window.location.href = '/';
     } catch (error) {
       console.error('Sign out error:', error);
+      window.location.href = '/';
     }
   };
 
