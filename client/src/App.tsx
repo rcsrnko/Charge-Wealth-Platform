@@ -10,7 +10,7 @@ import { TakeChargeBlog } from './pages/TakeChargeBlog';
 import OnboardingWizard from './components/OnboardingWizard';
 import { ToastProvider } from './components/Toast';
 import ErrorBoundary from './components/ErrorBoundary';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 interface MembershipStatus {
   hasMembership: boolean;
@@ -146,6 +146,8 @@ function LoginPage() {
         });
         const data = await res.json();
         if (res.ok && data.success) {
+          // Store test user auth in localStorage
+          localStorage.setItem('testUserAuth', JSON.stringify(data.user));
           window.location.href = '/dashboard';
           return;
         } else {
@@ -626,18 +628,24 @@ function AppRoutes() {
   const { isLoading: supabaseLoading, isAuthenticated: supabaseAuth } = useSupabaseAuth();
   const [wizardDismissed, setWizardDismissed] = useState(false);
 
-  // Check for server-side session (for test user login)
-  const { data: sessionData, isLoading: serverAuthLoading } = useQuery<{ authenticated: boolean; user?: any }>({
-    queryKey: ['/api/auth/session'],
-    retry: false,
-    staleTime: 1000 * 60 * 5,
-  });
+  // Check for test user auth in localStorage
+  const [testUserAuth, setTestUserAuth] = useState<any>(null);
+  
+  useEffect(() => {
+    const storedAuth = localStorage.getItem('testUserAuth');
+    if (storedAuth) {
+      try {
+        setTestUserAuth(JSON.parse(storedAuth));
+      } catch {
+        localStorage.removeItem('testUserAuth');
+      }
+    }
+  }, []);
 
   const TESTING_MODE = false;
   
-  const isLoading = TESTING_MODE ? false : (supabaseLoading || serverAuthLoading);
-  const serverAuth = !!(sessionData?.authenticated && sessionData?.user);
-  const isAuthenticated = TESTING_MODE ? true : (supabaseAuth || serverAuth);
+  const isLoading = TESTING_MODE ? false : supabaseLoading;
+  const isAuthenticated = TESTING_MODE ? true : (supabaseAuth || !!testUserAuth);
 
   const { data: onboardingStatus, isLoading: onboardingLoading, refetch } = useQuery<{ onboardingCompleted: boolean }>({
     queryKey: ['/api/user/onboarding-status'],
