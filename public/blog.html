@@ -432,17 +432,30 @@
         document.getElementById('newsletterForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             const btn = e.target.querySelector('button');
-            const email = e.target.querySelector('input[name="email"]').value;
+            const emailInput = e.target.querySelector('input[name="email"]');
+            const email = emailInput.value;
             btn.disabled = true;
             btn.textContent = 'Subscribing...';
             
             try {
-                // If user has Beehiiv API key set up, this would subscribe them
-                // For now, redirect to main landing page newsletter
-                window.location.href = `/?newsletter=${encodeURIComponent(email)}`;
+                const res = await fetch('/api/newsletter/subscribe', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, source: 'blog' })
+                });
+                const data = await res.json();
+                
+                if (data.success) {
+                    btn.textContent = 'Subscribed!';
+                    btn.style.background = '#22c55e';
+                    emailInput.value = '';
+                } else {
+                    throw new Error(data.message);
+                }
             } catch (err) {
-                btn.textContent = 'Subscribe Free';
+                btn.textContent = 'Subscribe';
                 btn.disabled = false;
+                alert('Failed to subscribe. Please try again.');
             }
         });
     </script>

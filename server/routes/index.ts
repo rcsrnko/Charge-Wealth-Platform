@@ -11,3 +11,4 @@ export { registerAllocationRoutes } from './allocation';
 export { registerPlaybookRoutes } from './playbooks';
 export { registerContextRoutes } from './context';
 export { registerSettingsRoutes } from './settings';
+export { registerNewsletterRoutes } from './newsletter';
