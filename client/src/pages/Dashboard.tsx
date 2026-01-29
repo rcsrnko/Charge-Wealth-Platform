@@ -3,8 +3,9 @@ import { useSupabaseAuth } from '../hooks/useSupabaseAuth';
 import { useTheme } from '../contexts/ThemeContext';
 import { Route, Switch, useLocation } from 'wouter';
 import Sidebar from '../components/Sidebar';
-import WealthReadiness from '../components/WealthReadiness';
-import CfoRecommendations from '../components/CfoRecommendations';
+// Removed WealthReadiness and CfoRecommendations for cleaner UX
+// import WealthReadiness from '../components/WealthReadiness';
+// import CfoRecommendations from '../components/CfoRecommendations';
 import QuickStartOnboarding from '../components/QuickStartOnboarding';
 import LoadingSpinner from '../components/LoadingSpinner';
 import ErrorBoundary from '../components/ErrorBoundary';
@@ -340,115 +341,72 @@ export default function Dashboard() {
             <Route path="/dashboard">
               <ErrorBoundary moduleName="default">
               <div className={styles.commandCenter}>
-                <div className={styles.onboardingLayout}>
-                  <div className={styles.primaryColumn}>
-                    <div className={styles.aiAdvisorPromo}>
-                      <div className={styles.promoHeader}>
-                        <div className={styles.promoIcon}>
-                          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-                            <path d="M12 2a2 2 0 0 1 2 2c0 .74-.4 1.39-1 1.73V7h1a7 7 0 0 1 7 7h1a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1h-1v1a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-1H2a1 1 0 0 1-1-1v-3a1 1 0 0 1 1-1h1a7 7 0 0 1 7-7h1V5.73c-.6-.34-1-.99-1-1.73a2 2 0 0 1 2-2z"/>
-                            <circle cx="8" cy="14" r="1.5"/>
-                            <circle cx="16" cy="14" r="1.5"/>
-                          </svg>
-                        </div>
-                        <div className={styles.promoText}>
-                          <h2 className={styles.promoTitle}>Your AI Advisor</h2>
-                          <p className={styles.promoDesc}>
-                            Ask any financial question. Get clear answers based on your actual data.
-                          </p>
-                        </div>
-                      </div>
-                      <a href="/dashboard/ai" className={styles.startButton}>
-                        Start Conversation
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                          <path d="M5 12h14M12 5l7 7-7 7"/>
-                        </svg>
-                      </a>
+                {/* Simplified Command Center - AI Advisor + Quick Links */}
+                <div className={styles.heroSection}>
+                  <div className={styles.aiHeroCard}>
+                    <div className={styles.aiHeroIcon}>
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+                        <path d="M12 2a2 2 0 0 1 2 2c0 .74-.4 1.39-1 1.73V7h1a7 7 0 0 1 7 7h1a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1h-1v1a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-1H2a1 1 0 0 1-1-1v-3a1 1 0 0 1 1-1h1a7 7 0 0 1 7-7h1V5.73c-.6-.34-1-.99-1-1.73a2 2 0 0 1 2-2z"/>
+                        <circle cx="8" cy="14" r="1.5"/>
+                        <circle cx="16" cy="14" r="1.5"/>
+                      </svg>
                     </div>
-
-                    <WealthReadiness
-                      hasTaxData={userData.hasTaxData}
-                      hasPositions={userData.hasPositions}
-                      hasProfile={userData.hasProfile}
-                      hasCashFlow={userData.hasCashFlow}
-                      onStepClick={handleStepClick}
-                    />
-                    
-                    <CfoRecommendations />
+                    <h1 className={styles.aiHeroTitle}>Your AI CFO</h1>
+                    <p className={styles.aiHeroDesc}>
+                      Ask any financial question. Get answers based on your actual data.
+                    </p>
+                    <a href="/dashboard/ai" className={styles.aiHeroButton}>
+                      Start Conversation
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                        <path d="M5 12h14M12 5l7 7-7 7"/>
+                      </svg>
+                    </a>
                   </div>
+                </div>
 
-                  <div className={styles.secondaryColumn}>
-                    <h3 className={styles.columnTitle}>Unlock More Tools</h3>
-                    
-                    <div className={styles.lockedModules}>
-                      <div className={`${styles.modulePreview} ${!isModuleLocked('tax-intel') ? styles.unlocked : ''}`}>
-                        <div className={styles.moduleIcon}>
-                          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
-                            <path d="M14 2v6h6M16 13H8M16 17H8M10 9H8"/>
-                          </svg>
-                          {isModuleLocked('tax-intel') && (
-                            <div className={styles.moduleLock}>
-                              <svg viewBox="0 0 24 24" fill="currentColor">
-                                <path d="M12 2C9.24 2 7 4.24 7 7v2H6c-1.1 0-2 .9-2 2v9c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2v-9c0-1.1-.9-2-2-2h-1V7c0-2.76-2.24-5-5-5zm0 2c1.66 0 3 1.34 3 3v2H9V7c0-1.66 1.34-3 3-3z"/>
-                              </svg>
-                            </div>
-                          )}
-                        </div>
-                        <div className={styles.moduleInfo}>
-                          <h4 className={styles.moduleName}>Tax Advisor</h4>
-                          <p className={styles.moduleUnlock}>
-                            {isModuleLocked('tax-intel') 
-                              ? 'Upload tax return to unlock' 
-                              : 'Find tax-saving opportunities'}
-                          </p>
-                        </div>
-                        {!isModuleLocked('tax-intel') && (
-                          <a href="/dashboard/tax-intel" className={styles.moduleLink}>Open</a>
-                        )}
+                <div className={styles.quickLinksSection}>
+                  <h2 className={styles.quickLinksTitle}>Quick Actions</h2>
+                  <div className={styles.quickLinksGrid}>
+                    <a href="/dashboard/tax-intel" className={styles.quickLinkCard}>
+                      <div className={styles.quickLinkIcon}>
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+                          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                          <path d="M14 2v6h6M16 13H8M16 17H8M10 9H8"/>
+                        </svg>
                       </div>
+                      <div className={styles.quickLinkText}>
+                        <h3>Tax Advisor</h3>
+                        <p>Find tax-saving opportunities</p>
+                      </div>
+                      <span className={styles.quickLinkArrow}>→</span>
+                    </a>
 
-                      <div className={`${styles.modulePreview} ${styles.unlocked}`}>
-                        <div className={styles.moduleIcon}>
-                          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-                            <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
-                          </svg>
-                        </div>
-                        <div className={styles.moduleInfo}>
-                          <h4 className={styles.moduleName}>Market Pulse</h4>
-                          <p className={styles.moduleUnlock}>Real-time market data</p>
-                        </div>
-                        <a href="/dashboard/market-pulse" className={styles.moduleLink}>Open</a>
+                    <a href="/dashboard/market-pulse" className={styles.quickLinkCard}>
+                      <div className={styles.quickLinkIcon}>
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+                          <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
+                        </svg>
                       </div>
+                      <div className={styles.quickLinkText}>
+                        <h3>Market Pulse</h3>
+                        <p>Real-time market data</p>
+                      </div>
+                      <span className={styles.quickLinkArrow}>→</span>
+                    </a>
 
-                      <div className={`${styles.modulePreview} ${!isModuleLocked('playbooks') ? styles.unlocked : ''}`}>
-                        <div className={styles.moduleIcon}>
-                          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-                            <path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2"/>
-                            <rect x="9" y="3" width="6" height="4" rx="1"/>
-                            <path d="M9 12l2 2 4-4"/>
-                          </svg>
-                          {isModuleLocked('playbooks') && (
-                            <div className={styles.moduleLock}>
-                              <svg viewBox="0 0 24 24" fill="currentColor">
-                                <path d="M12 2C9.24 2 7 4.24 7 7v2H6c-1.1 0-2 .9-2 2v9c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2v-9c0-1.1-.9-2-2-2h-1V7c0-2.76-2.24-5-5-5zm0 2c1.66 0 3 1.34 3 3v2H9V7c0-1.66 1.34-3 3-3z"/>
-                              </svg>
-                            </div>
-                          )}
-                        </div>
-                        <div className={styles.moduleInfo}>
-                          <h4 className={styles.moduleName}>Playbooks</h4>
-                          <p className={styles.moduleUnlock}>
-                            {isModuleLocked('playbooks') 
-                              ? 'Complete profile to unlock' 
-                              : 'Step-by-step action plans'}
-                          </p>
-                        </div>
-                        {!isModuleLocked('playbooks') && (
-                          <a href="/dashboard/playbooks" className={styles.moduleLink}>Open</a>
-                        )}
+                    <a href="/dashboard/settings" className={styles.quickLinkCard}>
+                      <div className={styles.quickLinkIcon}>
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+                          <circle cx="12" cy="12" r="3"/>
+                          <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+                        </svg>
                       </div>
-                    </div>
+                      <div className={styles.quickLinkText}>
+                        <h3>Settings</h3>
+                        <p>Email preferences & account</p>
+                      </div>
+                      <span className={styles.quickLinkArrow}>→</span>
+                    </a>
                   </div>
                 </div>
 
