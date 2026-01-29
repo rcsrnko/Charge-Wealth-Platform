@@ -271,6 +271,17 @@ export interface ExtractedPaystubData {
   ytdStateTaxWithheld: number | null;
   regularHours: number | null;
   regularRate: number | null;
+  retirement401k: number | null;
+  hsaContribution: number | null;
+  fsaContribution: number | null;
+  healthInsurance: number | null;
+  dentalVision: number | null;
+  preTaxDeductions: {
+    retirement401k: number;
+    hsa: number;
+    fsa: number;
+    health: number;
+  };
   extractedLines: Record<string, string | number>;
 }
 
@@ -336,6 +347,38 @@ export function extractPaystubDataFromText(text: string): ExtractedPaystubData {
     /Pay\s*Rate[:\s]*\$?([\d.]+)/i,
   ]);
   
+  // Pre-tax deductions
+  const retirement401k = extractNumber(text, [
+    /401\s*\(?k\)?[:\s]*\$?([\d,]+(?:\.\d{2})?)/i,
+    /401K[:\s]*\$?([\d,]+(?:\.\d{2})?)/i,
+    /Traditional\s*401[:\s]*\$?([\d,]+(?:\.\d{2})?)/i,
+    /Roth\s*401[:\s]*\$?([\d,]+(?:\.\d{2})?)/i,
+    /Retirement[:\s]*\$?([\d,]+(?:\.\d{2})?)/i,
+    /Def\s*Comp[:\s]*\$?([\d,]+(?:\.\d{2})?)/i,
+  ]);
+  
+  const hsaContribution = extractNumber(text, [
+    /HSA[:\s]*\$?([\d,]+(?:\.\d{2})?)/i,
+    /Health\s*Savings[:\s]*\$?([\d,]+(?:\.\d{2})?)/i,
+  ]);
+  
+  const fsaContribution = extractNumber(text, [
+    /FSA[:\s]*\$?([\d,]+(?:\.\d{2})?)/i,
+    /Flex\s*(?:Spending|Spend)[:\s]*\$?([\d,]+(?:\.\d{2})?)/i,
+    /HCFSA[:\s]*\$?([\d,]+(?:\.\d{2})?)/i,
+    /DCFSA[:\s]*\$?([\d,]+(?:\.\d{2})?)/i,
+  ]);
+  
+  const healthInsurance = extractNumber(text, [
+    /(?:Health|Medical)\s*(?:Ins|Insurance|Premium)[:\s]*\$?([\d,]+(?:\.\d{2})?)/i,
+    /(?:Medical|Health)\s*(?:Ded|Deduction)[:\s]*\$?([\d,]+(?:\.\d{2})?)/i,
+  ]);
+  
+  const dentalVision = extractNumber(text, [
+    /Dental[:\s]*\$?([\d,]+(?:\.\d{2})?)/i,
+    /Vision[:\s]*\$?([\d,]+(?:\.\d{2})?)/i,
+  ]);
+  
   const employerMatch = text.match(/(?:Company|Employer)[:\s]*(.+?)(?:\n|$)/i);
   const payDateMatch = text.match(/Pay\s*Date[:\s]*(\d{1,2}[\/\-]\d{1,2}[\/\-]\d{2,4})/i);
   const periodMatch = text.match(/Pay\s*Period[:\s]*(\d{1,2}[\/\-]\d{1,2}[\/\-]\d{2,4})\s*(?:to|[-–])\s*(\d{1,2}[\/\-]\d{1,2}[\/\-]\d{2,4})/i);
@@ -350,6 +393,10 @@ export function extractPaystubDataFromText(text: string): ExtractedPaystubData {
   if (ytdFederalWithheld) extractedLines['YTD Federal Tax'] = ytdFederalWithheld;
   if (regularHours) extractedLines['Regular Hours'] = regularHours;
   if (regularRate) extractedLines['Pay Rate'] = regularRate;
+  if (retirement401k) extractedLines['401k Contribution'] = retirement401k;
+  if (hsaContribution) extractedLines['HSA Contribution'] = hsaContribution;
+  if (fsaContribution) extractedLines['FSA Contribution'] = fsaContribution;
+  if (healthInsurance) extractedLines['Health Insurance'] = healthInsurance;
   
   return {
     employerName: employerMatch ? employerMatch[1].trim() : null,
@@ -367,6 +414,17 @@ export function extractPaystubDataFromText(text: string): ExtractedPaystubData {
     ytdStateTaxWithheld,
     regularHours,
     regularRate,
+    retirement401k,
+    hsaContribution,
+    fsaContribution,
+    healthInsurance,
+    dentalVision,
+    preTaxDeductions: {
+      retirement401k: retirement401k || 0,
+      hsa: hsaContribution || 0,
+      fsa: fsaContribution || 0,
+      health: healthInsurance || 0,
+    },
     extractedLines,
   };
 }

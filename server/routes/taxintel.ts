@@ -461,12 +461,21 @@ NO SPECIFIC PAYCHECK DATA EXTRACTED - using profile estimates.
 Estimated Annual Income: $${userContext.income}
 `;
 
+      // Determine pay periods (bi-weekly = 26, semi-monthly = 24)
+      const payPeriods = actualGrossPay && actualGrossPay < 8000 ? 26 : 24;
+      
       const systemPrompt = `You are a paycheck optimization specialist. The user uploaded their W-2 or paystub. Your ONLY job: help them keep more of each paycheck.
 
 DOCUMENT TYPE: ${docType.toUpperCase()}
 USER STATE: ${stateInfo.name} (${userContext.state})
 FILING STATUS: ${userContext.filing}
+PAY FREQUENCY: ${payPeriods === 26 ? 'Bi-weekly (26 paychecks/year)' : 'Semi-monthly (24 paychecks/year)'}
 ${actualPaycheckData}
+
+CRITICAL: All currentAmount and suggestedAmount values MUST be PER PAYCHECK amounts, not annual amounts!
+- 401k annual limit is $23,500 = $${Math.round(23500/payPeriods)} per paycheck (${payPeriods} pay periods)
+- HSA annual limit is $4,150 individual = $${Math.round(4150/payPeriods)} per paycheck
+- FSA annual limit is $3,200 = $${Math.round(3200/payPeriods)} per paycheck
 
 Based on this data, identify:
 1. Current withholding (federal, state, FICA)
@@ -478,50 +487,47 @@ Return JSON:
   "documentType": "${docType}",
   "taxYear": 2024,
   "currentPaycheck": {
-    "grossPay": [number],
-    "netPay": [number],
+    "grossPay": [number - from uploaded doc],
+    "netPay": [number - from uploaded doc],
     "federalWithheld": [number],
     "stateWithheld": [number],
     "fica": [number],
     "preTaxDeductions": {
-      "retirement401k": [number],
-      "hsa": [number],
-      "fsa": [number],
-      "other": [number]
+      "retirement401k": [number per paycheck],
+      "hsa": [number per paycheck],
+      "fsa": [number per paycheck],
+      "other": [number per paycheck]
     }
   },
   "optimizations": [
     {
-      "action": "[Clear action title]",
-      "currentAmount": [number per paycheck],
-      "suggestedAmount": [number per paycheck],
-      "extraPerPaycheck": [how much more to contribute or save],
-      "taxSavingsPerYear": [number],
-      "howToFix": "[Exact step-by-step instructions to implement this change]",
+      "action": "[Clear action title - e.g., 'Increase 401k contribution']",
+      "currentAmount": [MUST be per-paycheck amount, e.g., 500 not 13000],
+      "suggestedAmount": [MUST be per-paycheck amount, e.g., 904 not 23500],
+      "extraPerPaycheck": [difference between suggested and current],
+      "taxSavingsPerYear": [annual tax savings from this optimization],
+      "howToFix": "[Exact step-by-step instructions]",
       "priority": "high|medium|low"
     }
   ],
-  "totalExtraPerYear": [sum of all tax savings + extra take-home],
-  "summaryText": "[One sentence: You could take home an extra $X per year by making these changes. The biggest win is...]",
-  "totalIncome": [estimated annual income],
-  "effectiveTaxRate": [calculated rate],
-  "marginalTaxBracket": [federal bracket]
+  "totalExtraPerYear": [sum of all taxSavingsPerYear],
+  "summaryText": "[e.g., 'By maxing your 401k and starting an HSA, you could save $X per year in taxes.']",
+  "totalIncome": ${estimatedAnnualIncome},
+  "effectiveTaxRate": [calculated effective rate as percentage, e.g., 22.0],
+  "marginalTaxBracket": [federal marginal bracket, e.g., 32 or 35]
 }
 
 COMMON OPTIMIZATIONS TO CHECK:
-1. 401k contribution - Are they getting the full employer match? Suggest increasing if not.
-2. HSA - If on a high-deductible plan, are they using an HSA? Max is $4,150 individual / $8,300 family.
-3. FSA - Healthcare or dependent care FSA available?
-4. W-4 withholding - Are they overwithholding (getting big refunds)? Suggest adjusting W-4.
-5. Commuter benefits - Pre-tax transit or parking available?
+1. 401k: Max is $23,500/year = $${Math.round(23500/payPeriods)}/paycheck. If current contribution is less, suggest increasing.
+2. HSA: Max is $4,150/year = $${Math.round(4150/payPeriods)}/paycheck (if on HDHP). Tax savings = contribution × marginal rate.
+3. FSA: Max is $3,200/year = $${Math.round(3200/payPeriods)}/paycheck for healthcare.
+4. W-4 withholding: If overwithholding, suggest adjusting to get more per paycheck.
 
 RULES:
-- Only suggest legal, common optimizations
+- ALL amounts in currentAmount/suggestedAmount MUST be per-paycheck, NOT annual
+- taxSavingsPerYear = (suggestedAmount - currentAmount) × ${payPeriods} × marginalRate
 - Be specific with dollar amounts
-- Give exact steps to implement each fix
-- Prioritize by impact (biggest savings first)
-- If they're already maxing everything, acknowledge that and suggest next-level strategies
-- Write in plain English, no jargon`;
+- Prioritize by impact (biggest savings first)`;
 
       const openaiResponse = await fetchApi(`${process.env.AI_INTEGRATIONS_OPENAI_BASE_URL}/chat/completions`, {
         method: 'POST',
@@ -551,6 +557,49 @@ RULES:
         const jsonMatch = content.match(/\{[\s\S]*\}/);
         if (jsonMatch) {
           taxData = JSON.parse(jsonMatch[0]);
+          
+          // VALIDATION: Fix any per-paycheck amounts that look like annual amounts
+          if (taxData.optimizations && Array.isArray(taxData.optimizations)) {
+            const annualLimits: Record<string, number> = {
+              '401k': 23500,
+              '401': 23500,
+              'hsa': 4150,
+              'fsa': 3200,
+              'ira': 7000,
+            };
+            
+            taxData.optimizations = taxData.optimizations.map((opt: any) => {
+              // Check if suggestedAmount looks like an annual amount
+              for (const [keyword, annualLimit] of Object.entries(annualLimits)) {
+                if (opt.action?.toLowerCase().includes(keyword)) {
+                  // If suggestedAmount is close to annual limit, convert to per-paycheck
+                  if (opt.suggestedAmount >= annualLimit * 0.8 && opt.suggestedAmount <= annualLimit * 1.2) {
+                    console.log(`Fixing ${opt.action}: ${opt.suggestedAmount} looks like annual, converting to per-paycheck`);
+                    opt.suggestedAmount = Math.round(annualLimit / payPeriods);
+                  }
+                  // Same check for currentAmount
+                  if (opt.currentAmount >= annualLimit * 0.8 && opt.currentAmount <= annualLimit * 1.2) {
+                    opt.currentAmount = Math.round(annualLimit / payPeriods);
+                  }
+                  break;
+                }
+              }
+              
+              // Recalculate tax savings if amounts were fixed
+              const marginalRate = taxData.marginalTaxBracket ? taxData.marginalTaxBracket / 100 : 0.32;
+              const annualContributionIncrease = (opt.suggestedAmount - opt.currentAmount) * payPeriods;
+              opt.taxSavingsPerYear = Math.round(annualContributionIncrease * marginalRate);
+              opt.extraPerPaycheck = opt.suggestedAmount - opt.currentAmount;
+              
+              return opt;
+            });
+            
+            // Recalculate total
+            taxData.totalExtraPerYear = taxData.optimizations.reduce(
+              (sum: number, opt: any) => sum + (opt.taxSavingsPerYear || 0), 
+              0
+            );
+          }
         }
       } catch (parseErr) {
         console.error("Failed to parse AI response as JSON:", parseErr);
