@@ -25,7 +25,7 @@ Preferred communication style: Simple, everyday language.
 
 ### Core Features
 - **AI Advisor:** Central guide providing proactive, CFO-style insights, personalized financial data injection, and planning memos.
-- **Tax Advisor:** Analyzes 10+ tax strategies, incorporates state tax recognition, calculates comprehensive tax rates, and provides AI-generated tax insights with savings estimates.
+- **Tax Advisor:** Focused on W-2/paycheck optimization. Upload paystub or W-2 to get actionable recommendations for 401k, HSA, FSA, and W-4 adjustments. Shows checklist-style results with "How to fix" steps and total annual savings estimate.
 - **Market Pulse:** Real-time market overview showing major indices (S&P 500, Dow, Nasdaq, VIX, Bitcoin, Ethereum), top gainers/losers, sector performance, and AI commentary placeholder. Uses Yahoo Finance for data with 5-minute caching. Replaced the Portfolio Engine feature.
 - **Custom Playbooks:** Step-by-step financial action plans for various categories, with progress tracking and pre-built templates.
 - **Gamified Wealth Readiness System:** AI-generated, CFP-vetted recommendations with point values, level progression, and a dashboard component.

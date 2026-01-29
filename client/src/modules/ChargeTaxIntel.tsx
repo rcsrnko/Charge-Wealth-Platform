@@ -14,6 +14,30 @@ interface TaxStrategy {
   category?: string;
 }
 
+interface PaycheckOptimization {
+  action: string;
+  currentAmount: number;
+  suggestedAmount: number;
+  extraPerPaycheck: number;
+  taxSavingsPerYear: number;
+  howToFix: string;
+  priority: 'high' | 'medium' | 'low';
+}
+
+interface CurrentPaycheck {
+  grossPay: number;
+  netPay: number;
+  federalWithheld: number;
+  stateWithheld: number;
+  fica: number;
+  preTaxDeductions: {
+    retirement401k: number;
+    hsa: number;
+    fsa: number;
+    other: number;
+  };
+}
+
 interface TaxMetrics {
   taxYear: number;
   totalIncome: number;
@@ -43,11 +67,10 @@ interface TaxMetrics {
     action?: string;
   }>;
   taxStrategies?: TaxStrategy[];
-  paycheckOptimization?: {
-    currentWithholding: string;
-    suggestedW4Changes: string;
-    monthlyImpact: number;
-  };
+  optimizations?: PaycheckOptimization[];
+  currentPaycheck?: CurrentPaycheck;
+  totalExtraPerYear?: number;
+  summaryText?: string;
   totalPotentialSavings?: number;
   summaryRecommendation?: string;
 }
@@ -87,16 +110,71 @@ interface ChatMessage {
 }
 
 const DOCUMENT_TYPES = [
-  { id: '1040', name: 'Form 1040', description: 'Federal tax return', icon: '📋' },
-  { id: 'w2', name: 'W-2', description: 'Wage statement', icon: '💼' },
-  { id: '1099', name: '1099', description: 'Income statement', icon: '📄' },
-  { id: 'paystub', name: 'Paystub', description: 'Pay statement', icon: '💵' },
+  { id: 'paystub', name: 'Paystub', description: 'Recent pay statement', icon: '💵' },
+  { id: 'w2', name: 'W-2', description: 'Annual wage statement', icon: '💼' },
 ];
+
+function OptimizationItem({ 
+  optimization, 
+  index, 
+  formatCurrency 
+}: { 
+  optimization: PaycheckOptimization; 
+  index: number; 
+  formatCurrency: (n: number) => string;
+}) {
+  const [expanded, setExpanded] = useState(false);
+  
+  const priorityColors: Record<string, string> = {
+    high: '#10b981',
+    medium: '#f59e0b',
+    low: '#6b7280'
+  };
+  
+  return (
+    <div className={styles.optimizationItem}>
+      <div className={styles.optimizationMain} onClick={() => setExpanded(!expanded)}>
+        <div className={styles.optimizationNumber}>{index + 1}</div>
+        <div className={styles.optimizationContent}>
+          <div className={styles.optimizationAction}>{optimization.action}</div>
+          <div className={styles.optimizationSavings}>
+            Save <strong>{formatCurrency(optimization.taxSavingsPerYear)}</strong>/year
+          </div>
+        </div>
+        <div 
+          className={styles.priorityDot}
+          style={{ backgroundColor: priorityColors[optimization.priority] || '#6b7280' }}
+          title={`${optimization.priority} priority`}
+        />
+        <button className={styles.expandBtn}>
+          {expanded ? '−' : '+'}
+        </button>
+      </div>
+      
+      {expanded && (
+        <div className={styles.optimizationExpanded}>
+          <div className={styles.optDetail}>
+            <span className={styles.optLabel}>Current:</span>
+            <span>{formatCurrency(optimization.currentAmount)}/paycheck</span>
+          </div>
+          <div className={styles.optDetail}>
+            <span className={styles.optLabel}>Suggested:</span>
+            <span className={styles.optSuggested}>{formatCurrency(optimization.suggestedAmount)}/paycheck</span>
+          </div>
+          <div className={styles.howToFix}>
+            <strong>How to fix:</strong>
+            <p>{optimization.howToFix}</p>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
 
 export default function ChargeTaxIntel() {
   const { showError, showSuccess } = useToast();
   const [file, setFile] = useState<File | null>(null);
-  const [selectedDocType, setSelectedDocType] = useState<string>('1040');
+  const [selectedDocType, setSelectedDocType] = useState<string>('paystub');
   const [isUploading, setIsUploading] = useState(false);
   const [taxData, setTaxData] = useState<TaxMetrics | null>(null);
   const [scenarios, setScenarios] = useState<Scenario[]>([]);
@@ -210,7 +288,7 @@ export default function ChargeTaxIntel() {
     setIsUploading(true);
     try {
       const formData = new FormData();
-      formData.append('document', file);
+      formData.append('file', file);
       formData.append('documentType', selectedDocType);
       formData.append('documentYear', String(new Date().getFullYear() - 1));
 
@@ -247,11 +325,11 @@ export default function ChargeTaxIntel() {
         const data = await analyzeResponse.json();
         setTaxData(data.taxData);
         
-        const savingsAmount = data.taxData?.totalPotentialSavings || 0;
+        const savingsAmount = data.taxData?.totalExtraPerYear || data.taxData?.totalPotentialSavings || 0;
         if (savingsAmount > 0) {
-          showSuccess(`Analysis complete! Found ${formatCurrency(savingsAmount)} in potential tax savings.`);
+          showSuccess(`Analysis complete! Found ${formatCurrency(savingsAmount)} in potential annual savings.`);
         } else {
-          showSuccess('Analysis complete! Your personalized tax strategies are ready.');
+          showSuccess('Analysis complete! Your paycheck optimization recommendations are ready.');
         }
       } else {
         // Even if analysis fails, try to show extracted data
@@ -260,7 +338,7 @@ export default function ChargeTaxIntel() {
       }
 
       setFile(null);
-      setSelectedDocType('1040');
+      setSelectedDocType('paystub');
     } catch (err) {
       console.error('Upload error:', err);
       const errorMessage = err instanceof Error ? err.message : 'Failed to upload document';
@@ -822,37 +900,36 @@ export default function ChargeTaxIntel() {
             </div>
           )}
 
-          {/* Paycheck Optimization Section */}
-          {taxData.paycheckOptimization && (
-            <div className={styles.paycheckSection}>
-              <h3 className={styles.sectionTitle}>
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                  <rect x="1" y="4" width="22" height="16" rx="2" ry="2"/>
-                  <line x1="1" y1="10" x2="23" y2="10"/>
-                </svg>
-                Paycheck Optimization
-              </h3>
-              
-              <div className={styles.paycheckCard}>
-                <div className={styles.paycheckInfo}>
-                  <p><strong>Current Withholding Analysis:</strong></p>
-                  <p>{taxData.paycheckOptimization.currentWithholding}</p>
-                </div>
-                
-                <div className={styles.paycheckInfo}>
-                  <p><strong>Suggested W-4 Changes:</strong></p>
-                  <p>{taxData.paycheckOptimization.suggestedW4Changes}</p>
-                </div>
-                
-                {taxData.paycheckOptimization.monthlyImpact !== 0 && (
-                  <div className={styles.paycheckImpact}>
-                    <span>Estimated Monthly Impact:</span>
-                    <span className={taxData.paycheckOptimization.monthlyImpact > 0 ? styles.positive : styles.negative}>
-                      {taxData.paycheckOptimization.monthlyImpact > 0 ? '+' : ''}
-                      {formatCurrency(taxData.paycheckOptimization.monthlyImpact)}/month
-                    </span>
+          {/* Paycheck Optimization Checklist */}
+          {taxData.optimizations && taxData.optimizations.length > 0 && (
+            <div className={styles.optimizationSection}>
+              <div className={styles.optimizationHeader}>
+                <h3 className={styles.sectionTitle}>
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <path d="M9 12l2 2 4-4"/>
+                    <rect x="3" y="3" width="18" height="18" rx="2"/>
+                  </svg>
+                  Your Paycheck Optimization Checklist
+                </h3>
+                {(taxData.totalExtraPerYear || 0) > 0 && (
+                  <div className={styles.totalSavingsHero}>
+                    <span className={styles.heroLabel}>Keep an extra</span>
+                    <span className={styles.heroAmount}>{formatCurrency(taxData.totalExtraPerYear || 0)}</span>
+                    <span className={styles.heroLabel}>per year</span>
                   </div>
                 )}
+              </div>
+              
+              {taxData.summaryText && (
+                <div className={styles.summaryCallout}>
+                  <p>{taxData.summaryText}</p>
+                </div>
+              )}
+              
+              <div className={styles.optimizationList}>
+                {taxData.optimizations.map((opt, i) => (
+                  <OptimizationItem key={i} optimization={opt} index={i} formatCurrency={formatCurrency} />
+                ))}
               </div>
             </div>
           )}

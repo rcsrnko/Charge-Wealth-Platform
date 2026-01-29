@@ -379,10 +379,7 @@ ${allDocsText}`
       const docType = documentType || (filename?.toLowerCase().includes('w2') ? 'w2' : 
                                         filename?.toLowerCase().includes('paystub') ? 'paystub' : '1040');
       
-      const [profile, positions] = await Promise.all([
-        storage.getFinancialProfile(userId),
-        storage.getPortfolioPositions(userId)
-      ]);
+      const profile = await storage.getFinancialProfile(userId);
       
       const userContext = profile ? {
         income: profile.annualIncome,
@@ -390,32 +387,7 @@ ${allDocsText}`
         filing: profile.filingStatus || 'single'
       } : { income: '200000', state: 'CA', filing: 'single' };
       
-      const hasPortfolio = positions && positions.length > 0;
-      
-      const totalUnrealizedGains = positions?.reduce((sum, p) => {
-        const gain = parseFloat(String(p.unrealizedGain)) || 0;
-        return sum + (gain > 0 ? gain : 0);
-      }, 0) || 0;
-
-      const totalUnrealizedLosses = positions?.reduce((sum, p) => {
-        const gain = parseFloat(String(p.unrealizedGain)) || 0;
-        return sum + (gain < 0 ? Math.abs(gain) : 0);
-      }, 0) || 0;
-      
-      const losingPositions = positions?.filter(p => (parseFloat(String(p.unrealizedGain)) || 0) < 0) || [];
-      
-      const portfolioContext = hasPortfolio ? `
-PORTFOLIO TAX EXPOSURE:
-- Total Unrealized Gains: $${totalUnrealizedGains.toLocaleString()}
-- Total Unrealized Losses: $${totalUnrealizedLosses.toLocaleString()}
-- Net Tax Exposure: $${(totalUnrealizedGains - totalUnrealizedLosses).toLocaleString()}
-- Positions with Losses (tax-loss harvesting candidates): ${losingPositions.map(p => p.symbol).join(', ') || 'None'}
-
-TAX STRATEGIES TO CONSIDER BASED ON PORTFOLIO:
-1. Harvest losses to offset gains: Could save $${(Math.min(totalUnrealizedLosses, totalUnrealizedGains) * 0.24).toFixed(0)} at 24% bracket
-2. Time gain realization based on holding periods
-3. Consider qualified dividends vs ordinary income
-` : '';
+      // Portfolio context removed - now focused on paycheck optimization
       
       const stateTaxRates: Record<string, { marginal: number, name: string, hasLocalTax: boolean }> = {
         'CA': { marginal: 13.3, name: 'California', hasLocalTax: false },
@@ -442,95 +414,67 @@ TAX STRATEGIES TO CONSIDER BASED ON PORTFOLIO:
       
       const stateInfo = stateTaxRates[userContext.state] || { marginal: 5.0, name: userContext.state, hasLocalTax: false };
       
-      const systemPrompt = `You are a comprehensive tax intelligence engine providing CFP-vetted strategies. Analyze the user's ${docType.toUpperCase()} document and provide detailed, actionable tax-saving strategies.
+      const systemPrompt = `You are a paycheck optimization specialist. The user uploaded their W-2 or paystub. Your ONLY job: help them keep more of each paycheck.
 
-USER CONTEXT:
-- Estimated Income: $${userContext.income}
-- State: ${stateInfo.name} (${userContext.state})
-- State Top Marginal Rate: ${stateInfo.marginal}%
-- Has Local Income Tax: ${stateInfo.hasLocalTax}
-- Filing Status: ${userContext.filing}
-- Has Investment Portfolio: ${hasPortfolio}
-${portfolioContext}
 DOCUMENT TYPE: ${docType.toUpperCase()}
+USER STATE: ${stateInfo.name} (${userContext.state})
+FILING STATUS: ${userContext.filing}
+ESTIMATED INCOME: $${userContext.income}
 
-Generate a JSON response with detailed tax metrics AND specific optimization strategies:
+From their document, identify:
+1. Current withholding (federal, state, FICA)
+2. Pre-tax deductions they're using (401k, HSA, FSA, etc.)
+3. Pre-tax deductions they're NOT using but could
+
+Return JSON:
 {
   "documentType": "${docType}",
   "taxYear": 2024,
-  "totalIncome": [number],
-  "agi": [number],
-  "taxableIncome": [number],
-  "totalFederalTax": [number],
-  "taxRates": {
-    "federalMarginalRate": [number - their federal bracket 10/12/22/24/32/35/37],
-    "federalEffectiveRate": [number - actual federal tax / total income * 100],
-    "stateMarginalRate": ${stateInfo.marginal},
-    "stateEffectiveRate": [number - state tax / total income * 100],
-    "localTaxRate": [number if applicable, else 0],
-    "combinedMarginalRate": [federal marginal + state marginal + local],
-    "combinedEffectiveRate": [total all taxes / total income * 100],
-    "ficaTaxRate": [7.65 for W2 employees, 15.3 for self-employed],
-    "netInvestmentIncomeTaxRate": [3.8 if applicable, else 0]
-  },
-  "stateTaxDetails": {
-    "stateName": "${stateInfo.name}",
-    "stateTaxPaid": [number],
-    "hasLocalTax": ${stateInfo.hasLocalTax},
-    "localTaxPaid": [number if applicable],
-    "saltDeductionUsed": [number - capped at $10k],
-    "saltDeductionLost": [number - amount over $10k limit if itemizing]
-  },
-  "filingStatus": "${userContext.filing}",
-  "incomeBreakdown": {
-    "wages": [number],
-    "dividends": [number],
-    "capitalGains": [number],
-    "business": [number],
-    "rentalIncome": [number],
-    "other": [number]
-  },
-  "currentDeductions": {
-    "type": "standard|itemized",
-    "amount": [number],
-    "breakdown": {
-      "mortgageInterest": [number or 0],
-      "propertyTax": [number or 0],
-      "stateLocalTax": [number or 0],
-      "charitableGiving": [number or 0],
-      "medicalExpenses": [number or 0]
+  "currentPaycheck": {
+    "grossPay": [number],
+    "netPay": [number],
+    "federalWithheld": [number],
+    "stateWithheld": [number],
+    "fica": [number],
+    "preTaxDeductions": {
+      "retirement401k": [number],
+      "hsa": [number],
+      "fsa": [number],
+      "other": [number]
     }
   },
-  "taxStrategies": [
+  "optimizations": [
     {
-      "strategy": "Strategy name",
-      "currentSituation": "[Explain their current situation in plain English]",
-      "recommendation": "[Specific recommendation]",
-      "potentialSavings": [number],
-      "howToImplement": "[Step-by-step in plain English]",
+      "action": "[Clear action title]",
+      "currentAmount": [number per paycheck],
+      "suggestedAmount": [number per paycheck],
+      "extraPerPaycheck": [how much more to contribute or save],
+      "taxSavingsPerYear": [number],
+      "howToFix": "[Exact step-by-step instructions to implement this change]",
       "priority": "high|medium|low"
     }
   ],
-  "insights": [
-    {
-      "type": "immediate_action|planning_opportunity|warning",
-      "severity": "high|medium|low",
-      "title": "[Plain English title]",
-      "description": "[Detailed explanation a non-accountant can understand]",
-      "potentialImpact": [number in dollars],
-      "deadline": "[If time-sensitive]"
-    }
-  ],
-  "totalPotentialSavings": [sum of all strategy savings],
-  "plainEnglishSummary": "[2-3 paragraph summary of the top things this person should do to save on taxes]"
+  "totalExtraPerYear": [sum of all tax savings + extra take-home],
+  "summaryText": "[One sentence: You could take home an extra $X per year by making these changes. The biggest win is...]",
+  "totalIncome": [estimated annual income],
+  "effectiveTaxRate": [calculated rate],
+  "marginalTaxBracket": [federal bracket]
 }
 
-CRITICAL REQUIREMENTS:
-1. Write everything in plain English - no jargon
-2. Be specific with dollar amounts
-3. Explain the "why" behind each recommendation
-4. Include step-by-step implementation instructions
-5. Prioritize strategies by impact and ease of implementation`;
+COMMON OPTIMIZATIONS TO CHECK:
+1. 401k contribution - Are they getting the full employer match? Suggest increasing if not.
+2. HSA - If on a high-deductible plan, are they using an HSA? Max is $4,150 individual / $8,300 family.
+3. FSA - Healthcare or dependent care FSA available?
+4. W-4 withholding - Are they overwithholding (getting big refunds)? Suggest adjusting W-4.
+5. Commuter benefits - Pre-tax transit or parking available?
+
+RULES:
+- Only suggest legal, common optimizations
+- Be specific with dollar amounts
+- Give exact steps to implement each fix
+- Prioritize by impact (biggest savings first)
+- If they're already maxing everything, acknowledge that and suggest next-level strategies
+- Write in plain English, no jargon`;
 
       const openaiResponse = await fetchApi(`${process.env.AI_INTEGRATIONS_OPENAI_BASE_URL}/chat/completions`, {
         method: 'POST',
