@@ -391,3 +391,42 @@
     grid-template-columns: repeat(2, 1fr);
   }
 }
+
+/* What We're Watching Section */
+.watchingItems {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.watchingItem {
+  display: flex;
+  gap: 0.75rem;
+  padding: 0.75rem;
+  background: rgba(255, 255, 255, 0.02);
+  border-radius: 8px;
+  border-left: 3px solid var(--soft-gold);
+}
+
+.watchingBullet {
+  font-size: 1.25rem;
+  flex-shrink: 0;
+}
+
+.watchingContent {
+  flex: 1;
+}
+
+.watchingContent strong {
+  display: block;
+  color: var(--porcelain);
+  font-size: 0.95rem;
+  margin-bottom: 0.25rem;
+}
+
+.watchingContent p {
+  margin: 0;
+  font-size: 0.85rem;
+  color: var(--muted-gray);
+  line-height: 1.5;
+}

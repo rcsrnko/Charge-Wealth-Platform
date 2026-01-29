@@ -101,6 +101,41 @@ async function fetchGainersLosers(): Promise<{ gainers: any[]; losers: any[] }> 
   }
 }
 
+// Popular stocks to use as fallback for gainers/losers
+const POPULAR_STOCKS = [
+  "AAPL", "MSFT", "GOOGL", "AMZN", "NVDA", "META", "TSLA", "BRK-B", 
+  "JPM", "V", "UNH", "JNJ", "WMT", "PG", "MA", "HD", "CVX", "MRK",
+  "ABBV", "PEP", "KO", "COST", "TMO", "AVGO", "MCD", "CSCO", "ACN", "AMD"
+];
+
+async function fetchPopularStocksAsMovers(): Promise<{ gainers: any[]; losers: any[] }> {
+  try {
+    const quotes = await Promise.all(
+      POPULAR_STOCKS.slice(0, 15).map(async (symbol) => {
+        const quote = await fetchQuote(symbol);
+        if (!quote || typeof quote.regularMarketChangePercent !== 'number') return null;
+        return {
+          symbol,
+          shortName: quote.shortName || symbol,
+          regularMarketPrice: quote.regularMarketPrice || 0,
+          regularMarketChangePercent: quote.regularMarketChangePercent,
+        };
+      })
+    );
+    
+    const validQuotes = quotes.filter(q => q !== null) as any[];
+    const sorted = validQuotes.sort((a, b) => b.regularMarketChangePercent - a.regularMarketChangePercent);
+    
+    return {
+      gainers: sorted.filter(q => q.regularMarketChangePercent > 0).slice(0, 5),
+      losers: sorted.filter(q => q.regularMarketChangePercent < 0).slice(-5).reverse(),
+    };
+  } catch (error) {
+    console.error("Failed to fetch popular stocks:", error);
+    return { gainers: [], losers: [] };
+  }
+}
+
 async function fetchMarketData(): Promise<MarketData> {
   const now = Date.now();
   
@@ -134,16 +169,23 @@ async function fetchMarketData(): Promise<MarketData> {
     })),
     fetchGainersLosers(),
   ]);
+  
+  // If screener failed, fallback to popular stocks
+  let finalGainersLosers = gainersLosers;
+  if (gainersLosers.gainers.length === 0 && gainersLosers.losers.length === 0) {
+    console.log("[Market Pulse] Screener failed, falling back to popular stocks");
+    finalGainersLosers = await fetchPopularStocksAsMovers();
+  }
 
   const marketData: MarketData = {
     indices: indicesQuotes.filter(q => q.price > 0),
-    gainers: gainersLosers.gainers.slice(0, 5).map(q => ({
+    gainers: finalGainersLosers.gainers.slice(0, 5).map(q => ({
       symbol: String(q.symbol || "N/A"),
       name: String(q.shortName || q.symbol || "Unknown"),
       price: typeof q.regularMarketPrice === 'number' ? q.regularMarketPrice : 0,
       changePercent: typeof q.regularMarketChangePercent === 'number' ? q.regularMarketChangePercent : 0,
     })),
-    losers: gainersLosers.losers.slice(0, 5).map(q => ({
+    losers: finalGainersLosers.losers.slice(0, 5).map(q => ({
       symbol: String(q.symbol || "N/A"),
       name: String(q.shortName || q.symbol || "Unknown"),
       price: typeof q.regularMarketPrice === 'number' ? q.regularMarketPrice : 0,

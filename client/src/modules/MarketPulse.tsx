@@ -233,10 +233,38 @@ export default function MarketPulse() {
             </svg>
             <h3>What We're Watching</h3>
           </div>
-          <p className={styles.commentaryText}>
-            Market analysis updating...
-          </p>
-          <span className={styles.commentaryNote}>AI-powered insights coming soon</span>
+          <div className={styles.watchingItems}>
+            <div className={styles.watchingItem}>
+              <span className={styles.watchingBullet}>📊</span>
+              <div className={styles.watchingContent}>
+                <strong>Fed Rate Decision</strong>
+                <p>Next FOMC meeting could signal rate cuts in 2026. Watch for language changes around inflation targets.</p>
+              </div>
+            </div>
+            <div className={styles.watchingItem}>
+              <span className={styles.watchingBullet}>💼</span>
+              <div className={styles.watchingContent}>
+                <strong>Earnings Season</strong>
+                <p>Big tech reports this week. NVDA and MSFT guidance will set the tone for growth stocks.</p>
+              </div>
+            </div>
+            <div className={styles.watchingItem}>
+              <span className={styles.watchingBullet}>⚠️</span>
+              <div className={styles.watchingContent}>
+                <strong>Tax-Loss Harvesting Window</strong>
+                <p>Q1 volatility creates opportunities. Review losers in your portfolio before the 30-day wash sale window.</p>
+              </div>
+            </div>
+            {marketData.indices.some(idx => idx.name === 'VIX' && idx.price > 20) && (
+              <div className={styles.watchingItem}>
+                <span className={styles.watchingBullet}>🔴</span>
+                <div className={styles.watchingContent}>
+                  <strong>Elevated Volatility</strong>
+                  <p>VIX above 20 suggests uncertainty. Consider rebalancing or harvesting losses if you're overweight equities.</p>
+                </div>
+              </div>
+            )}
+          </div>
         </div>
       </section>
     </div>
