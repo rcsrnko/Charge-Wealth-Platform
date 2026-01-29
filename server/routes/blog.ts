@@ -184,20 +184,28 @@ export async function registerBlogRoutes(app: Express) {
         }
         .content {
             font-size: 1.1rem;
+            background: var(--midnight-blue) !important;
         }
-        .content, .content * {
-            background: transparent !important;
+        .content, .content *, .content div, .content table, .content td, .content tr, .content span, .content p {
+            background: var(--midnight-blue) !important;
+            background-color: var(--midnight-blue) !important;
             color: var(--porcelain) !important;
+        }
+        .content h1, .content h1 * {
+            color: var(--porcelain) !important;
+            background: var(--midnight-blue) !important;
         }
         .content h2, .content h2 * {
             font-size: 1.75rem;
             margin: 2.5rem 0 1rem;
             color: var(--gold-sand) !important;
+            background: var(--midnight-blue) !important;
         }
         .content h3, .content h3 * {
             font-size: 1.35rem;
             margin: 2rem 0 0.75rem;
             color: var(--porcelain) !important;
+            background: var(--midnight-blue) !important;
         }
         .content p { margin-bottom: 1.25rem; }
         .content a, .content a * { color: var(--gold-sand) !important; }
