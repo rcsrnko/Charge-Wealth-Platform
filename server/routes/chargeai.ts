@@ -304,57 +304,59 @@ Format the output as JSON with these fields: title, summary, keyFindings (array)
       
       const portfolioValue = positions?.reduce((sum, p) => sum + (parseFloat(String(p.currentValue)) || 0), 0) || 0;
       
-      // Build tax data from tax returns OR from uploaded documents (paystubs/W-2s)
+      // Build tax data - prioritize current year paystub data, then fall back to tax returns
       let taxData = null;
+      const currentYear = new Date().getFullYear();
       
-      if (taxReturns?.[0]) {
+      // First, try to build from current year paystubs/documents
+      const completedDocs = documents?.filter(d => d.extractionStatus === 'completed') || [];
+      if (completedDocs.length > 0) {
+        let estimatedAnnualIncome = 0;
+        let totalFederalWithheld = 0;
+        let latestNetPay = 0;
+        
+        for (const doc of completedDocs) {
+          const data = doc.extractedData as any;
+          if (data) {
+            // From paystubs - use YTD values if available
+            if (data.ytdGrossPay) estimatedAnnualIncome = Math.max(estimatedAnnualIncome, data.ytdGrossPay);
+            else if (data.grossPay) estimatedAnnualIncome = Math.max(estimatedAnnualIncome, data.grossPay);
+            
+            if (data.netPay) latestNetPay = Math.max(latestNetPay, data.netPay);
+            
+            if (data.ytdFederalWithheld) totalFederalWithheld = Math.max(totalFederalWithheld, data.ytdFederalWithheld);
+            else if (data.federalWithheld) totalFederalWithheld += data.federalWithheld;
+            
+            // From W-2s
+            if (data.wagesIncome) estimatedAnnualIncome = Math.max(estimatedAnnualIncome, data.wagesIncome);
+          }
+        }
+        
+        // Estimate annual from net pay if no gross available
+        if (estimatedAnnualIncome === 0 && latestNetPay > 0) {
+          estimatedAnnualIncome = (latestNetPay / 0.72) * 24; // Assume semi-monthly, ~28% effective rate
+        }
+        
+        if (estimatedAnnualIncome > 0) {
+          const estimatedTax = totalFederalWithheld > 0 ? totalFederalWithheld : estimatedAnnualIncome * 0.22;
+          taxData = {
+            year: currentYear,
+            agi: estimatedAnnualIncome,
+            totalTax: estimatedTax,
+            filingStatus: profile?.filingStatus || 'single',
+            isEstimated: true,
+          };
+        }
+      }
+      
+      // Fall back to tax returns only if no paystub data
+      if (!taxData && taxReturns?.[0]) {
         taxData = {
           year: taxReturns[0].taxYear,
           agi: taxReturns[0].agi ? Number(taxReturns[0].agi) : null,
           totalTax: taxReturns[0].totalFederalTax ? Number(taxReturns[0].totalFederalTax) : null,
           filingStatus: taxReturns[0].filingStatus,
         };
-      } else {
-        // Build from uploaded documents (paystubs, W-2s)
-        const completedDocs = documents?.filter(d => d.extractionStatus === 'completed') || [];
-        if (completedDocs.length > 0) {
-          let estimatedAnnualIncome = 0;
-          let totalFederalWithheld = 0;
-          let latestNetPay = 0;
-          
-          for (const doc of completedDocs) {
-            const data = doc.extractedData as any;
-            if (data) {
-              // From paystubs - use YTD values if available
-              if (data.ytdGrossPay) estimatedAnnualIncome = Math.max(estimatedAnnualIncome, data.ytdGrossPay);
-              else if (data.grossPay) estimatedAnnualIncome = Math.max(estimatedAnnualIncome, data.grossPay);
-              
-              if (data.netPay) latestNetPay = Math.max(latestNetPay, data.netPay);
-              
-              if (data.ytdFederalWithheld) totalFederalWithheld = Math.max(totalFederalWithheld, data.ytdFederalWithheld);
-              else if (data.federalWithheld) totalFederalWithheld += data.federalWithheld;
-              
-              // From W-2s
-              if (data.wagesIncome) estimatedAnnualIncome = Math.max(estimatedAnnualIncome, data.wagesIncome);
-            }
-          }
-          
-          // Estimate annual from net pay if no gross available
-          if (estimatedAnnualIncome === 0 && latestNetPay > 0) {
-            estimatedAnnualIncome = (latestNetPay / 0.72) * 24; // Assume semi-monthly, ~28% effective rate
-          }
-          
-          if (estimatedAnnualIncome > 0) {
-            const estimatedTax = totalFederalWithheld > 0 ? totalFederalWithheld : estimatedAnnualIncome * 0.22;
-            taxData = {
-              year: new Date().getFullYear(),
-              agi: estimatedAnnualIncome,
-              totalTax: estimatedTax,
-              filingStatus: profile?.filingStatus || 'single',
-              isEstimated: true,
-            };
-          }
-        }
       }
       
       res.json({

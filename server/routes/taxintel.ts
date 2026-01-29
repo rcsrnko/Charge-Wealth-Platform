@@ -457,6 +457,43 @@ Only return the JSON object.`
           extractionStatus: 'completed',
         });
 
+        // Auto-update profile from paystub data
+        if (documentType === 'paystub' && extractedData) {
+          const periodsPerYear = extractedData.payFrequency === 'weekly' ? 52 :
+                                 extractedData.payFrequency === 'biweekly' ? 26 :
+                                 extractedData.payFrequency === 'monthly' ? 12 : 24;
+          
+          // Calculate annual income from paystub
+          let annualIncome = 0;
+          if (extractedData.ytdGrossPay) {
+            // Extrapolate from YTD
+            const payDate = extractedData.payDate ? new Date(extractedData.payDate) : new Date();
+            const dayOfYear = Math.floor((payDate.getTime() - new Date(payDate.getFullYear(), 0, 0).getTime()) / (1000 * 60 * 60 * 24));
+            const percentOfYearComplete = dayOfYear / 365;
+            annualIncome = Math.round(extractedData.ytdGrossPay / percentOfYearComplete);
+          } else if (extractedData.grossPay) {
+            annualIncome = Math.round(extractedData.grossPay * periodsPerYear);
+          }
+          
+          if (annualIncome > 0) {
+            // Update or create financial profile
+            const existingProfile = await storage.getFinancialProfile(userId);
+            if (existingProfile) {
+              await storage.updateFinancialProfile(userId, {
+                annualIncome: annualIncome.toString(),
+              });
+              console.log(`Updated profile annual income to ${annualIncome} from paystub`);
+            } else {
+              await storage.createFinancialProfile({
+                userId,
+                annualIncome: annualIncome.toString(),
+                incomeType: 'w2',
+              });
+              console.log(`Created profile with annual income ${annualIncome} from paystub`);
+            }
+          }
+        }
+
         if (documentType === 'tax_return' && extractedData.totalIncome) {
           await storage.createTaxReturn({
             userId,
