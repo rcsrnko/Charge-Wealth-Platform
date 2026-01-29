@@ -5,7 +5,7 @@ import { Route, Switch, useLocation } from 'wouter';
 import Sidebar from '../components/Sidebar';
 import WealthReadiness from '../components/WealthReadiness';
 import CfoRecommendations from '../components/CfoRecommendations';
-import OnboardingWizard from '../components/OnboardingWizard';
+import QuickStartOnboarding from '../components/QuickStartOnboarding';
 import LoadingSpinner from '../components/LoadingSpinner';
 import ErrorBoundary from '../components/ErrorBoundary';
 import FinancialProfileEditor from '../components/FinancialProfileEditor';
@@ -258,9 +258,9 @@ export default function Dashboard() {
     }
   };
 
-  // Show onboarding wizard if triggered
+  // Show quick start onboarding if triggered
   if (showOnboarding) {
-    return <OnboardingWizard onComplete={handleOnboardingComplete} />;
+    return <QuickStartOnboarding onComplete={handleOnboardingComplete} />;
   }
 
   return (

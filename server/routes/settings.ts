@@ -1,9 +1,6 @@
 import type { Express, RequestHandler } from "express";
 import { storage } from "../storage";
 
-const emailPreferencesCache = new Map<string, any>();
-const notificationSettingsCache = new Map<string, any>();
-
 export function registerSettingsRoutes(app: Express, isAuthenticated: RequestHandler) {
   app.get('/api/settings/profile', isAuthenticated, async (req: any, res) => {
     try {
@@ -51,51 +48,24 @@ export function registerSettingsRoutes(app: Express, isAuthenticated: RequestHan
     }
   });
 
-  app.get('/api/settings/email-preferences', isAuthenticated, async (req: any, res) => {
-    try {
-      const userId = req.userId;
-      const prefs = emailPreferencesCache.get(userId) || {
-        marketingEmails: false,
-        productUpdates: true,
-        weeklyDigest: true,
-        taxAlerts: true,
-        portfolioAlerts: true,
-      };
-      
-      res.json(prefs);
-    } catch (error) {
-      console.error('Error fetching email preferences:', error);
-      res.status(500).json({ message: 'Failed to fetch email preferences' });
-    }
-  });
-
-  app.put('/api/settings/email-preferences', isAuthenticated, async (req: any, res) => {
-    try {
-      const userId = req.userId;
-      const preferences = req.body;
-      
-      emailPreferencesCache.set(userId, preferences);
-      
-      res.json({ success: true });
-    } catch (error) {
-      console.error('Error updating email preferences:', error);
-      res.status(500).json({ message: 'Failed to update email preferences' });
-    }
-  });
-
+  // New consolidated notification preferences endpoint
   app.get('/api/settings/notifications', isAuthenticated, async (req: any, res) => {
     try {
       const userId = req.userId;
-      const settings = notificationSettingsCache.get(userId) || {
-        pushEnabled: false,
-        emailNotifications: true,
-        priceAlerts: true,
-        taxDeadlines: true,
-        weeklyReports: true,
-        aiInsights: true,
-      };
+      const user = await storage.getUser(userId);
       
-      res.json(settings);
+      if (!user) {
+        return res.status(404).json({ message: 'User not found' });
+      }
+      
+      // Return notification preferences from user record
+      res.json({
+        emailFrequency: user.emailFrequency || 'weekly',
+        emailOpportunityAlerts: user.emailOpportunityAlerts ?? true,
+        emailWeeklyDigest: user.emailWeeklyDigest ?? true,
+        emailTaxDeadlines: user.emailTaxDeadlines ?? true,
+        emailProductUpdates: user.emailProductUpdates ?? false,
+      });
     } catch (error) {
       console.error('Error fetching notification settings:', error);
       res.status(500).json({ message: 'Failed to fetch notification settings' });
@@ -105,9 +75,29 @@ export function registerSettingsRoutes(app: Express, isAuthenticated: RequestHan
   app.put('/api/settings/notifications', isAuthenticated, async (req: any, res) => {
     try {
       const userId = req.userId;
-      const settings = req.body;
+      const { 
+        emailFrequency, 
+        emailOpportunityAlerts, 
+        emailWeeklyDigest, 
+        emailTaxDeadlines, 
+        emailProductUpdates 
+      } = req.body;
       
-      notificationSettingsCache.set(userId, settings);
+      const user = await storage.getUser(userId);
+      if (!user) {
+        return res.status(404).json({ message: 'User not found' });
+      }
+
+      // Update user with new notification preferences
+      await storage.upsertUser({
+        id: userId,
+        email: user.email,
+        emailFrequency: emailFrequency || user.emailFrequency || 'weekly',
+        emailOpportunityAlerts: emailOpportunityAlerts ?? user.emailOpportunityAlerts ?? true,
+        emailWeeklyDigest: emailWeeklyDigest ?? user.emailWeeklyDigest ?? true,
+        emailTaxDeadlines: emailTaxDeadlines ?? user.emailTaxDeadlines ?? true,
+        emailProductUpdates: emailProductUpdates ?? user.emailProductUpdates ?? false,
+      });
       
       res.json({ success: true });
     } catch (error) {
@@ -150,6 +140,7 @@ export function registerSettingsRoutes(app: Express, isAuthenticated: RequestHan
         return res.status(400).json({ message: 'Password must be at least 8 characters' });
       }
       
+      // Note: Actual password change would be handled by Supabase Auth
       res.json({ 
         success: true, 
         message: 'Password updated successfully.' 

@@ -450,3 +450,84 @@
   gap: 1.5rem;
   max-width: 400px;
 }
+
+/* Email Frequency Section */
+.frequencySection {
+  margin-bottom: 2rem;
+}
+
+.subsectionTitle {
+  font-size: 1rem;
+  font-weight: 500;
+  color: var(--text-primary, #fff);
+  margin: 0 0 1rem 0;
+}
+
+.frequencyGrid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0.75rem;
+}
+
+@media (max-width: 768px) {
+  .frequencyGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.frequencyCard {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 1.25rem 1rem;
+  background: var(--bg-subtle, #0a0f1a);
+  border: 2px solid var(--border-color, #1e293b);
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.2s;
+  position: relative;
+  text-align: center;
+}
+
+.frequencyCard:hover {
+  border-color: var(--accent-gold, #d4af37);
+  background: rgba(212, 175, 55, 0.05);
+}
+
+.frequencyCard.frequencyActive {
+  border-color: var(--accent-gold, #d4af37);
+  background: rgba(212, 175, 55, 0.1);
+}
+
+.frequencyLabel {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text-primary, #fff);
+  margin-bottom: 0.25rem;
+}
+
+.frequencyDesc {
+  font-size: 0.75rem;
+  color: var(--text-secondary, #94a3b8);
+}
+
+.frequencyCheck {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 20px;
+  height: 20px;
+  background: var(--accent-gold, #d4af37);
+  color: #000;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.7rem;
+  font-weight: bold;
+}
+
+.alertsSection {
+  margin-bottom: 1.5rem;
+}

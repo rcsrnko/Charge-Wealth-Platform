@@ -4,7 +4,7 @@ import styles from './Settings.module.css';
 import { fetchWithAuth } from '../lib/fetchWithAuth';
 import { useSupabaseAuth } from '../hooks/useSupabaseAuth';
 
-type SettingsTab = 'profile' | 'email' | 'connected' | 'notifications' | 'password';
+type SettingsTab = 'profile' | 'notifications' | 'connected' | 'password';
 
 interface UserProfile {
   id: string;
@@ -14,21 +14,12 @@ interface UserProfile {
   createdAt: string;
 }
 
-interface EmailPreferences {
-  marketingEmails: boolean;
-  productUpdates: boolean;
-  weeklyDigest: boolean;
-  taxAlerts: boolean;
-  portfolioAlerts: boolean;
-}
-
-interface NotificationSettings {
-  pushEnabled: boolean;
-  emailNotifications: boolean;
-  priceAlerts: boolean;
-  taxDeadlines: boolean;
-  weeklyReports: boolean;
-  aiInsights: boolean;
+interface NotificationPreferences {
+  emailFrequency: 'daily' | 'weekly' | 'monthly' | 'none';
+  emailOpportunityAlerts: boolean;
+  emailWeeklyDigest: boolean;
+  emailTaxDeadlines: boolean;
+  emailProductUpdates: boolean;
 }
 
 interface ConnectedAccount {
@@ -45,11 +36,7 @@ export default function Settings() {
     queryKey: ['/api/settings/profile'],
   });
 
-  const { data: emailPrefs } = useQuery<EmailPreferences>({
-    queryKey: ['/api/settings/email-preferences'],
-  });
-
-  const { data: notifications } = useQuery<NotificationSettings>({
+  const { data: notifications } = useQuery<NotificationPreferences>({
     queryKey: ['/api/settings/notifications'],
   });
 
@@ -69,12 +56,12 @@ export default function Settings() {
       ),
     },
     {
-      id: 'email',
-      label: 'Email Preferences',
+      id: 'notifications',
+      label: 'Email & Notifications',
       icon: (
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-          <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
-          <polyline points="22,6 12,13 2,6"/>
+          <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
+          <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
         </svg>
       ),
     },
@@ -85,16 +72,6 @@ export default function Settings() {
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
           <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/>
           <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>
-        </svg>
-      ),
-    },
-    {
-      id: 'notifications',
-      label: 'Notifications',
-      icon: (
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-          <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
-          <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
         </svg>
       ),
     },
@@ -114,7 +91,7 @@ export default function Settings() {
     <div className={styles.container}>
       <div className={styles.header}>
         <h1 className={styles.title}>Settings</h1>
-        <p className={styles.subtitle}>Manage your account preferences and security</p>
+        <p className={styles.subtitle}>Manage your account preferences and notifications</p>
       </div>
 
       <div className={styles.content}>
@@ -135,14 +112,11 @@ export default function Settings() {
           {activeTab === 'profile' && (
             <ProfileSection profile={profile} isLoading={profileLoading} />
           )}
-          {activeTab === 'email' && (
-            <EmailPreferencesSection preferences={emailPrefs} />
+          {activeTab === 'notifications' && (
+            <NotificationsSection preferences={notifications} />
           )}
           {activeTab === 'connected' && (
             <ConnectedAccountsSection accounts={connectedAccounts} />
-          )}
-          {activeTab === 'notifications' && (
-            <NotificationsSection settings={notifications} />
           )}
           {activeTab === 'password' && (
             <PasswordSection userEmail={profile?.email || user?.email} />
@@ -256,16 +230,17 @@ function ProfileSection({ profile, isLoading }: { profile?: UserProfile; isLoadi
   );
 }
 
-function EmailPreferencesSection({ preferences }: { preferences?: EmailPreferences }) {
-  const [prefs, setPrefs] = useState<EmailPreferences>({
-    marketingEmails: false,
-    productUpdates: true,
-    weeklyDigest: true,
-    taxAlerts: true,
-    portfolioAlerts: true,
+function NotificationsSection({ preferences }: { preferences?: NotificationPreferences }) {
+  const [prefs, setPrefs] = useState<NotificationPreferences>({
+    emailFrequency: 'weekly',
+    emailOpportunityAlerts: true,
+    emailWeeklyDigest: true,
+    emailTaxDeadlines: true,
+    emailProductUpdates: false,
   });
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
+  const queryClient = useQueryClient();
 
   useEffect(() => {
     if (preferences) {
@@ -273,21 +248,26 @@ function EmailPreferencesSection({ preferences }: { preferences?: EmailPreferenc
     }
   }, [preferences]);
 
-  const handleToggle = (key: keyof EmailPreferences) => {
+  const handleToggle = (key: keyof Omit<NotificationPreferences, 'emailFrequency'>) => {
     setPrefs((prev) => ({ ...prev, [key]: !prev[key] }));
+  };
+
+  const handleFrequencyChange = (frequency: NotificationPreferences['emailFrequency']) => {
+    setPrefs((prev) => ({ ...prev, emailFrequency: frequency }));
   };
 
   const handleSave = async () => {
     setSaving(true);
     setMessage(null);
     try {
-      const response = await fetchWithAuth('/api/settings/email-preferences', {
+      const response = await fetchWithAuth('/api/settings/notifications', {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(prefs),
       });
       if (response.ok) {
-        setMessage({ type: 'success', text: 'Email preferences updated' });
+        setMessage({ type: 'success', text: 'Notification preferences saved' });
+        queryClient.invalidateQueries({ queryKey: ['/api/settings/notifications'] });
       } else {
         throw new Error('Failed to update');
       }
@@ -298,18 +278,24 @@ function EmailPreferencesSection({ preferences }: { preferences?: EmailPreferenc
     }
   };
 
-  const emailOptions = [
-    { key: 'marketingEmails' as const, label: 'Marketing Emails', desc: 'Promotional offers and announcements' },
-    { key: 'productUpdates' as const, label: 'Product Updates', desc: 'New features and improvements' },
-    { key: 'weeklyDigest' as const, label: 'Weekly Digest', desc: 'Summary of your financial activity' },
-    { key: 'taxAlerts' as const, label: 'Tax Alerts', desc: 'Important tax deadlines and reminders' },
-    { key: 'portfolioAlerts' as const, label: 'Portfolio Alerts', desc: 'Price changes and market updates' },
+  const frequencyOptions: { value: NotificationPreferences['emailFrequency']; label: string; desc: string }[] = [
+    { value: 'daily', label: 'Daily', desc: 'Get updates every morning' },
+    { value: 'weekly', label: 'Weekly', desc: 'Sunday summary of your week' },
+    { value: 'monthly', label: 'Monthly', desc: 'First of the month recap' },
+    { value: 'none', label: 'None', desc: 'Only critical alerts' },
+  ];
+
+  const alertOptions: { key: keyof Omit<NotificationPreferences, 'emailFrequency'>; label: string; desc: string }[] = [
+    { key: 'emailOpportunityAlerts', label: 'Opportunity Alerts', desc: 'Get notified when we find money-saving opportunities' },
+    { key: 'emailWeeklyDigest', label: 'Weekly Digest', desc: 'Summary of your financial activity and insights' },
+    { key: 'emailTaxDeadlines', label: 'Tax Deadlines', desc: 'Never miss an important tax date' },
+    { key: 'emailProductUpdates', label: 'Product Updates', desc: 'New features and improvements' },
   ];
 
   return (
     <div className={styles.section}>
-      <h2 className={styles.sectionTitle}>Email Preferences</h2>
-      <p className={styles.sectionDesc}>Choose which emails you want to receive</p>
+      <h2 className={styles.sectionTitle}>Email & Notifications</h2>
+      <p className={styles.sectionDesc}>Control how and when we reach out to you</p>
 
       {message && (
         <div className={`${styles.message} ${styles[message.type]}`}>
@@ -317,23 +303,47 @@ function EmailPreferencesSection({ preferences }: { preferences?: EmailPreferenc
         </div>
       )}
 
-      <div className={styles.toggleList}>
-        {emailOptions.map((option) => (
-          <div key={option.key} className={styles.toggleItem}>
-            <div className={styles.toggleInfo}>
-              <span className={styles.toggleLabel}>{option.label}</span>
-              <span className={styles.toggleDesc}>{option.desc}</span>
-            </div>
+      {/* Email Frequency */}
+      <div className={styles.frequencySection}>
+        <h3 className={styles.subsectionTitle}>How often do you want to hear from us?</h3>
+        <div className={styles.frequencyGrid}>
+          {frequencyOptions.map((option) => (
             <button
-              className={`${styles.toggle} ${prefs[option.key] ? styles.toggleOn : ''}`}
-              onClick={() => handleToggle(option.key)}
-              role="switch"
-              aria-checked={prefs[option.key]}
+              key={option.value}
+              className={`${styles.frequencyCard} ${prefs.emailFrequency === option.value ? styles.frequencyActive : ''}`}
+              onClick={() => handleFrequencyChange(option.value)}
             >
-              <span className={styles.toggleKnob} />
+              <span className={styles.frequencyLabel}>{option.label}</span>
+              <span className={styles.frequencyDesc}>{option.desc}</span>
+              {prefs.emailFrequency === option.value && (
+                <span className={styles.frequencyCheck}>✓</span>
+              )}
             </button>
-          </div>
-        ))}
+          ))}
+        </div>
+      </div>
+
+      {/* Alert Types */}
+      <div className={styles.alertsSection}>
+        <h3 className={styles.subsectionTitle}>What should we notify you about?</h3>
+        <div className={styles.toggleList}>
+          {alertOptions.map((option) => (
+            <div key={option.key} className={styles.toggleItem}>
+              <div className={styles.toggleInfo}>
+                <span className={styles.toggleLabel}>{option.label}</span>
+                <span className={styles.toggleDesc}>{option.desc}</span>
+              </div>
+              <button
+                className={`${styles.toggle} ${prefs[option.key] ? styles.toggleOn : ''}`}
+                onClick={() => handleToggle(option.key)}
+                role="switch"
+                aria-checked={prefs[option.key]}
+              >
+                <span className={styles.toggleKnob} />
+              </button>
+            </div>
+          ))}
+        </div>
       </div>
 
       <div className={styles.actions}>
@@ -400,97 +410,6 @@ function ConnectedAccountsSection({ accounts }: { accounts?: ConnectedAccount[] 
             </div>
           );
         })}
-      </div>
-    </div>
-  );
-}
-
-function NotificationsSection({ settings }: { settings?: NotificationSettings }) {
-  const [notifs, setNotifs] = useState<NotificationSettings>({
-    pushEnabled: false,
-    emailNotifications: true,
-    priceAlerts: true,
-    taxDeadlines: true,
-    weeklyReports: true,
-    aiInsights: true,
-  });
-  const [saving, setSaving] = useState(false);
-  const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
-
-  useEffect(() => {
-    if (settings) {
-      setNotifs(settings);
-    }
-  }, [settings]);
-
-  const handleToggle = (key: keyof NotificationSettings) => {
-    setNotifs((prev) => ({ ...prev, [key]: !prev[key] }));
-  };
-
-  const handleSave = async () => {
-    setSaving(true);
-    setMessage(null);
-    try {
-      const response = await fetchWithAuth('/api/settings/notifications', {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(notifs),
-      });
-      if (response.ok) {
-        setMessage({ type: 'success', text: 'Notification settings updated' });
-      } else {
-        throw new Error('Failed to update');
-      }
-    } catch {
-      setMessage({ type: 'error', text: 'Failed to update settings' });
-    } finally {
-      setSaving(false);
-    }
-  };
-
-  const notifOptions = [
-    { key: 'pushEnabled' as const, label: 'Push Notifications', desc: 'Receive push notifications in your browser' },
-    { key: 'emailNotifications' as const, label: 'Email Notifications', desc: 'Get notified via email' },
-    { key: 'priceAlerts' as const, label: 'Price Alerts', desc: 'Alerts when your holdings hit target prices' },
-    { key: 'taxDeadlines' as const, label: 'Tax Deadlines', desc: 'Reminders for important tax dates' },
-    { key: 'weeklyReports' as const, label: 'Weekly Reports', desc: 'Weekly summary of your finances' },
-    { key: 'aiInsights' as const, label: 'AI Insights', desc: 'Personalized insights from your AI Advisor' },
-  ];
-
-  return (
-    <div className={styles.section}>
-      <h2 className={styles.sectionTitle}>Notification Settings</h2>
-      <p className={styles.sectionDesc}>Control how you receive notifications</p>
-
-      {message && (
-        <div className={`${styles.message} ${styles[message.type]}`}>
-          {message.text}
-        </div>
-      )}
-
-      <div className={styles.toggleList}>
-        {notifOptions.map((option) => (
-          <div key={option.key} className={styles.toggleItem}>
-            <div className={styles.toggleInfo}>
-              <span className={styles.toggleLabel}>{option.label}</span>
-              <span className={styles.toggleDesc}>{option.desc}</span>
-            </div>
-            <button
-              className={`${styles.toggle} ${notifs[option.key] ? styles.toggleOn : ''}`}
-              onClick={() => handleToggle(option.key)}
-              role="switch"
-              aria-checked={notifs[option.key]}
-            >
-              <span className={styles.toggleKnob} />
-            </button>
-          </div>
-        ))}
-      </div>
-
-      <div className={styles.actions}>
-        <button className={styles.primaryBtn} onClick={handleSave} disabled={saving}>
-          {saving ? 'Saving...' : 'Save Settings'}
-        </button>
       </div>
     </div>
   );

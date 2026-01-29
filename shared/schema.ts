@@ -46,6 +46,12 @@ export const users = pgTable("users", {
   stripeCustomerId: varchar("stripe_customer_id"),
   subscriptionStartDate: timestamp("subscription_start_date"),
   subscriptionEndDate: timestamp("subscription_end_date"),
+  // Email notification preferences
+  emailFrequency: varchar("email_frequency", { length: 20 }).default('weekly'), // daily, weekly, monthly, none
+  emailOpportunityAlerts: boolean("email_opportunity_alerts").default(true),
+  emailWeeklyDigest: boolean("email_weekly_digest").default(true),
+  emailTaxDeadlines: boolean("email_tax_deadlines").default(true),
+  emailProductUpdates: boolean("email_product_updates").default(false),
   createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at").defaultNow(),
 });
