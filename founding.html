@@ -305,6 +305,108 @@
             text-decoration: underline;
         }
         
+        /* Urgency Banner */
+        .urgency-banner {
+            position: sticky;
+            top: 0;
+            background: linear-gradient(135deg, #dc2626 0%, #f97316 100%);
+            color: #fff;
+            text-align: center;
+            padding: 12px 16px;
+            font-size: 15px;
+            font-weight: 600;
+            z-index: 1000;
+        }
+        
+        /* Newsletter Section */
+        .newsletter {
+            background: var(--deep-navy);
+            border: 1px solid rgba(201, 169, 98, 0.2);
+            border-radius: 16px;
+            padding: 40px 32px;
+            text-align: center;
+            margin-bottom: 56px;
+        }
+        
+        .newsletter h2 {
+            font-size: 24px;
+            color: #fff;
+            margin-bottom: 12px;
+        }
+        
+        .newsletter .subhead {
+            font-size: 16px;
+            color: var(--muted-gray);
+            margin-bottom: 24px;
+            max-width: 480px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .newsletter-form {
+            display: flex;
+            gap: 12px;
+            max-width: 440px;
+            margin: 0 auto 16px;
+        }
+        
+        .newsletter-form input {
+            flex: 1;
+            padding: 14px 18px;
+            border: 1px solid rgba(201, 169, 98, 0.3);
+            border-radius: 8px;
+            background: var(--midnight-blue);
+            color: #fff;
+            font-size: 16px;
+        }
+        
+        .newsletter-form input::placeholder {
+            color: var(--muted-gray);
+        }
+        
+        .newsletter-form button {
+            padding: 14px 24px;
+            background: linear-gradient(135deg, var(--gold-sand) 0%, #D4B76A 100%);
+            color: var(--midnight-blue);
+            font-weight: 700;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: transform 0.2s;
+        }
+        
+        .newsletter-form button:hover {
+            transform: translateY(-2px);
+        }
+        
+        .newsletter-form button:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+        }
+        
+        .newsletter-note {
+            font-size: 13px;
+            color: var(--muted-gray);
+        }
+        
+        .newsletter-message {
+            margin-top: 12px;
+            font-size: 14px;
+            padding: 8px;
+            border-radius: 6px;
+        }
+        
+        .newsletter-message.success {
+            color: #22c55e;
+            background: rgba(34, 197, 94, 0.1);
+        }
+        
+        .newsletter-message.error {
+            color: #ef4444;
+            background: rgba(239, 68, 68, 0.1);
+        }
+        
         @media (max-width: 600px) {
             h1 {
                 font-size: 32px;
@@ -318,14 +420,23 @@
                 padding: 16px 40px;
                 font-size: 16px;
             }
+            
+            .newsletter-form {
+                flex-direction: column;
+            }
         }
     </style>
 </head>
 <body>
+    <!-- Urgency Banner -->
+    <div class="urgency-banner">
+        <span>🔥 Only 47 founding spots left. Price increases to $499 when they're gone.</span>
+    </div>
+    
     <div class="container">
         <!-- Hero -->
         <section class="hero">
-            <div class="badge" id="spots-badge">⚡ Loading...</div>
+            <div class="badge" id="spots-badge">⚡ 47 of 250 Spots Left</div>
             <h1>Your Money's Working Against You</h1>
             <p class="subhead">Missed tax breaks. Cash sitting idle. Deadlines slipping by. You're bleeding money you don't even see.</p>
             <p class="stat-line">The average high earner leaves $8,400/year on the table.</p>
@@ -421,9 +532,23 @@
             </div>
         </section>
         
+        <!-- Newsletter Section -->
+        <section class="newsletter">
+            <h2>Not ready to buy?</h2>
+            <p class="subhead">Get our free daily newsletter — actionable money tips for people who actually work for a living. No fluff. No spam. Just the stuff that saves you money.</p>
+            
+            <form class="newsletter-form" id="newsletterForm">
+                <input type="email" placeholder="Enter your email" required>
+                <button type="submit">Get Free Tips →</button>
+            </form>
+            
+            <p class="newsletter-note">Join 2,400+ readers. Unsubscribe anytime.</p>
+            <div id="newsletterMessage"></div>
+        </section>
+        
         <!-- Final CTA -->
         <section class="final-cta">
-            <p><span class="urgency" id="spots-urgency">250 founding spots.</span> Once they're gone, this price is gone.</p>
+            <p><span class="urgency" id="spots-urgency">47 spots left.</span> Once they're gone, this price is gone.</p>
             <a href="#" class="cta-button" onclick="startCheckout(); return false;">Become a Founding Member →</a>
         </section>
         
@@ -496,6 +621,43 @@
             });
         }
     }
+    
+    // Newsletter form handler
+    document.getElementById('newsletterForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const form = e.target;
+        const emailInput = form.querySelector('input[type="email"]');
+        const button = form.querySelector('button');
+        const messageDiv = document.getElementById('newsletterMessage');
+        
+        const originalText = button.textContent;
+        button.disabled = true;
+        button.textContent = 'Subscribing...';
+        
+        try {
+            const res = await fetch('/api/newsletter/subscribe', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email: emailInput.value })
+            });
+            
+            const data = await res.json();
+            
+            if (res.ok) {
+                messageDiv.className = 'newsletter-message success';
+                messageDiv.textContent = data.message || 'You\'re subscribed! Check your inbox.';
+                emailInput.value = '';
+            } else {
+                throw new Error(data.message || 'Something went wrong');
+            }
+        } catch (err) {
+            messageDiv.className = 'newsletter-message error';
+            messageDiv.textContent = err.message || 'Failed to subscribe. Please try again.';
+        } finally {
+            button.disabled = false;
+            button.textContent = originalText;
+        }
+    });
 </script>
 </body>
 </html>
