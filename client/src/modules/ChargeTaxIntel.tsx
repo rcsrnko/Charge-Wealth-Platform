@@ -564,19 +564,72 @@ export default function ChargeTaxIntel() {
 
       {taxData && (
         <div className={styles.resultsPage} ref={resultsRef}>
-          {/* Hero Savings Banner */}
-          <div className={styles.savingsHero}>
-            <div className={styles.savingsHeroContent}>
-              <span className={styles.savingsHeroLabel}>You could save</span>
-              <span className={styles.savingsHeroAmount}>
-                {formatCurrency(taxData.totalExtraPerYear || taxData.totalPotentialSavings || 0)}
-              </span>
-              <span className={styles.savingsHeroLabel}>per year</span>
+          {/* Problem-Focused Hero */}
+          {taxProjection?.withholding?.status === 'under' && taxProjection.withholding.federalDifference ? (
+            <div className={styles.problemHero}>
+              <div className={styles.problemHeroMain}>
+                <span className={styles.problemHeroIcon}>⚠️</span>
+                <div className={styles.problemHeroText}>
+                  <span className={styles.problemHeroTitle}>You're on track to owe at tax time</span>
+                  <span className={styles.problemHeroAmount}>{formatCurrency(Math.abs(taxProjection.withholding.federalDifference))}</span>
+                </div>
+              </div>
+              <div className={styles.problemHeroActions}>
+                <span className={styles.problemHeroActionsTitle}>Here's how to fix it:</span>
+                <div className={styles.problemHeroActionsList}>
+                  <div className={styles.problemHeroAction}>
+                    <span className={styles.actionNumber}>1</span>
+                    <span className={styles.actionText}>Increase 401(k) to $23,000</span>
+                    <span className={styles.actionSavings}>→ Save ~$5,500 in taxes</span>
+                  </div>
+                  <div className={styles.problemHeroAction}>
+                    <span className={styles.actionNumber}>2</span>
+                    <span className={styles.actionText}>Max HSA at $8,300</span>
+                    <span className={styles.actionSavings}>→ Save ~$2,000 in taxes</span>
+                  </div>
+                  <div className={styles.problemHeroAction}>
+                    <span className={styles.actionNumber}>3</span>
+                    <span className={styles.actionText}>Adjust W-4 withholding</span>
+                    <span className={styles.actionSavings}>→ Avoid underpayment penalty</span>
+                  </div>
+                </div>
+              </div>
             </div>
-            {taxData.summaryText && (
-              <p className={styles.savingsHeroSummary}>{taxData.summaryText}</p>
-            )}
-          </div>
+          ) : (taxData.totalExtraPerYear || taxData.totalPotentialSavings || 0) > 0 ? (
+            <div className={styles.savingsHero}>
+              <div className={styles.savingsHeroContent}>
+                <span className={styles.savingsHeroLabel}>You could save</span>
+                <span className={styles.savingsHeroAmount}>
+                  {formatCurrency(taxData.totalExtraPerYear || taxData.totalPotentialSavings || 0)}
+                </span>
+                <span className={styles.savingsHeroLabel}>per year</span>
+              </div>
+              {taxData.summaryText && (
+                <p className={styles.savingsHeroSummary}>{taxData.summaryText}</p>
+              )}
+            </div>
+          ) : (
+            <div className={styles.potentialHero}>
+              <div className={styles.potentialHeroContent}>
+                <span className={styles.potentialHeroTitle}>At {formatCurrency(taxProjection?.projections?.annualGross || taxData.totalIncome || 0)} income in the {taxData.marginalTaxBracket || taxProjection?.rates?.marginalBracket}% bracket</span>
+                <span className={styles.potentialHeroSubtitle}>High earners like you typically save:</span>
+                <div className={styles.potentialHeroRanges}>
+                  <div className={styles.potentialRange}>
+                    <span className={styles.rangeAmount}>$3,000 - $8,000</span>
+                    <span className={styles.rangeLabel}>via pre-tax optimization</span>
+                  </div>
+                  <div className={styles.potentialRange}>
+                    <span className={styles.rangeAmount}>$2,000 - $5,000</span>
+                    <span className={styles.rangeLabel}>via tax-loss harvesting</span>
+                  </div>
+                  <div className={styles.potentialRange}>
+                    <span className={styles.rangeAmount}>$1,000 - $3,000</span>
+                    <span className={styles.rangeLabel}>via deduction strategies</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
 
           {/* Tax Projection Section */}
           {taxProjection?.hasProjection && taxProjection.projections && (
