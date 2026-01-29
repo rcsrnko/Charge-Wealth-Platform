@@ -408,65 +408,45 @@ export default function ChargeTaxIntel() {
         </div>
       </div>
 
-      <div className={styles.uploadSection}>
-        <div className={styles.uploadContent}>
-          <div className={styles.emptyStateHero}>
-            <div className={styles.savingsIllustration}>
-              <svg viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <circle cx="40" cy="40" r="38" stroke="currentColor" strokeWidth="2" opacity="0.3"/>
-                <circle cx="40" cy="40" r="28" stroke="currentColor" strokeWidth="2" opacity="0.5"/>
-                <path d="M40 20v40M50 26h-15a7 7 0 100 14h10a7 7 0 110 14H30" stroke="currentColor" strokeWidth="3" strokeLinecap="round"/>
-                <circle cx="40" cy="40" r="5" fill="currentColor" opacity="0.3"/>
-              </svg>
+      {/* EMPTY STATE - Only show when no tax data */}
+      {!taxData && (
+        <div className={styles.uploadSection}>
+          <div className={styles.uploadContent}>
+            <div className={styles.emptyStateHero}>
+              <div className={styles.savingsIllustration}>
+                <svg viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <circle cx="40" cy="40" r="38" stroke="currentColor" strokeWidth="2" opacity="0.3"/>
+                  <circle cx="40" cy="40" r="28" stroke="currentColor" strokeWidth="2" opacity="0.5"/>
+                  <path d="M40 20v40M50 26h-15a7 7 0 100 14h10a7 7 0 110 14H30" stroke="currentColor" strokeWidth="3" strokeLinecap="round"/>
+                  <circle cx="40" cy="40" r="5" fill="currentColor" opacity="0.3"/>
+                </svg>
+              </div>
+              <h2 className={styles.emptyStateTitle}>Unlock Your Tax Savings Potential</h2>
+              <p className={styles.emptyStateSubtitle}>Upload any tax document to see exactly how much you could save</p>
+              
+              <div className={styles.unlockBenefits}>
+                <div className={styles.unlockItem}>
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <polyline points="20 6 9 17 4 12"/>
+                  </svg>
+                  <span>Your effective vs marginal tax rate</span>
+                </div>
+                <div className={styles.unlockItem}>
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <polyline points="20 6 9 17 4 12"/>
+                  </svg>
+                  <span>Personalized savings opportunities</span>
+                </div>
+                <div className={styles.unlockItem}>
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <polyline points="20 6 9 17 4 12"/>
+                  </svg>
+                  <span>Deadline calendar for tax moves</span>
+                </div>
+              </div>
             </div>
-            <h2 className={styles.emptyStateTitle}>Unlock Your Tax Savings Potential</h2>
-            <p className={styles.emptyStateSubtitle}>Upload any tax document to see exactly how much you could save</p>
-            
-            <div className={styles.unlockBenefits}>
-              <div className={styles.unlockItem}>
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                  <polyline points="20 6 9 17 4 12"/>
-                </svg>
-                <span>Your effective vs marginal tax rate</span>
-              </div>
-              <div className={styles.unlockItem}>
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                  <polyline points="20 6 9 17 4 12"/>
-                </svg>
-                <span>Personalized savings opportunities</span>
-              </div>
-              <div className={styles.unlockItem}>
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                  <polyline points="20 6 9 17 4 12"/>
-                </svg>
-                <span>Deadline calendar for tax moves</span>
-              </div>
-            </div>
-          </div>
 
-          <div className={styles.previewSection}>
-            <div className={styles.dataPromptCard}>
-              <div className={styles.promptIcon}>
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
-                  <polyline points="14 2 14 8 20 8"/>
-                  <line x1="12" y1="18" x2="12" y2="12"/>
-                  <line x1="9" y1="15" x2="15" y2="15"/>
-                </svg>
-              </div>
-              <h3 className={styles.promptTitle}>Your Tax Data Needed</h3>
-              <p className={styles.promptDesc}>
-                Upload your tax documents to see your actual effective rate, potential savings, and personalized strategies.
-              </p>
-              <div className={styles.promptBenefits}>
-                <span>Your effective tax rate</span>
-                <span>Your potential savings</span>
-                <span>Strategies for your situation</span>
-              </div>
-            </div>
-          </div>
-
-          <div className={styles.docTypeSelector}>
+            <div className={styles.docTypeSelector}>
             <h4>Select Document Type</h4>
             <div className={styles.docTypeGrid}>
               {DOCUMENT_TYPES.map((docType) => (
@@ -667,6 +647,7 @@ export default function ChargeTaxIntel() {
           </div>
         </div>
       </div>
+      )}
 
       {taxData && (
         <div className={styles.resultsPage} ref={resultsRef}>
