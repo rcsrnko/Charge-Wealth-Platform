@@ -1295,6 +1295,27 @@
   }
 }
 
+.insightsRow {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+  margin-top: 2rem;
+}
+
+@media (max-width: 900px) {
+  .insightsRow {
+    grid-template-columns: 1fr;
+  }
+}
+
+.insightPlaceholder {
+  background: var(--deep-navy);
+  border-radius: 12px;
+  padding: 2rem;
+  text-align: center;
+  color: var(--muted);
+}
+
 .quickLinkCard {
   display: flex;
   align-items: center;

@@ -1,0 +1,90 @@
+.container {
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.12) 0%, rgba(201, 169, 98, 0.08) 100%);
+  border: 1px solid rgba(16, 185, 129, 0.3);
+  border-radius: 12px;
+  padding: 1.25rem;
+}
+
+.loading {
+  padding: 2rem;
+  text-align: center;
+  color: var(--muted-gray, #6b7280);
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid rgba(16, 185, 129, 0.2);
+}
+
+.icon {
+  font-size: 2rem;
+}
+
+.headerText {
+  display: flex;
+  flex-direction: column;
+}
+
+.label {
+  font-size: 0.8rem;
+  color: var(--muted-gray, #6b7280);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.totalAmount {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #10b981;
+  line-height: 1.2;
+}
+
+.period {
+  font-size: 0.85rem;
+  color: var(--porcelain, #f4f5f7);
+}
+
+.breakdown {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.breakdownItem {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.breakdownItem:last-child {
+  border-bottom: none;
+}
+
+.breakdownLabel {
+  font-size: 0.85rem;
+  color: var(--muted-gray, #6b7280);
+}
+
+.breakdownValue {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--porcelain, #f4f5f7);
+}
+
+.footer {
+  margin-top: 0.75rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.footerNote {
+  font-size: 0.7rem;
+  color: var(--muted-gray, #6b7280);
+  font-style: italic;
+}

@@ -1,0 +1,151 @@
+.container {
+  background: var(--deep-navy, #1a1d28);
+  border: 1px solid rgba(201, 169, 98, 0.15);
+  border-radius: 12px;
+  padding: 1.25rem;
+}
+
+.header {
+  margin-bottom: 1rem;
+}
+
+.title {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--porcelain, #f4f5f7);
+  margin: 0;
+}
+
+.loading {
+  padding: 2rem;
+  text-align: center;
+  color: var(--muted-gray, #6b7280);
+}
+
+.deadlinesList {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.deadlineItem {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  padding: 0.875rem;
+  background: rgba(255, 255, 255, 0.02);
+  border-radius: 8px;
+  border-left: 3px solid transparent;
+}
+
+.deadlineItem.urgent {
+  border-left-color: #ef4444;
+  background: rgba(239, 68, 68, 0.08);
+}
+
+.deadlineItem.soon {
+  border-left-color: #f59e0b;
+  background: rgba(245, 158, 11, 0.08);
+}
+
+.deadlineItem.upcoming {
+  border-left-color: var(--gold-sand, #c9a962);
+}
+
+.dateColumn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 50px;
+  text-align: center;
+}
+
+.dateMonth {
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: var(--muted-gray, #6b7280);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.dateDay {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--porcelain, #f4f5f7);
+  line-height: 1.2;
+}
+
+.daysUntil {
+  font-size: 0.65rem;
+  color: var(--muted-gray, #6b7280);
+  margin-top: 0.125rem;
+}
+
+.urgent .daysUntil {
+  color: #ef4444;
+  font-weight: 600;
+}
+
+.soon .daysUntil {
+  color: #f59e0b;
+  font-weight: 600;
+}
+
+.infoColumn {
+  flex: 1;
+  min-width: 0;
+}
+
+.deadlineHeader {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.25rem;
+}
+
+.categoryIcon {
+  font-size: 0.9rem;
+}
+
+.deadlineTitle {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--porcelain, #f4f5f7);
+}
+
+.deadlineDesc {
+  font-size: 0.8rem;
+  color: var(--muted-gray, #6b7280);
+  margin: 0;
+  line-height: 1.4;
+}
+
+.personalNote {
+  font-size: 0.75rem;
+  color: var(--gold-sand, #c9a962);
+  margin: 0.375rem 0 0 0;
+  font-style: italic;
+}
+
+.actionColumn {
+  flex-shrink: 0;
+}
+
+.actionBtn {
+  display: inline-block;
+  padding: 0.375rem 0.75rem;
+  background: rgba(201, 169, 98, 0.15);
+  border: 1px solid rgba(201, 169, 98, 0.3);
+  border-radius: 6px;
+  color: var(--gold-sand, #c9a962);
+  font-size: 0.75rem;
+  font-weight: 500;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.actionBtn:hover {
+  background: rgba(201, 169, 98, 0.25);
+  border-color: var(--gold-sand, #c9a962);
+}

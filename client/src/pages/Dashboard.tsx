@@ -21,6 +21,8 @@ const ReferralDashboard = lazy(() => import('../modules/ReferralDashboard'));
 const Settings = lazy(() => import('../modules/Settings'));
 const MyFinancialData = lazy(() => import('../modules/MyFinancialData'));
 const Optimizer401k = lazy(() => import('../modules/Optimizer401k'));
+const TaxDeadlines = lazy(() => import('../components/TaxDeadlines'));
+const SavingsTracker = lazy(() => import('../components/SavingsTracker'));
 
 function ModuleLoader() {
   return (
@@ -416,6 +418,16 @@ export default function Dashboard() {
                       <span className={styles.quickLinkArrow}>→</span>
                     </a>
                   </div>
+                </div>
+
+                {/* Savings & Deadlines Row */}
+                <div className={styles.insightsRow}>
+                  <Suspense fallback={<div className={styles.insightPlaceholder}>Loading...</div>}>
+                    <SavingsTracker />
+                  </Suspense>
+                  <Suspense fallback={<div className={styles.insightPlaceholder}>Loading...</div>}>
+                    <TaxDeadlines />
+                  </Suspense>
                 </div>
 
                 <div className={styles.disclaimer}>
