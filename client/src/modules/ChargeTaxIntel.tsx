@@ -186,6 +186,8 @@ export default function ChargeTaxIntel() {
   const [chatMessages, setChatMessages] = useState<ChatMessage[]>([]);
   const [chatInput, setChatInput] = useState('');
   const [isSendingMessage, setIsSendingMessage] = useState(false);
+  const [chatExpanded, setChatExpanded] = useState(false);
+  const [expandedInsight, setExpandedInsight] = useState<number | null>(null);
   const chatEndRef = useRef<HTMLDivElement>(null);
 
   const taxDeadlines: TaxDeadline[] = [
@@ -626,15 +628,23 @@ export default function ChargeTaxIntel() {
         </div>
 
         <div className={styles.rightColumn}>
-          <div className={styles.taxChatSection}>
+          <div className={`${styles.taxChatSection} ${chatExpanded ? styles.chatExpanded : ''}`}>
             <div className={styles.chatHeader}>
-              <h3>
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                  <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
-                </svg>
-                Tax Assistant
-              </h3>
-              <p>Ask questions about your uploaded documents</p>
+              <div className={styles.chatHeaderContent}>
+                <h3>
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+                  </svg>
+                  Tax Assistant
+                </h3>
+                <p>Ask questions about your uploaded documents</p>
+              </div>
+              <button 
+                className={styles.chatExpandButton}
+                onClick={() => setChatExpanded(!chatExpanded)}
+              >
+                {chatExpanded ? 'Minimize' : 'Expand'}
+              </button>
             </div>
             
             <div className={styles.chatMessages}>
@@ -784,11 +794,25 @@ export default function ChargeTaxIntel() {
                   {taxData.insights.map((insight, i) => (
                     <div 
                       key={i} 
-                      className={`${styles.insightCard} ${styles[insight.severity]}`}
+                      className={`${styles.insightCard} ${styles[insight.severity]} ${expandedInsight === i ? styles.expanded : ''}`}
                     >
                       <div className={styles.insightContent}>
                         <h4>{insight.title}</h4>
                         <p>{insight.description}</p>
+                        {expandedInsight === i && (
+                          <div className={styles.insightDetails}>
+                            {insight.action && (
+                              <div className={styles.insightDetailItem}>
+                                <strong>Recommended Action:</strong>
+                                <p>{insight.action}</p>
+                              </div>
+                            )}
+                            <div className={styles.insightDetailItem}>
+                              <strong>Next Steps:</strong>
+                              <p>Review this opportunity with your financial advisor or take action directly through your employer's benefits portal.</p>
+                            </div>
+                          </div>
+                        )}
                       </div>
                       <div className={styles.insightAction}>
                         {insight.potentialImpact && (
@@ -796,8 +820,11 @@ export default function ChargeTaxIntel() {
                             Save {formatCurrency(insight.potentialImpact)}
                           </span>
                         )}
-                        <button className={styles.insightCta}>
-                          {insight.action || 'See Strategy'}
+                        <button 
+                          className={styles.insightCta}
+                          onClick={() => setExpandedInsight(expandedInsight === i ? null : i)}
+                        >
+                          {expandedInsight === i ? 'Hide Details' : 'See Strategy'}
                         </button>
                       </div>
                     </div>

@@ -1,0 +1,132 @@
+URGENT: Fix the Tax Advisor tool - multiple broken features
+
+PROBLEMS TO FIX:
+1. Static data shows $35,500 even after uploading paystub - not using actual extracted data
+2. "See Strategy" buttons do nothing when clicked
+3. What-if calculator buttons don't work
+4. Tax Assistant chat is too small and hard to read
+5. Hardcoded placeholder values throughout instead of real user data
+
+FIXES NEEDED:
+
+1. MAKE UPLOADED PAYSTUB DATA ACTUALLY DISPLAY
+
+After a paystub uploads successfully, the extracted data (grossPay, netPay, federalWithheld, etc.) must populate the UI. Currently it shows hardcoded $35,500.
+
+- In the uploadAndAnalyze function, after the analyze API returns, call loadTaxData() to refresh
+- In loadTaxData(), make sure setTaxData() is called with the actual response data
+- Remove ALL hardcoded fallback values (35500, 225000, 205000, 17.3, 24) from the component
+- If no data exists, show "Upload a document to see your tax data" instead of fake numbers
+
+2. WIRE UP "SEE STRATEGY" BUTTONS
+
+Add expand/collapse functionality to strategy cards. Add state:
+const [expandedStrategy, setExpandedStrategy] = useState<number | null>(null);
+
+In each strategy card, make the button work:
+<button 
+  className={styles.strategyButton}
+  onClick={() => setExpandedStrategy(expandedStrategy === i ? null : i)}
+>
+  {expandedStrategy === i ? 'Hide Details' : 'See Strategy'}
+</button>
+
+{expandedStrategy === i && (
+  <div className={styles.strategyDetails}>
+    <p><strong>Current Situation:</strong> {strategy.currentSituation}</p>
+    <p><strong>Recommendation:</strong> {strategy.recommendation}</p>
+    <p><strong>How to Implement:</strong> {strategy.howToImplement}</p>
+    <p><strong>Potential Savings:</strong> ${strategy.potentialSavings?.toLocaleString()}</p>
+  </div>
+)}
+
+3. WIRE UP WHAT-IF CALCULATOR BUTTONS
+
+The scenario/calculator buttons need to call the API. Add this function:
+
+const runScenario = async (scenarioType: string) => {
+  if (isCalculating) return;
+  setIsCalculating(true);
+  
+  try {
+    const response = await fetch('/api/tax-intel/run-scenario', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      credentials: 'include',
+      body: JSON.stringify({ scenarioType, inputs: scenarioInputs }),
+    });
+    
+    if (response.ok) {
+      const data = await response.json();
+      setScenarios(prev => [...prev, data.scenario]);
+      showSuccess('Scenario calculated!');
+    } else {
+      showError('Failed to run scenario');
+    }
+  } catch (err) {
+    console.error('Scenario error:', err);
+    showError('Failed to run scenario');
+  } finally {
+    setIsCalculating(false);
+  }
+};
+
+Make each calculator button call this:
+<button onClick={() => runScenario('retirement_contribution')}>Calculate 401k Impact</button>
+<button onClick={() => runScenario('income_change')}>Calculate Income Change</button>
+
+4. FIX TAX ASSISTANT CHAT - TOO SMALL TO READ
+
+Make the chat expandable and more readable. Add state:
+const [chatExpanded, setChatExpanded] = useState(false);
+
+Wrap chat in expandable container:
+<div className={`${styles.chatPanel} ${chatExpanded ? styles.chatExpanded : ''}`}>
+  <div className={styles.chatHeader}>
+    <h4>Tax Assistant</h4>
+    <button 
+      className={styles.expandButton}
+      onClick={() => setChatExpanded(!chatExpanded)}
+    >
+      {chatExpanded ? 'Minimize' : 'Expand'}
+    </button>
+  </div>
+</div>
+
+Add CSS:
+.chatPanel {
+  width: 320px;
+  min-height: 400px;
+  transition: all 0.3s ease;
+}
+
+.chatExpanded {
+  position: fixed;
+  top: 80px;
+  right: 20px;
+  width: 500px;
+  height: 70vh;
+  z-index: 100;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+}
+
+.chatMessage {
+  font-size: 15px;
+  line-height: 1.6;
+  padding: 14px;
+  margin: 8px 0;
+}
+
+.chatInput {
+  font-size: 15px;
+  padding: 12px;
+}
+
+5. REMOVE ALL HARDCODED PLACEHOLDER DATA
+
+Search the file for these hardcoded values and remove them:
+- 35500 (federal tax)
+- 225000 (income)
+- 205000 (AGI)
+- 175000 (taxable income)
+- 17.3 (effective rate)
