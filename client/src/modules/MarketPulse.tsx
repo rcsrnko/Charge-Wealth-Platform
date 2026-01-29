@@ -151,6 +151,78 @@ export default function MarketPulse() {
         </div>
       </section>
 
+      {/* What We're Watching - moved up */}
+      <section className={styles.watchingSection}>
+        <div className={styles.watchingHeader}>
+          <h2 className={styles.sectionTitle}>👀 What We're Watching</h2>
+        </div>
+        <div className={styles.watchingGrid}>
+          <div className={styles.watchingCard}>
+            <span className={styles.watchingEmoji}>📊</span>
+            <div>
+              <strong>Fed Rate Decision</strong>
+              <p>Next FOMC meeting could signal rate cuts in 2026. Watch for language changes.</p>
+            </div>
+          </div>
+          <div className={styles.watchingCard}>
+            <span className={styles.watchingEmoji}>💼</span>
+            <div>
+              <strong>Earnings Season</strong>
+              <p>Big tech reports this week. NVDA and MSFT guidance will set the tone.</p>
+            </div>
+          </div>
+          <div className={styles.watchingCard}>
+            <span className={styles.watchingEmoji}>⚠️</span>
+            <div>
+              <strong>Tax-Loss Harvesting</strong>
+              <p>Q1 volatility creates opportunities. Review losers before wash sale window.</p>
+            </div>
+          </div>
+          {marketData.indices.some(idx => idx.name === 'VIX' && idx.price > 20) && (
+            <div className={styles.watchingCard}>
+              <span className={styles.watchingEmoji}>🔴</span>
+              <div>
+                <strong>Elevated Volatility</strong>
+                <p>VIX above 20 suggests uncertainty. Consider rebalancing.</p>
+              </div>
+            </div>
+          )}
+        </div>
+      </section>
+
+      {/* Our Watchlist - stocks/sectors we're tracking */}
+      <section className={styles.watchlistSection}>
+        <h2 className={styles.sectionTitle}>📌 Our Watchlist</h2>
+        <div className={styles.watchlistGrid}>
+          <div className={styles.watchlistCategory}>
+            <h3 className={styles.watchlistCategoryTitle}>Stocks</h3>
+            <div className={styles.watchlistTickers}>
+              <span className={styles.watchlistTicker}>NVDA</span>
+              <span className={styles.watchlistTicker}>MSFT</span>
+              <span className={styles.watchlistTicker}>GOOGL</span>
+              <span className={styles.watchlistTicker}>AMZN</span>
+              <span className={styles.watchlistTicker}>META</span>
+            </div>
+          </div>
+          <div className={styles.watchlistCategory}>
+            <h3 className={styles.watchlistCategoryTitle}>Sectors</h3>
+            <div className={styles.watchlistTickers}>
+              <span className={styles.watchlistTicker}>Technology</span>
+              <span className={styles.watchlistTicker}>Healthcare</span>
+              <span className={styles.watchlistTicker}>Energy</span>
+            </div>
+          </div>
+          <div className={styles.watchlistCategory}>
+            <h3 className={styles.watchlistCategoryTitle}>Themes</h3>
+            <div className={styles.watchlistTickers}>
+              <span className={styles.watchlistTicker}>AI/ML</span>
+              <span className={styles.watchlistTicker}>Clean Energy</span>
+              <span className={styles.watchlistTicker}>Dividend Growth</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
       <div className={styles.moversRow}>
         <section className={styles.moversSection}>
           <h2 className={styles.sectionTitle}>
@@ -224,49 +296,6 @@ export default function MarketPulse() {
         </div>
       </section>
 
-      <section className={styles.commentarySection}>
-        <div className={styles.commentaryCard}>
-          <div className={styles.commentaryHeader}>
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className={styles.commentaryIcon}>
-              <circle cx="12" cy="12" r="10"/>
-              <path d="M12 16v-4M12 8h.01"/>
-            </svg>
-            <h3>What We're Watching</h3>
-          </div>
-          <div className={styles.watchingItems}>
-            <div className={styles.watchingItem}>
-              <span className={styles.watchingBullet}>📊</span>
-              <div className={styles.watchingContent}>
-                <strong>Fed Rate Decision</strong>
-                <p>Next FOMC meeting could signal rate cuts in 2026. Watch for language changes around inflation targets.</p>
-              </div>
-            </div>
-            <div className={styles.watchingItem}>
-              <span className={styles.watchingBullet}>💼</span>
-              <div className={styles.watchingContent}>
-                <strong>Earnings Season</strong>
-                <p>Big tech reports this week. NVDA and MSFT guidance will set the tone for growth stocks.</p>
-              </div>
-            </div>
-            <div className={styles.watchingItem}>
-              <span className={styles.watchingBullet}>⚠️</span>
-              <div className={styles.watchingContent}>
-                <strong>Tax-Loss Harvesting Window</strong>
-                <p>Q1 volatility creates opportunities. Review losers in your portfolio before the 30-day wash sale window.</p>
-              </div>
-            </div>
-            {marketData.indices.some(idx => idx.name === 'VIX' && idx.price > 20) && (
-              <div className={styles.watchingItem}>
-                <span className={styles.watchingBullet}>🔴</span>
-                <div className={styles.watchingContent}>
-                  <strong>Elevated Volatility</strong>
-                  <p>VIX above 20 suggests uncertainty. Consider rebalancing or harvesting losses if you're overweight equities.</p>
-                </div>
-              </div>
-            )}
-          </div>
-        </div>
-      </section>
     </div>
   );
 }
