@@ -1,0 +1,393 @@
+.container {
+  padding: 2rem;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.titleSection {
+  flex: 1;
+}
+
+.title {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--text-primary, #fff);
+  margin: 0 0 0.25rem 0;
+}
+
+.subtitle {
+  color: var(--text-secondary, rgba(255, 255, 255, 0.6));
+  margin: 0;
+  font-size: 0.95rem;
+}
+
+.headerActions {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.lastUpdated {
+  color: var(--text-secondary, rgba(255, 255, 255, 0.5));
+  font-size: 0.85rem;
+}
+
+.refreshBtn {
+  background: var(--accent-gold, #C9A962);
+  color: #0F1117;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+.refreshBtn:hover {
+  opacity: 0.9;
+}
+
+.refreshBtn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.loadingState,
+.errorState {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 400px;
+  color: var(--text-secondary, rgba(255, 255, 255, 0.6));
+}
+
+.spinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid rgba(201, 169, 98, 0.2);
+  border-top-color: var(--accent-gold, #C9A962);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-bottom: 1rem;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.retryBtn {
+  background: var(--accent-gold, #C9A962);
+  color: #0F1117;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  margin-top: 1rem;
+}
+
+.sectionTitle {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--text-primary, #fff);
+  margin: 0 0 1rem 0;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.gainersIcon {
+  color: #10b981;
+}
+
+.losersIcon {
+  color: #ef4444;
+}
+
+.indicesSection {
+  margin-bottom: 2rem;
+}
+
+.indicesGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 1rem;
+}
+
+.indexCard {
+  background: var(--card-bg, rgba(255, 255, 255, 0.03));
+  border: 1px solid var(--border-color, rgba(255, 255, 255, 0.08));
+  border-radius: 12px;
+  padding: 1.25rem;
+  text-align: center;
+  transition: border-color 0.2s;
+}
+
+.indexCard:hover {
+  border-color: var(--accent-gold, #C9A962);
+}
+
+.indexName {
+  font-size: 0.85rem;
+  color: var(--text-secondary, rgba(255, 255, 255, 0.6));
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+}
+
+.indexPrice {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--text-primary, #fff);
+  margin-bottom: 0.25rem;
+}
+
+.indexChange {
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.positive {
+  color: #10b981;
+}
+
+.negative {
+  color: #ef4444;
+}
+
+.moversRow {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+@media (max-width: 900px) {
+  .moversRow {
+    grid-template-columns: 1fr;
+  }
+}
+
+.moversSection {
+  background: var(--card-bg, rgba(255, 255, 255, 0.03));
+  border: 1px solid var(--border-color, rgba(255, 255, 255, 0.08));
+  border-radius: 12px;
+  padding: 1.25rem;
+}
+
+.moversList {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.moverItem {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem;
+  background: rgba(255, 255, 255, 0.02);
+  border-radius: 8px;
+  transition: background 0.2s;
+}
+
+.moverItem:hover {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.moverRank {
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(201, 169, 98, 0.15);
+  color: var(--accent-gold, #C9A962);
+  border-radius: 50%;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.moverInfo {
+  flex: 1;
+  min-width: 0;
+}
+
+.moverSymbol {
+  display: block;
+  font-weight: 600;
+  color: var(--text-primary, #fff);
+  font-size: 0.95rem;
+}
+
+.moverName {
+  display: block;
+  font-size: 0.8rem;
+  color: var(--text-secondary, rgba(255, 255, 255, 0.5));
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.moverData {
+  text-align: right;
+}
+
+.moverPrice {
+  display: block;
+  font-weight: 600;
+  color: var(--text-primary, #fff);
+  font-size: 0.95rem;
+}
+
+.moverChange {
+  display: block;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.noData {
+  color: var(--text-secondary, rgba(255, 255, 255, 0.5));
+  text-align: center;
+  padding: 2rem;
+  font-size: 0.9rem;
+}
+
+.sectorsSection {
+  margin-bottom: 2rem;
+}
+
+.sectorsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 0.75rem;
+}
+
+.sectorCard {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  border-radius: 10px;
+  text-align: center;
+  transition: transform 0.2s;
+}
+
+.sectorCard:hover {
+  transform: translateY(-2px);
+}
+
+.sectorPositive {
+  background: rgba(16, 185, 129, 0.12);
+  border: 1px solid rgba(16, 185, 129, 0.25);
+}
+
+.sectorNegative {
+  background: rgba(239, 68, 68, 0.12);
+  border: 1px solid rgba(239, 68, 68, 0.25);
+}
+
+.sectorName {
+  font-size: 0.85rem;
+  color: var(--text-primary, #fff);
+  font-weight: 500;
+  margin-bottom: 0.25rem;
+}
+
+.sectorChange {
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+.sectorPositive .sectorChange {
+  color: #10b981;
+}
+
+.sectorNegative .sectorChange {
+  color: #ef4444;
+}
+
+.commentarySection {
+  margin-top: 1.5rem;
+}
+
+.commentaryCard {
+  background: linear-gradient(135deg, rgba(201, 169, 98, 0.08) 0%, rgba(201, 169, 98, 0.03) 100%);
+  border: 1px solid rgba(201, 169, 98, 0.2);
+  border-radius: 12px;
+  padding: 1.5rem;
+}
+
+.commentaryHeader {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.commentaryHeader h3 {
+  margin: 0;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--accent-gold, #C9A962);
+}
+
+.commentaryIcon {
+  width: 24px;
+  height: 24px;
+  color: var(--accent-gold, #C9A962);
+}
+
+.commentaryText {
+  color: var(--text-primary, #fff);
+  font-size: 1rem;
+  line-height: 1.6;
+  margin: 0 0 0.75rem 0;
+  font-style: italic;
+}
+
+.commentaryNote {
+  font-size: 0.8rem;
+  color: var(--text-secondary, rgba(255, 255, 255, 0.5));
+}
+
+@media (max-width: 640px) {
+  .container {
+    padding: 1rem;
+  }
+
+  .title {
+    font-size: 1.5rem;
+  }
+
+  .header {
+    flex-direction: column;
+  }
+
+  .headerActions {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .indicesGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .indexPrice {
+    font-size: 1.2rem;
+  }
+
+  .sectorsGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}

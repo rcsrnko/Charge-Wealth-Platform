@@ -14,7 +14,7 @@ import { fetchWithAuth } from '../lib/fetchWithAuth';
 
 const ChargeAI = lazy(() => import('../modules/ChargeAI'));
 const ChargeTaxIntel = lazy(() => import('../modules/ChargeTaxIntel'));
-const ChargeAllocation = lazy(() => import('../modules/ChargeAllocation'));
+const MarketPulse = lazy(() => import('../modules/MarketPulse'));
 const Playbooks = lazy(() => import('../modules/Playbooks'));
 const ReferralDashboard = lazy(() => import('../modules/ReferralDashboard'));
 const Settings = lazy(() => import('../modules/Settings'));
@@ -92,24 +92,21 @@ export default function Dashboard() {
     const checkUserData = async () => {
       setIsLoading(true);
       try {
-        const [contextRes, portfolioRes, taxRes] = await Promise.all([
+        const [contextRes, taxRes] = await Promise.all([
           fetchWithAuth('/api/charge-ai/context'),
-          fetchWithAuth('/api/allocation/portfolio'),
           fetchWithAuth('/api/tax-intel/current')
         ]);
         
         const contextData = contextRes.ok ? await contextRes.json() : null;
-        const portfolioData = portfolioRes.ok ? await portfolioRes.json() : null;
         const taxData = taxRes.ok ? await taxRes.json() : null;
         
         const hasProfile = !!contextData?.hasProfile;
-        const hasPositions = portfolioData?.portfolio?.positions?.length > 0;
         const hasTaxData = !!taxData?.taxData || !!contextData?.hasTaxData;
         const hasCashFlow = !!(contextData?.profile?.monthlyExpenses && contextData?.profile?.currentCash);
 
         setUserData({
           hasTaxData,
-          hasPositions,
+          hasPositions: true, // Market Pulse always available (no portfolio needed)
           hasProfile,
           hasCashFlow
         });
@@ -181,7 +178,7 @@ export default function Dashboard() {
       '/dashboard': 'Command Center | Charge Wealth',
       '/dashboard/ai': 'AI Advisor | Charge Wealth',
       '/dashboard/tax-intel': 'Tax Advisor | Charge Wealth',
-      '/dashboard/allocation': 'Portfolio Engine | Charge Wealth',
+      '/dashboard/market-pulse': 'Market Pulse | Charge Wealth',
       '/dashboard/playbooks': 'Playbooks | Charge Wealth',
       '/dashboard/referrals': 'Referral Program | Charge Wealth',
     };
@@ -217,7 +214,7 @@ export default function Dashboard() {
     if (isMainDashboard) return 'Command Center';
     if (location.includes('/ai')) return 'AI Advisor';
     if (location.includes('tax-intel')) return 'Tax Advisor';
-    if (location.includes('allocation')) return 'Portfolio Engine';
+    if (location.includes('market-pulse')) return 'Market Pulse';
     if (location.includes('playbooks')) return 'Playbooks';
     if (location.includes('referrals')) return 'Referral Program';
     return 'Charge Wealth';
@@ -411,32 +408,17 @@ export default function Dashboard() {
                         )}
                       </div>
 
-                      <div className={`${styles.modulePreview} ${!isModuleLocked('allocation') ? styles.unlocked : ''}`}>
+                      <div className={`${styles.modulePreview} ${styles.unlocked}`}>
                         <div className={styles.moduleIcon}>
                           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-                            <path d="M12 2a10 10 0 1 0 10 10"/>
-                            <path d="M12 2v10l6.5-3.5"/>
-                            <path d="M12 12l6.5 3.5"/>
+                            <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
                           </svg>
-                          {isModuleLocked('allocation') && (
-                            <div className={styles.moduleLock}>
-                              <svg viewBox="0 0 24 24" fill="currentColor">
-                                <path d="M12 2C9.24 2 7 4.24 7 7v2H6c-1.1 0-2 .9-2 2v9c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2v-9c0-1.1-.9-2-2-2h-1V7c0-2.76-2.24-5-5-5zm0 2c1.66 0 3 1.34 3 3v2H9V7c0-1.66 1.34-3 3-3z"/>
-                              </svg>
-                            </div>
-                          )}
                         </div>
                         <div className={styles.moduleInfo}>
-                          <h4 className={styles.moduleName}>Portfolio Engine</h4>
-                          <p className={styles.moduleUnlock}>
-                            {isModuleLocked('allocation') 
-                              ? 'Add positions to unlock' 
-                              : 'Analyze risk & allocation'}
-                          </p>
+                          <h4 className={styles.moduleName}>Market Pulse</h4>
+                          <p className={styles.moduleUnlock}>Real-time market data</p>
                         </div>
-                        {!isModuleLocked('allocation') && (
-                          <a href="/dashboard/allocation" className={styles.moduleLink}>Open</a>
-                        )}
+                        <a href="/dashboard/market-pulse" className={styles.moduleLink}>Open</a>
                       </div>
 
                       <div className={`${styles.modulePreview} ${!isModuleLocked('playbooks') ? styles.unlocked : ''}`}>
@@ -499,19 +481,10 @@ export default function Dashboard() {
                 </Suspense>
               </ErrorBoundary>
             </Route>
-            <Route path="/dashboard/allocation">
-              <ErrorBoundary moduleName="portfolio">
+            <Route path="/dashboard/market-pulse">
+              <ErrorBoundary moduleName="market-pulse">
                 <Suspense fallback={<ModuleLoader />}>
-                  {isModuleLocked('allocation') ? (
-                    <LockedModule 
-                      title="Portfolio Engine"
-                      description="Add your portfolio positions to unlock CFA-level analysis."
-                      requiredAction="Add Portfolio Positions"
-                      actionPath="/dashboard/ai"
-                    />
-                  ) : (
-                    <ChargeAllocation />
-                  )}
+                  <MarketPulse />
                 </Suspense>
               </ErrorBoundary>
             </Route>

@@ -51,6 +51,7 @@
     "tsx": "^4.20.6",
     "typescript": "^5.9.3",
     "vite": "^7.1.9",
-    "wouter": "^3.7.1"
+    "wouter": "^3.7.1",
+    "yahoo-finance2": "^3.13.0"
   }
 }

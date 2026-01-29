@@ -1,0 +1,87 @@
+Update the Tax Intel module to focus specifically on W-2/paycheck optimization. 
+
+## Changes needed:
+
+### 1. Simplify the upload flow
+- Default document type to "paystub" (most common use case)
+- After upload, immediately show actionable recommendations
+- Remove scenarios and complex analysis for now
+
+### 2. Replace the AI analysis prompt in /api/tax-intel/analyze
+
+Use this focused prompt for W-2 and paystub analysis:
+
+"""
+You are a paycheck optimization specialist. The user uploaded their W-2 or paystub. Your ONLY job: help them keep more of each paycheck.
+
+DOCUMENT TYPE: ${docType}
+USER STATE: ${userContext.state}
+FILING STATUS: ${userContext.filing}
+
+From their document, identify:
+1. Current withholding (federal, state, FICA)
+2. Pre-tax deductions they're using (401k, HSA, FSA, etc.)
+3. Pre-tax deductions they're NOT using but could
+
+Return JSON:
+{
+  "currentPaycheck": {
+    "grossPay": [number],
+    "netPay": [number],
+    "federalWithheld": [number],
+    "stateWithheld": [number],
+    "fica": [number],
+    "preTaxDeductions": {
+      "401k": [number],
+      "hsa": [number],
+      "fsa": [number],
+      "other": [number]
+    }
+  },
+  "optimizations": [
+    {
+      "action": "Increase 401k contribution to get full employer match",
+      "currentAmount": [number per paycheck],
+      "suggestedAmount": [number per paycheck],
+      "extraPerPaycheck": [how much more to contribute],
+      "taxSavingsPerYear": [number],
+      "howToFix": "Log into your HR portal > Benefits > 401k > Change contribution to X%"
+    },
+    {
+      "action": "Open an HSA (you're eligible but not using one)",
+      "currentAmount": 0,
+      "suggestedAmount": [max annual / 24],
+      "taxSavingsPerYear": [number],
+      "howToFix": "Ask HR if your health plan is HSA-eligible. If yes, open an HSA and contribute the max ($4,150 individual / $8,300 family in 2024)"
+    },
+    {
+      "action": "Adjust W-4 withholding (you're overwithholding)",
+      "currentAmount": [federal withholding per paycheck],
+      "suggestedAmount": [lower amount],
+      "extraPerPaycheck": [how much more they'd take home],
+      "taxSavingsPerYear": 0,
+      "howToFix": "Submit a new W-4 to HR. Change Step 3 to claim X dependents OR add $X to Step 4b deductions"
+    }
+  ],
+  "totalExtraPerYear": [sum of all tax savings + extra take-home],
+  "summaryText": "You could take home an extra $X per year by making these 3 changes. The biggest win is [top optimization]."
+}
+
+RULES:
+- Only suggest legal, common optimizations
+- Be specific with dollar amounts
+- Give exact steps to implement each fix
+- Prioritize by impact (biggest savings first)
+- If they're already maxing everything, say so
+"""
+
+### 3. Update the UI
+- Show results as a simple checklist: "Do this → Save $X/year"
+- Add a "total savings" number prominently at top
+- Each optimization should have a "How to fix" expandable section
+
+### 4. Simplify document types
+- Only show W-2 and Paystub as upload options for now
+- Hide 1040 and 1099 options (we'll add those later)
+
+Keep all existing database storage and document parsing logic. Just update the prompts and UI to focus on actionable paycheck optimization.

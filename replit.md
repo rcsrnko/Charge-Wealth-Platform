@@ -13,7 +13,7 @@ Preferred communication style: Simple, everyday language.
 ### Frontend Architecture
 - **Technology Stack:** React 19 with TypeScript, Wouter for routing, Vite for building, TanStack Query for server state.
 - **Application Structure:** Separate landing page (static HTML), React SPA for the dashboard (`/dashboard/*`), and static HTML for legal pages.
-- **Route Structure:** Dedicated routes for Overview, AI Advisor, Tax Advisor, Portfolio Engine, Custom Playbooks, Referrals, and Settings.
+- **Route Structure:** Dedicated routes for Overview, AI Advisor, Tax Advisor, Market Pulse, Custom Playbooks, Referrals, and Settings.
 - **Design System:** Premium dark theme with Midnight Blue, Deep Navy, and Gold accents, utilizing CSS modules for styling, and a mobile-first responsive design.
 - **Brand Voice:** Direct, confrontational, intelligent; anti-industry stance (criticizing high fees and commissioned products), targeting high earners experiencing decision paralysis.
 
@@ -26,7 +26,7 @@ Preferred communication style: Simple, everyday language.
 ### Core Features
 - **AI Advisor:** Central guide providing proactive, CFO-style insights, personalized financial data injection, and planning memos.
 - **Tax Advisor:** Analyzes 10+ tax strategies, incorporates state tax recognition, calculates comprehensive tax rates, and provides AI-generated tax insights with savings estimates.
-- **Portfolio Engine:** Offers CFA-level analysis of positions, AI-driven stock/ETF/crypto recommendations, opportunity signals, and tax-aware rebalancing. Includes real-time stock/crypto price tracking via Alpha Vantage and CoinGecko APIs, historical price charts (7D/1M/3M), and configurable price alerts with hourly checking.
+- **Market Pulse:** Real-time market overview showing major indices (S&P 500, Dow, Nasdaq, VIX, Bitcoin, Ethereum), top gainers/losers, sector performance, and AI commentary placeholder. Uses Yahoo Finance for data with 5-minute caching. Replaced the Portfolio Engine feature.
 - **Custom Playbooks:** Step-by-step financial action plans for various categories, with progress tracking and pre-built templates.
 - **Gamified Wealth Readiness System:** AI-generated, CFP-vetted recommendations with point values, level progression, and a dashboard component.
 - **Settings:** User account management with tabs for Profile (name, email), Email Preferences, Connected Accounts (Google OAuth), Notifications, and Password Change.
@@ -48,6 +48,5 @@ Preferred communication style: Simple, everyday language.
 -   **OpenAI via Replit AI:** Powers all AI-driven features (GPT-4).
 -   **Stripe:** Payment processing for subscriptions ($49/mo, $99/3mo, $200/6mo, $279 lifetime).
 -   **pdf-parse:** Used for parsing PDF tax returns.
--   **Alpha Vantage API:** Real-time and historical stock price data (requires ALPHA_VANTAGE_API_KEY environment variable).
--   **CoinGecko API:** Real-time crypto price data (free tier, no API key required).
--   **recharts:** Chart library for price history visualization.
+-   **Yahoo Finance (yahoo-finance2):** Market data for indices, sectors, and top movers (no API key required).
+-   **recharts:** Chart library for data visualization.

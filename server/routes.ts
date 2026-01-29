@@ -12,11 +12,13 @@ import { registerBlogRoutes } from "./routes/blog";
 import { registerChargeAIRoutes } from "./routes/chargeai";
 import { registerTaxIntelRoutes } from "./routes/taxintel";
 import { registerCfoRoutes } from "./routes/cfo";
-import { registerAllocationRoutes } from "./routes/allocation";
+// Portfolio Engine removed - replaced by Market Pulse
+// import { registerAllocationRoutes } from "./routes/allocation";
 import { registerPlaybookRoutes } from "./routes/playbooks";
 import { registerContextRoutes } from "./routes/context";
 import { registerSettingsRoutes } from "./routes/settings";
 import { registerNewsletterRoutes } from "./routes/newsletter";
+import { registerMarketPulseRoutes } from "./routes/marketpulse";
 
 const upload = multer({
   storage: multer.memoryStorage(),
@@ -43,11 +45,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
   registerChargeAIRoutes(app, isAuthenticated);
   registerTaxIntelRoutes(app, isAuthenticated, upload);
   registerCfoRoutes(app, isAuthenticated);
-  registerAllocationRoutes(app, isAuthenticated);
+  // Portfolio Engine removed - replaced by Market Pulse
   registerPlaybookRoutes(app, isAuthenticated);
   registerContextRoutes(app, isAuthenticated);
   registerSettingsRoutes(app, isAuthenticated);
   registerNewsletterRoutes(app);
+  registerMarketPulseRoutes(app, isAuthenticated);
 
   const httpServer = createServer(app);
   return httpServer;

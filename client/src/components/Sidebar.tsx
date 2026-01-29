@@ -61,17 +61,15 @@ const navItems: NavItem[] = [
     )
   },
   { 
-    id: 'allocation', 
-    label: 'Portfolio Engine', 
-    path: '/dashboard/allocation',
-    description: 'CFA-Level Analysis',
-    lockedDescription: 'Reveal Hidden Risk',
+    id: 'market-pulse', 
+    label: 'Market Pulse', 
+    path: '/dashboard/market-pulse',
+    description: 'Real-Time Markets',
+    lockedDescription: 'Live Market Data',
     requiredScore: 0,
     icon: (
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
-        <path d="M12 2a10 10 0 1 0 10 10"/>
-        <path d="M12 2v10l6.5-3.5"/>
-        <path d="M12 12l6.5 3.5"/>
+        <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
       </svg>
     )
   },
