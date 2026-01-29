@@ -123,7 +123,8 @@ function OptimizationItem({
   index: number; 
   formatCurrency: (n: number) => string;
 }) {
-  const [expanded, setExpanded] = useState(false);
+  // Default to expanded so users see everything immediately
+  const [expanded, setExpanded] = useState(true);
   
   const priorityColors: Record<string, string> = {
     high: '#10b981',
