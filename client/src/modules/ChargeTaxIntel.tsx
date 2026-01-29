@@ -97,6 +97,46 @@ interface ChatMessage {
   timestamp: Date;
 }
 
+interface TaxProjection {
+  hasProjection: boolean;
+  payFrequency?: string;
+  periodsPerYear?: number;
+  currentPeriod?: {
+    grossPay: number;
+    federalWithheld: number;
+    stateWithheld: number;
+    socialSecurity: number;
+    medicare: number;
+    retirement401k: number;
+    hsaContribution: number;
+    netPay: number;
+  };
+  projections?: {
+    annualGross: number;
+    preTaxDeductions: number;
+    agi: number;
+    standardDeduction: number;
+    taxableIncome: number;
+    federalTax: number;
+    fica: number;
+    totalTax: number;
+  };
+  withholding?: {
+    projectedFederalWithheld: number;
+    projectedStateWithheld: number;
+    federalDifference: number;
+    status: 'over' | 'under' | 'on_track';
+    message: string;
+  };
+  rates?: {
+    effectiveRate: number;
+    marginalBracket: number;
+  };
+  filingStatus?: string;
+  employer?: string;
+  lastPayDate?: string;
+}
+
 const DOCUMENT_TYPES = [
   { id: 'paystub', name: 'Paystub', description: 'Recent pay statement', icon: '💵' },
   { id: 'w2', name: 'W-2', description: 'Annual wage statement', icon: '💼' },
@@ -168,6 +208,7 @@ export default function ChargeTaxIntel() {
   const [chatInput, setChatInput] = useState('');
   const [isSendingMessage, setIsSendingMessage] = useState(false);
   const [chatExpanded, setChatExpanded] = useState(false);
+  const [taxProjection, setTaxProjection] = useState<TaxProjection | null>(null);
   const chatEndRef = useRef<HTMLDivElement>(null);
   const resultsRef = useRef<HTMLDivElement>(null);
 
@@ -205,6 +246,7 @@ export default function ChargeTaxIntel() {
   useEffect(() => {
     loadTaxData();
     loadUploadedDocs();
+    loadTaxProjection();
   }, []);
 
   useEffect(() => {
@@ -236,6 +278,18 @@ export default function ChargeTaxIntel() {
       }
     } catch (err) {
       console.error('Failed to load documents:', err);
+    }
+  };
+
+  const loadTaxProjection = async () => {
+    try {
+      const response = await fetchWithAuth('/api/tax-intel/projection');
+      if (response.ok) {
+        const data = await response.json();
+        setTaxProjection(data);
+      }
+    } catch (err) {
+      console.error('Failed to load tax projection:', err);
     }
   };
 
@@ -302,6 +356,9 @@ export default function ChargeTaxIntel() {
           showSuccess('Analysis complete! Your paycheck optimization recommendations are ready.');
         }
         
+        // Reload tax projection with new data
+        await loadTaxProjection();
+        
         // Scroll to results after a short delay
         setTimeout(() => {
           resultsRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -310,6 +367,7 @@ export default function ChargeTaxIntel() {
         // Even if analysis fails, try to show extracted data
         showError('AI analysis failed, but your data was extracted. Try refreshing.');
         await loadTaxData();
+        await loadTaxProjection();
       }
 
       setFile(null);
@@ -509,6 +567,92 @@ export default function ChargeTaxIntel() {
               <p className={styles.savingsHeroSummary}>{taxData.summaryText}</p>
             )}
           </div>
+
+          {/* Tax Projection Section */}
+          {taxProjection?.hasProjection && taxProjection.projections && (
+            <div className={styles.projectionSection}>
+              <div className={styles.projectionHeader}>
+                <h3>📊 {new Date().getFullYear()} Tax Projection</h3>
+                <span className={styles.projectionSubtitle}>Based on your {taxProjection.payFrequency} paystub</span>
+              </div>
+              
+              <div className={styles.projectionGrid}>
+                <div className={styles.projectionCard}>
+                  <span className={styles.projectionLabel}>Projected Annual Income</span>
+                  <span className={styles.projectionValue}>{formatCurrency(taxProjection.projections.annualGross)}</span>
+                </div>
+                <div className={styles.projectionCard}>
+                  <span className={styles.projectionLabel}>Pre-Tax Deductions (401k, HSA)</span>
+                  <span className={styles.projectionValue}>-{formatCurrency(taxProjection.projections.preTaxDeductions)}</span>
+                </div>
+                <div className={styles.projectionCard}>
+                  <span className={styles.projectionLabel}>Adjusted Gross Income</span>
+                  <span className={styles.projectionValue}>{formatCurrency(taxProjection.projections.agi)}</span>
+                </div>
+                <div className={styles.projectionCard}>
+                  <span className={styles.projectionLabel}>Standard Deduction ({taxProjection.filingStatus?.replace('_', ' ')})</span>
+                  <span className={styles.projectionValue}>-{formatCurrency(taxProjection.projections.standardDeduction)}</span>
+                </div>
+                <div className={styles.projectionCard}>
+                  <span className={styles.projectionLabel}>Taxable Income</span>
+                  <span className={styles.projectionValueHighlight}>{formatCurrency(taxProjection.projections.taxableIncome)}</span>
+                </div>
+                <div className={styles.projectionCard}>
+                  <span className={styles.projectionLabel}>Projected Federal Tax</span>
+                  <span className={styles.projectionValue}>{formatCurrency(taxProjection.projections.federalTax)}</span>
+                </div>
+                <div className={styles.projectionCard}>
+                  <span className={styles.projectionLabel}>FICA (SS + Medicare)</span>
+                  <span className={styles.projectionValue}>{formatCurrency(taxProjection.projections.fica)}</span>
+                </div>
+                <div className={styles.projectionCard}>
+                  <span className={styles.projectionLabel}>Total Tax Burden</span>
+                  <span className={styles.projectionValueHighlight}>{formatCurrency(taxProjection.projections.totalTax)}</span>
+                </div>
+              </div>
+              
+              {taxProjection.withholding && (
+                <div className={`${styles.withholdingAlert} ${styles[taxProjection.withholding.status]}`}>
+                  <div className={styles.withholdingIcon}>
+                    {taxProjection.withholding.status === 'over' ? '💰' : 
+                     taxProjection.withholding.status === 'under' ? '⚠️' : '✅'}
+                  </div>
+                  <div className={styles.withholdingContent}>
+                    <span className={styles.withholdingTitle}>
+                      {taxProjection.withholding.status === 'over' ? 'On Track for Refund' :
+                       taxProjection.withholding.status === 'under' ? 'May Owe at Tax Time' : 'Withholding On Track'}
+                    </span>
+                    <span className={styles.withholdingMessage}>{taxProjection.withholding.message}</span>
+                  </div>
+                  <div className={styles.withholdingAmount}>
+                    {taxProjection.withholding.status !== 'on_track' && (
+                      <span className={styles.withholdingDiff}>
+                        {taxProjection.withholding.federalDifference > 0 ? '+' : ''}
+                        {formatCurrency(taxProjection.withholding.federalDifference)}
+                      </span>
+                    )}
+                  </div>
+                </div>
+              )}
+              
+              <div className={styles.ratesRow}>
+                <div className={styles.rateItem}>
+                  <span className={styles.rateLabel}>Effective Tax Rate</span>
+                  <span className={styles.rateValue}>{taxProjection.rates?.effectiveRate}%</span>
+                </div>
+                <div className={styles.rateItem}>
+                  <span className={styles.rateLabel}>Marginal Bracket</span>
+                  <span className={styles.rateValue}>{taxProjection.rates?.marginalBracket}%</span>
+                </div>
+                {taxProjection.employer && (
+                  <div className={styles.rateItem}>
+                    <span className={styles.rateLabel}>Employer</span>
+                    <span className={styles.rateValue}>{taxProjection.employer}</span>
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
 
           {/* Inline Upload Section */}
           <div className={styles.inlineUploadSection}>

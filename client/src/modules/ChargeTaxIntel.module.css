@@ -2492,3 +2492,177 @@
     justify-content: flex-start;
   }
 }
+
+/* Tax Projection Section */
+.projectionSection {
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.08) 0%, rgba(16, 185, 129, 0.02) 100%);
+  border: 1px solid rgba(16, 185, 129, 0.2);
+  border-radius: 16px;
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.projectionHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.projectionHeader h3 {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: var(--porcelain);
+  margin: 0;
+}
+
+.projectionSubtitle {
+  font-size: 0.85rem;
+  color: var(--muted-gray);
+}
+
+.projectionGrid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.projectionCard {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.projectionLabel {
+  font-size: 0.75rem;
+  color: var(--muted-gray);
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.projectionValue {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--porcelain);
+}
+
+.projectionValueHighlight {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--soft-gold);
+}
+
+.withholdingAlert {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem 1.25rem;
+  border-radius: 10px;
+  margin-bottom: 1.5rem;
+}
+
+.withholdingAlert.over {
+  background: rgba(16, 185, 129, 0.1);
+  border: 1px solid rgba(16, 185, 129, 0.3);
+}
+
+.withholdingAlert.under {
+  background: rgba(245, 158, 11, 0.1);
+  border: 1px solid rgba(245, 158, 11, 0.3);
+}
+
+.withholdingAlert.on_track {
+  background: rgba(59, 130, 246, 0.1);
+  border: 1px solid rgba(59, 130, 246, 0.3);
+}
+
+.withholdingIcon {
+  font-size: 1.5rem;
+}
+
+.withholdingContent {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.withholdingTitle {
+  font-weight: 600;
+  color: var(--porcelain);
+}
+
+.withholdingMessage {
+  font-size: 0.9rem;
+  color: var(--muted-gray);
+}
+
+.withholdingAmount {
+  text-align: right;
+}
+
+.withholdingDiff {
+  font-size: 1.25rem;
+  font-weight: 700;
+}
+
+.withholdingAlert.over .withholdingDiff {
+  color: #10b981;
+}
+
+.withholdingAlert.under .withholdingDiff {
+  color: #f59e0b;
+}
+
+.ratesRow {
+  display: flex;
+  gap: 2rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--border);
+}
+
+.rateItem {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.rateLabel {
+  font-size: 0.75rem;
+  color: var(--muted-gray);
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.rateValue {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--porcelain);
+}
+
+@media (max-width: 1024px) {
+  .projectionGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 640px) {
+  .projectionGrid {
+    grid-template-columns: 1fr;
+  }
+  
+  .projectionHeader {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+  
+  .ratesRow {
+    flex-wrap: wrap;
+  }
+}
