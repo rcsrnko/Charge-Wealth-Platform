@@ -72,13 +72,48 @@ function LoginPage() {
   const [socialLoading, setSocialLoading] = useState<string | null>(null);
   const [showSignup, setShowSignup] = useState(false);
   const [showEmailSignin, setShowEmailSignin] = useState(false);
+  const [showMemberLogin, setShowMemberLogin] = useState(false);
   const [signupData, setSignupData] = useState({ firstName: '', lastName: '', email: '', password: '', confirmPassword: '' });
   const [signinData, setSigninData] = useState({ email: '', password: '' });
+  const [memberEmail, setMemberEmail] = useState('');
   const [signupError, setSignupError] = useState('');
   const [signinError, setSigninError] = useState('');
+  const [memberError, setMemberError] = useState('');
   const [signupLoading, setSignupLoading] = useState(false);
   const [signinLoading, setSigninLoading] = useState(false);
+  const [memberLoading, setMemberLoading] = useState(false);
   const [signupSuccess, setSignupSuccess] = useState(false);
+
+  const handleMemberLogin = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setMemberError('');
+    
+    if (!memberEmail.trim()) {
+      setMemberError('Please enter your email');
+      return;
+    }
+    
+    setMemberLoading(true);
+    try {
+      const res = await fetch('/api/auth/member-login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({ email: memberEmail }),
+      });
+      const data = await res.json();
+      
+      if (res.ok && data.success) {
+        window.location.href = '/dashboard';
+      } else {
+        setMemberError(data.message || 'Login failed');
+        setMemberLoading(false);
+      }
+    } catch (error) {
+      setMemberError('Login failed. Please try again.');
+      setMemberLoading(false);
+    }
+  };
 
   const handleGoogleLogin = async () => {
     setSocialLoading('google');
@@ -351,6 +386,52 @@ function LoginPage() {
               Already have an account? Sign in
             </button>
           </form>
+        ) : showMemberLogin ? (
+          <form onSubmit={handleMemberLogin}>
+            <p style={{ color: 'rgba(255,255,255,0.7)', marginBottom: '1.5rem', fontSize: '0.875rem' }}>
+              Already paid? Enter the email you used during checkout to access your account.
+            </p>
+            <input
+              type="email"
+              placeholder="Email Address"
+              value={memberEmail}
+              onChange={(e) => setMemberEmail(e.target.value)}
+              style={inputStyle}
+            />
+            
+            {memberError && (
+              <p style={{ color: '#ef4444', fontSize: '0.875rem', marginBottom: '1rem' }}>
+                {memberError}
+              </p>
+            )}
+            
+            <button
+              type="submit"
+              disabled={memberLoading}
+              style={{
+                ...buttonStyle,
+                background: '#C9A962',
+                color: '#0F1117',
+                opacity: memberLoading ? 0.7 : 1,
+              }}
+            >
+              {memberLoading ? 'Verifying...' : 'Access My Account'}
+            </button>
+            
+            <button
+              type="button"
+              onClick={() => setShowMemberLogin(false)}
+              style={{
+                ...buttonStyle,
+                background: 'transparent',
+                color: 'rgba(255,255,255,0.6)',
+                border: 'none',
+                marginTop: '0.5rem',
+              }}
+            >
+              Back to login options
+            </button>
+          </form>
         ) : showEmailSignin ? (
           <form onSubmit={handleEmailSignin}>
             <input
@@ -483,6 +564,19 @@ function LoginPage() {
                 <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
               </svg>
               {socialLoading === 'google' ? 'Signing in...' : 'Continue with Google'}
+            </button>
+            
+            <button
+              onClick={() => setShowMemberLogin(true)}
+              style={{
+                ...buttonStyle,
+                background: 'transparent',
+                color: '#C9A962',
+                border: '1px solid #C9A962',
+                marginTop: '1rem',
+              }}
+            >
+              Already Paid? Access Account
             </button>
           </>
         )}

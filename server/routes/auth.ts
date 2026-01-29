@@ -46,6 +46,47 @@ export function registerAuthRoutes(app: Express, isAuthenticated: RequestHandler
     }
   });
 
+  // Direct member login - for paid members who have trouble with OAuth
+  app.post('/api/auth/member-login', authLimiter, async (req, res) => {
+    try {
+      const { email } = req.body;
+      
+      if (!email) {
+        return res.status(400).json({ message: 'Email is required' });
+      }
+      
+      // Check if user exists with an active subscription
+      const user = await storage.getUserByEmail(email);
+      
+      if (!user) {
+        return res.status(404).json({ message: 'No account found with this email. Please purchase a membership first.' });
+      }
+      
+      if (user.subscriptionStatus !== 'active') {
+        return res.status(403).json({ message: 'No active membership found. Please purchase a membership.' });
+      }
+      
+      console.log('[Member Login] Logging in:', email, user.id);
+      
+      // Create session for the user
+      const sessionUser = {
+        claims: { sub: user.id },
+        expires_at: Math.floor(Date.now() / 1000) + 86400 * 30
+      };
+      
+      req.login(sessionUser, (err) => {
+        if (err) {
+          console.error('Member login error:', err);
+          return res.status(500).json({ message: 'Login failed' });
+        }
+        res.json({ success: true, user });
+      });
+    } catch (error) {
+      console.error('Member login error:', error);
+      res.status(500).json({ message: 'Login failed' });
+    }
+  });
+
   // Session check endpoint (no auth required) - for checking if user is logged in via server session
   app.get('/api/auth/session', async (req: any, res) => {
     try {
