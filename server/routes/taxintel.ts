@@ -646,14 +646,17 @@ RULES:
         };
       }
 
-      await storage.createTaxReturn({
-        userId,
-        taxYear: taxData.taxYear,
-        totalIncome: taxData.totalIncome.toString(),
-        agi: taxData.agi.toString(),
-        totalFederalTax: taxData.totalFederalTax.toString(),
-        filingStatus: taxData.filingStatus.toLowerCase().replace(/ /g, '_'),
-      });
+      // Only save to database if we have valid tax data
+      if (taxData.totalIncome && taxData.agi && taxData.totalFederalTax) {
+        await storage.createTaxReturn({
+          userId,
+          taxYear: taxData.taxYear || new Date().getFullYear(),
+          totalIncome: String(taxData.totalIncome),
+          agi: String(taxData.agi),
+          totalFederalTax: String(taxData.totalFederalTax),
+          filingStatus: (taxData.filingStatus || 'single').toLowerCase().replace(/ /g, '_'),
+        });
+      }
 
       res.json({ taxData });
     } catch (error) {
