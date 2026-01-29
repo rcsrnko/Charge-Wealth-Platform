@@ -374,18 +374,48 @@ ${allDocsText}`
   app.post('/api/tax-intel/analyze', aiLimiter, isAuthenticated, async (req: any, res) => {
     try {
       const userId = req.user.claims.sub;
-      const { filename, documentType } = req.body;
+      const { filename, documentType, documentId } = req.body;
       
       const docType = documentType || (filename?.toLowerCase().includes('w2') ? 'w2' : 
                                         filename?.toLowerCase().includes('paystub') ? 'paystub' : '1040');
       
+      // CRITICAL: Fetch the actual extracted data from the uploaded document
+      const documents = await storage.getFinancialDocuments(userId);
+      const latestDoc = documentId 
+        ? documents.find(d => d.id === documentId)
+        : documents.filter(d => d.extractionStatus === 'completed')[0];
+      
+      const extractedData = (latestDoc?.extractedData as any) || {};
+      
+      console.log('Analyze - Using extracted data:', {
+        docId: latestDoc?.id,
+        docType: latestDoc?.documentType,
+        hasGrossPay: !!extractedData.grossPay,
+        hasNetPay: !!extractedData.netPay,
+        hasFederalWithheld: !!extractedData.federalWithheld,
+      });
+      
       const profile = await storage.getFinancialProfile(userId);
       
-      const userContext = profile ? {
-        income: profile.annualIncome,
-        state: profile.stateOfResidence || 'CA',
-        filing: profile.filingStatus || 'single'
-      } : { income: '200000', state: 'CA', filing: 'single' };
+      // Use extracted data if available, otherwise fall back to profile
+      const actualGrossPay = extractedData.grossPay || extractedData.ytdGrossPay || null;
+      const actualNetPay = extractedData.netPay || null;
+      const actualFederalWithheld = extractedData.federalWithheld || extractedData.ytdFederalWithheld || null;
+      const actualStateWithheld = extractedData.stateWithheld || extractedData.ytdStateTaxWithheld || null;
+      
+      // Estimate annual income from paystub data
+      let estimatedAnnualIncome = profile?.annualIncome ? parseInt(profile.annualIncome) : 200000;
+      if (actualGrossPay && actualGrossPay > 0) {
+        // Assume bi-weekly (26 pay periods) if gross is under 15000, otherwise semi-monthly (24)
+        const payPeriods = actualGrossPay < 15000 ? 26 : 24;
+        estimatedAnnualIncome = Math.round(actualGrossPay * payPeriods);
+      }
+      
+      const userContext = {
+        income: estimatedAnnualIncome.toString(),
+        state: profile?.stateOfResidence || 'CO',
+        filing: profile?.filingStatus || 'single'
+      };
       
       // Portfolio context removed - now focused on paycheck optimization
       
@@ -414,14 +444,31 @@ ${allDocsText}`
       
       const stateInfo = stateTaxRates[userContext.state] || { marginal: 5.0, name: userContext.state, hasLocalTax: false };
       
+      // Build actual paycheck data string for the AI
+      const actualPaycheckData = actualGrossPay ? `
+ACTUAL DATA FROM UPLOADED DOCUMENT:
+- Gross Pay (per paycheck): $${actualGrossPay?.toLocaleString() || 'unknown'}
+- Net Pay (per paycheck): $${actualNetPay?.toLocaleString() || 'unknown'}
+- Federal Tax Withheld: $${actualFederalWithheld?.toLocaleString() || 'unknown'}
+- State Tax Withheld: $${actualStateWithheld?.toLocaleString() || 'unknown'}
+- 401k Contribution: $${extractedData.retirement401k?.toLocaleString() || extractedData.preTaxDeductions?.retirement401k?.toLocaleString() || 'not detected'}
+- HSA Contribution: $${extractedData.hsa?.toLocaleString() || extractedData.preTaxDeductions?.hsa?.toLocaleString() || 'not detected'}
+- Estimated Annual Income: $${estimatedAnnualIncome.toLocaleString()}
+
+USE THESE ACTUAL NUMBERS in your analysis. Do not make up different values.
+` : `
+NO SPECIFIC PAYCHECK DATA EXTRACTED - using profile estimates.
+Estimated Annual Income: $${userContext.income}
+`;
+
       const systemPrompt = `You are a paycheck optimization specialist. The user uploaded their W-2 or paystub. Your ONLY job: help them keep more of each paycheck.
 
 DOCUMENT TYPE: ${docType.toUpperCase()}
 USER STATE: ${stateInfo.name} (${userContext.state})
 FILING STATUS: ${userContext.filing}
-ESTIMATED INCOME: $${userContext.income}
+${actualPaycheckData}
 
-From their document, identify:
+Based on this data, identify:
 1. Current withholding (federal, state, FICA)
 2. Pre-tax deductions they're using (401k, HSA, FSA, etc.)
 3. Pre-tax deductions they're NOT using but could
