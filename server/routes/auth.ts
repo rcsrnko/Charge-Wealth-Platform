@@ -75,12 +75,36 @@ export function registerAuthRoutes(app: Express, isAuthenticated: RequestHandler
       const firstName = nameParts[0] || '';
       const lastName = nameParts.slice(1).join(' ') || '';
       
-      const dbUser = await storage.upsertUser({
-        id: user.id,
-        email: user.email,
-        firstName,
-        lastName,
-      });
+      // First check if a user with this email already exists (may have paid before OAuth)
+      let dbUser = await storage.getUserByEmail(user.email);
+      
+      if (dbUser) {
+        // User exists by email - update their Supabase ID if different
+        if (dbUser.id !== user.id) {
+          // Update the user record to use the Supabase ID while preserving subscription data
+          await db.execute(sql`
+            UPDATE users 
+            SET id = ${user.id}, 
+                first_name = COALESCE(NULLIF(${firstName}, ''), first_name),
+                last_name = COALESCE(NULLIF(${lastName}, ''), last_name),
+                updated_at = NOW()
+            WHERE email = ${user.email}
+          `);
+          dbUser = await storage.getUser(user.id);
+        }
+      } else {
+        // Create new user with Supabase ID
+        dbUser = await storage.upsertUser({
+          id: user.id,
+          email: user.email,
+          firstName,
+          lastName,
+        });
+      }
+      
+      if (!dbUser) {
+        return res.status(500).json({ message: 'Failed to create/update user' });
+      }
       
       const sessionUser = {
         claims: { sub: dbUser.id },
