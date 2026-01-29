@@ -104,6 +104,12 @@ function LoginPage() {
       const data = await res.json();
       
       if (res.ok && data.success) {
+        // Store auth in localStorage so frontend recognizes logged-in state
+        localStorage.setItem('testUserAuth', JSON.stringify({
+          id: data.user.id,
+          email: data.user.email,
+          subscriptionStatus: data.user.subscriptionStatus,
+        }));
         window.location.href = '/dashboard';
       } else {
         setMemberError(data.message || 'Login failed');
