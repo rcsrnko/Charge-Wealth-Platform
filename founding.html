@@ -482,8 +482,8 @@
                 <div class="feature">
                     <span class="feature-icon">📊</span>
                     <div class="feature-text">
-                        <strong>Portfolio Intelligence</strong>
-                        <p>Spot concentration risks, rebalancing opportunities, and hidden fees eating your returns.</p>
+                        <strong>Market Pulse</strong>
+                        <p>Real-time market data, sector performance, and AI commentary to keep you informed.</p>
                     </div>
                 </div>
                 <div class="feature">
@@ -638,7 +638,7 @@
             const res = await fetch('/api/newsletter/subscribe', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ email: emailInput.value })
+                body: JSON.stringify({ email: emailInput.value, source: 'founding_page' })
             });
             
             const data = await res.json();

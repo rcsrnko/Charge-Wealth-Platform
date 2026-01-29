@@ -94,38 +94,4 @@ export function registerPublicRoutes(app: Express) {
     }
   });
 
-  // Newsletter subscription
-  app.post('/api/newsletter/subscribe', async (req, res) => {
-    try {
-      const { email } = req.body;
-      
-      if (!email || !email.includes('@')) {
-        return res.status(400).json({ message: 'Please enter a valid email address' });
-      }
-      
-      // Insert into subscribers table
-      const { db } = await import('../db');
-      const { sql } = await import('drizzle-orm');
-      
-      // Check if already subscribed
-      const existing = await db.execute(sql`SELECT id FROM subscribers WHERE email = ${email}`);
-      const rows = Array.isArray(existing) ? existing : ((existing as any).rows || []);
-      
-      if (rows.length > 0) {
-        return res.json({ success: true, message: "You're already subscribed!" });
-      }
-      
-      await db.execute(sql`INSERT INTO subscribers (email, source) VALUES (${email}, 'founding_page')`);
-      
-      res.json({ success: true, message: "You're subscribed! Check your inbox for money tips." });
-    } catch (error: any) {
-      console.error('Newsletter subscription error:', error);
-      
-      if (error.code === '23505') {
-        return res.json({ success: true, message: "You're already subscribed!" });
-      }
-      
-      res.status(500).json({ message: 'Something went wrong. Please try again.' });
-    }
-  });
 }
