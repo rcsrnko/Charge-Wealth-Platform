@@ -204,9 +204,10 @@ export function registerTaxIntelRoutes(app: Express, isAuthenticated: RequestHan
             extractedData = extractPaystubDataFromText(rawText);
             console.log('Paystub extraction result:', extractedData);
             
-            // If regex extraction failed to get key fields, use AI extraction
-            const hasKeyFields = extractedData.grossPay || extractedData.netPay || extractedData.federalWithheld;
-            if (!hasKeyFields && rawText.length > 100) {
+            // If regex extraction is missing important fields, use AI extraction to fill gaps
+            const hasMostFields = extractedData.grossPay && extractedData.federalWithheld && (extractedData.retirement401k !== null);
+            const missingImportantFields = !extractedData.grossPay || !extractedData.federalWithheld;
+            if (missingImportantFields && rawText.length > 100) {
               console.log('Regex extraction incomplete, trying AI extraction...');
               try {
                 const aiExtractionResponse = await fetchApi(`${process.env.AI_INTEGRATIONS_OPENAI_BASE_URL}/chat/completions`, {
