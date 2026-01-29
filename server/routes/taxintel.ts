@@ -502,33 +502,43 @@ RULES:
       let taxData;
       try {
         const jsonMatch = content.match(/\{[\s\S]*\}/);
-        taxData = jsonMatch ? JSON.parse(jsonMatch[0]) : null;
-      } catch {
+        if (jsonMatch) {
+          taxData = JSON.parse(jsonMatch[0]);
+        }
+      } catch (parseErr) {
+        console.error("Failed to parse AI response as JSON:", parseErr);
+      }
+      
+      // If no valid taxData from AI, create fallback based on profile
+      if (!taxData) {
+        const estimatedIncome = parseInt(userContext.income) || 200000;
+        const estimatedTax = Math.round(estimatedIncome * 0.22);
         taxData = {
           taxYear: 2024,
-          totalIncome: 225000,
-          agi: 205000,
-          taxableIncome: 175000,
-          totalFederalTax: 35500,
-          effectiveTaxRate: 17.3,
+          totalIncome: estimatedIncome,
+          agi: Math.round(estimatedIncome * 0.9),
+          taxableIncome: Math.round(estimatedIncome * 0.78),
+          totalFederalTax: estimatedTax,
+          effectiveTaxRate: 22,
           marginalTaxBracket: 24,
-          filingStatus: "Married Filing Jointly",
+          filingStatus: userContext.filing || "single",
           incomeBreakdown: {
-            wages: 180000,
-            dividends: 15000,
-            capitalGains: 25000,
+            wages: estimatedIncome,
+            dividends: 0,
+            capitalGains: 0,
             business: 0,
-            other: 5000
+            other: 0
           },
           insights: [
             {
-              type: "bracket_opportunity",
-              severity: "opportunity",
-              title: "Near top of 24% bracket",
-              description: "You're approaching the 32% bracket. Consider maximizing pre-tax retirement contributions to stay in the lower bracket.",
-              potentialImpact: 4800
+              type: "upload_more",
+              severity: "info",
+              title: "Upload your paystub for personalized insights",
+              description: "We couldn't fully extract data from your document. Try uploading a clearer PDF or a recent paystub to get specific optimization recommendations.",
+              potentialImpact: 0
             }
-          ]
+          ],
+          optimizations: []
         };
       }
 
