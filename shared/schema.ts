@@ -726,6 +726,18 @@ export const waitlist = pgTable("waitlist", {
   index("idx_waitlist_email").on(table.email),
 ]);
 
+// Market Pulse Watchlist (editable by admin)
+export const marketWatchlist = pgTable("market_watchlist", {
+  id: serial("id").primaryKey(),
+  category: varchar("category", { length: 50 }).notNull(), // 'stocks', 'sectors', 'themes', 'watching'
+  label: varchar("label", { length: 100 }).notNull(),
+  description: text("description"), // Optional description for 'watching' items
+  sortOrder: integer("sort_order").default(0),
+  isActive: boolean("is_active").default(true),
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
 // ============================================
 // TYPE EXPORTS
 // ============================================
@@ -811,3 +823,7 @@ export type InsertReferral = typeof referrals.$inferInsert;
 // Price Alert types
 export type PriceAlert = typeof priceAlerts.$inferSelect;
 export type InsertPriceAlert = typeof priceAlerts.$inferInsert;
+
+// Market Watchlist types
+export type MarketWatchlistItem = typeof marketWatchlist.$inferSelect;
+export type InsertMarketWatchlistItem = typeof marketWatchlist.$inferInsert;

@@ -30,11 +30,70 @@ interface MarketData {
   lastUpdated: string;
 }
 
+interface WatchlistItem {
+  id: number;
+  category: string;
+  label: string;
+  description?: string;
+  sortOrder: number;
+}
+
+interface Watchlist {
+  stocks: WatchlistItem[];
+  sectors: WatchlistItem[];
+  themes: WatchlistItem[];
+  watching: WatchlistItem[];
+}
+
 export default function MarketPulse() {
   const [marketData, setMarketData] = useState<MarketData | null>(null);
+  const [watchlist, setWatchlist] = useState<Watchlist | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [refreshing, setRefreshing] = useState(false);
+  const [editMode, setEditMode] = useState(false);
+  const [newItem, setNewItem] = useState({ category: '', label: '', description: '' });
+
+  const fetchWatchlist = async () => {
+    try {
+      const response = await fetchWithAuth('/api/market-data/watchlist');
+      if (response.ok) {
+        const data = await response.json();
+        setWatchlist(data);
+      }
+    } catch (err) {
+      console.error('Failed to fetch watchlist:', err);
+    }
+  };
+
+  const addWatchlistItem = async (category: string, label: string, description?: string) => {
+    try {
+      const response = await fetchWithAuth('/api/market-data/watchlist', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ category, label, description }),
+      });
+      if (response.ok) {
+        fetchWatchlist();
+        setNewItem({ category: '', label: '', description: '' });
+      }
+    } catch (err) {
+      console.error('Failed to add watchlist item:', err);
+    }
+  };
+
+  const deleteWatchlistItem = async (id: number) => {
+    try {
+      const response = await fetchWithAuth(`/api/market-data/watchlist/${id}`, {
+        method: 'DELETE',
+      });
+      if (response.ok) {
+        fetchWatchlist();
+      }
+    } catch (err) {
+      console.error('Failed to delete watchlist item:', err);
+    }
+  };
 
   const fetchData = async (forceRefresh = false) => {
     try {
@@ -62,6 +121,7 @@ export default function MarketPulse() {
 
   useEffect(() => {
     fetchData();
+    fetchWatchlist();
     const interval = setInterval(() => fetchData(), 5 * 60 * 1000);
     return () => clearInterval(interval);
   }, []);
@@ -155,29 +215,31 @@ export default function MarketPulse() {
       <section className={styles.watchingSection}>
         <div className={styles.watchingHeader}>
           <h2 className={styles.sectionTitle}>👀 What We're Watching</h2>
+          <button 
+            className={styles.editBtn} 
+            onClick={() => setEditMode(!editMode)}
+          >
+            {editMode ? 'Done' : 'Edit'}
+          </button>
         </div>
         <div className={styles.watchingGrid}>
-          <div className={styles.watchingCard}>
-            <span className={styles.watchingEmoji}>📊</span>
-            <div>
-              <strong>Fed Rate Decision</strong>
-              <p>Next FOMC meeting could signal rate cuts in 2026. Watch for language changes.</p>
+          {watchlist?.watching.map((item) => (
+            <div key={item.id} className={styles.watchingCard}>
+              <span className={styles.watchingEmoji}>📊</span>
+              <div>
+                <strong>{item.label}</strong>
+                <p>{item.description}</p>
+              </div>
+              {editMode && (
+                <button 
+                  className={styles.deleteBtn}
+                  onClick={() => deleteWatchlistItem(item.id)}
+                >
+                  ×
+                </button>
+              )}
             </div>
-          </div>
-          <div className={styles.watchingCard}>
-            <span className={styles.watchingEmoji}>💼</span>
-            <div>
-              <strong>Earnings Season</strong>
-              <p>Big tech reports this week. NVDA and MSFT guidance will set the tone.</p>
-            </div>
-          </div>
-          <div className={styles.watchingCard}>
-            <span className={styles.watchingEmoji}>⚠️</span>
-            <div>
-              <strong>Tax-Loss Harvesting</strong>
-              <p>Q1 volatility creates opportunities. Review losers before wash sale window.</p>
-            </div>
-          </div>
+          ))}
           {marketData.indices.some(idx => idx.name === 'VIX' && idx.price > 20) && (
             <div className={styles.watchingCard}>
               <span className={styles.watchingEmoji}>🔴</span>
@@ -185,6 +247,30 @@ export default function MarketPulse() {
                 <strong>Elevated Volatility</strong>
                 <p>VIX above 20 suggests uncertainty. Consider rebalancing.</p>
               </div>
+            </div>
+          )}
+          {editMode && (
+            <div className={styles.addItemCard}>
+              <input
+                type="text"
+                placeholder="Title"
+                value={newItem.category === 'watching' ? newItem.label : ''}
+                onChange={(e) => setNewItem({ ...newItem, category: 'watching', label: e.target.value })}
+                className={styles.addInput}
+              />
+              <input
+                type="text"
+                placeholder="Description"
+                value={newItem.category === 'watching' ? newItem.description : ''}
+                onChange={(e) => setNewItem({ ...newItem, description: e.target.value })}
+                className={styles.addInput}
+              />
+              <button 
+                className={styles.addBtn}
+                onClick={() => newItem.label && addWatchlistItem('watching', newItem.label, newItem.description)}
+              >
+                Add
+              </button>
             </div>
           )}
         </div>
@@ -197,27 +283,79 @@ export default function MarketPulse() {
           <div className={styles.watchlistCategory}>
             <h3 className={styles.watchlistCategoryTitle}>Stocks</h3>
             <div className={styles.watchlistTickers}>
-              <span className={styles.watchlistTicker}>NVDA</span>
-              <span className={styles.watchlistTicker}>MSFT</span>
-              <span className={styles.watchlistTicker}>GOOGL</span>
-              <span className={styles.watchlistTicker}>AMZN</span>
-              <span className={styles.watchlistTicker}>META</span>
+              {watchlist?.stocks.map((item) => (
+                <span key={item.id} className={styles.watchlistTicker}>
+                  {item.label}
+                  {editMode && (
+                    <button className={styles.tickerDelete} onClick={() => deleteWatchlistItem(item.id)}>×</button>
+                  )}
+                </span>
+              ))}
+              {editMode && (
+                <input
+                  type="text"
+                  placeholder="+ Add"
+                  className={styles.tickerInput}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter' && e.currentTarget.value) {
+                      addWatchlistItem('stocks', e.currentTarget.value);
+                      e.currentTarget.value = '';
+                    }
+                  }}
+                />
+              )}
             </div>
           </div>
           <div className={styles.watchlistCategory}>
             <h3 className={styles.watchlistCategoryTitle}>Sectors</h3>
             <div className={styles.watchlistTickers}>
-              <span className={styles.watchlistTicker}>Technology</span>
-              <span className={styles.watchlistTicker}>Healthcare</span>
-              <span className={styles.watchlistTicker}>Energy</span>
+              {watchlist?.sectors.map((item) => (
+                <span key={item.id} className={styles.watchlistTicker}>
+                  {item.label}
+                  {editMode && (
+                    <button className={styles.tickerDelete} onClick={() => deleteWatchlistItem(item.id)}>×</button>
+                  )}
+                </span>
+              ))}
+              {editMode && (
+                <input
+                  type="text"
+                  placeholder="+ Add"
+                  className={styles.tickerInput}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter' && e.currentTarget.value) {
+                      addWatchlistItem('sectors', e.currentTarget.value);
+                      e.currentTarget.value = '';
+                    }
+                  }}
+                />
+              )}
             </div>
           </div>
           <div className={styles.watchlistCategory}>
             <h3 className={styles.watchlistCategoryTitle}>Themes</h3>
             <div className={styles.watchlistTickers}>
-              <span className={styles.watchlistTicker}>AI/ML</span>
-              <span className={styles.watchlistTicker}>Clean Energy</span>
-              <span className={styles.watchlistTicker}>Dividend Growth</span>
+              {watchlist?.themes.map((item) => (
+                <span key={item.id} className={styles.watchlistTicker}>
+                  {item.label}
+                  {editMode && (
+                    <button className={styles.tickerDelete} onClick={() => deleteWatchlistItem(item.id)}>×</button>
+                  )}
+                </span>
+              ))}
+              {editMode && (
+                <input
+                  type="text"
+                  placeholder="+ Add"
+                  className={styles.tickerInput}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter' && e.currentTarget.value) {
+                      addWatchlistItem('themes', e.currentTarget.value);
+                      e.currentTarget.value = '';
+                    }
+                  }}
+                />
+              )}
             </div>
           </div>
         </div>

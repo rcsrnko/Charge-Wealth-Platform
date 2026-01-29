@@ -23,6 +23,7 @@ import {
   testimonials,
   referrals,
   priceAlerts,
+  marketWatchlist,
   type User,
   type UpsertUser,
   type NetWorthSnapshot,
@@ -49,6 +50,8 @@ import {
   type PlaybookTemplate,
   type PriceAlert,
   type InsertPriceAlert,
+  type MarketWatchlistItem,
+  type InsertMarketWatchlistItem,
 } from "../shared/schema";
 import { db } from "./db";
 import { eq, desc, count, sql, and, gte } from "drizzle-orm";
@@ -847,6 +850,64 @@ export class DatabaseStorage implements IStorage {
       .where(and(eq(portfolioPositions.id, id), eq(portfolioPositions.userId, userId)))
       .returning();
     return result;
+  }
+
+  // Market Watchlist
+  async getMarketWatchlist(): Promise<MarketWatchlistItem[]> {
+    return await db.select()
+      .from(marketWatchlist)
+      .where(eq(marketWatchlist.isActive, true))
+      .orderBy(marketWatchlist.category, marketWatchlist.sortOrder);
+  }
+
+  async addWatchlistItem(item: InsertMarketWatchlistItem): Promise<MarketWatchlistItem> {
+    const [result] = await db.insert(marketWatchlist)
+      .values(item)
+      .returning();
+    return result;
+  }
+
+  async updateWatchlistItem(id: number, updates: Partial<InsertMarketWatchlistItem>): Promise<MarketWatchlistItem | undefined> {
+    const [result] = await db.update(marketWatchlist)
+      .set({ ...updates, updatedAt: new Date() })
+      .where(eq(marketWatchlist.id, id))
+      .returning();
+    return result;
+  }
+
+  async deleteWatchlistItem(id: number): Promise<void> {
+    await db.delete(marketWatchlist)
+      .where(eq(marketWatchlist.id, id));
+  }
+
+  async seedDefaultWatchlist(): Promise<void> {
+    const existing = await db.select().from(marketWatchlist).limit(1);
+    if (existing.length > 0) return; // Already seeded
+    
+    const defaults = [
+      // Stocks
+      { category: 'stocks', label: 'NVDA', sortOrder: 1 },
+      { category: 'stocks', label: 'MSFT', sortOrder: 2 },
+      { category: 'stocks', label: 'GOOGL', sortOrder: 3 },
+      { category: 'stocks', label: 'AMZN', sortOrder: 4 },
+      { category: 'stocks', label: 'META', sortOrder: 5 },
+      // Sectors
+      { category: 'sectors', label: 'Technology', sortOrder: 1 },
+      { category: 'sectors', label: 'Healthcare', sortOrder: 2 },
+      { category: 'sectors', label: 'Energy', sortOrder: 3 },
+      // Themes
+      { category: 'themes', label: 'AI/ML', sortOrder: 1 },
+      { category: 'themes', label: 'Clean Energy', sortOrder: 2 },
+      { category: 'themes', label: 'Dividend Growth', sortOrder: 3 },
+      // What we're watching
+      { category: 'watching', label: 'Fed Rate Decision', description: 'Next FOMC meeting could signal rate cuts in 2026. Watch for language changes.', sortOrder: 1 },
+      { category: 'watching', label: 'Earnings Season', description: 'Big tech reports this week. NVDA and MSFT guidance will set the tone.', sortOrder: 2 },
+      { category: 'watching', label: 'Tax-Loss Harvesting', description: 'Q1 volatility creates opportunities. Review losers before wash sale window.', sortOrder: 3 },
+    ];
+    
+    for (const item of defaults) {
+      await db.insert(marketWatchlist).values(item);
+    }
   }
 }
 

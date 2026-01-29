@@ -204,7 +204,12 @@ async function fetchMarketData(): Promise<MarketData> {
   return marketData;
 }
 
+import { storage } from "../storage";
+
 export function registerMarketPulseRoutes(app: Express, isAuthenticated: RequestHandler) {
+  // Seed default watchlist on startup
+  storage.seedDefaultWatchlist().catch(console.error);
+  
   app.get("/api/market-data", isAuthenticated, async (_req, res) => {
     try {
       const data = await fetchMarketData();
@@ -224,6 +229,60 @@ export function registerMarketPulseRoutes(app: Express, isAuthenticated: Request
     } catch (error) {
       console.error("[Market Pulse] Refresh error:", error);
       res.status(500).json({ error: "Failed to refresh market data" });
+    }
+  });
+
+  // Watchlist API
+  app.get("/api/market-data/watchlist", isAuthenticated, async (_req, res) => {
+    try {
+      const items = await storage.getMarketWatchlist();
+      const grouped = {
+        stocks: items.filter(i => i.category === 'stocks'),
+        sectors: items.filter(i => i.category === 'sectors'),
+        themes: items.filter(i => i.category === 'themes'),
+        watching: items.filter(i => i.category === 'watching'),
+      };
+      res.json(grouped);
+    } catch (error) {
+      console.error("[Market Pulse] Watchlist error:", error);
+      res.status(500).json({ error: "Failed to fetch watchlist" });
+    }
+  });
+
+  app.post("/api/market-data/watchlist", isAuthenticated, async (req, res) => {
+    try {
+      const { category, label, description } = req.body;
+      if (!category || !label) {
+        return res.status(400).json({ error: "Category and label required" });
+      }
+      const item = await storage.addWatchlistItem({ category, label, description });
+      res.json(item);
+    } catch (error) {
+      console.error("[Market Pulse] Add watchlist error:", error);
+      res.status(500).json({ error: "Failed to add watchlist item" });
+    }
+  });
+
+  app.put("/api/market-data/watchlist/:id", isAuthenticated, async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      const { label, description, isActive, sortOrder } = req.body;
+      const item = await storage.updateWatchlistItem(id, { label, description, isActive, sortOrder });
+      res.json(item);
+    } catch (error) {
+      console.error("[Market Pulse] Update watchlist error:", error);
+      res.status(500).json({ error: "Failed to update watchlist item" });
+    }
+  });
+
+  app.delete("/api/market-data/watchlist/:id", isAuthenticated, async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      await storage.deleteWatchlistItem(id);
+      res.json({ success: true });
+    } catch (error) {
+      console.error("[Market Pulse] Delete watchlist error:", error);
+      res.status(500).json({ error: "Failed to delete watchlist item" });
     }
   });
 }
