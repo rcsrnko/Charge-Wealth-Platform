@@ -422,8 +422,9 @@ export class DatabaseStorage implements IStorage {
   async deleteFinancialDocument(id: number, userId: string): Promise<boolean> {
     const result = await db
       .delete(financialDocuments)
-      .where(and(eq(financialDocuments.id, id), eq(financialDocuments.userId, userId)));
-    return (result.rowCount ?? 0) > 0;
+      .where(and(eq(financialDocuments.id, id), eq(financialDocuments.userId, userId)))
+      .returning({ id: financialDocuments.id });
+    return result.length > 0;
   }
   
   async getPortfolioPositions(userId: string): Promise<PortfolioPosition[]> {
