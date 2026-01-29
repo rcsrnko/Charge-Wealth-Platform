@@ -185,16 +185,23 @@ export async function registerBlogRoutes(app: Express) {
         .content {
             font-size: 1.1rem;
         }
-        .content h2 {
+        .content, .content * {
+            background: transparent !important;
+            color: var(--porcelain) !important;
+        }
+        .content h2, .content h2 * {
             font-size: 1.75rem;
             margin: 2.5rem 0 1rem;
-            color: var(--gold-sand);
+            color: var(--gold-sand) !important;
         }
-        .content h3 {
+        .content h3, .content h3 * {
             font-size: 1.35rem;
             margin: 2rem 0 0.75rem;
+            color: var(--porcelain) !important;
         }
         .content p { margin-bottom: 1.25rem; }
+        .content a, .content a * { color: var(--gold-sand) !important; }
+        .content strong, .content b { color: var(--gold-sand) !important; }
         .content ul, .content ol {
             margin: 1rem 0 1.5rem 1.5rem;
         }
