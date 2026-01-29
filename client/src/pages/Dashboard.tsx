@@ -19,6 +19,7 @@ const MarketPulse = lazy(() => import('../modules/MarketPulse'));
 const Playbooks = lazy(() => import('../modules/Playbooks'));
 const ReferralDashboard = lazy(() => import('../modules/ReferralDashboard'));
 const Settings = lazy(() => import('../modules/Settings'));
+const MyFinancialData = lazy(() => import('../modules/MyFinancialData'));
 
 function ModuleLoader() {
   return (
@@ -181,6 +182,7 @@ export default function Dashboard() {
       '/dashboard/tax-intel': 'Tax Advisor | Charge Wealth',
       '/dashboard/market-pulse': 'Market Pulse | Charge Wealth',
       '/dashboard/playbooks': 'Playbooks | Charge Wealth',
+      '/dashboard/my-data': 'My Financial Data | Charge Wealth',
       '/dashboard/referrals': 'Referral Program | Charge Wealth',
     };
     document.title = titles[location] || 'Charge Wealth';
@@ -459,6 +461,13 @@ export default function Dashboard() {
                   ) : (
                     <Playbooks />
                   )}
+                </Suspense>
+              </ErrorBoundary>
+            </Route>
+            <Route path="/dashboard/my-data">
+              <ErrorBoundary moduleName="my-data">
+                <Suspense fallback={<ModuleLoader />}>
+                  <MyFinancialData />
                 </Suspense>
               </ErrorBoundary>
             </Route>

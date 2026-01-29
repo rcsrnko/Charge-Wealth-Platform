@@ -1,0 +1,279 @@
+.container {
+  padding: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.header {
+  margin-bottom: 2rem;
+}
+
+.title {
+  font-size: 1.75rem;
+  font-weight: 600;
+  color: var(--porcelain);
+  margin: 0 0 0.5rem 0;
+}
+
+.subtitle {
+  font-size: 1rem;
+  color: var(--muted-gray);
+  margin: 0;
+}
+
+.loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 300px;
+  color: var(--muted-gray);
+  font-size: 1.1rem;
+}
+
+/* Empty State */
+.emptyState {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 4rem 2rem;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px dashed var(--border);
+  border-radius: 16px;
+}
+
+.emptyIcon {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+}
+
+.emptyState h2 {
+  font-size: 1.5rem;
+  color: var(--porcelain);
+  margin: 0 0 0.5rem 0;
+}
+
+.emptyState p {
+  color: var(--muted-gray);
+  margin: 0 0 1.5rem 0;
+}
+
+.ctaButton {
+  padding: 0.75rem 1.5rem;
+  background: var(--soft-gold);
+  color: var(--deep-navy);
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.ctaButton:hover {
+  background: #c9a832;
+  transform: translateY(-1px);
+}
+
+/* Data Grid */
+.dataGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.5rem;
+}
+
+.card {
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.documentsCard {
+  grid-column: span 2;
+}
+
+.cardHeader {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 1rem 1.25rem;
+  background: rgba(255, 255, 255, 0.02);
+  border-bottom: 1px solid var(--border);
+}
+
+.cardIcon {
+  font-size: 1.25rem;
+}
+
+.cardHeader h2 {
+  flex: 1;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--porcelain);
+  margin: 0;
+}
+
+.editButton {
+  padding: 0.35rem 0.75rem;
+  background: transparent;
+  border: 1px solid var(--soft-gold);
+  border-radius: 6px;
+  color: var(--soft-gold);
+  font-size: 0.8rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.editButton:hover {
+  background: rgba(212, 175, 55, 0.1);
+}
+
+.cardContent {
+  padding: 1.25rem;
+}
+
+.dataRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.6rem 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.dataRow:last-child {
+  border-bottom: none;
+}
+
+.label {
+  font-size: 0.9rem;
+  color: var(--muted-gray);
+}
+
+.value {
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: var(--porcelain);
+}
+
+/* No Data State */
+.noData {
+  text-align: center;
+  padding: 1.5rem 1rem;
+}
+
+.noData p {
+  color: var(--muted-gray);
+  margin: 0 0 0.5rem 0;
+}
+
+.hint {
+  font-size: 0.85rem;
+  color: var(--muted-gray);
+  opacity: 0.7;
+}
+
+/* Positions List */
+.positionsList {
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--border);
+}
+
+.position {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem 0;
+}
+
+.positionSymbol {
+  font-weight: 600;
+  color: var(--soft-gold);
+  font-size: 0.9rem;
+}
+
+.positionValue {
+  color: var(--porcelain);
+  font-size: 0.9rem;
+}
+
+.morePositions {
+  display: block;
+  text-align: center;
+  padding-top: 0.5rem;
+  font-size: 0.85rem;
+  color: var(--muted-gray);
+}
+
+/* Documents List */
+.documentsList {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.document {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem 1rem;
+  background: rgba(255, 255, 255, 0.02);
+  border-radius: 8px;
+}
+
+.documentInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.documentType {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  color: var(--soft-gold);
+}
+
+.documentName {
+  font-size: 0.9rem;
+  color: var(--porcelain);
+}
+
+.documentStatus {
+  font-size: 0.85rem;
+}
+
+.documentStatus.completed {
+  color: #10b981;
+}
+
+.documentStatus.processing {
+  color: var(--soft-gold);
+}
+
+.documentStatus.failed {
+  color: #ef4444;
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+  .dataGrid {
+    grid-template-columns: 1fr;
+  }
+  
+  .documentsCard {
+    grid-column: span 1;
+  }
+}
+
+@media (max-width: 640px) {
+  .container {
+    padding: 1rem;
+  }
+  
+  .title {
+    font-size: 1.5rem;
+  }
+}
