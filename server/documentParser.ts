@@ -293,18 +293,31 @@ export function extractPaystubDataFromText(text: string): ExtractedPaystubData {
     /Total\s*(?:Gross|Earnings)[:\s]*\$?([\d,]+(?:\.\d{2})?)/i,
     /Current\s*(?:Gross|Total)[:\s]*\$?([\d,]+(?:\.\d{2})?)/i,
     /Earnings[:\s]+\$?([\d,]+(?:\.\d{2})?)/i,
+    // Intuit/QuickBooks specific
+    /Total\s*Pay[:\s]*\$?([\d,]+(?:\.\d{2})?)/i,
+    /Gross[:\s]*\$?([\d,]+(?:\.\d{2})?)/i,
+    /Total\s*Earnings\s*This\s*Period[:\s]*\$?([\d,]+(?:\.\d{2})?)/i,
+    /Check\s*Amount[:\s]*\$?([\d,]+(?:\.\d{2})?)/i,
   ]);
   
   const netPay = extractNumber(text, [
     /Net\s*Pay[:\s]*\$?([\d,]+(?:\.\d{2})?)/i,
     /Take\s*Home[:\s]*\$?([\d,]+(?:\.\d{2})?)/i,
     /Net\s*(?:Check|Amount)[:\s]*\$?([\d,]+(?:\.\d{2})?)/i,
+    // Intuit/QuickBooks specific
+    /Net\s*This\s*Period[:\s]*\$?([\d,]+(?:\.\d{2})?)/i,
+    /Direct\s*Deposit[:\s]*\$?([\d,]+(?:\.\d{2})?)/i,
+    /Amount[:\s]*\$?([\d,]+(?:\.\d{2})?)\s*(?:Direct|Deposit)/i,
   ]);
   
   const federalWithheld = extractNumber(text, [
     /Federal\s*(?:Tax|Withholding|Income\s*Tax)[:\s]*\$?([\d,]+(?:\.\d{2})?)/i,
     /Fed\s*(?:Tax|W\/H|Withhold)[:\s]*\$?([\d,]+(?:\.\d{2})?)/i,
     /FIT[:\s]*\$?([\d,]+(?:\.\d{2})?)/i,
+    // Intuit/QuickBooks specific
+    /Federal\s*Income\s*Tax[:\s]*\$?([\d,]+(?:\.\d{2})?)/i,
+    /Fed\s*Income[:\s]*\$?([\d,]+(?:\.\d{2})?)/i,
+    /Federal[:\s]*-?\$?([\d,]+(?:\.\d{2})?)/i,
   ]);
   
   const stateWithheld = extractNumber(text, [

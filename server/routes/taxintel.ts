@@ -444,21 +444,29 @@ ${allDocsText}`
       
       const stateInfo = stateTaxRates[userContext.state] || { marginal: 5.0, name: userContext.state, hasLocalTax: false };
       
+      // Get raw text from document for AI fallback
+      const rawDocText = extractedData.rawText || '';
+      const hasStructuredData = actualGrossPay && actualGrossPay > 0;
+      
       // Build actual paycheck data string for the AI
-      const actualPaycheckData = actualGrossPay ? `
+      const actualPaycheckData = hasStructuredData ? `
 ACTUAL DATA FROM UPLOADED DOCUMENT:
 - Gross Pay (per paycheck): $${actualGrossPay?.toLocaleString() || 'unknown'}
 - Net Pay (per paycheck): $${actualNetPay?.toLocaleString() || 'unknown'}
 - Federal Tax Withheld: $${actualFederalWithheld?.toLocaleString() || 'unknown'}
 - State Tax Withheld: $${actualStateWithheld?.toLocaleString() || 'unknown'}
 - 401k Contribution: $${extractedData.retirement401k?.toLocaleString() || extractedData.preTaxDeductions?.retirement401k?.toLocaleString() || 'not detected'}
-- HSA Contribution: $${extractedData.hsa?.toLocaleString() || extractedData.preTaxDeductions?.hsa?.toLocaleString() || 'not detected'}
+- HSA Contribution: $${extractedData.hsaContribution?.toLocaleString() || extractedData.preTaxDeductions?.hsa?.toLocaleString() || 'not detected'}
 - Estimated Annual Income: $${estimatedAnnualIncome.toLocaleString()}
 
 USE THESE ACTUAL NUMBERS in your analysis. Do not make up different values.
 ` : `
-NO SPECIFIC PAYCHECK DATA EXTRACTED - using profile estimates.
-Estimated Annual Income: $${userContext.income}
+STRUCTURED EXTRACTION FAILED - Please extract data from the raw document text below.
+Look for: gross pay, net pay, federal withholding, state withholding, 401k deductions, HSA deductions.
+Estimated Annual Income (from profile): $${userContext.income}
+
+RAW DOCUMENT TEXT (first 3000 chars):
+${rawDocText.substring(0, 3000)}
 `;
 
       // Determine pay periods (bi-weekly = 26, semi-monthly = 24)
