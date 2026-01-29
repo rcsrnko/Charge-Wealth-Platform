@@ -28,7 +28,7 @@
     "@vitejs/plugin-react": "^5.0.4",
     "axios": "^1.13.2",
     "connect-pg-simple": "^10.0.0",
-    "drizzle-kit": "^0.31.5",
+    "drizzle-kit": "^0.18.1",
     "drizzle-orm": "^0.44.6",
     "express": "^5.1.0",
     "express-rate-limit": "^8.2.1",
