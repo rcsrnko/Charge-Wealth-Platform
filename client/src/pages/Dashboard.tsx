@@ -20,6 +20,7 @@ const Playbooks = lazy(() => import('../modules/Playbooks'));
 const ReferralDashboard = lazy(() => import('../modules/ReferralDashboard'));
 const Settings = lazy(() => import('../modules/Settings'));
 const MyFinancialData = lazy(() => import('../modules/MyFinancialData'));
+const Optimizer401k = lazy(() => import('../modules/Optimizer401k'));
 
 function ModuleLoader() {
   return (
@@ -450,6 +451,13 @@ export default function Dashboard() {
               <ErrorBoundary moduleName="market-pulse">
                 <Suspense fallback={<ModuleLoader />}>
                   <MarketPulse />
+                </Suspense>
+              </ErrorBoundary>
+            </Route>
+            <Route path="/dashboard/401k-optimizer">
+              <ErrorBoundary moduleName="401k-optimizer">
+                <Suspense fallback={<ModuleLoader />}>
+                  <Optimizer401k />
                 </Suspense>
               </ErrorBoundary>
             </Route>
