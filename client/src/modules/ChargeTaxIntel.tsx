@@ -573,7 +573,7 @@ export default function ChargeTaxIntel() {
             <div className={styles.projectionSection}>
               <div className={styles.projectionHeader}>
                 <h3>📊 {new Date().getFullYear()} Tax Projection</h3>
-                <span className={styles.projectionSubtitle}>Based on your {taxProjection.payFrequency} paystub</span>
+                <span className={styles.projectionSubtitle}>Based on your {taxProjection.payFrequency?.charAt(0).toUpperCase()}{taxProjection.payFrequency?.slice(1)} paystub</span>
               </div>
               
               <div className={styles.projectionGrid}>
@@ -582,7 +582,7 @@ export default function ChargeTaxIntel() {
                   <span className={styles.projectionValue}>{formatCurrency(taxProjection.projections.annualGross)}</span>
                 </div>
                 <div className={styles.projectionCard}>
-                  <span className={styles.projectionLabel}>Pre-Tax Deductions (401k, HSA)</span>
+                  <span className={styles.projectionLabel}>Pre-Tax Deductions (401(k), HSA)</span>
                   <span className={styles.projectionValue}>-{formatCurrency(taxProjection.projections.preTaxDeductions)}</span>
                 </div>
                 <div className={styles.projectionCard}>
@@ -824,8 +824,8 @@ export default function ChargeTaxIntel() {
                     <div className={styles.chatEmpty}>
                       <p>Have questions about these recommendations?</p>
                       <div className={styles.chatSuggestions}>
-                        <button onClick={() => setChatInput("Explain the 401k recommendation")}>
-                          Explain 401k recommendation
+                        <button onClick={() => setChatInput("Explain the 401(k) recommendation")}>
+                          Explain 401(k) recommendation
                         </button>
                         <button onClick={() => setChatInput("How do I adjust my W-4?")}>
                           How do I adjust my W-4?

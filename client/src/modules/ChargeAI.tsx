@@ -291,7 +291,7 @@ export default function ChargeAI() {
   };
 
   const starterQuestions = [
-    "How much will I save if I max out my 401k this year?",
+    "How much will I save if I max out my 401(k) this year?",
     "What's my current tax situation and biggest opportunities?",
     "Help me build my financial profile step by step",
     "What should I focus on first given my situation?",
