@@ -392,7 +392,24 @@ export function extractPaystubDataFromText(text: string): ExtractedPaystubData {
     /Vision[:\s]*\$?([\d,]+(?:\.\d{2})?)/i,
   ]);
   
-  const employerMatch = text.match(/(?:Company|Employer)[:\s]*(.+?)(?:\n|$)/i);
+  // Employer name extraction - more specific patterns and validation
+  let employerName: string | null = null;
+  const employerPatterns = [
+    /(?:Company|Employer)\s*(?:Name)?[:\s]+([A-Za-z][A-Za-z\s&,.'-]+?)(?:\n|$)/i,
+    /(?:Pay\s*(?:from|by)|Paid\s*by)[:\s]+([A-Za-z][A-Za-z\s&,.'-]+?)(?:\n|$)/i,
+  ];
+  for (const pattern of employerPatterns) {
+    const match = text.match(pattern);
+    if (match && match[1]) {
+      const name = match[1].trim();
+      // Validate: must have letters, not just numbers/symbols
+      if (/[A-Za-z]{2,}/.test(name) && !/^\d+(?:\.\d+)?$/.test(name)) {
+        employerName = name;
+        break;
+      }
+    }
+  }
+  
   const payDateMatch = text.match(/Pay\s*Date[:\s]*(\d{1,2}[\/\-]\d{1,2}[\/\-]\d{2,4})/i);
   const periodMatch = text.match(/Pay\s*Period[:\s]*(\d{1,2}[\/\-]\d{1,2}[\/\-]\d{2,4})\s*(?:to|[-–])\s*(\d{1,2}[\/\-]\d{1,2}[\/\-]\d{2,4})/i);
   
@@ -412,7 +429,7 @@ export function extractPaystubDataFromText(text: string): ExtractedPaystubData {
   if (healthInsurance) extractedLines['Health Insurance'] = healthInsurance;
   
   return {
-    employerName: employerMatch ? employerMatch[1].trim() : null,
+    employerName,
     payPeriodStart: periodMatch ? periodMatch[1] : null,
     payPeriodEnd: periodMatch ? periodMatch[2] : null,
     payDate: payDateMatch ? payDateMatch[1] : null,

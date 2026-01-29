@@ -203,6 +203,85 @@ export function registerTaxIntelRoutes(app: Express, isAuthenticated: RequestHan
           if (documentType === 'paystub') {
             extractedData = extractPaystubDataFromText(rawText);
             console.log('Paystub extraction result:', extractedData);
+            
+            // If regex extraction failed to get key fields, use AI extraction
+            const hasKeyFields = extractedData.grossPay || extractedData.netPay || extractedData.federalWithheld;
+            if (!hasKeyFields && rawText.length > 100) {
+              console.log('Regex extraction incomplete, trying AI extraction...');
+              try {
+                const aiExtractionResponse = await fetchApi(`${process.env.AI_INTEGRATIONS_OPENAI_BASE_URL}/chat/completions`, {
+                  method: 'POST',
+                  headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${process.env.AI_INTEGRATIONS_OPENAI_API_KEY}`,
+                  },
+                  body: JSON.stringify({
+                    model: 'gpt-4o-mini',
+                    messages: [
+                      { 
+                        role: 'system', 
+                        content: `Extract paystub data from the text. Return ONLY valid JSON with these fields (use null if not found):
+{
+  "grossPay": number or null,
+  "netPay": number or null,
+  "federalWithheld": number or null,
+  "stateWithheld": number or null,
+  "socialSecurityWithheld": number or null,
+  "medicareWithheld": number or null,
+  "retirement401k": number or null,
+  "hsaContribution": number or null,
+  "healthInsurance": number or null,
+  "payDate": "MM/DD/YYYY" or null,
+  "employerName": string or null
+}
+Only return the JSON object, no other text.`
+                      },
+                      { role: 'user', content: `Extract paystub data:\n\n${rawText.substring(0, 4000)}` }
+                    ],
+                    max_completion_tokens: 500,
+                  }),
+                });
+                
+                if (aiExtractionResponse.ok) {
+                  const aiResult = await aiExtractionResponse.json();
+                  const aiContent = aiResult.choices?.[0]?.message?.content || '';
+                  const jsonMatch = aiContent.match(/\{[\s\S]*\}/);
+                  if (jsonMatch) {
+                    const aiData = JSON.parse(jsonMatch[0]);
+                    console.log('AI extraction result:', aiData);
+                    // Merge AI data with regex data (prefer AI values if regex found nothing)
+                    extractedData = {
+                      ...extractedData,
+                      grossPay: extractedData.grossPay || aiData.grossPay,
+                      netPay: extractedData.netPay || aiData.netPay,
+                      federalWithheld: extractedData.federalWithheld || aiData.federalWithheld,
+                      stateWithheld: extractedData.stateWithheld || aiData.stateWithheld,
+                      socialSecurityWithheld: extractedData.socialSecurityWithheld || aiData.socialSecurityWithheld,
+                      medicareWithheld: extractedData.medicareWithheld || aiData.medicareWithheld,
+                      retirement401k: extractedData.retirement401k || aiData.retirement401k,
+                      hsaContribution: extractedData.hsaContribution || aiData.hsaContribution,
+                      healthInsurance: extractedData.healthInsurance || aiData.healthInsurance,
+                      payDate: extractedData.payDate || aiData.payDate,
+                      employerName: extractedData.employerName || aiData.employerName,
+                      extractedLines: {
+                        ...extractedData.extractedLines,
+                        ...(aiData.grossPay && { 'Gross Pay (AI)': aiData.grossPay }),
+                        ...(aiData.netPay && { 'Net Pay (AI)': aiData.netPay }),
+                        ...(aiData.federalWithheld && { 'Federal Tax (AI)': aiData.federalWithheld }),
+                      }
+                    };
+                    extractedData.preTaxDeductions = {
+                      retirement401k: extractedData.retirement401k || 0,
+                      hsa: extractedData.hsaContribution || 0,
+                      fsa: extractedData.fsaContribution || 0,
+                      health: extractedData.healthInsurance || 0,
+                    };
+                  }
+                }
+              } catch (aiErr) {
+                console.error('AI extraction failed:', aiErr);
+              }
+            }
           } else if (documentType === 'w2') {
             extractedData = extractW2DataFromText(rawText);
             console.log('W-2 extraction result:', extractedData);
