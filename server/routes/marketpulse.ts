@@ -71,15 +71,30 @@ async function fetchQuote(symbol: string): Promise<QuoteResult | null> {
 }
 
 async function fetchGainersLosers(): Promise<{ gainers: any[]; losers: any[] }> {
+  const fetchScreener = async (scrIds: string): Promise<any[]> => {
+    try {
+      const result = await yahooFinance.screener(
+        { scrIds, count: 10 },
+        { validateResult: false }
+      );
+      return (result as any)?.quotes || [];
+    } catch (error: any) {
+      if (error?.result?.quotes) {
+        console.log(`[Market Pulse] Using partial data for ${scrIds}`);
+        return error.result.quotes;
+      }
+      console.error(`Failed to fetch ${scrIds}:`, error?.message || error);
+      return [];
+    }
+  };
+
   try {
-    const [gainersResult, losersResult] = await Promise.all([
-      yahooFinance.screener({ scrIds: "day_gainers", count: 5 }),
-      yahooFinance.screener({ scrIds: "day_losers", count: 5 }),
+    const [gainers, losers] = await Promise.all([
+      fetchScreener("day_gainers"),
+      fetchScreener("day_losers"),
     ]);
-    return {
-      gainers: (gainersResult as any).quotes || [],
-      losers: (losersResult as any).quotes || [],
-    };
+    console.log(`[Market Pulse] Fetched ${gainers.length} gainers, ${losers.length} losers`);
+    return { gainers, losers };
   } catch (error) {
     console.error("Failed to fetch gainers/losers:", error);
     return { gainers: [], losers: [] };
