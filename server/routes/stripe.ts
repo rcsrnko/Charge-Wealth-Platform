@@ -73,11 +73,12 @@ export function registerStripeRoutes(app: Express, isAuthenticated: RequestHandl
       const sessionParams: any = {
         payment_method_types: ['card'],
         mode: 'payment',
-        success_url: `${baseUrl}/dashboard?payment=success&plan=${planType}${referralCode ? `&ref=${referralCode}` : ''}`,
+        success_url: `${baseUrl}/api/stripe/payment-callback?session_id={CHECKOUT_SESSION_ID}`,
         cancel_url: `${baseUrl}/?payment=cancelled`,
         allow_promotion_codes: !hasReferralDiscount,
         metadata: {
           planType: planType || 'lifetime',
+          email: email || '',
           referralCode: referralCode || '',
           referrerId: referrer?.id || '',
         },
@@ -99,10 +100,166 @@ export function registerStripeRoutes(app: Express, isAuthenticated: RequestHandl
       }
 
       const session = await stripe.checkout.sessions.create(sessionParams);
-      res.json({ url: session.url, hasReferralDiscount, finalPrice: finalAmount / 100 });
+      res.json({ url: session.url, sessionId: session.id, hasReferralDiscount, finalPrice: finalAmount / 100 });
     } catch (error) {
       console.error("Checkout error:", error);
       res.status(500).json({ message: "Failed to create checkout session" });
+    }
+  });
+
+  // Payment callback - verifies payment and grants access
+  app.get('/api/stripe/payment-callback', async (req: any, res) => {
+    try {
+      const { session_id } = req.query;
+      
+      if (!session_id || typeof session_id !== 'string') {
+        return res.redirect('/dashboard?payment=error&reason=no_session');
+      }
+      
+      const stripe = await getUncachableStripeClient();
+      const session = await stripe.checkout.sessions.retrieve(session_id);
+      
+      if (session.payment_status !== 'paid') {
+        return res.redirect('/dashboard?payment=failed');
+      }
+      
+      const customerEmail = session.customer_email || session.metadata?.email;
+      const planType = session.metadata?.planType || 'lifetime';
+      const referralCode = session.metadata?.referralCode;
+      const referrerId = session.metadata?.referrerId;
+      
+      if (!customerEmail) {
+        console.error('No email found in Stripe session:', session_id);
+        return res.redirect('/dashboard?payment=error&reason=no_email');
+      }
+      
+      // Find or create user by email
+      let user = await storage.getUserByEmail(customerEmail);
+      
+      if (!user) {
+        const userId = `stripe-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+        user = await storage.upsertUser({
+          id: userId,
+          email: customerEmail,
+          firstName: '',
+          lastName: '',
+        });
+      }
+      
+      // Calculate subscription end date based on plan type
+      let subscriptionEndDate: Date | null = null;
+      if (planType === 'monthly') {
+        subscriptionEndDate = new Date();
+        subscriptionEndDate.setMonth(subscriptionEndDate.getMonth() + 1);
+      } else if (planType === 'quarterly') {
+        subscriptionEndDate = new Date();
+        subscriptionEndDate.setMonth(subscriptionEndDate.getMonth() + 3);
+      } else if (planType === 'biannual') {
+        subscriptionEndDate = new Date();
+        subscriptionEndDate.setMonth(subscriptionEndDate.getMonth() + 6);
+      }
+      // lifetime has no end date
+      
+      // Update user subscription
+      await storage.updateUserSubscription(user.id, {
+        subscriptionStatus: 'active',
+        subscriptionType: planType,
+        stripeCustomerId: typeof session.customer === 'string' ? session.customer : null,
+        subscriptionStartDate: new Date(),
+        subscriptionEndDate,
+      });
+      
+      console.log(`Subscription granted: ${customerEmail} -> ${planType}`);
+      
+      // Handle referral
+      if (referralCode && referrerId) {
+        try {
+          await storage.completeReferral(referralCode, user.id, 30);
+        } catch (e) {
+          console.log('Referral completion skipped:', e);
+        }
+      }
+      
+      // If user is already logged in, redirect directly
+      if (req.isAuthenticated && req.isAuthenticated()) {
+        return res.redirect('/dashboard?payment=success');
+      }
+      
+      // Auto-login the user
+      const sessionUser = {
+        claims: { sub: user.id },
+        expires_at: Math.floor(Date.now() / 1000) + 86400 * 30
+      };
+      
+      req.login(sessionUser, (err: any) => {
+        if (err) {
+          console.error('Auto-login after payment failed:', err);
+          return res.redirect('/dashboard?payment=success&login=pending');
+        }
+        res.redirect('/dashboard?payment=success');
+      });
+    } catch (error) {
+      console.error('Payment callback error:', error);
+      res.redirect('/dashboard?payment=error');
+    }
+  });
+
+  // Verify payment for authenticated users (fallback if webhook fails)
+  app.post('/api/stripe/verify-payment', isAuthenticated, async (req: any, res) => {
+    try {
+      const userId = req.user.claims.sub;
+      const user = await storage.getUser(userId);
+      
+      if (!user || !user.email) {
+        return res.status(400).json({ success: false, message: 'User email not found' });
+      }
+      
+      const stripe = await getUncachableStripeClient();
+      
+      // Find recent successful checkout sessions for this email
+      const sessions = await stripe.checkout.sessions.list({
+        limit: 10,
+        expand: ['data.line_items'],
+      });
+      
+      const userSession = sessions.data.find(s => 
+        s.payment_status === 'paid' && 
+        (s.customer_email === user.email || s.metadata?.email === user.email)
+      );
+      
+      if (!userSession) {
+        return res.json({ success: false, message: 'No recent payment found' });
+      }
+      
+      const planType = userSession.metadata?.planType || 'lifetime';
+      
+      // Calculate subscription end date
+      let subscriptionEndDate: Date | null = null;
+      if (planType === 'monthly') {
+        subscriptionEndDate = new Date();
+        subscriptionEndDate.setMonth(subscriptionEndDate.getMonth() + 1);
+      } else if (planType === 'quarterly') {
+        subscriptionEndDate = new Date();
+        subscriptionEndDate.setMonth(subscriptionEndDate.getMonth() + 3);
+      } else if (planType === 'biannual') {
+        subscriptionEndDate = new Date();
+        subscriptionEndDate.setMonth(subscriptionEndDate.getMonth() + 6);
+      }
+      
+      await storage.updateUserSubscription(userId, {
+        subscriptionStatus: 'active',
+        subscriptionType: planType,
+        stripeCustomerId: typeof userSession.customer === 'string' ? userSession.customer : null,
+        subscriptionStartDate: new Date(),
+        subscriptionEndDate,
+      });
+      
+      console.log(`Payment verified for ${user.email}: ${planType}`);
+      
+      res.json({ success: true, planType });
+    } catch (error) {
+      console.error('Verify payment error:', error);
+      res.status(500).json({ success: false, message: 'Failed to verify payment' });
     }
   });
   
