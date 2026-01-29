@@ -48,13 +48,50 @@ interface ProactiveAnalysis {
   };
 }
 
+interface MyFinancialData {
+  profile: {
+    annualIncome: number | null;
+    incomeType: string | null;
+    filingStatus: string | null;
+    stateOfResidence: string | null;
+    dependents: number | null;
+    primaryGoal: string | null;
+    riskTolerance: string | null;
+  } | null;
+  portfolio: {
+    totalValue: number;
+    positionCount: number;
+    positions: Array<{ symbol: string; shares: number; currentValue: number }>;
+  };
+  tax: {
+    year: number;
+    agi: number | null;
+    totalTax: number | null;
+    filingStatus: string | null;
+  } | null;
+  liquidity: {
+    monthlyExpenses: number | null;
+    currentCash: number | null;
+    targetReserveMonths: number | null;
+  } | null;
+  documents: Array<{
+    id: number;
+    type: string;
+    fileName: string;
+    status: string;
+    uploadedAt: string;
+  }>;
+}
+
 export default function ChargeAI() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [showMemoPanel, setShowMemoPanel] = useState(false);
+  const [showDataPanel, setShowDataPanel] = useState(false);
   const [savedMemos, setSavedMemos] = useState<PlanningMemo[]>([]);
   const [contextSummary, setContextSummary] = useState<ContextData | null>(null);
+  const [myData, setMyData] = useState<MyFinancialData | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   
   const [proactiveAnalysis, setProactiveAnalysis] = useState<ProactiveAnalysis | null>(null);
@@ -65,6 +102,8 @@ export default function ChargeAI() {
     loadContext();
     loadMemos();
     loadProactiveAnalysis();
+    loadChatHistory();
+    loadMyData();
   }, []);
 
   useEffect(() => {
@@ -112,6 +151,68 @@ export default function ChargeAI() {
     }
   };
 
+  const loadChatHistory = async () => {
+    try {
+      const response = await fetchWithAuth('/api/charge-ai/history');
+      if (response.ok) {
+        const data = await response.json();
+        if (data.messages && data.messages.length > 0) {
+          setMessages(data.messages.map((m: any) => ({
+            ...m,
+            timestamp: new Date(m.timestamp)
+          })));
+          setShowProactivePanel(false); // Hide proactive panel if there's chat history
+        }
+      }
+    } catch (err) {
+      console.error('Failed to load chat history:', err);
+    }
+  };
+
+  const saveChatHistory = async (msgs: Message[]) => {
+    try {
+      await fetchWithAuth('/api/charge-ai/history', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ messages: msgs }),
+      });
+    } catch (err) {
+      console.error('Failed to save chat history:', err);
+    }
+  };
+
+  const clearChatHistory = async () => {
+    try {
+      await fetchWithAuth('/api/charge-ai/history', { method: 'DELETE' });
+      setMessages([]);
+      setShowProactivePanel(true);
+    } catch (err) {
+      console.error('Failed to clear chat history:', err);
+    }
+  };
+
+  const loadMyData = async () => {
+    try {
+      const response = await fetchWithAuth('/api/charge-ai/my-data');
+      if (response.ok) {
+        const data = await response.json();
+        setMyData(data);
+      }
+    } catch (err) {
+      console.error('Failed to load financial data:', err);
+    }
+  };
+
+  const formatCurrency = (value: number | null) => {
+    if (value == null) return '—';
+    return new Intl.NumberFormat('en-US', {
+      style: 'currency',
+      currency: 'USD',
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 0,
+    }).format(value);
+  };
+
   const sendMessage = async () => {
     if (!input.trim() || isLoading) return;
 
@@ -146,14 +247,19 @@ export default function ChargeAI() {
         citations: data.citations,
       };
 
-      setMessages(prev => [...prev, assistantMessage]);
+      const newMessages = [...messages, userMessage, assistantMessage];
+      setMessages(newMessages);
+      saveChatHistory(newMessages); // Persist to database
     } catch (err) {
       console.error('Chat error:', err);
-      setMessages(prev => [...prev, {
+      const errorMessage: Message = {
         role: 'assistant',
         content: 'I encountered an issue processing your request. Please try again.',
         timestamp: new Date(),
-      }]);
+      };
+      const newMessages = [...messages, userMessage, errorMessage];
+      setMessages(newMessages);
+      saveChatHistory(newMessages);
     } finally {
       setIsLoading(false);
     }
@@ -229,7 +335,18 @@ export default function ChargeAI() {
             )}
             <button 
               className={styles.contextButton}
-              onClick={() => setShowMemoPanel(!showMemoPanel)}
+              onClick={() => { setShowDataPanel(!showDataPanel); setShowMemoPanel(false); }}
+            >
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+                <polyline points="3.27 6.96 12 12.01 20.73 6.96"/>
+                <line x1="12" y1="22.08" x2="12" y2="12"/>
+              </svg>
+              {showDataPanel ? 'Hide' : 'My Data'}
+            </button>
+            <button 
+              className={styles.contextButton}
+              onClick={() => { setShowMemoPanel(!showMemoPanel); setShowDataPanel(false); }}
             >
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>
@@ -237,6 +354,18 @@ export default function ChargeAI() {
               </svg>
               {showMemoPanel ? 'Hide' : 'Memos'}
             </button>
+            {messages.length > 0 && (
+              <button 
+                className={styles.clearButton}
+                onClick={clearChatHistory}
+                title="Clear chat history"
+              >
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75">
+                  <polyline points="3 6 5 6 21 6"/>
+                  <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+                </svg>
+              </button>
+            )}
           </div>
         </div>
 
@@ -529,6 +658,143 @@ export default function ChargeAI() {
               ))}
             </div>
           )}
+        </div>
+      )}
+
+      {showDataPanel && (
+        <div className={styles.dataPanel}>
+          <h3 className={styles.dataPanelTitle}>My Financial Data</h3>
+          <p className={styles.dataPanelSubtitle}>What the AI knows about you</p>
+          
+          {myData ? (
+            <div className={styles.dataList}>
+              {/* Profile Section */}
+              {myData.profile && (
+                <div className={styles.dataSection}>
+                  <h4 className={styles.dataSectionTitle}>📋 Profile</h4>
+                  <div className={styles.dataGrid}>
+                    {myData.profile.annualIncome && (
+                      <div className={styles.dataItem}>
+                        <span className={styles.dataLabel}>Income</span>
+                        <span className={styles.dataValue}>{formatCurrency(myData.profile.annualIncome)}</span>
+                      </div>
+                    )}
+                    {myData.profile.filingStatus && (
+                      <div className={styles.dataItem}>
+                        <span className={styles.dataLabel}>Filing Status</span>
+                        <span className={styles.dataValue}>{myData.profile.filingStatus.replace('_', ' ')}</span>
+                      </div>
+                    )}
+                    {myData.profile.stateOfResidence && (
+                      <div className={styles.dataItem}>
+                        <span className={styles.dataLabel}>State</span>
+                        <span className={styles.dataValue}>{myData.profile.stateOfResidence}</span>
+                      </div>
+                    )}
+                    {myData.profile.primaryGoal && (
+                      <div className={styles.dataItem}>
+                        <span className={styles.dataLabel}>Goal</span>
+                        <span className={styles.dataValue}>{myData.profile.primaryGoal}</span>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              )}
+
+              {/* Tax Section */}
+              {myData.tax && (
+                <div className={styles.dataSection}>
+                  <h4 className={styles.dataSectionTitle}>💰 Tax ({myData.tax.year})</h4>
+                  <div className={styles.dataGrid}>
+                    {myData.tax.agi && (
+                      <div className={styles.dataItem}>
+                        <span className={styles.dataLabel}>AGI</span>
+                        <span className={styles.dataValue}>{formatCurrency(myData.tax.agi)}</span>
+                      </div>
+                    )}
+                    {myData.tax.totalTax && (
+                      <div className={styles.dataItem}>
+                        <span className={styles.dataLabel}>Federal Tax</span>
+                        <span className={styles.dataValue}>{formatCurrency(myData.tax.totalTax)}</span>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              )}
+
+              {/* Portfolio Section */}
+              {myData.portfolio && myData.portfolio.totalValue > 0 && (
+                <div className={styles.dataSection}>
+                  <h4 className={styles.dataSectionTitle}>📈 Portfolio</h4>
+                  <div className={styles.dataGrid}>
+                    <div className={styles.dataItem}>
+                      <span className={styles.dataLabel}>Total Value</span>
+                      <span className={styles.dataValue}>{formatCurrency(myData.portfolio.totalValue)}</span>
+                    </div>
+                    <div className={styles.dataItem}>
+                      <span className={styles.dataLabel}>Positions</span>
+                      <span className={styles.dataValue}>{myData.portfolio.positionCount}</span>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* Liquidity Section */}
+              {myData.liquidity && (
+                <div className={styles.dataSection}>
+                  <h4 className={styles.dataSectionTitle}>💵 Cash Flow</h4>
+                  <div className={styles.dataGrid}>
+                    {myData.liquidity.monthlyExpenses && (
+                      <div className={styles.dataItem}>
+                        <span className={styles.dataLabel}>Monthly Expenses</span>
+                        <span className={styles.dataValue}>{formatCurrency(myData.liquidity.monthlyExpenses)}</span>
+                      </div>
+                    )}
+                    {myData.liquidity.currentCash && (
+                      <div className={styles.dataItem}>
+                        <span className={styles.dataLabel}>Cash on Hand</span>
+                        <span className={styles.dataValue}>{formatCurrency(myData.liquidity.currentCash)}</span>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              )}
+
+              {/* Documents Section */}
+              {myData.documents && myData.documents.length > 0 && (
+                <div className={styles.dataSection}>
+                  <h4 className={styles.dataSectionTitle}>📄 Documents</h4>
+                  <div className={styles.documentList}>
+                    {myData.documents.map((doc) => (
+                      <div key={doc.id} className={styles.documentItem}>
+                        <span className={styles.documentName}>{doc.fileName}</span>
+                        <span className={`${styles.documentStatus} ${styles[doc.status]}`}>
+                          {doc.status === 'completed' ? '✓' : doc.status === 'processing' ? '...' : '✗'}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {!myData.profile && !myData.tax && (!myData.portfolio || myData.portfolio.totalValue === 0) && (
+                <div className={styles.dataEmpty}>
+                  <p>No financial data yet. Complete onboarding or upload documents to get personalized insights.</p>
+                </div>
+              )}
+            </div>
+          ) : (
+            <div className={styles.dataEmpty}>
+              <p>Loading your financial data...</p>
+            </div>
+          )}
+          
+          <button 
+            className={styles.editDataButton}
+            onClick={() => window.location.href = '/dashboard?showOnboarding=true'}
+          >
+            Edit Profile
+          </button>
         </div>
       )}
     </div>

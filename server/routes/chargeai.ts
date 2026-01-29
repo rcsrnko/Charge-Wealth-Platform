@@ -5,6 +5,10 @@ import { aiLimiter, expensiveLimiter } from "../middleware/rateLimit";
 
 const fetchApi = globalThis.fetch;
 
+// Simple in-memory cache for proactive analysis (24h TTL)
+const proactiveAnalysisCache = new Map<string, { analysis: any; generatedAt: number }>();
+const CACHE_TTL_MS = 24 * 60 * 60 * 1000; // 24 hours
+
 export function registerChargeAIRoutes(app: Express, isAuthenticated: RequestHandler) {
   app.get('/api/charge-ai/context', isAuthenticated, async (req: any, res) => {
     try {
@@ -226,9 +230,140 @@ Format the output as JSON with these fields: title, summary, keyFindings (array)
     }
   });
 
+  // Get chat history
+  app.get('/api/charge-ai/history', isAuthenticated, async (req: any, res) => {
+    try {
+      const userId = req.user.claims.sub;
+      const session = await storage.getChatSession(userId);
+      
+      if (session) {
+        res.json({ 
+          messages: session.messages || [],
+          sessionId: session.id,
+          lastUpdated: session.updatedAt
+        });
+      } else {
+        res.json({ messages: [], sessionId: null });
+      }
+    } catch (error) {
+      console.error("Error fetching chat history:", error);
+      res.status(500).json({ message: "Failed to fetch chat history" });
+    }
+  });
+
+  // Save chat history
+  app.post('/api/charge-ai/history', isAuthenticated, async (req: any, res) => {
+    try {
+      const userId = req.user.claims.sub;
+      const { messages } = req.body;
+      
+      const existingSession = await storage.getChatSession(userId);
+      
+      if (existingSession) {
+        await storage.updateChatSession(existingSession.id, messages);
+      } else {
+        await storage.createChatSession({ userId, messages });
+      }
+      
+      res.json({ success: true });
+    } catch (error) {
+      console.error("Error saving chat history:", error);
+      res.status(500).json({ message: "Failed to save chat history" });
+    }
+  });
+
+  // Clear chat history
+  app.delete('/api/charge-ai/history', isAuthenticated, async (req: any, res) => {
+    try {
+      const userId = req.user.claims.sub;
+      const existingSession = await storage.getChatSession(userId);
+      
+      if (existingSession) {
+        await storage.updateChatSession(existingSession.id, []);
+      }
+      
+      res.json({ success: true });
+    } catch (error) {
+      console.error("Error clearing chat history:", error);
+      res.status(500).json({ message: "Failed to clear chat history" });
+    }
+  });
+
+  // Get consolidated financial data (for "My Financial Data" panel)
+  app.get('/api/charge-ai/my-data', isAuthenticated, async (req: any, res) => {
+    try {
+      const userId = req.user.claims.sub;
+      
+      const [profile, positions, taxReturns, liquidity, documents] = await Promise.all([
+        storage.getFinancialProfile(userId),
+        storage.getPortfolioPositions(userId),
+        storage.getTaxReturns(userId),
+        storage.getLiquidityProfile(userId),
+        storage.getFinancialDocuments(userId)
+      ]);
+      
+      const portfolioValue = positions?.reduce((sum, p) => sum + (parseFloat(String(p.currentValue)) || 0), 0) || 0;
+      
+      res.json({
+        profile: profile ? {
+          annualIncome: profile.annualIncome ? Number(profile.annualIncome) : null,
+          incomeType: profile.incomeType,
+          filingStatus: profile.filingStatus,
+          stateOfResidence: profile.stateOfResidence,
+          dependents: profile.dependents,
+          primaryGoal: profile.primaryGoal,
+          riskTolerance: profile.riskTolerance,
+        } : null,
+        portfolio: {
+          totalValue: portfolioValue,
+          positionCount: positions?.length || 0,
+          positions: positions?.map(p => ({
+            symbol: p.symbol,
+            shares: p.shares,
+            currentValue: p.currentValue,
+          })) || []
+        },
+        tax: taxReturns?.[0] ? {
+          year: taxReturns[0].taxYear,
+          agi: taxReturns[0].agi ? Number(taxReturns[0].agi) : null,
+          totalTax: taxReturns[0].totalFederalTax ? Number(taxReturns[0].totalFederalTax) : null,
+          filingStatus: taxReturns[0].filingStatus,
+        } : null,
+        liquidity: liquidity ? {
+          monthlyExpenses: liquidity.monthlyEssentialExpenses ? Number(liquidity.monthlyEssentialExpenses) : null,
+          currentCash: liquidity.currentCash ? Number(liquidity.currentCash) : null,
+          targetReserveMonths: liquidity.targetReserveMonths,
+        } : null,
+        documents: documents?.map(d => ({
+          id: d.id,
+          type: d.documentType,
+          fileName: d.fileName,
+          status: d.extractionStatus,
+          uploadedAt: d.uploadedAt,
+        })) || [],
+        lastUpdated: new Date().toISOString()
+      });
+    } catch (error) {
+      console.error("Error fetching financial data:", error);
+      res.status(500).json({ message: "Failed to fetch financial data" });
+    }
+  });
+
   app.get('/api/charge-ai/proactive-analysis', expensiveLimiter, isAuthenticated, async (req: any, res) => {
     try {
       const userId = req.user.claims.sub;
+      const forceRefresh = req.query.refresh === 'true';
+      
+      // Check cache first (unless force refresh)
+      const cached = proactiveAnalysisCache.get(userId);
+      if (cached && !forceRefresh && (Date.now() - cached.generatedAt < CACHE_TTL_MS)) {
+        return res.json({
+          hasAnalysis: true,
+          analysis: cached.analysis,
+          generatedAt: new Date(cached.generatedAt).toISOString(),
+          cached: true
+        });
+      }
       
       const [profile, positions, taxReturns, liquidity] = await Promise.all([
         storage.getFinancialProfile(userId),
@@ -330,15 +465,31 @@ RULES:
         analysis = null;
       }
 
+      // Cache the result
+      if (analysis) {
+        proactiveAnalysisCache.set(userId, {
+          analysis,
+          generatedAt: Date.now()
+        });
+      }
+
       res.json({ 
         hasAnalysis: !!analysis, 
         analysis,
-        generatedAt: new Date().toISOString()
+        generatedAt: new Date().toISOString(),
+        cached: false
       });
     } catch (error) {
       console.error("Error generating proactive analysis:", error);
       res.status(500).json({ message: "Failed to generate analysis" });
     }
+  });
+
+  // Invalidate cache when user updates their data
+  app.post('/api/charge-ai/invalidate-cache', isAuthenticated, async (req: any, res) => {
+    const userId = req.user.claims.sub;
+    proactiveAnalysisCache.delete(userId);
+    res.json({ success: true });
   });
 
   app.post('/api/charge-ai/generate-recap', expensiveLimiter, isAuthenticated, async (req: any, res) => {

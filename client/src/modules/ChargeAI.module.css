@@ -1525,3 +1525,161 @@
     font-size: 0.9375rem;
   }
 }
+
+/* Clear Chat Button */
+.clearButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  background: rgba(239, 68, 68, 0.1);
+  border: 1px solid rgba(239, 68, 68, 0.2);
+  border-radius: 8px;
+  color: #ef4444;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.clearButton:hover {
+  background: rgba(239, 68, 68, 0.2);
+  border-color: rgba(239, 68, 68, 0.4);
+}
+
+/* My Financial Data Panel */
+.dataPanel {
+  width: 320px;
+  background: var(--deep-navy);
+  border-left: 1px solid var(--border);
+  padding: 1.5rem;
+  overflow-y: auto;
+  flex-shrink: 0;
+}
+
+.dataPanelTitle {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--porcelain);
+  margin: 0 0 0.25rem 0;
+}
+
+.dataPanelSubtitle {
+  font-size: 0.85rem;
+  color: var(--muted-gray);
+  margin: 0 0 1.5rem 0;
+}
+
+.dataList {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.dataSection {
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 1rem;
+}
+
+.dataSectionTitle {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--soft-gold);
+  margin: 0 0 0.75rem 0;
+}
+
+.dataGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem;
+}
+
+.dataItem {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.dataLabel {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--muted-gray);
+}
+
+.dataValue {
+  font-size: 0.9rem;
+  color: var(--porcelain);
+  font-weight: 500;
+}
+
+.documentList {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.documentItem {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.documentItem:last-child {
+  border-bottom: none;
+}
+
+.documentName {
+  font-size: 0.85rem;
+  color: var(--porcelain);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  flex: 1;
+}
+
+.documentStatus {
+  font-size: 0.8rem;
+  margin-left: 0.5rem;
+}
+
+.documentStatus.completed {
+  color: #10b981;
+}
+
+.documentStatus.processing {
+  color: var(--soft-gold);
+}
+
+.documentStatus.failed {
+  color: #ef4444;
+}
+
+.dataEmpty {
+  text-align: center;
+  padding: 2rem 1rem;
+  color: var(--muted-gray);
+  font-size: 0.9rem;
+}
+
+.editDataButton {
+  width: 100%;
+  margin-top: 1.5rem;
+  padding: 0.75rem 1rem;
+  background: transparent;
+  border: 1px solid var(--soft-gold);
+  border-radius: 8px;
+  color: var(--soft-gold);
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.editDataButton:hover {
+  background: rgba(212, 175, 55, 0.1);
+}
