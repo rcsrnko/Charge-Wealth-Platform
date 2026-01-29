@@ -132,7 +132,7 @@ export default function MyFinancialData() {
               <h2>Profile</h2>
               <button 
                 className={styles.editButton}
-                onClick={() => window.location.href = '/dashboard?showOnboarding=true'}
+                onClick={() => window.location.href = '/dashboard?editProfile=true'}
               >
                 Edit
               </button>
@@ -156,7 +156,7 @@ export default function MyFinancialData() {
               </div>
               <div className={styles.dataRow}>
                 <span className={styles.label}>Primary Goal</span>
-                <span className={styles.value}>{data?.profile?.primaryGoal || '—'}</span>
+                <span className={styles.value}>{formatFilingStatus(data?.profile?.primaryGoal ?? null)}</span>
               </div>
               <div className={styles.dataRow}>
                 <span className={styles.label}>Risk Tolerance</span>
@@ -207,6 +207,12 @@ export default function MyFinancialData() {
             <div className={styles.cardHeader}>
               <span className={styles.cardIcon}>📈</span>
               <h2>Portfolio</h2>
+              <button 
+                className={styles.editButton}
+                onClick={() => window.location.href = '/dashboard?editProfile=true'}
+              >
+                Add
+              </button>
             </div>
             <div className={styles.cardContent}>
               {data?.portfolio && data.portfolio.totalValue > 0 ? (
@@ -249,6 +255,12 @@ export default function MyFinancialData() {
             <div className={styles.cardHeader}>
               <span className={styles.cardIcon}>💵</span>
               <h2>Cash Flow</h2>
+              <button 
+                className={styles.editButton}
+                onClick={() => window.location.href = '/dashboard?editProfile=true'}
+              >
+                Add
+              </button>
             </div>
             <div className={styles.cardContent}>
               {data?.liquidity ? (

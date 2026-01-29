@@ -123,10 +123,15 @@ export default function Dashboard() {
   }, []);
 
   useEffect(() => {
-    // Check if we should show onboarding from URL param
+    // Check if we should show onboarding or profile editor from URL param
     const params = new URLSearchParams(window.location.search);
     if (params.get('showOnboarding') === 'true') {
       setShowOnboarding(true);
+      // Clean up URL without page reload
+      window.history.replaceState({}, '', '/dashboard');
+    }
+    if (params.get('editProfile') === 'true') {
+      setShowProfileEditor(true);
       // Clean up URL without page reload
       window.history.replaceState({}, '', '/dashboard');
     }

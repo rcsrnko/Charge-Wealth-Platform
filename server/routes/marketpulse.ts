@@ -1,5 +1,7 @@
 import type { Express, RequestHandler } from "express";
-import yahooFinance from "yahoo-finance2";
+import { YahooFinance } from "yahoo-finance2";
+
+const yahooFinance = new YahooFinance();
 
 interface MarketData {
   indices: Array<{
