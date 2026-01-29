@@ -94,6 +94,7 @@ export interface IStorage {
   getFinancialDocuments(userId: string): Promise<FinancialDocument[]>;
   createFinancialDocument(document: any): Promise<FinancialDocument>;
   updateFinancialDocument(id: number, updates: any): Promise<FinancialDocument | undefined>;
+  deleteFinancialDocument(id: number, userId: string): Promise<boolean>;
   getPortfolioPositions(userId: string): Promise<PortfolioPosition[]>;
   createPortfolioPosition(position: any): Promise<PortfolioPosition>;
   
@@ -416,6 +417,13 @@ export class DatabaseStorage implements IStorage {
       .where(eq(financialDocuments.id, id))
       .returning();
     return document;
+  }
+  
+  async deleteFinancialDocument(id: number, userId: string): Promise<boolean> {
+    const result = await db
+      .delete(financialDocuments)
+      .where(and(eq(financialDocuments.id, id), eq(financialDocuments.userId, userId)));
+    return (result.rowCount ?? 0) > 0;
   }
   
   async getPortfolioPositions(userId: string): Promise<PortfolioPosition[]> {

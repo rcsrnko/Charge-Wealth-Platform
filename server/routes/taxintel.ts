@@ -152,6 +152,28 @@ export function registerTaxIntelRoutes(app: Express, isAuthenticated: RequestHan
     }
   });
 
+  app.delete('/api/tax-intel/documents/:id', isAuthenticated, async (req: any, res) => {
+    try {
+      const userId = req.user.claims.sub;
+      const documentId = parseInt(req.params.id);
+      
+      if (isNaN(documentId)) {
+        return res.status(400).json({ message: "Invalid document ID" });
+      }
+      
+      const deleted = await storage.deleteFinancialDocument(documentId, userId);
+      
+      if (deleted) {
+        res.json({ success: true, message: "Document deleted" });
+      } else {
+        res.status(404).json({ message: "Document not found or already deleted" });
+      }
+    } catch (error) {
+      console.error("Error deleting document:", error);
+      res.status(500).json({ message: "Failed to delete document" });
+    }
+  });
+
   app.post('/api/tax-intel/upload', isAuthenticated, upload.single('file'), async (req: any, res) => {
     try {
       const userId = req.user.claims.sub;
