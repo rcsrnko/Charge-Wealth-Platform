@@ -510,6 +510,47 @@ export default function ChargeTaxIntel() {
             )}
           </div>
 
+          {/* Inline Upload Section */}
+          <div className={styles.inlineUploadSection}>
+            <div className={styles.inlineUploadContent}>
+              <div className={styles.inlineUploadInfo}>
+                <span className={styles.inlineUploadIcon}>📄</span>
+                <span>Upload another document to refine your recommendations</span>
+              </div>
+              <div className={styles.inlineUploadControls}>
+                <div className={styles.inlineDocTypeToggle}>
+                  {DOCUMENT_TYPES.map((docType) => (
+                    <button
+                      key={docType.id}
+                      className={`${styles.inlineDocTypeBtn} ${selectedDocType === docType.id ? styles.active : ''}`}
+                      onClick={() => setSelectedDocType(docType.id)}
+                    >
+                      {docType.icon} {docType.name}
+                    </button>
+                  ))}
+                </div>
+                <label className={styles.inlineUploadBtn}>
+                  <input 
+                    type="file" 
+                    accept=".pdf"
+                    onChange={handleFileChange}
+                    style={{ display: 'none' }}
+                  />
+                  {file ? file.name : `Upload ${getDocTypeLabel(selectedDocType)}`}
+                </label>
+                {file && (
+                  <button 
+                    className={styles.inlineAnalyzeBtn}
+                    onClick={uploadAndAnalyze}
+                    disabled={isUploading}
+                  >
+                    {isUploading ? 'Analyzing...' : 'Analyze'}
+                  </button>
+                )}
+              </div>
+            </div>
+          </div>
+
           <div className={styles.resultsLayout}>
             {/* Left side: Recommendations */}
             <div className={styles.recommendationsColumn}>

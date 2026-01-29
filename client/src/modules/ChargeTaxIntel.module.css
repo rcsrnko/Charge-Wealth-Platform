@@ -2377,3 +2377,118 @@
   font-size: 0.8rem;
   color: var(--soft-gold);
 }
+
+/* Inline Upload Section (when results are showing) */
+.inlineUploadSection {
+  background: linear-gradient(135deg, rgba(212, 175, 55, 0.08) 0%, rgba(212, 175, 55, 0.02) 100%);
+  border: 1px solid rgba(212, 175, 55, 0.2);
+  border-radius: 12px;
+  padding: 1rem 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.inlineUploadContent {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.inlineUploadInfo {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  color: var(--muted-gray);
+  font-size: 0.9rem;
+}
+
+.inlineUploadIcon {
+  font-size: 1.25rem;
+}
+
+.inlineUploadControls {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.inlineDocTypeToggle {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.inlineDocTypeBtn {
+  padding: 0.5rem 0.75rem;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  color: var(--muted-gray);
+  font-size: 0.8rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.inlineDocTypeBtn:hover {
+  border-color: var(--soft-gold);
+  color: var(--porcelain);
+}
+
+.inlineDocTypeBtn.active {
+  background: rgba(212, 175, 55, 0.15);
+  border-color: var(--soft-gold);
+  color: var(--soft-gold);
+}
+
+.inlineUploadBtn {
+  padding: 0.5rem 1rem;
+  background: transparent;
+  border: 1px dashed var(--soft-gold);
+  border-radius: 6px;
+  color: var(--soft-gold);
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  max-width: 200px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.inlineUploadBtn:hover {
+  background: rgba(212, 175, 55, 0.1);
+}
+
+.inlineAnalyzeBtn {
+  padding: 0.5rem 1rem;
+  background: var(--soft-gold);
+  border: none;
+  border-radius: 6px;
+  color: var(--deep-navy);
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.inlineAnalyzeBtn:hover:not(:disabled) {
+  background: #c9a832;
+}
+
+.inlineAnalyzeBtn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+@media (max-width: 768px) {
+  .inlineUploadContent {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .inlineUploadControls {
+    width: 100%;
+    justify-content: flex-start;
+  }
+}
