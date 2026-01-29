@@ -75,18 +75,6 @@ interface TaxMetrics {
   summaryRecommendation?: string;
 }
 
-interface Scenario {
-  id: number;
-  name: string;
-  type: string;
-  inputs: any;
-  results?: {
-    newTax: number;
-    taxDelta: number;
-    effectiveRate: number;
-  };
-}
-
 interface TaxDeadline {
   date: string;
   title: string;
@@ -123,9 +111,6 @@ function OptimizationItem({
   index: number; 
   formatCurrency: (n: number) => string;
 }) {
-  // Default to expanded so users see everything immediately
-  const [expanded, setExpanded] = useState(true);
-  
   const priorityColors: Record<string, string> = {
     high: '#10b981',
     medium: '#f59e0b',
@@ -133,41 +118,41 @@ function OptimizationItem({
   };
   
   return (
-    <div className={styles.optimizationItem}>
-      <div className={styles.optimizationMain} onClick={() => setExpanded(!expanded)}>
-        <div className={styles.optimizationNumber}>{index + 1}</div>
-        <div className={styles.optimizationContent}>
-          <div className={styles.optimizationAction}>{optimization.action}</div>
-          <div className={styles.optimizationSavings}>
+    <div className={styles.resultCard}>
+      <div className={styles.resultCardHeader}>
+        <div className={styles.resultCardNumber}>{index + 1}</div>
+        <div className={styles.resultCardTitle}>
+          <h4>{optimization.action}</h4>
+          <span className={styles.resultCardSavings}>
             Save <strong>{formatCurrency(optimization.taxSavingsPerYear)}</strong>/year
-          </div>
+          </span>
         </div>
         <div 
-          className={styles.priorityDot}
+          className={styles.priorityIndicator}
           style={{ backgroundColor: priorityColors[optimization.priority] || '#6b7280' }}
-          title={`${optimization.priority} priority`}
-        />
-        <button className={styles.expandBtn}>
-          {expanded ? '−' : '+'}
-        </button>
+        >
+          {optimization.priority}
+        </div>
       </div>
       
-      {expanded && (
-        <div className={styles.optimizationExpanded}>
-          <div className={styles.optDetail}>
-            <span className={styles.optLabel}>Current:</span>
-            <span>{formatCurrency(optimization.currentAmount)}/paycheck</span>
+      <div className={styles.resultCardBody}>
+        <div className={styles.resultCardAmounts}>
+          <div className={styles.amountItem}>
+            <span className={styles.amountLabel}>Current</span>
+            <span className={styles.amountValue}>{formatCurrency(optimization.currentAmount)}/paycheck</span>
           </div>
-          <div className={styles.optDetail}>
-            <span className={styles.optLabel}>Suggested:</span>
-            <span className={styles.optSuggested}>{formatCurrency(optimization.suggestedAmount)}/paycheck</span>
-          </div>
-          <div className={styles.howToFix}>
-            <strong>How to fix:</strong>
-            <p>{optimization.howToFix}</p>
+          <div className={styles.amountArrow}>→</div>
+          <div className={styles.amountItem}>
+            <span className={styles.amountLabel}>Suggested</span>
+            <span className={styles.amountValueHighlight}>{formatCurrency(optimization.suggestedAmount)}/paycheck</span>
           </div>
         </div>
-      )}
+        
+        <div className={styles.howToFixSection}>
+          <h5>How to fix this:</h5>
+          <p>{optimization.howToFix}</p>
+        </div>
+      </div>
     </div>
   );
 }
@@ -178,18 +163,13 @@ export default function ChargeTaxIntel() {
   const [selectedDocType, setSelectedDocType] = useState<string>('paystub');
   const [isUploading, setIsUploading] = useState(false);
   const [taxData, setTaxData] = useState<TaxMetrics | null>(null);
-  const [scenarios, setScenarios] = useState<Scenario[]>([]);
-  const [showScenarioBuilder, setShowScenarioBuilder] = useState(false);
-  const [activeScenario, setActiveScenario] = useState<string>('');
-  const [scenarioInputs, setScenarioInputs] = useState<any>({});
-  const [isCalculating, setIsCalculating] = useState(false);
   const [uploadedDocs, setUploadedDocs] = useState<UploadedDocument[]>([]);
   const [chatMessages, setChatMessages] = useState<ChatMessage[]>([]);
   const [chatInput, setChatInput] = useState('');
   const [isSendingMessage, setIsSendingMessage] = useState(false);
   const [chatExpanded, setChatExpanded] = useState(false);
-  const [expandedInsight, setExpandedInsight] = useState<number | null>(null);
   const chatEndRef = useRef<HTMLDivElement>(null);
+  const resultsRef = useRef<HTMLDivElement>(null);
 
   const taxDeadlines: TaxDeadline[] = [
     {
@@ -224,7 +204,6 @@ export default function ChargeTaxIntel() {
 
   useEffect(() => {
     loadTaxData();
-    loadScenarios();
     loadUploadedDocs();
   }, []);
 
@@ -245,18 +224,6 @@ export default function ChargeTaxIntel() {
       }
     } catch (err) {
       console.error('Failed to load tax data:', err);
-    }
-  };
-
-  const loadScenarios = async () => {
-    try {
-      const response = await fetchWithAuth('/api/tax-intel/scenarios');
-      if (response.ok) {
-        const data = await response.json();
-        setScenarios(data.scenarios || []);
-      }
-    } catch (err) {
-      console.error('Failed to load scenarios:', err);
     }
   };
 
@@ -334,6 +301,11 @@ export default function ChargeTaxIntel() {
         } else {
           showSuccess('Analysis complete! Your paycheck optimization recommendations are ready.');
         }
+        
+        // Scroll to results after a short delay
+        setTimeout(() => {
+          resultsRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }, 300);
       } else {
         // Even if analysis fails, try to show extracted data
         showError('AI analysis failed, but your data was extracted. Try refreshing.');
@@ -412,34 +384,6 @@ export default function ChargeTaxIntel() {
     return docType ? docType.name : type;
   };
 
-  const runScenario = async () => {
-    if (!activeScenario) return;
-
-    setIsCalculating(true);
-    try {
-      const response = await fetchWithAuth('/api/tax-intel/run-scenario', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          scenarioType: activeScenario,
-          inputs: scenarioInputs,
-        }),
-      });
-
-      if (response.ok) {
-        const data = await response.json();
-        setScenarios(prev => [data.scenario, ...prev]);
-        setShowScenarioBuilder(false);
-        setActiveScenario('');
-        setScenarioInputs({});
-      }
-    } catch (err) {
-      console.error('Scenario error:', err);
-    } finally {
-      setIsCalculating(false);
-    }
-  };
-
   const formatCurrency = (value: number | null | undefined) => {
     if (value == null) return '—';
     return new Intl.NumberFormat('en-US', {
@@ -454,13 +398,6 @@ export default function ChargeTaxIntel() {
     if (value == null) return '—';
     return `${value.toFixed(1)}%`;
   };
-
-  const scenarioTypes = [
-    { id: 'gain_realization', name: 'Realize Gains', icon: '📈', description: 'See tax on selling positions' },
-    { id: 'charitable_giving', name: 'Charitable Gift', icon: '🎁', description: 'Calculate donation deduction' },
-    { id: 'retirement_contribution', name: 'Boost 401k/IRA', icon: '💰', description: 'See tax savings from contributions' },
-    { id: 'roth_conversion', name: 'Roth Conversion', icon: '🔄', description: 'Model conversion tax impact' },
-  ];
 
   return (
     <div className={styles.container}>
@@ -732,414 +669,219 @@ export default function ChargeTaxIntel() {
       </div>
 
       {taxData && (
-        <div className={styles.dashboard}>
-          <div className={styles.taxSummary}>
-            <div className={styles.summaryMain}>
-              <div className={styles.summaryCard}>
-                <span className={styles.summaryLabel}>You Paid</span>
-                <span className={styles.summaryValue}>{formatCurrency(taxData.totalFederalTax)}</span>
-                <span className={styles.summarySubtext}>in federal taxes</span>
-              </div>
-              <div className={styles.summaryCard}>
-                <span className={styles.summaryLabel}>Effective Rate</span>
-                <span className={styles.summaryValue}>{formatPercent(taxData.effectiveTaxRate)}</span>
-                <span className={styles.summarySubtext}>of total income</span>
-              </div>
-              <div className={styles.summaryCard}>
-                <span className={styles.summaryLabel}>Next Dollar Rate</span>
-                <span className={styles.summaryValue}>{formatPercent(taxData.marginalTaxBracket)}</span>
-                <span className={styles.summarySubtext}>marginal bracket</span>
-              </div>
+        <div className={styles.resultsPage} ref={resultsRef}>
+          {/* Hero Savings Banner */}
+          <div className={styles.savingsHero}>
+            <div className={styles.savingsHeroContent}>
+              <span className={styles.savingsHeroLabel}>You could save</span>
+              <span className={styles.savingsHeroAmount}>
+                {formatCurrency(taxData.totalExtraPerYear || taxData.totalPotentialSavings || 0)}
+              </span>
+              <span className={styles.savingsHeroLabel}>per year</span>
             </div>
-
-            {taxData.incomeBreakdown && (
-              <div className={styles.incomeBreakdown}>
-                <h4>Income Sources</h4>
-                <div className={styles.breakdownBars}>
-                  {(taxData.incomeBreakdown.wages ?? 0) > 0 && (
-                    <div className={styles.breakdownItem}>
-                      <span>Wages</span>
-                      <span>{formatCurrency(taxData.incomeBreakdown.wages)}</span>
-                    </div>
-                  )}
-                  {(taxData.incomeBreakdown.capitalGains ?? 0) > 0 && (
-                    <div className={styles.breakdownItem}>
-                      <span>Capital Gains</span>
-                      <span>{formatCurrency(taxData.incomeBreakdown.capitalGains)}</span>
-                    </div>
-                  )}
-                  {(taxData.incomeBreakdown.dividends ?? 0) > 0 && (
-                    <div className={styles.breakdownItem}>
-                      <span>Dividends</span>
-                      <span>{formatCurrency(taxData.incomeBreakdown.dividends)}</span>
-                    </div>
-                  )}
-                  {(taxData.incomeBreakdown.business ?? 0) > 0 && (
-                    <div className={styles.breakdownItem}>
-                      <span>Business Income</span>
-                      <span>{formatCurrency(taxData.incomeBreakdown.business)}</span>
-                    </div>
-                  )}
-                </div>
-              </div>
+            {taxData.summaryText && (
+              <p className={styles.savingsHeroSummary}>{taxData.summaryText}</p>
             )}
           </div>
 
-          <div className={styles.twoColumn}>
-            <div className={styles.insightsSection}>
-              <h3 className={styles.sectionTitle}>Money Opportunities</h3>
-              <p className={styles.sectionSubtitle}>Actions ranked by potential savings</p>
+          <div className={styles.resultsLayout}>
+            {/* Left side: Recommendations */}
+            <div className={styles.recommendationsColumn}>
+              <h2 className={styles.recommendationsTitle}>Your Action Plan</h2>
+              <p className={styles.recommendationsSubtitle}>Here's exactly what to do, ranked by impact</p>
               
-              {taxData.insights && taxData.insights.length > 0 ? (
-                <div className={styles.insightsList}>
+              {/* Optimizations from paystub analysis */}
+              {taxData.optimizations && taxData.optimizations.length > 0 && (
+                <div className={styles.resultsList}>
+                  {taxData.optimizations.map((opt, i) => (
+                    <OptimizationItem key={i} optimization={opt} index={i} formatCurrency={formatCurrency} />
+                  ))}
+                </div>
+              )}
+
+              {/* Insights (general tax insights) */}
+              {taxData.insights && taxData.insights.length > 0 && (
+                <div className={styles.resultsList}>
                   {taxData.insights.map((insight, i) => (
-                    <div 
-                      key={i} 
-                      className={`${styles.insightCard} ${styles[insight.severity]} ${expandedInsight === i ? styles.expanded : ''}`}
-                    >
-                      <div className={styles.insightContent}>
-                        <h4>{insight.title}</h4>
-                        <p>{insight.description}</p>
-                        {expandedInsight === i && (
-                          <div className={styles.insightDetails}>
-                            {insight.action && (
-                              <div className={styles.insightDetailItem}>
-                                <strong>Recommended Action:</strong>
-                                <p>{insight.action}</p>
-                              </div>
-                            )}
-                            <div className={styles.insightDetailItem}>
-                              <strong>Next Steps:</strong>
-                              <p>Review this opportunity with your financial advisor or take action directly through your employer's benefits portal.</p>
-                            </div>
+                    <div key={i} className={styles.resultCard}>
+                      <div className={styles.resultCardHeader}>
+                        <div className={styles.resultCardNumber}>{(taxData.optimizations?.length || 0) + i + 1}</div>
+                        <div className={styles.resultCardTitle}>
+                          <h4>{insight.title}</h4>
+                          {insight.potentialImpact && insight.potentialImpact > 0 && (
+                            <span className={styles.resultCardSavings}>
+                              Save <strong>{formatCurrency(insight.potentialImpact)}</strong>/year
+                            </span>
+                          )}
+                        </div>
+                      </div>
+                      <div className={styles.resultCardBody}>
+                        <p className={styles.insightDescription}>{insight.description}</p>
+                        {insight.action && (
+                          <div className={styles.howToFixSection}>
+                            <h5>How to fix this:</h5>
+                            <p>{insight.action}</p>
                           </div>
                         )}
                       </div>
-                      <div className={styles.insightAction}>
-                        {insight.potentialImpact && (
-                          <span className={styles.insightImpact}>
-                            Save {formatCurrency(insight.potentialImpact)}
-                          </span>
-                        )}
-                        <button 
-                          className={styles.insightCta}
-                          onClick={() => setExpandedInsight(expandedInsight === i ? null : i)}
+                    </div>
+                  ))}
+                </div>
+              )}
+
+              {/* Tax Strategies (from 1040/W2 analysis) */}
+              {taxData.taxStrategies && taxData.taxStrategies.length > 0 && (
+                <div className={styles.resultsList}>
+                  {taxData.taxStrategies.map((strategy, i) => (
+                    <div key={i} className={styles.resultCard}>
+                      <div className={styles.resultCardHeader}>
+                        <div className={styles.resultCardNumber}>
+                          {(taxData.optimizations?.length || 0) + (taxData.insights?.length || 0) + i + 1}
+                        </div>
+                        <div className={styles.resultCardTitle}>
+                          <h4>{strategy.strategy}</h4>
+                          {strategy.potentialSavings > 0 && (
+                            <span className={styles.resultCardSavings}>
+                              Save <strong>{formatCurrency(strategy.potentialSavings)}</strong>/year
+                            </span>
+                          )}
+                        </div>
+                        <div 
+                          className={styles.priorityIndicator}
+                          style={{ 
+                            backgroundColor: strategy.priority === 'high' ? '#10b981' : 
+                                            strategy.priority === 'medium' ? '#f59e0b' : '#6b7280'
+                          }}
                         >
-                          {expandedInsight === i ? 'Hide Details' : 'See Strategy'}
+                          {strategy.priority}
+                        </div>
+                      </div>
+                      <div className={styles.resultCardBody}>
+                        <div className={styles.strategyInfo}>
+                          <div className={styles.strategyInfoItem}>
+                            <strong>Current Situation:</strong>
+                            <p>{strategy.currentSituation}</p>
+                          </div>
+                          <div className={styles.strategyInfoItem}>
+                            <strong>Recommendation:</strong>
+                            <p>{strategy.recommendation}</p>
+                          </div>
+                        </div>
+                        <div className={styles.howToFixSection}>
+                          <h5>How to implement:</h5>
+                          <p>{strategy.howToImplement}</p>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+
+              {/* Empty state */}
+              {(!taxData.optimizations || taxData.optimizations.length === 0) && 
+               (!taxData.insights || taxData.insights.length === 0) && 
+               (!taxData.taxStrategies || taxData.taxStrategies.length === 0) && (
+                <div className={styles.noResults}>
+                  <p>No specific recommendations found. Try uploading a clearer document.</p>
+                </div>
+              )}
+            </div>
+
+            {/* Right side: Chat */}
+            <div className={styles.chatColumn}>
+              <div className={`${styles.resultsChat} ${chatExpanded ? styles.chatExpanded : ''}`}>
+                <div className={styles.chatHeader}>
+                  <div className={styles.chatHeaderContent}>
+                    <h3>
+                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+                      </svg>
+                      Tax Assistant
+                    </h3>
+                    <p>Ask questions about your taxes</p>
+                  </div>
+                  <button 
+                    className={styles.chatExpandButton}
+                    onClick={() => setChatExpanded(!chatExpanded)}
+                  >
+                    {chatExpanded ? 'Minimize' : 'Expand'}
+                  </button>
+                </div>
+                
+                <div className={styles.chatMessages}>
+                  {chatMessages.length === 0 ? (
+                    <div className={styles.chatEmpty}>
+                      <p>Have questions about these recommendations?</p>
+                      <div className={styles.chatSuggestions}>
+                        <button onClick={() => setChatInput("Explain the 401k recommendation")}>
+                          Explain 401k recommendation
+                        </button>
+                        <button onClick={() => setChatInput("How do I adjust my W-4?")}>
+                          How do I adjust my W-4?
+                        </button>
+                        <button onClick={() => setChatInput("What's an HSA and should I use one?")}>
+                          What's an HSA?
                         </button>
                       </div>
                     </div>
-                  ))}
-                </div>
-              ) : (
-                <div className={styles.noInsights}>
-                  <p>We're analyzing your return for optimization opportunities...</p>
-                </div>
-              )}
-            </div>
-
-            <div className={styles.calendarSection}>
-              <h3 className={styles.sectionTitle}>Tax Timing Calendar</h3>
-              <p className={styles.sectionSubtitle}>Upcoming deadlines & decision windows</p>
-              <div className={styles.deadlinesList}>
-                {taxDeadlines.map((deadline, i) => (
-                  <div key={i} className={`${styles.deadlineCard} ${styles[deadline.urgency]}`}>
-                    <div className={styles.deadlineDate}>{deadline.date}</div>
-                    <div className={styles.deadlineInfo}>
-                      <h4>{deadline.title}</h4>
-                      <span className={styles.deadlineImpact}>{deadline.impact}</span>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-
-          {/* Tax Strategies Section */}
-          {taxData.taxStrategies && taxData.taxStrategies.length > 0 && (
-            <div className={styles.strategiesSection}>
-              <div className={styles.strategiesHeader}>
-                <h3 className={styles.sectionTitle}>
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                    <path d="M12 2L2 7l10 5 10-5-10-5z"/>
-                    <path d="M2 17l10 5 10-5"/>
-                    <path d="M2 12l10 5 10-5"/>
-                  </svg>
-                  Your Tax-Saving Playbook
-                </h3>
-                {taxData.totalPotentialSavings && taxData.totalPotentialSavings > 0 && (
-                  <div className={styles.totalSavings}>
-                    <span className={styles.savingsLabel}>Total Potential Savings</span>
-                    <span className={styles.savingsValue}>{formatCurrency(taxData.totalPotentialSavings)}</span>
-                  </div>
-                )}
-              </div>
-              
-              {taxData.summaryRecommendation && (
-                <div className={styles.summaryBox}>
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                    <circle cx="12" cy="12" r="10"/>
-                    <path d="M12 16v-4"/>
-                    <path d="M12 8h.01"/>
-                  </svg>
-                  <p>{taxData.summaryRecommendation}</p>
-                </div>
-              )}
-              
-              <div className={styles.strategiesList}>
-                {taxData.taxStrategies.map((strategy, i) => (
-                  <div 
-                    key={i} 
-                    className={`${styles.strategyCard} ${styles[strategy.priority]}`}
-                  >
-                    <div className={styles.strategyHeader}>
-                      <span className={`${styles.priorityBadge} ${styles[strategy.priority]}`}>
-                        {strategy.priority === 'high' ? 'High Impact' : 
-                         strategy.priority === 'medium' ? 'Medium Impact' : 'Consider'}
-                      </span>
-                      {strategy.potentialSavings > 0 && (
-                        <span className={styles.strategySavings}>
-                          Save {formatCurrency(strategy.potentialSavings)}
-                        </span>
-                      )}
-                    </div>
-                    
-                    <h4 className={styles.strategyTitle}>{strategy.strategy}</h4>
-                    
-                    <div className={styles.strategyDetails}>
-                      <div className={styles.strategySection}>
-                        <strong>Current Situation:</strong>
-                        <p>{strategy.currentSituation}</p>
-                      </div>
-                      
-                      <div className={styles.strategySection}>
-                        <strong>Recommendation:</strong>
-                        <p>{strategy.recommendation}</p>
-                      </div>
-                      
-                      <div className={styles.strategySection}>
-                        <strong>How to Implement:</strong>
-                        <p>{strategy.howToImplement}</p>
+                  ) : (
+                    <>
+                      {chatMessages.map((msg, i) => (
+                        <div key={i} className={`${styles.chatMessage} ${styles[msg.role]}`}>
+                          <div className={styles.chatMessageContent}>{msg.content}</div>
+                        </div>
+                      ))}
+                      <div ref={chatEndRef} />
+                    </>
+                  )}
+                  {isSendingMessage && (
+                    <div className={`${styles.chatMessage} ${styles.assistant}`}>
+                      <div className={styles.chatMessageContent}>
+                        <span className={styles.typingIndicator}>Thinking...</span>
                       </div>
                     </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
-
-          {/* Paycheck Optimization Checklist */}
-          {taxData.optimizations && taxData.optimizations.length > 0 && (
-            <div className={styles.optimizationSection}>
-              <div className={styles.optimizationHeader}>
-                <h3 className={styles.sectionTitle}>
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                    <path d="M9 12l2 2 4-4"/>
-                    <rect x="3" y="3" width="18" height="18" rx="2"/>
-                  </svg>
-                  Your Paycheck Optimization Checklist
-                </h3>
-                {(taxData.totalExtraPerYear || 0) > 0 && (
-                  <div className={styles.totalSavingsHero}>
-                    <span className={styles.heroLabel}>Keep an extra</span>
-                    <span className={styles.heroAmount}>{formatCurrency(taxData.totalExtraPerYear || 0)}</span>
-                    <span className={styles.heroLabel}>per year</span>
-                  </div>
-                )}
-              </div>
-              
-              {taxData.summaryText && (
-                <div className={styles.summaryCallout}>
-                  <p>{taxData.summaryText}</p>
+                  )}
                 </div>
-              )}
-              
-              <div className={styles.optimizationList}>
-                {taxData.optimizations.map((opt, i) => (
-                  <OptimizationItem key={i} optimization={opt} index={i} formatCurrency={formatCurrency} />
-                ))}
-              </div>
-            </div>
-          )}
-
-          <div className={styles.scenarioSection}>
-            <div className={styles.scenarioHeader}>
-              <div>
-                <h3 className={styles.sectionTitle}>What-If Calculator</h3>
-                <p className={styles.sectionSubtitle}>Model decisions before you make them</p>
-              </div>
-              {!showScenarioBuilder && (
-                <button 
-                  className={styles.newScenarioButton}
-                  onClick={() => setShowScenarioBuilder(true)}
-                >
-                  + Run New Scenario
-                </button>
-              )}
-            </div>
-
-            {showScenarioBuilder && (
-              <div className={styles.scenarioBuilder}>
-                <div className={styles.scenarioTypes}>
-                  {scenarioTypes.map((type) => (
-                    <button
-                      key={type.id}
-                      className={`${styles.scenarioType} ${activeScenario === type.id ? styles.active : ''}`}
-                      onClick={() => setActiveScenario(type.id)}
-                    >
-                      <span className={styles.scenarioIcon}>{type.icon}</span>
-                      <div className={styles.scenarioTypeText}>
-                        <span className={styles.scenarioTypeName}>{type.name}</span>
-                        <span className={styles.scenarioTypeDesc}>{type.description}</span>
-                      </div>
-                    </button>
-                  ))}
-                </div>
-
-                {activeScenario === 'gain_realization' && (
-                  <div className={styles.scenarioInputs}>
-                    <label>
-                      Gain Amount
-                      <input 
-                        type="number"
-                        placeholder="50000"
-                        value={scenarioInputs.gainAmount || ''}
-                        onChange={(e) => setScenarioInputs({...scenarioInputs, gainAmount: e.target.value})}
-                      />
-                    </label>
-                    <label>
-                      Holding Period
-                      <select 
-                        value={scenarioInputs.holdingPeriod || ''}
-                        onChange={(e) => setScenarioInputs({...scenarioInputs, holdingPeriod: e.target.value})}
-                      >
-                        <option value="">Select...</option>
-                        <option value="short">Short-term (&lt; 1 year)</option>
-                        <option value="long">Long-term (&gt; 1 year)</option>
-                      </select>
-                    </label>
-                  </div>
-                )}
-
-                {activeScenario === 'charitable_giving' && (
-                  <div className={styles.scenarioInputs}>
-                    <label>
-                      Donation Amount
-                      <input 
-                        type="number"
-                        placeholder="10000"
-                        value={scenarioInputs.donationAmount || ''}
-                        onChange={(e) => setScenarioInputs({...scenarioInputs, donationAmount: e.target.value})}
-                      />
-                    </label>
-                    <label>
-                      Donation Type
-                      <select 
-                        value={scenarioInputs.donationType || ''}
-                        onChange={(e) => setScenarioInputs({...scenarioInputs, donationType: e.target.value})}
-                      >
-                        <option value="">Select...</option>
-                        <option value="cash">Cash</option>
-                        <option value="appreciated_stock">Appreciated Stock</option>
-                        <option value="daf">Donor-Advised Fund</option>
-                      </select>
-                    </label>
-                  </div>
-                )}
-
-                {activeScenario === 'retirement_contribution' && (
-                  <div className={styles.scenarioInputs}>
-                    <label>
-                      Contribution Amount
-                      <input 
-                        type="number"
-                        placeholder="23000"
-                        value={scenarioInputs.contributionAmount || ''}
-                        onChange={(e) => setScenarioInputs({...scenarioInputs, contributionAmount: e.target.value})}
-                      />
-                    </label>
-                    <label>
-                      Account Type
-                      <select 
-                        value={scenarioInputs.accountType || ''}
-                        onChange={(e) => setScenarioInputs({...scenarioInputs, accountType: e.target.value})}
-                      >
-                        <option value="">Select...</option>
-                        <option value="401k">Traditional 401(k)</option>
-                        <option value="ira">Traditional IRA</option>
-                        <option value="roth_401k">Roth 401(k)</option>
-                        <option value="roth_ira">Roth IRA</option>
-                      </select>
-                    </label>
-                  </div>
-                )}
-
-                {activeScenario === 'roth_conversion' && (
-                  <div className={styles.scenarioInputs}>
-                    <label>
-                      Conversion Amount
-                      <input 
-                        type="number"
-                        placeholder="50000"
-                        value={scenarioInputs.conversionAmount || ''}
-                        onChange={(e) => setScenarioInputs({...scenarioInputs, conversionAmount: e.target.value})}
-                      />
-                    </label>
-                  </div>
-                )}
-
-                <div className={styles.scenarioActions}>
+                
+                <div className={styles.chatInputArea}>
+                  <input
+                    type="text"
+                    value={chatInput}
+                    onChange={(e) => setChatInput(e.target.value)}
+                    onKeyPress={handleChatKeyPress}
+                    placeholder="Ask about your taxes..."
+                    className={styles.chatInput}
+                    disabled={isSendingMessage}
+                  />
                   <button 
-                    className={styles.cancelButton}
-                    onClick={() => {
-                      setShowScenarioBuilder(false);
-                      setActiveScenario('');
-                      setScenarioInputs({});
-                    }}
+                    className={styles.chatSendButton}
+                    onClick={sendChatMessage}
+                    disabled={!chatInput.trim() || isSendingMessage}
                   >
-                    Cancel
-                  </button>
-                  <button 
-                    className={styles.runButton}
-                    onClick={runScenario}
-                    disabled={!activeScenario || isCalculating}
-                  >
-                    {isCalculating ? 'Calculating...' : 'Calculate Tax Impact'}
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                      <line x1="22" y1="2" x2="11" y2="13"/>
+                      <polygon points="22 2 15 22 11 13 2 9 22 2"/>
+                    </svg>
                   </button>
                 </div>
               </div>
-            )}
 
-            {scenarios.length > 0 && (
-              <div className={styles.scenarioResults}>
-                <h4 className={styles.resultsTitle}>Your Scenarios</h4>
-                {scenarios.map((scenario) => (
-                  <div key={scenario.id} className={styles.scenarioResult}>
-                    <div className={styles.scenarioResultHeader}>
-                      <span className={styles.scenarioName}>{scenario.name}</span>
-                    </div>
-                    {scenario.results && (
-                      <div className={styles.scenarioMetrics}>
-                        <div className={styles.scenarioMetric}>
-                          <span className={styles.label}>New Tax Bill</span>
-                          <span className={styles.value}>{formatCurrency(scenario.results.newTax)}</span>
-                        </div>
-                        <div className={styles.scenarioMetric}>
-                          <span className={styles.label}>Change</span>
-                          <span className={`${styles.value} ${scenario.results.taxDelta > 0 ? styles.negative : styles.positive}`}>
-                            {scenario.results.taxDelta > 0 ? '+' : ''}{formatCurrency(scenario.results.taxDelta)}
-                          </span>
-                        </div>
-                        <div className={styles.scenarioMetric}>
-                          <span className={styles.label}>New Rate</span>
-                          <span className={styles.value}>{formatPercent(scenario.results.effectiveRate)}</span>
-                        </div>
-                      </div>
-                    )}
-                  </div>
-                ))}
+              {/* Quick Stats */}
+              <div className={styles.quickStats}>
+                <div className={styles.quickStat}>
+                  <span className={styles.quickStatLabel}>Effective Rate</span>
+                  <span className={styles.quickStatValue}>{formatPercent(taxData.effectiveTaxRate)}</span>
+                </div>
+                <div className={styles.quickStat}>
+                  <span className={styles.quickStatLabel}>Marginal Bracket</span>
+                  <span className={styles.quickStatValue}>{formatPercent(taxData.marginalTaxBracket)}</span>
+                </div>
+                <div className={styles.quickStat}>
+                  <span className={styles.quickStatLabel}>Federal Tax Paid</span>
+                  <span className={styles.quickStatValue}>{formatCurrency(taxData.totalFederalTax)}</span>
+                </div>
               </div>
-            )}
+            </div>
           </div>
         </div>
       )}

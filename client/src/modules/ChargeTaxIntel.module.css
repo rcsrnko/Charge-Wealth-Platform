@@ -1858,3 +1858,349 @@
     padding-left: 1rem;
   }
 }
+
+/* ===== SIMPLIFIED RESULTS PAGE ===== */
+
+.resultsPage {
+  padding: 0 2rem 3rem;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.savingsHero {
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.15) 0%, rgba(201, 169, 98, 0.1) 100%);
+  border: 1px solid rgba(16, 185, 129, 0.3);
+  border-radius: 16px;
+  padding: 2.5rem;
+  text-align: center;
+  margin-bottom: 2.5rem;
+}
+
+.savingsHeroContent {
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.savingsHeroLabel {
+  font-size: 1.25rem;
+  color: var(--porcelain);
+  font-weight: 400;
+}
+
+.savingsHeroAmount {
+  font-size: 3.5rem;
+  font-weight: 700;
+  color: #10b981;
+  line-height: 1;
+}
+
+.savingsHeroSummary {
+  margin: 1.25rem auto 0;
+  max-width: 600px;
+  color: var(--muted-gray);
+  font-size: 1rem;
+  line-height: 1.6;
+}
+
+.resultsLayout {
+  display: grid;
+  grid-template-columns: 1fr 400px;
+  gap: 2rem;
+  align-items: start;
+}
+
+.recommendationsColumn {
+  min-width: 0;
+}
+
+.recommendationsTitle {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--porcelain);
+  margin: 0 0 0.25rem 0;
+}
+
+.recommendationsSubtitle {
+  font-size: 0.9375rem;
+  color: var(--muted-gray);
+  margin: 0 0 1.5rem 0;
+}
+
+.resultsList {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.resultCard {
+  background: var(--deep-navy);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.resultCardHeader {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1.25rem 1.5rem;
+  background: rgba(255, 255, 255, 0.02);
+  border-bottom: 1px solid var(--border);
+}
+
+.resultCardNumber {
+  width: 36px;
+  height: 36px;
+  background: rgba(201, 169, 98, 0.15);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  color: var(--soft-gold);
+  font-size: 1rem;
+  flex-shrink: 0;
+}
+
+.resultCardTitle {
+  flex: 1;
+  min-width: 0;
+}
+
+.resultCardTitle h4 {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--porcelain);
+}
+
+.resultCardSavings {
+  display: block;
+  font-size: 0.875rem;
+  color: #10b981;
+  margin-top: 0.25rem;
+}
+
+.resultCardSavings strong {
+  font-weight: 700;
+}
+
+.priorityIndicator {
+  padding: 0.25rem 0.75rem;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  color: white;
+  flex-shrink: 0;
+}
+
+.resultCardBody {
+  padding: 1.25rem 1.5rem;
+}
+
+.resultCardAmounts {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
+  padding: 1rem;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 8px;
+}
+
+.amountItem {
+  flex: 1;
+}
+
+.amountLabel {
+  display: block;
+  font-size: 0.75rem;
+  color: var(--muted-gray);
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  margin-bottom: 0.25rem;
+}
+
+.amountValue {
+  font-size: 1rem;
+  color: var(--porcelain);
+}
+
+.amountValueHighlight {
+  font-size: 1rem;
+  color: #10b981;
+  font-weight: 600;
+}
+
+.amountArrow {
+  color: var(--muted-gray);
+  font-size: 1.25rem;
+  flex-shrink: 0;
+}
+
+.howToFixSection {
+  background: rgba(201, 169, 98, 0.08);
+  border-radius: 8px;
+  padding: 1rem 1.25rem;
+}
+
+.howToFixSection h5 {
+  margin: 0 0 0.5rem 0;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--soft-gold);
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.howToFixSection p {
+  margin: 0;
+  font-size: 0.9375rem;
+  color: var(--porcelain);
+  line-height: 1.6;
+}
+
+.insightDescription {
+  color: var(--muted-gray);
+  font-size: 0.9375rem;
+  line-height: 1.6;
+  margin: 0 0 1rem 0;
+}
+
+.strategyInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.strategyInfoItem strong {
+  display: block;
+  color: var(--soft-gold);
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  margin-bottom: 0.25rem;
+}
+
+.strategyInfoItem p {
+  margin: 0;
+  color: var(--porcelain);
+  font-size: 0.9375rem;
+  line-height: 1.5;
+}
+
+.noResults {
+  background: var(--deep-navy);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 2rem;
+  text-align: center;
+  color: var(--muted-gray);
+}
+
+/* Chat Column */
+.chatColumn {
+  position: sticky;
+  top: 1rem;
+}
+
+.resultsChat {
+  background: var(--deep-navy);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  height: 500px;
+  margin-bottom: 1rem;
+}
+
+.resultsChat.chatExpanded {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 90%;
+  max-width: 700px;
+  height: 80vh;
+  z-index: 1000;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+}
+
+.quickStats {
+  background: var(--deep-navy);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.quickStat {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.quickStat:last-child {
+  border-bottom: none;
+}
+
+.quickStatLabel {
+  font-size: 0.875rem;
+  color: var(--muted-gray);
+}
+
+.quickStatValue {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--porcelain);
+}
+
+/* Mobile Responsive */
+@media (max-width: 900px) {
+  .resultsLayout {
+    grid-template-columns: 1fr;
+  }
+  
+  .chatColumn {
+    position: static;
+    order: -1;
+  }
+  
+  .resultsChat {
+    height: 400px;
+  }
+  
+  .savingsHeroAmount {
+    font-size: 2.5rem;
+  }
+  
+  .resultsPage {
+    padding: 0 1rem 2rem;
+  }
+}
+
+@media (max-width: 640px) {
+  .resultCardAmounts {
+    flex-direction: column;
+    gap: 0.75rem;
+    text-align: center;
+  }
+  
+  .amountArrow {
+    transform: rotate(90deg);
+  }
+  
+  .savingsHeroContent {
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+}
