@@ -123,19 +123,18 @@ export function registerAuthRoutes(app: Express, isAuthenticated: RequestHandler
       console.log('[Supabase Sync] Existing user by email:', dbUser?.id, dbUser?.subscriptionStatus);
       
       if (dbUser) {
-        // User exists by email - update their Supabase ID if different
-        if (dbUser.id !== user.id) {
-          // Update the user record to use the Supabase ID while preserving subscription data
+        // User exists by email - use the existing user (don't change ID to avoid FK issues)
+        // Just update name if provided
+        if (firstName || lastName) {
           await db.execute(sql`
             UPDATE users 
-            SET id = ${user.id}, 
-                first_name = COALESCE(NULLIF(${firstName}, ''), first_name),
+            SET first_name = COALESCE(NULLIF(${firstName}, ''), first_name),
                 last_name = COALESCE(NULLIF(${lastName}, ''), last_name),
                 updated_at = NOW()
-            WHERE email = ${user.email}
+            WHERE id = ${dbUser.id}
           `);
-          dbUser = await storage.getUser(user.id);
         }
+        console.log('[Supabase Sync] Using existing user:', dbUser.id, 'subscription:', dbUser.subscriptionStatus);
       } else {
         // Create new user with Supabase ID
         dbUser = await storage.upsertUser({
