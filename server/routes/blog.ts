@@ -119,11 +119,16 @@ export async function registerBlogRoutes(app: Express) {
             --muted-gray: #6B7280;
         }
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body {
+        html, body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-            background: var(--midnight-blue);
+            background: var(--midnight-blue) !important;
+            background-color: var(--midnight-blue) !important;
             color: var(--porcelain);
             line-height: 1.7;
+            min-height: 100%;
+        }
+        main, article {
+            background: var(--midnight-blue) !important;
         }
         header {
             background: rgba(15, 17, 23, 0.95);
