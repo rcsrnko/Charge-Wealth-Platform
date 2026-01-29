@@ -67,6 +67,8 @@ export function registerAuthRoutes(app: Express, isAuthenticated: RequestHandler
     try {
       const { user } = req.body;
       
+      console.log('[Supabase Sync] Incoming user:', user?.id, user?.email);
+      
       if (!user || !user.id || !user.email) {
         return res.status(400).json({ message: 'Invalid user data' });
       }
@@ -77,6 +79,7 @@ export function registerAuthRoutes(app: Express, isAuthenticated: RequestHandler
       
       // First check if a user with this email already exists (may have paid before OAuth)
       let dbUser = await storage.getUserByEmail(user.email);
+      console.log('[Supabase Sync] Existing user by email:', dbUser?.id, dbUser?.subscriptionStatus);
       
       if (dbUser) {
         // User exists by email - update their Supabase ID if different
@@ -195,7 +198,9 @@ export function registerAuthRoutes(app: Express, isAuthenticated: RequestHandler
   app.get('/api/user/membership-status', isAuthenticated, async (req: any, res) => {
     try {
       const userId = req.user.claims.sub;
+      console.log('[Membership Check] User ID:', userId);
       const user = await storage.getUser(userId);
+      console.log('[Membership Check] Found user:', user?.id, user?.email, user?.subscriptionStatus);
       
       if (!user) {
         return res.status(404).json({ message: 'User not found' });
