@@ -410,243 +410,88 @@ export default function ChargeTaxIntel() {
 
       {/* EMPTY STATE - Only show when no tax data */}
       {!taxData && (
-        <div className={styles.uploadSection}>
-          <div className={styles.uploadContent}>
-            <div className={styles.emptyStateHero}>
-              <div className={styles.savingsIllustration}>
-                <svg viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <circle cx="40" cy="40" r="38" stroke="currentColor" strokeWidth="2" opacity="0.3"/>
-                  <circle cx="40" cy="40" r="28" stroke="currentColor" strokeWidth="2" opacity="0.5"/>
-                  <path d="M40 20v40M50 26h-15a7 7 0 100 14h10a7 7 0 110 14H30" stroke="currentColor" strokeWidth="3" strokeLinecap="round"/>
-                  <circle cx="40" cy="40" r="5" fill="currentColor" opacity="0.3"/>
-                </svg>
-              </div>
-              <h2 className={styles.emptyStateTitle}>Unlock Your Tax Savings Potential</h2>
-              <p className={styles.emptyStateSubtitle}>Upload any tax document to see exactly how much you could save</p>
-              
-              <div className={styles.unlockBenefits}>
-                <div className={styles.unlockItem}>
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                    <polyline points="20 6 9 17 4 12"/>
-                  </svg>
-                  <span>Your effective vs marginal tax rate</span>
-                </div>
-                <div className={styles.unlockItem}>
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                    <polyline points="20 6 9 17 4 12"/>
-                  </svg>
-                  <span>Personalized savings opportunities</span>
-                </div>
-                <div className={styles.unlockItem}>
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                    <polyline points="20 6 9 17 4 12"/>
-                  </svg>
-                  <span>Deadline calendar for tax moves</span>
-                </div>
-              </div>
-            </div>
-
-            <div className={styles.docTypeSelector}>
-            <h4>Select Document Type</h4>
-            <div className={styles.docTypeGrid}>
+        <div className={styles.emptyStateContainer}>
+          <div className={styles.singleUploadCard}>
+            <h2 className={styles.uploadCardTitle}>See How Much You Could Save</h2>
+            <p className={styles.uploadCardSubtitle}>Upload a paystub or W-2 to get personalized tax-saving recommendations</p>
+            
+            <div className={styles.docTypeToggle}>
               {DOCUMENT_TYPES.map((docType) => (
                 <button
                   key={docType.id}
-                  className={`${styles.docTypeButton} ${selectedDocType === docType.id ? styles.active : ''}`}
+                  className={`${styles.docTypeTab} ${selectedDocType === docType.id ? styles.active : ''}`}
                   onClick={() => setSelectedDocType(docType.id)}
                 >
-                  <span className={styles.docTypeIcon}>{docType.icon}</span>
-                  <span className={styles.docTypeName}>{docType.name}</span>
-                  <span className={styles.docTypeDesc}>{docType.description}</span>
+                  <span>{docType.icon}</span>
+                  <span>{docType.name}</span>
                 </button>
               ))}
             </div>
-          </div>
-          
-          <div 
-            className={`${styles.dropzone} ${file ? styles.hasFile : ''}`}
-            onDrop={handleDrop}
-            onDragOver={(e) => e.preventDefault()}
-          >
-            {file ? (
-              <div className={styles.filePreview}>
-                <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
-                  <polyline points="14 2 14 8 20 8"/>
-                </svg>
-                <span className={styles.fileName}>{file.name}</span>
-                <span className={styles.fileDocType}>Uploading as: {getDocTypeLabel(selectedDocType)}</span>
-                <button 
-                  className={styles.removeFile}
-                  onClick={() => setFile(null)}
-                >
-                  Remove
-                </button>
-              </div>
-            ) : (
-              <>
-                <div className={styles.uploadIcon}>
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+            
+            <div 
+              className={`${styles.dropzone} ${file ? styles.hasFile : ''}`}
+              onDrop={handleDrop}
+              onDragOver={(e) => e.preventDefault()}
+            >
+              {file ? (
+                <div className={styles.filePreview}>
+                  <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                    <polyline points="14 2 14 8 20 8"/>
+                  </svg>
+                  <span className={styles.fileName}>{file.name}</span>
+                  <button className={styles.removeFile} onClick={() => setFile(null)}>✕</button>
+                </div>
+              ) : (
+                <>
+                  <svg className={styles.uploadIcon} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
                     <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
                     <polyline points="17 8 12 3 7 8"/>
                     <line x1="12" y1="3" x2="12" y2="15"/>
                   </svg>
-                </div>
-                <h3>Upload Your Tax Documents</h3>
-                <p>Drop your {getDocTypeLabel(selectedDocType)} here or click to browse</p>
-                <div className={styles.uploadBenefits}>
-                  <span>1040s</span>
-                  <span>W-2s</span>
-                  <span>1099s</span>
-                  <span>Paystubs</span>
-                </div>
-                <input 
-                  type="file" 
-                  accept=".pdf"
-                  onChange={handleFileChange}
-                  className={styles.fileInput}
-                />
-              </>
+                  <p>Drop your {getDocTypeLabel(selectedDocType)} here or <span className={styles.browseLink}>browse</span></p>
+                  <input 
+                    type="file" 
+                    accept=".pdf"
+                    onChange={handleFileChange}
+                    className={styles.fileInput}
+                  />
+                </>
+              )}
+            </div>
+            
+            {file && (
+              <button 
+                className={styles.analyzeButton}
+                onClick={uploadAndAnalyze}
+                disabled={isUploading}
+              >
+                {isUploading ? (
+                  <>
+                    <LoadingSpinner size="small" />
+                    <span>Analyzing...</span>
+                  </>
+                ) : 'Analyze My Taxes →'}
+              </button>
+            )}
+
+            {uploadedDocs.length > 0 && (
+              <div className={styles.uploadedDocsList}>
+                <h4>Your Documents</h4>
+                {uploadedDocs.map((doc) => (
+                  <div key={doc.id} className={styles.uploadedDoc}>
+                    <span>{DOCUMENT_TYPES.find(d => d.id === doc.documentType)?.icon || '📄'}</span>
+                    <span className={styles.uploadedDocName}>{doc.fileName}</span>
+                    <span className={`${styles.uploadedDocStatus} ${styles[doc.status]}`}>
+                      {doc.status === 'completed' ? '✓ Analyzed' : doc.status === 'processing' ? 'Processing...' : 'Failed'}
+                    </span>
+                  </div>
+                ))}
+              </div>
             )}
           </div>
-          {file && (
-            <button 
-              className={styles.analyzeButton}
-              onClick={uploadAndAnalyze}
-              disabled={isUploading}
-            >
-              {isUploading ? (
-                <>
-                  <LoadingSpinner size="small" />
-                  <span style={{ marginLeft: '0.5rem' }}>Analyzing...</span>
-                </>
-              ) : 'Upload & Analyze'}
-            </button>
-          )}
-
-          {uploadedDocs.length > 0 && (
-            <div className={styles.uploadedDocsList}>
-              <h4>Your Documents</h4>
-              {uploadedDocs.map((doc) => (
-                <div key={doc.id} className={styles.uploadedDoc}>
-                  <span className={styles.uploadedDocIcon}>
-                    {DOCUMENT_TYPES.find(d => d.id === doc.documentType)?.icon || '📄'}
-                  </span>
-                  <div className={styles.uploadedDocInfo}>
-                    <span className={styles.uploadedDocName}>{doc.fileName}</span>
-                    <span className={styles.uploadedDocType}>{getDocTypeLabel(doc.documentType)}</span>
-                  </div>
-                  <span className={`${styles.uploadedDocStatus} ${styles[doc.status]}`}>
-                    {doc.status === 'completed' ? 'Analyzed' : doc.status === 'processing' ? 'Processing...' : 'Failed'}
-                  </span>
-                </div>
-              ))}
-            </div>
-          )}
         </div>
 
-        <div className={styles.rightColumn}>
-          <div className={`${styles.taxChatSection} ${chatExpanded ? styles.chatExpanded : ''}`}>
-            <div className={styles.chatHeader}>
-              <div className={styles.chatHeaderContent}>
-                <h3>
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
-                  </svg>
-                  Tax Assistant
-                </h3>
-                <p>Ask questions about your uploaded documents</p>
-              </div>
-              <button 
-                className={styles.chatExpandButton}
-                onClick={() => setChatExpanded(!chatExpanded)}
-              >
-                {chatExpanded ? 'Minimize' : 'Expand'}
-              </button>
-            </div>
-            
-            <div className={styles.chatMessages}>
-              {chatMessages.length === 0 ? (
-                <div className={styles.chatEmpty}>
-                  <p>Upload your tax documents and ask me anything!</p>
-                  <div className={styles.chatSuggestions}>
-                    <button onClick={() => setChatInput("What was my total income last year?")}>
-                      What was my total income?
-                    </button>
-                    <button onClick={() => setChatInput("How can I reduce my tax burden?")}>
-                      How can I reduce taxes?
-                    </button>
-                    <button onClick={() => setChatInput("What deductions did I take?")}>
-                      What deductions did I take?
-                    </button>
-                  </div>
-                </div>
-              ) : (
-                <>
-                  {chatMessages.map((msg, i) => (
-                    <div key={i} className={`${styles.chatMessage} ${styles[msg.role]}`}>
-                      <div className={styles.chatMessageContent}>{msg.content}</div>
-                    </div>
-                  ))}
-                  <div ref={chatEndRef} />
-                </>
-              )}
-              {isSendingMessage && (
-                <div className={`${styles.chatMessage} ${styles.assistant}`}>
-                  <div className={styles.chatMessageContent}>
-                    <span className={styles.typingIndicator}>Thinking...</span>
-                  </div>
-                </div>
-              )}
-            </div>
-            
-            <div className={styles.chatInputArea}>
-              <input
-                type="text"
-                value={chatInput}
-                onChange={(e) => setChatInput(e.target.value)}
-                onKeyPress={handleChatKeyPress}
-                placeholder="Ask about your taxes..."
-                className={styles.chatInput}
-                disabled={isSendingMessage}
-              />
-              <button 
-                className={styles.chatSendButton}
-                onClick={sendChatMessage}
-                disabled={!chatInput.trim() || isSendingMessage}
-              >
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                  <line x1="22" y1="2" x2="11" y2="13"/>
-                  <polygon points="22 2 15 22 11 13 2 9 22 2"/>
-                </svg>
-              </button>
-            </div>
-          </div>
-
-          <div className={styles.calendarPreview}>
-            <h3 className={styles.calendarTitle}>
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
-                <line x1="16" y1="2" x2="16" y2="6"/>
-                <line x1="8" y1="2" x2="8" y2="6"/>
-                <line x1="3" y1="10" x2="21" y2="10"/>
-              </svg>
-              Tax Deadlines
-            </h3>
-            <div className={styles.deadlinesList}>
-              {taxDeadlines.slice(0, 3).map((deadline, i) => (
-                <div key={i} className={`${styles.deadlineCard} ${styles[deadline.urgency]}`}>
-                  <div className={styles.deadlineDate}>{deadline.date}</div>
-                  <div className={styles.deadlineInfo}>
-                    <h4>{deadline.title}</h4>
-                    <span className={styles.deadlineImpact}>{deadline.impact}</span>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      </div>
       )}
 
       {taxData && (
