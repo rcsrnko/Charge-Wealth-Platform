@@ -162,7 +162,7 @@ function OptimizationItem({
       <div className={styles.resultCardHeader}>
         <div className={styles.resultCardNumber}>{index + 1}</div>
         <div className={styles.resultCardTitle}>
-          <h4>{optimization.action}</h4>
+          <h4>{formatText(optimization.action)}</h4>
           <span className={styles.resultCardSavings}>
             Save <strong>{formatCurrency(optimization.taxSavingsPerYear)}</strong>/year
           </span>
@@ -190,7 +190,7 @@ function OptimizationItem({
         
         <div className={styles.howToFixSection}>
           <h5>How to fix this:</h5>
-          <p>{optimization.howToFix}</p>
+          <p>{formatText(optimization.howToFix)}</p>
         </div>
       </div>
     </div>
@@ -457,6 +457,16 @@ export default function ChargeTaxIntel() {
     return `${value.toFixed(1)}%`;
   };
 
+  // Clean up AI-generated text for proper formatting
+  const formatText = (text: string | null | undefined) => {
+    if (!text) return '';
+    return text
+      .replace(/\b401k\b/gi, '401(k)')
+      .replace(/\b403b\b/gi, '403(b)')
+      .replace(/\bRoth 401\(k\)/gi, 'Roth 401(k)')
+      .replace(/\btraditional 401\(k\)/gi, 'Traditional 401(k)');
+  };
+
   return (
     <div className={styles.container}>
       <div className={styles.header}>
@@ -718,7 +728,7 @@ export default function ChargeTaxIntel() {
                       <div className={styles.resultCardHeader}>
                         <div className={styles.resultCardNumber}>{(taxData.optimizations?.length || 0) + i + 1}</div>
                         <div className={styles.resultCardTitle}>
-                          <h4>{insight.title}</h4>
+                          <h4>{formatText(insight.title)}</h4>
                           {insight.potentialImpact && insight.potentialImpact > 0 && (
                             <span className={styles.resultCardSavings}>
                               Save <strong>{formatCurrency(insight.potentialImpact)}</strong>/year
@@ -727,11 +737,11 @@ export default function ChargeTaxIntel() {
                         </div>
                       </div>
                       <div className={styles.resultCardBody}>
-                        <p className={styles.insightDescription}>{insight.description}</p>
+                        <p className={styles.insightDescription}>{formatText(insight.description)}</p>
                         {insight.action && (
                           <div className={styles.howToFixSection}>
                             <h5>How to fix this:</h5>
-                            <p>{insight.action}</p>
+                            <p>{formatText(insight.action)}</p>
                           </div>
                         )}
                       </div>
@@ -750,7 +760,7 @@ export default function ChargeTaxIntel() {
                           {(taxData.optimizations?.length || 0) + (taxData.insights?.length || 0) + i + 1}
                         </div>
                         <div className={styles.resultCardTitle}>
-                          <h4>{strategy.strategy}</h4>
+                          <h4>{formatText(strategy.strategy)}</h4>
                           {strategy.potentialSavings > 0 && (
                             <span className={styles.resultCardSavings}>
                               Save <strong>{formatCurrency(strategy.potentialSavings)}</strong>/year
@@ -771,16 +781,16 @@ export default function ChargeTaxIntel() {
                         <div className={styles.strategyInfo}>
                           <div className={styles.strategyInfoItem}>
                             <strong>Current Situation:</strong>
-                            <p>{strategy.currentSituation}</p>
+                            <p>{formatText(strategy.currentSituation)}</p>
                           </div>
                           <div className={styles.strategyInfoItem}>
                             <strong>Recommendation:</strong>
-                            <p>{strategy.recommendation}</p>
+                            <p>{formatText(strategy.recommendation)}</p>
                           </div>
                         </div>
                         <div className={styles.howToFixSection}>
                           <h5>How to implement:</h5>
-                          <p>{strategy.howToImplement}</p>
+                          <p>{formatText(strategy.howToImplement)}</p>
                         </div>
                       </div>
                     </div>
