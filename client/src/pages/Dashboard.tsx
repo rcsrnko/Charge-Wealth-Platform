@@ -21,6 +21,7 @@ const ReferralDashboard = lazy(() => import('../modules/ReferralDashboard'));
 const Settings = lazy(() => import('../modules/Settings'));
 const MyFinancialData = lazy(() => import('../modules/MyFinancialData'));
 const Optimizer401k = lazy(() => import('../modules/Optimizer401k'));
+const ScenarioPlanner = lazy(() => import('../modules/ScenarioPlanner'));
 const TaxDeadlines = lazy(() => import('../components/TaxDeadlines'));
 const SavingsTracker = lazy(() => import('../components/SavingsTracker'));
 
@@ -470,6 +471,13 @@ export default function Dashboard() {
               <ErrorBoundary moduleName="401k-optimizer">
                 <Suspense fallback={<ModuleLoader />}>
                   <Optimizer401k />
+                </Suspense>
+              </ErrorBoundary>
+            </Route>
+            <Route path="/dashboard/scenarios">
+              <ErrorBoundary moduleName="scenarios">
+                <Suspense fallback={<ModuleLoader />}>
+                  <ScenarioPlanner />
                 </Suspense>
               </ErrorBoundary>
             </Route>
