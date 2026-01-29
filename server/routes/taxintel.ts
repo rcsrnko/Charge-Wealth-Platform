@@ -199,97 +199,226 @@ export function registerTaxIntelRoutes(app: Express, isAuthenticated: RequestHan
         if (file.mimetype === 'application/pdf') {
           rawText = await parsePdfDocument(file.buffer);
           
-          // Use appropriate parser based on document type
+          // Use AI extraction for all document types - more reliable than regex
           if (documentType === 'paystub') {
-            extractedData = extractPaystubDataFromText(rawText);
-            console.log('Paystub extraction result:', extractedData);
-            
-            // If regex extraction is missing important fields, use AI extraction to fill gaps
-            const hasMostFields = extractedData.grossPay && extractedData.federalWithheld && (extractedData.retirement401k !== null);
-            const missingImportantFields = !extractedData.grossPay || !extractedData.federalWithheld;
-            if (missingImportantFields && rawText.length > 100) {
-              console.log('Regex extraction incomplete, trying AI extraction...');
-              try {
-                const aiExtractionResponse = await fetchApi(`${process.env.AI_INTEGRATIONS_OPENAI_BASE_URL}/chat/completions`, {
-                  method: 'POST',
-                  headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${process.env.AI_INTEGRATIONS_OPENAI_API_KEY}`,
-                  },
-                  body: JSON.stringify({
-                    model: 'gpt-4o-mini',
-                    messages: [
-                      { 
-                        role: 'system', 
-                        content: `Extract paystub data from the text. Return ONLY valid JSON with these fields (use null if not found):
+            console.log('Using AI extraction for paystub...');
+            try {
+              const aiExtractionResponse = await fetchApi(`${process.env.AI_INTEGRATIONS_OPENAI_BASE_URL}/chat/completions`, {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                  'Authorization': `Bearer ${process.env.AI_INTEGRATIONS_OPENAI_API_KEY}`,
+                },
+                body: JSON.stringify({
+                  model: 'gpt-4o-mini',
+                  messages: [
+                    { 
+                      role: 'system', 
+                      content: `Extract ALL paystub data from the text. Return ONLY valid JSON with these fields (use null if not found):
 {
+  "employerName": string or null,
+  "payDate": "MM/DD/YYYY" or null,
+  "payPeriodStart": "MM/DD/YYYY" or null,
+  "payPeriodEnd": "MM/DD/YYYY" or null,
+  "payFrequency": "weekly" | "biweekly" | "semimonthly" | "monthly" or null,
   "grossPay": number or null,
   "netPay": number or null,
   "federalWithheld": number or null,
   "stateWithheld": number or null,
+  "localWithheld": number or null,
   "socialSecurityWithheld": number or null,
   "medicareWithheld": number or null,
   "retirement401k": number or null,
+  "rothContribution": number or null,
   "hsaContribution": number or null,
+  "fsaContribution": number or null,
   "healthInsurance": number or null,
-  "payDate": "MM/DD/YYYY" or null,
-  "employerName": string or null
+  "dentalInsurance": number or null,
+  "visionInsurance": number or null,
+  "lifeInsurance": number or null,
+  "otherDeductions": number or null,
+  "regularHours": number or null,
+  "overtimeHours": number or null,
+  "regularRate": number or null,
+  "ytdGrossPay": number or null,
+  "ytdFederalWithheld": number or null,
+  "ytdStateWithheld": number or null,
+  "ytdSocialSecurity": number or null,
+  "ytdMedicare": number or null,
+  "ytd401k": number or null
 }
 Only return the JSON object, no other text.`
-                      },
-                      { role: 'user', content: `Extract paystub data:\n\n${rawText.substring(0, 4000)}` }
-                    ],
-                    max_completion_tokens: 500,
-                  }),
-                });
-                
-                if (aiExtractionResponse.ok) {
-                  const aiResult = await aiExtractionResponse.json();
-                  const aiContent = aiResult.choices?.[0]?.message?.content || '';
-                  const jsonMatch = aiContent.match(/\{[\s\S]*\}/);
-                  if (jsonMatch) {
-                    const aiData = JSON.parse(jsonMatch[0]);
-                    console.log('AI extraction result:', aiData);
-                    // Merge AI data with regex data (prefer AI values if regex found nothing)
-                    extractedData = {
-                      ...extractedData,
-                      grossPay: extractedData.grossPay || aiData.grossPay,
-                      netPay: extractedData.netPay || aiData.netPay,
-                      federalWithheld: extractedData.federalWithheld || aiData.federalWithheld,
-                      stateWithheld: extractedData.stateWithheld || aiData.stateWithheld,
-                      socialSecurityWithheld: extractedData.socialSecurityWithheld || aiData.socialSecurityWithheld,
-                      medicareWithheld: extractedData.medicareWithheld || aiData.medicareWithheld,
-                      retirement401k: extractedData.retirement401k || aiData.retirement401k,
-                      hsaContribution: extractedData.hsaContribution || aiData.hsaContribution,
-                      healthInsurance: extractedData.healthInsurance || aiData.healthInsurance,
-                      payDate: extractedData.payDate || aiData.payDate,
-                      employerName: extractedData.employerName || aiData.employerName,
-                      extractedLines: {
-                        ...extractedData.extractedLines,
-                        ...(aiData.grossPay && { 'Gross Pay (AI)': aiData.grossPay }),
-                        ...(aiData.netPay && { 'Net Pay (AI)': aiData.netPay }),
-                        ...(aiData.federalWithheld && { 'Federal Tax (AI)': aiData.federalWithheld }),
-                      }
-                    };
-                    extractedData.preTaxDeductions = {
-                      retirement401k: extractedData.retirement401k || 0,
-                      hsa: extractedData.hsaContribution || 0,
-                      fsa: extractedData.fsaContribution || 0,
-                      health: extractedData.healthInsurance || 0,
-                    };
-                  }
+                    },
+                    { role: 'user', content: `Extract all paystub data:\n\n${rawText.substring(0, 6000)}` }
+                  ],
+                  max_completion_tokens: 800,
+                }),
+              });
+              
+              if (aiExtractionResponse.ok) {
+                const aiResult = await aiExtractionResponse.json();
+                const aiContent = aiResult.choices?.[0]?.message?.content || '';
+                const jsonMatch = aiContent.match(/\{[\s\S]*\}/);
+                if (jsonMatch) {
+                  const aiData = JSON.parse(jsonMatch[0]);
+                  console.log('AI paystub extraction result:', aiData);
+                  extractedData = {
+                    ...aiData,
+                    preTaxDeductions: {
+                      retirement401k: aiData.retirement401k || 0,
+                      hsa: aiData.hsaContribution || 0,
+                      fsa: aiData.fsaContribution || 0,
+                      health: aiData.healthInsurance || 0,
+                    },
+                    extractedLines: {
+                      ...(aiData.grossPay && { 'Gross Pay': aiData.grossPay }),
+                      ...(aiData.netPay && { 'Net Pay': aiData.netPay }),
+                      ...(aiData.federalWithheld && { 'Federal Tax': aiData.federalWithheld }),
+                      ...(aiData.stateWithheld && { 'State Tax': aiData.stateWithheld }),
+                      ...(aiData.socialSecurityWithheld && { 'Social Security': aiData.socialSecurityWithheld }),
+                      ...(aiData.medicareWithheld && { 'Medicare': aiData.medicareWithheld }),
+                      ...(aiData.retirement401k && { '401(k)': aiData.retirement401k }),
+                      ...(aiData.hsaContribution && { 'HSA': aiData.hsaContribution }),
+                      ...(aiData.healthInsurance && { 'Health Insurance': aiData.healthInsurance }),
+                      ...(aiData.ytdGrossPay && { 'YTD Gross': aiData.ytdGrossPay }),
+                      ...(aiData.ytdFederalWithheld && { 'YTD Federal': aiData.ytdFederalWithheld }),
+                    }
+                  };
                 }
-              } catch (aiErr) {
-                console.error('AI extraction failed:', aiErr);
+              } else {
+                console.error('AI extraction API error:', aiExtractionResponse.statusText);
+                extractedData = { extractedLines: {}, preTaxDeductions: { retirement401k: 0, hsa: 0, fsa: 0, health: 0 } };
               }
+            } catch (aiErr) {
+              console.error('AI extraction failed:', aiErr);
+              extractedData = { extractedLines: {}, preTaxDeductions: { retirement401k: 0, hsa: 0, fsa: 0, health: 0 } };
             }
           } else if (documentType === 'w2') {
-            extractedData = extractW2DataFromText(rawText);
-            console.log('W-2 extraction result:', extractedData);
+            // AI extraction for W-2
+            console.log('Using AI extraction for W-2...');
+            try {
+              const aiExtractionResponse = await fetchApi(`${process.env.AI_INTEGRATIONS_OPENAI_BASE_URL}/chat/completions`, {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                  'Authorization': `Bearer ${process.env.AI_INTEGRATIONS_OPENAI_API_KEY}`,
+                },
+                body: JSON.stringify({
+                  model: 'gpt-4o-mini',
+                  messages: [
+                    { 
+                      role: 'system', 
+                      content: `Extract W-2 data from the text. Return ONLY valid JSON:
+{
+  "taxYear": number,
+  "employerName": string or null,
+  "employerEIN": string or null,
+  "wages": number or null (Box 1),
+  "federalWithheld": number or null (Box 2),
+  "socialSecurityWages": number or null (Box 3),
+  "socialSecurityWithheld": number or null (Box 4),
+  "medicareWages": number or null (Box 5),
+  "medicareWithheld": number or null (Box 6),
+  "socialSecurityTips": number or null (Box 7),
+  "allocatedTips": number or null (Box 8),
+  "dependentCareBenefits": number or null (Box 10),
+  "nonQualifiedPlans": number or null (Box 11),
+  "box12Codes": [{"code": string, "amount": number}] or [],
+  "statutoryEmployee": boolean,
+  "retirementPlan": boolean,
+  "thirdPartySickPay": boolean,
+  "stateWages": number or null (Box 16),
+  "stateWithheld": number or null (Box 17),
+  "localWages": number or null (Box 18),
+  "localWithheld": number or null (Box 19)
+}
+Only return the JSON object.`
+                    },
+                    { role: 'user', content: `Extract W-2 data:\n\n${rawText.substring(0, 6000)}` }
+                  ],
+                  max_completion_tokens: 800,
+                }),
+              });
+              
+              if (aiExtractionResponse.ok) {
+                const aiResult = await aiExtractionResponse.json();
+                const aiContent = aiResult.choices?.[0]?.message?.content || '';
+                const jsonMatch = aiContent.match(/\{[\s\S]*\}/);
+                if (jsonMatch) {
+                  extractedData = JSON.parse(jsonMatch[0]);
+                  console.log('AI W-2 extraction result:', extractedData);
+                }
+              }
+            } catch (aiErr) {
+              console.error('AI W-2 extraction failed:', aiErr);
+              extractedData = extractW2DataFromText(rawText); // Fallback to regex
+            }
+          } else if (documentType === 'tax_return' || documentType === '1040') {
+            // AI extraction for tax returns
+            console.log('Using AI extraction for tax return...');
+            try {
+              const aiExtractionResponse = await fetchApi(`${process.env.AI_INTEGRATIONS_OPENAI_BASE_URL}/chat/completions`, {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                  'Authorization': `Bearer ${process.env.AI_INTEGRATIONS_OPENAI_API_KEY}`,
+                },
+                body: JSON.stringify({
+                  model: 'gpt-4o-mini',
+                  messages: [
+                    { 
+                      role: 'system', 
+                      content: `Extract 1040 tax return data. Return ONLY valid JSON:
+{
+  "taxYear": number,
+  "filingStatus": "single" | "married_joint" | "married_separate" | "head_of_household" | "qualifying_widow",
+  "wagesIncome": number or null (Line 1a),
+  "interestIncome": number or null (Line 2b),
+  "dividendIncome": number or null (Line 3b),
+  "qualifiedDividends": number or null (Line 3a),
+  "capitalGainsShortTerm": number or null,
+  "capitalGainsLongTerm": number or null (Line 7),
+  "businessIncome": number or null (Line 8),
+  "otherIncome": number or null,
+  "totalIncome": number or null (Line 9),
+  "adjustmentsToIncome": number or null (Line 10),
+  "agi": number or null (Line 11),
+  "standardDeduction": number or null,
+  "itemizedDeductions": number or null,
+  "deductionUsed": "standard" | "itemized",
+  "taxableIncome": number or null (Line 15),
+  "totalFederalTax": number or null (Line 24),
+  "totalPayments": number or null (Line 33),
+  "refundAmount": number or null,
+  "amountOwed": number or null,
+  "stateTaxPaid": number or null
+}
+Only return the JSON object.`
+                    },
+                    { role: 'user', content: `Extract 1040 data:\n\n${rawText.substring(0, 8000)}` }
+                  ],
+                  max_completion_tokens: 800,
+                }),
+              });
+              
+              if (aiExtractionResponse.ok) {
+                const aiResult = await aiExtractionResponse.json();
+                const aiContent = aiResult.choices?.[0]?.message?.content || '';
+                const jsonMatch = aiContent.match(/\{[\s\S]*\}/);
+                if (jsonMatch) {
+                  extractedData = JSON.parse(jsonMatch[0]);
+                  extractedData.extractedLines = {};
+                  console.log('AI tax return extraction result:', extractedData);
+                }
+              }
+            } catch (aiErr) {
+              console.error('AI tax return extraction failed:', aiErr);
+              extractedData = extractTaxDataFromText(rawText); // Fallback to regex
+            }
           } else {
-            // Default to tax return parser for 1040, 1099, etc
+            // Default fallback for other document types (1099, etc)
             extractedData = extractTaxDataFromText(rawText);
-            console.log('Tax return extraction result:', {
+            console.log('Fallback extraction result:', {
               taxYear: extractedData.taxYear,
               totalIncome: extractedData.totalIncome,
               extractedLinesCount: Object.keys(extractedData.extractedLines || {}).length
@@ -825,6 +954,199 @@ Return JSON: { "newTax": number, "taxDelta": number, "effectiveRate": number }`;
     } catch (error) {
       console.error("Error running scenario:", error);
       res.status(500).json({ message: "Failed to run scenario" });
+    }
+  });
+
+  // Tax projection endpoint - project full year taxes from paystub data
+  app.get('/api/tax-intel/projection', isAuthenticated, async (req: any, res) => {
+    try {
+      const userId = req.user.claims.sub;
+      
+      // Get user's profile and documents
+      const [profile, documents] = await Promise.all([
+        storage.getFinancialProfile(userId),
+        storage.getFinancialDocuments(userId)
+      ]);
+      
+      // Find most recent paystub
+      const paystubs = documents.filter(d => d.documentType === 'paystub' && d.extractionStatus === 'completed');
+      
+      if (paystubs.length === 0) {
+        return res.json({
+          hasProjection: false,
+          message: "Upload a paystub to see your tax projection"
+        });
+      }
+      
+      // Get the most recent paystub data
+      const latestPaystub = paystubs.sort((a, b) => 
+        new Date(b.uploadedAt || 0).getTime() - new Date(a.uploadedAt || 0).getTime()
+      )[0];
+      
+      const paystubData = latestPaystub.extractedData as any;
+      
+      // Determine pay frequency and calculate annual amounts
+      const payFrequency = paystubData?.payFrequency || 'biweekly';
+      const payPeriodsPerYear: Record<string, number> = {
+        weekly: 52,
+        biweekly: 26,
+        semimonthly: 24,
+        monthly: 12
+      };
+      const periods = payPeriodsPerYear[payFrequency] || 26;
+      
+      // Current period values
+      const grossPay = paystubData?.grossPay || 0;
+      const federalWithheld = paystubData?.federalWithheld || 0;
+      const stateWithheld = paystubData?.stateWithheld || 0;
+      const socialSecurity = paystubData?.socialSecurityWithheld || 0;
+      const medicare = paystubData?.medicareWithheld || 0;
+      const retirement401k = paystubData?.retirement401k || 0;
+      const hsaContribution = paystubData?.hsaContribution || 0;
+      
+      // YTD values if available
+      const ytdGross = paystubData?.ytdGrossPay || null;
+      const ytdFederal = paystubData?.ytdFederalWithheld || null;
+      
+      // Project annual income
+      const projectedAnnualGross = grossPay * periods;
+      
+      // Pre-tax deductions that reduce AGI
+      const annual401k = retirement401k * periods;
+      const annualHSA = hsaContribution * periods;
+      const totalPreTaxDeductions = annual401k + annualHSA;
+      
+      // Calculate AGI
+      const projectedAGI = projectedAnnualGross - totalPreTaxDeductions;
+      
+      // Standard deduction 2026 (estimated)
+      const filingStatus = profile?.filingStatus || 'single';
+      const standardDeductions: Record<string, number> = {
+        single: 15700,
+        married_joint: 31400,
+        married_separate: 15700,
+        head_of_household: 23550,
+      };
+      const standardDeduction = standardDeductions[filingStatus] || 15700;
+      
+      // Taxable income
+      const projectedTaxableIncome = Math.max(0, projectedAGI - standardDeduction);
+      
+      // Calculate federal tax using 2026 brackets (estimated)
+      const calculateFederalTax = (taxable: number, status: string): number => {
+        const brackets = status === 'married_joint' ? [
+          { max: 24000, rate: 0.10 },
+          { max: 97500, rate: 0.12 },
+          { max: 208500, rate: 0.22 },
+          { max: 397500, rate: 0.24 },
+          { max: 504000, rate: 0.32 },
+          { max: 756000, rate: 0.35 },
+          { max: Infinity, rate: 0.37 },
+        ] : [
+          { max: 12000, rate: 0.10 },
+          { max: 48750, rate: 0.12 },
+          { max: 104250, rate: 0.22 },
+          { max: 198750, rate: 0.24 },
+          { max: 252000, rate: 0.32 },
+          { max: 630000, rate: 0.35 },
+          { max: Infinity, rate: 0.37 },
+        ];
+        
+        let tax = 0;
+        let prevMax = 0;
+        for (const bracket of brackets) {
+          if (taxable <= prevMax) break;
+          const taxableInBracket = Math.min(taxable, bracket.max) - prevMax;
+          tax += taxableInBracket * bracket.rate;
+          prevMax = bracket.max;
+        }
+        return Math.round(tax);
+      };
+      
+      const projectedFederalTax = calculateFederalTax(projectedTaxableIncome, filingStatus);
+      
+      // Calculate FICA (Social Security + Medicare)
+      const socialSecurityLimit = 176100; // 2026 estimate
+      const projectedSocialSecurity = Math.min(projectedAnnualGross, socialSecurityLimit) * 0.062;
+      const projectedMedicare = projectedAnnualGross * 0.0145;
+      const additionalMedicare = projectedAnnualGross > 200000 ? (projectedAnnualGross - 200000) * 0.009 : 0;
+      const projectedFICA = projectedSocialSecurity + projectedMedicare + additionalMedicare;
+      
+      // Projected withholding
+      const projectedFederalWithheld = federalWithheld * periods;
+      const projectedStateWithheld = stateWithheld * periods;
+      
+      // Over/under withheld
+      const federalDifference = projectedFederalWithheld - projectedFederalTax;
+      const withholdingStatus = federalDifference > 500 ? 'over' : federalDifference < -500 ? 'under' : 'on_track';
+      
+      // Effective tax rate
+      const effectiveRate = projectedAnnualGross > 0 
+        ? ((projectedFederalTax + projectedFICA) / projectedAnnualGross * 100).toFixed(1)
+        : '0';
+      
+      // Marginal bracket
+      const getMarginalBracket = (taxable: number, status: string): number => {
+        const brackets = status === 'married_joint' 
+          ? [24000, 97500, 208500, 397500, 504000, 756000]
+          : [12000, 48750, 104250, 198750, 252000, 630000];
+        const rates = [10, 12, 22, 24, 32, 35, 37];
+        for (let i = 0; i < brackets.length; i++) {
+          if (taxable <= brackets[i]) return rates[i];
+        }
+        return 37;
+      };
+      
+      res.json({
+        hasProjection: true,
+        payFrequency,
+        periodsPerYear: periods,
+        currentPeriod: {
+          grossPay,
+          federalWithheld,
+          stateWithheld,
+          socialSecurity,
+          medicare,
+          retirement401k,
+          hsaContribution,
+          netPay: paystubData?.netPay || 0,
+        },
+        ytd: ytdGross ? {
+          grossPay: ytdGross,
+          federalWithheld: ytdFederal,
+        } : null,
+        projections: {
+          annualGross: Math.round(projectedAnnualGross),
+          preTaxDeductions: Math.round(totalPreTaxDeductions),
+          agi: Math.round(projectedAGI),
+          standardDeduction,
+          taxableIncome: Math.round(projectedTaxableIncome),
+          federalTax: projectedFederalTax,
+          fica: Math.round(projectedFICA),
+          totalTax: Math.round(projectedFederalTax + projectedFICA),
+        },
+        withholding: {
+          projectedFederalWithheld: Math.round(projectedFederalWithheld),
+          projectedStateWithheld: Math.round(projectedStateWithheld),
+          federalDifference: Math.round(federalDifference),
+          status: withholdingStatus,
+          message: withholdingStatus === 'over' 
+            ? `You're on track for a ~$${Math.abs(Math.round(federalDifference)).toLocaleString()} refund. Consider reducing withholding to get more per paycheck.`
+            : withholdingStatus === 'under'
+            ? `You may owe ~$${Math.abs(Math.round(federalDifference)).toLocaleString()} at tax time. Consider increasing withholding to avoid penalties.`
+            : `Your withholding looks on track.`
+        },
+        rates: {
+          effectiveRate: parseFloat(effectiveRate),
+          marginalBracket: getMarginalBracket(projectedTaxableIncome, filingStatus),
+        },
+        filingStatus,
+        employer: paystubData?.employerName || null,
+        lastPayDate: paystubData?.payDate || null,
+      });
+    } catch (error) {
+      console.error("Error calculating tax projection:", error);
+      res.status(500).json({ message: "Failed to calculate tax projection" });
     }
   });
 }
