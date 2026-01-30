@@ -367,6 +367,54 @@ function BlogIndex() {
         </div>
       </section>
 
+      {/* Premium Tools CTA Banner */}
+      <section style={{
+        padding: '24px 32px',
+        background: isDark ? 'linear-gradient(135deg, rgba(246,219,166,0.1) 0%, rgba(246,219,166,0.05) 100%)' : 'linear-gradient(135deg, rgba(246,219,166,0.25) 0%, rgba(246,219,166,0.1) 100%)',
+        borderBottom: `1px solid ${colors.border}`,
+      }}>
+        <div style={{
+          maxWidth: 1200,
+          margin: '0 auto',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          flexWrap: 'wrap',
+          gap: 16,
+        }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+            <span style={{ fontSize: 28 }}>📊</span>
+            <div>
+              <div style={{ fontWeight: 700, color: colors.textPrimary, fontSize: 16 }}>
+                Premium CFO Tools
+              </div>
+              <div style={{ color: colors.textSecondary, fontSize: 14 }}>
+                5 Excel spreadsheets used by professional CFOs
+              </div>
+            </div>
+          </div>
+          <Link href="/premium-tools">
+            <a style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: 8,
+              padding: '12px 24px',
+              background: colors.accent,
+              color: '#4A3F2F',
+              fontWeight: 600,
+              fontSize: 14,
+              borderRadius: 8,
+              textDecoration: 'none',
+              transition: 'all 0.2s',
+              boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
+            }}>
+              View Tools
+              <span>→</span>
+            </a>
+          </Link>
+        </div>
+      </section>
+
       {/* Posts Grid */}
       <section style={{
         padding: '48px 32px',
