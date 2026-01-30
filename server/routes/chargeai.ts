@@ -315,26 +315,54 @@ Format the output as JSON with these fields: title, summary, keyFindings (array)
         let totalFederalWithheld = 0;
         let latestNetPay = 0;
         
+        // Pay period multipliers
+        const payPeriods: Record<string, number> = {
+          weekly: 52, biweekly: 26, semimonthly: 24, monthly: 12
+        };
+        
         for (const doc of completedDocs) {
           const data = doc.extractedData as any;
           if (data) {
-            // From paystubs - use YTD values if available
-            if (data.ytdGrossPay) estimatedAnnualIncome = Math.max(estimatedAnnualIncome, data.ytdGrossPay);
-            else if (data.grossPay) estimatedAnnualIncome = Math.max(estimatedAnnualIncome, data.grossPay);
+            const periods = payPeriods[data.payFrequency || 'biweekly'] || 26;
+            
+            // From W-2s (already annual)
+            if (data.wagesIncome) {
+              estimatedAnnualIncome = Math.max(estimatedAnnualIncome, data.wagesIncome);
+            }
+            // From paystubs - smart annualization
+            else if (data.baseSalary && data.baseSalary > 0) {
+              // Best: base salary * periods + YTD bonus
+              const annualBase = data.baseSalary * periods;
+              const totalBonus = data.ytdBonus || data.bonus || 0;
+              estimatedAnnualIncome = Math.max(estimatedAnnualIncome, annualBase + totalBonus);
+            } else if (data.ytdGrossPay && data.grossPay && data.ytdGrossPay > data.grossPay) {
+              // Second: YTD-based average (estimate periods elapsed)
+              const estimatedPeriodsElapsed = Math.max(1, Math.round(data.ytdGrossPay / data.grossPay));
+              const avgPerPeriod = data.ytdGrossPay / estimatedPeriodsElapsed;
+              estimatedAnnualIncome = Math.max(estimatedAnnualIncome, avgPerPeriod * periods);
+            } else if (data.grossPay) {
+              // Fallback: current gross * periods (may include one-time items)
+              estimatedAnnualIncome = Math.max(estimatedAnnualIncome, data.grossPay * periods);
+            }
             
             if (data.netPay) latestNetPay = Math.max(latestNetPay, data.netPay);
             
-            if (data.ytdFederalWithheld) totalFederalWithheld = Math.max(totalFederalWithheld, data.ytdFederalWithheld);
-            else if (data.federalWithheld) totalFederalWithheld += data.federalWithheld;
-            
-            // From W-2s
-            if (data.wagesIncome) estimatedAnnualIncome = Math.max(estimatedAnnualIncome, data.wagesIncome);
+            // Annualize withholding too
+            if (data.ytdFederalWithheld) {
+              // Estimate based on YTD
+              const estimatedPeriodsElapsed = data.ytdGrossPay && data.grossPay 
+                ? Math.max(1, Math.round(data.ytdGrossPay / data.grossPay)) 
+                : 2;
+              totalFederalWithheld = Math.max(totalFederalWithheld, (data.ytdFederalWithheld / estimatedPeriodsElapsed) * periods);
+            } else if (data.federalWithheld) {
+              totalFederalWithheld = Math.max(totalFederalWithheld, data.federalWithheld * periods);
+            }
           }
         }
         
         // Estimate annual from net pay if no gross available
         if (estimatedAnnualIncome === 0 && latestNetPay > 0) {
-          estimatedAnnualIncome = (latestNetPay / 0.72) * 24; // Assume semi-monthly, ~28% effective rate
+          estimatedAnnualIncome = (latestNetPay / 0.72) * 26; // Assume biweekly, ~28% effective rate
         }
         
         if (estimatedAnnualIncome > 0) {
