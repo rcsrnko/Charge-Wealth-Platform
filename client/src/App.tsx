@@ -6,6 +6,7 @@ import { useSupabaseAuth } from './hooks/useSupabaseAuth';
 import Dashboard from './pages/Dashboard';
 import DemoDashboard from './pages/DemoDashboard';
 import { ToolsPage } from './pages/ToolsPage';
+import { PremiumToolsPage } from './pages/PremiumToolsPage';
 import { TakeChargeBlog } from './pages/TakeChargeBlog';
 import OnboardingWizard from './components/OnboardingWizard';
 import { ToastProvider } from './components/Toast';
@@ -39,6 +40,11 @@ function App() {
             <Route path="/tools">
               <ErrorBoundary moduleName="tools">
                 <ToolsPage />
+              </ErrorBoundary>
+            </Route>
+            <Route path="/premium-tools">
+              <ErrorBoundary moduleName="premium-tools">
+                <PremiumToolsPage />
               </ErrorBoundary>
             </Route>
             <Route path="/take-charge/:rest*">

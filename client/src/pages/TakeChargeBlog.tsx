@@ -3,6 +3,7 @@ import { Route, Switch, Link, useRoute, useLocation } from 'wouter';
 import { useQuery, useMutation } from '@tanstack/react-query';
 import { SEO } from '../components/SEO';
 import { PaywallGate, PaywallBadge } from '../components/PaywallGate';
+import { PremiumToolsSection } from '../components/PremiumToolsSection';
 import { apiRequest } from '../lib/queryClient';
 
 // Types
@@ -490,6 +491,15 @@ function BlogIndex() {
             })}
           </div>
         )}
+      </section>
+
+      {/* Premium CFO Tools Section */}
+      <section style={{
+        padding: '48px 32px',
+        maxWidth: 1200,
+        margin: '0 auto',
+      }}>
+        <PremiumToolsSection isDark={isDark} variant="full" />
       </section>
 
       {/* CTA */}

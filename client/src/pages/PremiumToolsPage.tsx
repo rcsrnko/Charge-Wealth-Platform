@@ -14,10 +14,10 @@ interface PremiumTool {
 const premiumTools: PremiumTool[] = [
   {
     id: 'cash-flow',
-    name: 'Cash Flow Projection Template',
+    name: 'Cash Flow Command Center',
     description: '12-month cash flow forecast to plan your financial future with confidence.',
     icon: '💰',
-    filename: 'cash-flow-projection.xlsx',
+    filename: 'Cash-Flow-Command-Center.xlsx',
     features: [
       '12-month income vs expenses tracking',
       'Auto-calculating surplus/deficit',
@@ -28,10 +28,10 @@ const premiumTools: PremiumTool[] = [
   },
   {
     id: 'tax-planning',
-    name: 'Tax Planning Worksheet',
+    name: 'Tax Planning Command Center',
     description: 'Estimate quarterly taxes and track deductions like a CFO.',
     icon: '📋',
-    filename: 'tax-planning-worksheet.xlsx',
+    filename: 'Tax-Planning-Command-Center.xlsx',
     features: [
       'Quarterly estimated tax calculator',
       'Comprehensive deduction tracker',
@@ -42,10 +42,10 @@ const premiumTools: PremiumTool[] = [
   },
   {
     id: 'net-worth',
-    name: 'Net Worth Tracker',
+    name: 'Net Worth Dashboard',
     description: 'Track your assets, liabilities, and net worth month-by-month.',
     icon: '📈',
-    filename: 'net-worth-tracker.xlsx',
+    filename: 'Net-Worth-Dashboard.xlsx',
     features: [
       'Monthly asset tracking',
       'Liability monitoring',
@@ -56,10 +56,10 @@ const premiumTools: PremiumTool[] = [
   },
   {
     id: 'debt-payoff',
-    name: 'Debt Payoff Calculator',
+    name: 'Debt Destruction Planner',
     description: 'Compare avalanche vs snowball methods and create your payoff plan.',
     icon: '🎯',
-    filename: 'debt-payoff-calculator.xlsx',
+    filename: 'Debt-Destruction-Planner.xlsx',
     features: [
       'Avalanche vs snowball comparison',
       'Automatic priority ranking',
@@ -73,7 +73,7 @@ const premiumTools: PremiumTool[] = [
     name: 'Investment Fee Analyzer',
     description: 'See the shocking true cost of fees over 10, 20, and 30 years.',
     icon: '🔍',
-    filename: 'investment-fee-analyzer.xlsx',
+    filename: 'Investment-Fee-Analyzer.xlsx',
     features: [
       'Compare multiple fee scenarios',
       '10/20/30 year projections',
@@ -184,7 +184,7 @@ function ToolCard({ tool, hasPremium, colors, isDark }: { tool: PremiumTool; has
     try {
       // Create download link
       const link = document.createElement('a');
-      link.href = `/tools/${tool.filename}`;
+      link.href = `/downloads/${tool.filename}`;
       link.download = tool.filename;
       document.body.appendChild(link);
       link.click();
