@@ -244,6 +244,24 @@ export async function registerBlogRoutes(app: Express) {
             color: var(--gold-sand);
             text-decoration: underline;
         }
+        .content .tldr, .tldr {
+            background: var(--deep-navy);
+            border-left: 4px solid var(--gold-sand);
+            padding: 1.25rem 1.5rem;
+            margin: 1.5rem 0 2rem;
+            border-radius: 0 8px 8px 0;
+        }
+        .tldr h3 {
+            color: var(--gold-sand) !important;
+            margin: 0 0 0.75rem 0 !important;
+            font-size: 1.1rem;
+        }
+        .tldr ul {
+            margin: 0 0 0 1.25rem;
+        }
+        .tldr li {
+            margin-bottom: 0.4rem;
+        }
         .content img {
             max-width: 100%;
             height: auto;
@@ -309,6 +327,7 @@ export async function registerBlogRoutes(app: Express) {
             <h1>${post.title}</h1>
             <div class="meta">
                 <span>${post.published_at ? new Date(post.published_at).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }) : ''}</span>
+                <span>${Math.ceil((post.content_html?.length || 0) / 1000)} min read</span>
                 <span>By CFOAnon</span>
             </div>
             
