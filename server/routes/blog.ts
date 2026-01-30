@@ -309,7 +309,7 @@ export async function registerBlogRoutes(app: Express) {
             <h1>${post.title}</h1>
             <div class="meta">
                 <span>${post.published_at ? new Date(post.published_at).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }) : ''}</span>
-                <span>By Charge Wealth Team</span>
+                <span>By CFOAnon</span>
             </div>
             
             <div class="content">
