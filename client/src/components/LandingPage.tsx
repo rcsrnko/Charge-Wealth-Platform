@@ -5,6 +5,34 @@ interface LandingPageProps {
   onShowLogin: () => void;
 }
 
+// Referral code utilities
+function getReferralCodeFromUrl(): string | null {
+  const params = new URLSearchParams(window.location.search);
+  return params.get('ref') || params.get('referral');
+}
+
+function storeReferralCode(code: string): void {
+  localStorage.setItem('charge_referral_code', code.toUpperCase());
+  localStorage.setItem('charge_referral_timestamp', Date.now().toString());
+}
+
+export function getStoredReferralCode(): string | null {
+  const code = localStorage.getItem('charge_referral_code');
+  const timestamp = localStorage.getItem('charge_referral_timestamp');
+  
+  // Expire after 30 days
+  if (code && timestamp) {
+    const age = Date.now() - parseInt(timestamp);
+    if (age < 30 * 24 * 60 * 60 * 1000) {
+      return code;
+    }
+    // Clean up expired code
+    localStorage.removeItem('charge_referral_code');
+    localStorage.removeItem('charge_referral_timestamp');
+  }
+  return null;
+}
+
 export function LandingPage({ onShowLogin }: LandingPageProps) {
   const { signInWithGoogle, signUpWithEmail } = useSupabaseAuth();
   const [showSignupForm, setShowSignupForm] = useState(false);
@@ -14,6 +42,34 @@ export function LandingPage({ onShowLogin }: LandingPageProps) {
   const [signupSuccess, setSignupSuccess] = useState(false);
   const [socialLoading, setSocialLoading] = useState<string | null>(null);
   const [foundingStats, setFoundingStats] = useState({ remaining: 0, claimed: 0, total: 250 });
+  const [referralInfo, setReferralInfo] = useState<{ valid: boolean; referrerName: string; discount: number; finalPrice: number } | null>(null);
+
+  // Capture referral code from URL on mount
+  useEffect(() => {
+    const urlCode = getReferralCodeFromUrl();
+    if (urlCode) {
+      storeReferralCode(urlCode);
+      // Track the click
+      fetch('/api/referrals/track', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ referralCode: urlCode }),
+      }).catch(() => {}); // Silent fail
+    }
+    
+    // Validate stored referral code
+    const storedCode = getStoredReferralCode();
+    if (storedCode) {
+      fetch(`/api/referrals/validate/${storedCode}`)
+        .then(res => res.json())
+        .then(data => {
+          if (data.valid) {
+            setReferralInfo(data);
+          }
+        })
+        .catch(() => {});
+    }
+  }, []);
 
   useEffect(() => {
     fetch('/api/stats/founding')
@@ -361,6 +417,24 @@ export function LandingPage({ onShowLogin }: LandingPageProps) {
           and tells you exactly what moves to make. Like having a $50K/year advisor for a one-time fee.
         </p>
 
+        {referralInfo && (
+          <div style={{
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: '0.5rem',
+            background: 'rgba(34, 197, 94, 0.15)',
+            border: '1px solid rgba(34, 197, 94, 0.3)',
+            borderRadius: '100px',
+            padding: '0.5rem 1rem',
+            marginBottom: '1rem',
+            fontSize: '0.875rem',
+            color: '#22c55e',
+            fontWeight: '500',
+          }}>
+            🎁 {referralInfo.referrerName} gave you ${referralInfo.discount} off!
+          </div>
+        )}
+
         <button
           onClick={() => setShowSignupForm(true)}
           style={{
@@ -379,14 +453,18 @@ export function LandingPage({ onShowLogin }: LandingPageProps) {
             marginBottom: '1rem',
           }}
         >
-          Claim Your Spot ($279 Lifetime)
+          {referralInfo 
+            ? `Claim Your Spot ($${referralInfo.finalPrice} Lifetime)` 
+            : 'Claim Your Spot ($279 Lifetime)'}
         </button>
 
         <p style={{
           fontSize: '0.875rem',
           color: 'var(--text-secondary)',
         }}>
-          No recurring fees. No 1% AUM charges. Ever.
+          {referralInfo 
+            ? `$${referralInfo.discount} off with referral. No recurring fees ever.`
+            : 'No recurring fees. No 1% AUM charges. Ever.'}
         </p>
       </section>
 
@@ -566,7 +644,9 @@ export function LandingPage({ onShowLogin }: LandingPageProps) {
               'Tax Optimizer that finds every deduction you qualify for',
               'Portfolio Monitor with 24/7 alerts and rebalancing reminders',
               'Retirement Planner showing your exact path to financial freedom',
-              'One-time $279 payment, lifetime access, no hidden fees',
+              referralInfo 
+                ? `One-time $${referralInfo.finalPrice} payment (${referralInfo.referrerName} gave you $${referralInfo.discount} off!), lifetime access`
+                : 'One-time $279 payment, lifetime access, no hidden fees',
             ].map((item, i) => (
               <li
                 key={i}
@@ -628,14 +708,18 @@ export function LandingPage({ onShowLogin }: LandingPageProps) {
               marginBottom: '1rem',
             }}
           >
-            Claim Your Spot Now
+            {referralInfo 
+              ? `Claim Your Spot - $${referralInfo.finalPrice}`
+              : 'Claim Your Spot Now'}
           </button>
 
           <p style={{
             fontSize: '0.8125rem',
             color: 'var(--text-muted)',
           }}>
-            30-day money-back guarantee. No questions asked.
+            {referralInfo
+              ? `$${referralInfo.discount} off with referral. 30-day money-back guarantee.`
+              : '30-day money-back guarantee. No questions asked.'}
           </p>
         </div>
       </section>

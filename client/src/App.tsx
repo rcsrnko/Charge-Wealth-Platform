@@ -400,6 +400,55 @@ function LoadingPage() {
 
 function PaywallPage() {
   const { signOut } = useSupabaseAuth();
+  const [checkoutLoading, setCheckoutLoading] = useState(false);
+  const [referralInfo, setReferralInfo] = useState<{ valid: boolean; referrerName: string; discount: number; finalPrice: number } | null>(null);
+
+  // Check for referral code on mount
+  useEffect(() => {
+    const storedCode = localStorage.getItem('charge_referral_code');
+    const timestamp = localStorage.getItem('charge_referral_timestamp');
+    
+    if (storedCode && timestamp) {
+      const age = Date.now() - parseInt(timestamp);
+      if (age < 30 * 24 * 60 * 60 * 1000) {
+        fetch(`/api/referrals/validate/${storedCode}`)
+          .then(res => res.json())
+          .then(data => {
+            if (data.valid) {
+              setReferralInfo(data);
+            }
+          })
+          .catch(() => {});
+      }
+    }
+  }, []);
+
+  const handleCheckout = async () => {
+    setCheckoutLoading(true);
+    try {
+      const referralCode = localStorage.getItem('charge_referral_code');
+      const response = await fetch('/api/stripe/checkout', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          planType: 'lifetime',
+          referralCode: referralCode || undefined,
+        }),
+      });
+      
+      const data = await response.json();
+      if (data.url) {
+        window.location.href = data.url;
+      } else {
+        alert('Failed to start checkout. Please try again.');
+        setCheckoutLoading(false);
+      }
+    } catch (error) {
+      console.error('Checkout error:', error);
+      alert('Failed to start checkout. Please try again.');
+      setCheckoutLoading(false);
+    }
+  };
   
   const handleSignOut = async () => {
     try {
@@ -411,6 +460,8 @@ function PaywallPage() {
       window.location.href = '/';
     }
   };
+
+  const price = referralInfo ? referralInfo.finalPrice : 279;
 
   return (
     <div style={{
@@ -446,6 +497,25 @@ function PaywallPage() {
           Join our founding members and unlock lifetime access.
         </p>
         
+        {referralInfo && (
+          <div style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            gap: '0.5rem',
+            background: 'rgba(34, 197, 94, 0.15)',
+            border: '1px solid rgba(34, 197, 94, 0.3)',
+            borderRadius: '8px',
+            padding: '0.75rem 1rem',
+            marginBottom: '1rem',
+            fontSize: '0.9375rem',
+            color: '#22c55e',
+            fontWeight: '500',
+          }}>
+            🎁 {referralInfo.referrerName} gave you ${referralInfo.discount} off!
+          </div>
+        )}
+        
         <div style={{
           background: 'var(--bg-elevated)',
           border: '1px solid var(--border)',
@@ -454,7 +524,17 @@ function PaywallPage() {
           marginBottom: '2rem',
         }}>
           <h3 style={{ color: 'var(--text-on-honey)', marginBottom: '1rem', fontSize: '1.25rem' }}>
-            Founding Member - $279 Lifetime
+            Founding Member - ${price} Lifetime
+            {referralInfo && (
+              <span style={{ 
+                textDecoration: 'line-through', 
+                color: 'var(--text-secondary)', 
+                fontSize: '1rem',
+                marginLeft: '0.5rem',
+              }}>
+                $279
+              </span>
+            )}
           </h3>
           <ul style={{
             textAlign: 'left',
@@ -471,22 +551,25 @@ function PaywallPage() {
           </ul>
         </div>
 
-        <a
-          href="/"
+        <button
+          onClick={handleCheckout}
+          disabled={checkoutLoading}
           style={{
             display: 'inline-block',
-            background: 'var(--brand-accent)',
+            background: checkoutLoading ? 'var(--text-secondary)' : 'var(--brand-accent)',
             color: 'var(--text-on-honey)',
             padding: '1rem 2rem',
             fontSize: '1rem',
             fontWeight: '600',
             borderRadius: '8px',
-            textDecoration: 'none',
+            border: 'none',
+            cursor: checkoutLoading ? 'wait' : 'pointer',
             marginBottom: '1rem',
+            opacity: checkoutLoading ? 0.7 : 1,
           }}
         >
-          Become a Founding Member
-        </a>
+          {checkoutLoading ? 'Loading...' : `Become a Founding Member - $${price}`}
+        </button>
         
         <p style={{ marginTop: '1.5rem' }}>
           <button
