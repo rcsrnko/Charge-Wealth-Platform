@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'wouter';
 
 interface PremiumTool {
@@ -84,6 +84,87 @@ const premiumTools: PremiumTool[] = [
   }
 ];
 
+// Theme hook for dark/light mode
+function useTheme() {
+  const [isDark, setIsDark] = useState(() => {
+    if (typeof window !== 'undefined') {
+      const saved = localStorage.getItem('tools-theme');
+      if (saved) return saved === 'dark';
+      return window.matchMedia('(prefers-color-scheme: dark)').matches;
+    }
+    return false;
+  });
+
+  useEffect(() => {
+    localStorage.setItem('tools-theme', isDark ? 'dark' : 'light');
+    if (isDark) {
+      document.documentElement.setAttribute('data-theme', 'dark');
+    } else {
+      document.documentElement.removeAttribute('data-theme');
+    }
+  }, [isDark]);
+
+  return { isDark, toggleTheme: () => setIsDark(!isDark) };
+}
+
+// Color scheme helper
+function getColors(isDark: boolean) {
+  return isDark ? {
+    bg: '#121212',
+    bgSecondary: '#1E1E1E',
+    bgTertiary: '#252525',
+    textPrimary: '#F5F5F5',
+    textSecondary: '#A3A3A3',
+    textMuted: '#737373',
+    accent: '#F6DBA6',
+    accentHover: '#E8C88A',
+    accentText: '#F6DBA6',
+    border: 'rgba(255,255,255,0.08)',
+    borderHover: 'rgba(255,255,255,0.15)',
+    card: '#1E1E1E',
+    accentBg: 'rgba(246,219,166,0.1)',
+  } : {
+    bg: '#F9F6F0',
+    bgSecondary: '#F5F2ED',
+    bgTertiary: '#EFEBE5',
+    textPrimary: '#1F2937',
+    textSecondary: '#6B7280',
+    textMuted: '#9CA3AF',
+    accent: '#F6DBA6',
+    accentHover: '#E8C88A',
+    accentText: '#8B6914',
+    border: 'rgba(0,0,0,0.08)',
+    borderHover: 'rgba(0,0,0,0.12)',
+    card: '#FFFDFB',
+    accentBg: 'rgba(246,219,166,0.3)',
+  };
+}
+
+// Theme toggle component
+function ThemeToggle({ isDark, onToggle }: { isDark: boolean; onToggle: () => void }) {
+  return (
+    <button
+      onClick={onToggle}
+      aria-label={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
+      style={{
+        background: isDark ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.05)',
+        border: 'none',
+        borderRadius: 8,
+        padding: '8px 12px',
+        cursor: 'pointer',
+        display: 'flex',
+        alignItems: 'center',
+        gap: 6,
+        fontSize: 14,
+        color: isDark ? '#F5F5F5' : '#1F2937',
+        transition: 'all 0.2s',
+      }}
+    >
+      {isDark ? <span style={{ fontSize: 16 }}>☀️</span> : <span style={{ fontSize: 16 }}>🌙</span>}
+    </button>
+  );
+}
+
 // Check if user has premium access
 function usePremiumAccess(): { hasPremium: boolean; loading: boolean } {
   // This would connect to your auth system
@@ -92,7 +173,7 @@ function usePremiumAccess(): { hasPremium: boolean; loading: boolean } {
   return { hasPremium, loading: false };
 }
 
-function ToolCard({ tool, hasPremium }: { tool: PremiumTool; hasPremium: boolean }) {
+function ToolCard({ tool, hasPremium, colors, isDark }: { tool: PremiumTool; hasPremium: boolean; colors: ReturnType<typeof getColors>; isDark: boolean }) {
   const [downloading, setDownloading] = useState(false);
 
   const handleDownload = async () => {
@@ -116,20 +197,21 @@ function ToolCard({ tool, hasPremium }: { tool: PremiumTool; hasPremium: boolean
 
   return (
     <div style={{
-      background: '#1A1D28',
+      background: colors.card,
       borderRadius: 16,
       padding: 32,
-      border: '1px solid rgba(201, 169, 98, 0.15)',
+      border: `1px solid ${colors.border}`,
       display: 'flex',
       flexDirection: 'column',
       height: '100%',
+      boxShadow: isDark ? 'none' : '0 2px 8px rgba(0,0,0,0.04)',
     }}>
       <div style={{ fontSize: 48, marginBottom: 16 }}>{tool.icon}</div>
       
       <h3 style={{
         fontSize: 22,
         fontWeight: 600,
-        color: '#F4F5F7',
+        color: colors.textPrimary,
         marginBottom: 8,
       }}>
         {tool.name}
@@ -137,7 +219,7 @@ function ToolCard({ tool, hasPremium }: { tool: PremiumTool; hasPremium: boolean
       
       <p style={{
         fontSize: 15,
-        color: '#A8B0C5',
+        color: colors.textSecondary,
         lineHeight: 1.6,
         marginBottom: 20,
       }}>
@@ -145,7 +227,7 @@ function ToolCard({ tool, hasPremium }: { tool: PremiumTool; hasPremium: boolean
       </p>
 
       <div style={{
-        background: 'rgba(201, 169, 98, 0.08)',
+        background: colors.accentBg,
         borderRadius: 12,
         padding: 16,
         marginBottom: 20,
@@ -154,7 +236,7 @@ function ToolCard({ tool, hasPremium }: { tool: PremiumTool; hasPremium: boolean
         <div style={{
           fontSize: 12,
           fontWeight: 600,
-          color: '#F6DBA6',
+          color: colors.accentText,
           marginBottom: 12,
           textTransform: 'uppercase',
           letterSpacing: '0.05em',
@@ -164,7 +246,7 @@ function ToolCard({ tool, hasPremium }: { tool: PremiumTool; hasPremium: boolean
         <ul style={{
           margin: 0,
           paddingLeft: 20,
-          color: '#A8B0C5',
+          color: colors.textSecondary,
           fontSize: 14,
           lineHeight: 1.8,
         }}>
@@ -179,8 +261,8 @@ function ToolCard({ tool, hasPremium }: { tool: PremiumTool; hasPremium: boolean
           onClick={handleDownload}
           disabled={downloading}
           style={{
-            background: '#F6DBA6',
-            color: '#121212',
+            background: colors.accent,
+            color: '#4A3F2F',
             border: 'none',
             padding: '14px 24px',
             borderRadius: 8,
@@ -196,12 +278,12 @@ function ToolCard({ tool, hasPremium }: { tool: PremiumTool; hasPremium: boolean
           }}
           onMouseEnter={(e) => {
             if (!downloading) {
-              e.currentTarget.style.background = '#D4B872';
+              e.currentTarget.style.background = colors.accentHover;
               e.currentTarget.style.transform = 'translateY(-2px)';
             }
           }}
           onMouseLeave={(e) => {
-            e.currentTarget.style.background = '#F6DBA6';
+            e.currentTarget.style.background = colors.accent;
             e.currentTarget.style.transform = 'translateY(0)';
           }}
         >
@@ -220,8 +302,8 @@ function ToolCard({ tool, hasPremium }: { tool: PremiumTool; hasPremium: boolean
             justifyContent: 'center',
             gap: 8,
             background: 'transparent',
-            color: '#F6DBA6',
-            border: '2px solid #F6DBA6',
+            color: colors.accentText,
+            border: `2px solid ${colors.accent}`,
             padding: '12px 24px',
             borderRadius: 8,
             fontWeight: 600,
@@ -241,21 +323,25 @@ function ToolCard({ tool, hasPremium }: { tool: PremiumTool; hasPremium: boolean
 }
 
 export function PremiumToolsPage() {
+  const { isDark, toggleTheme } = useTheme();
+  const colors = getColors(isDark);
   const { hasPremium, loading } = usePremiumAccess();
 
   return (
     <div style={{
       minHeight: '100vh',
-      background: 'linear-gradient(180deg, #121212 0%, #1A1D28 100%)',
+      background: isDark 
+        ? 'linear-gradient(180deg, #121212 0%, #1E1E1E 100%)'
+        : 'linear-gradient(180deg, #F9F6F0 0%, #F5F2ED 100%)',
       fontFamily: 'Inter, -apple-system, sans-serif',
     }}>
       {/* Header */}
       <header style={{
         padding: '20px 32px',
-        borderBottom: '1px solid rgba(201, 169, 98, 0.1)',
+        borderBottom: `1px solid ${colors.border}`,
         position: 'sticky',
         top: 0,
-        background: 'rgba(15, 17, 23, 0.95)',
+        background: isDark ? 'rgba(18, 18, 18, 0.95)' : 'rgba(255, 253, 251, 0.95)',
         backdropFilter: 'blur(10px)',
         zIndex: 100,
       }}>
@@ -264,12 +350,14 @@ export function PremiumToolsPage() {
           margin: '0 auto',
           display: 'flex',
           justifyContent: 'space-between',
-          alignItems: 'center'
+          alignItems: 'center',
+          flexWrap: 'wrap',
+          gap: 16
         }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 24 }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 24, flexWrap: 'wrap' }}>
             <Link href="/">
               <a style={{
-                color: '#F6DBA6',
+                color: colors.accent,
                 fontSize: 22,
                 fontWeight: 700,
                 textDecoration: 'none',
@@ -280,7 +368,7 @@ export function PremiumToolsPage() {
             </Link>
             <Link href="/tools">
               <a style={{
-                color: '#A8B0C5',
+                color: colors.textSecondary,
                 fontSize: 14,
                 textDecoration: 'none'
               }}>
@@ -288,11 +376,12 @@ export function PremiumToolsPage() {
               </a>
             </Link>
           </div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+            <ThemeToggle isDark={isDark} onToggle={toggleTheme} />
             {hasPremium && (
               <span style={{
-                background: 'rgba(201, 169, 98, 0.15)',
-                color: '#F6DBA6',
+                background: colors.accentBg,
+                color: colors.accentText,
                 padding: '6px 12px',
                 borderRadius: 20,
                 fontSize: 12,
@@ -303,9 +392,9 @@ export function PremiumToolsPage() {
             )}
             <Link href="/dashboard">
               <a style={{
-                background: hasPremium ? 'transparent' : '#F6DBA6',
-                color: hasPremium ? '#F6DBA6' : '#121212',
-                border: hasPremium ? '1px solid #F6DBA6' : 'none',
+                background: hasPremium ? 'transparent' : colors.accent,
+                color: hasPremium ? colors.accentText : '#4A3F2F',
+                border: hasPremium ? `1px solid ${colors.accent}` : 'none',
                 padding: '10px 20px',
                 borderRadius: 8,
                 fontWeight: 600,
@@ -326,8 +415,8 @@ export function PremiumToolsPage() {
       }}>
         <div style={{
           display: 'inline-block',
-          background: 'rgba(201, 169, 98, 0.1)',
-          color: '#F6DBA6',
+          background: colors.accentBg,
+          color: colors.accentText,
           padding: '8px 16px',
           borderRadius: 20,
           fontSize: 13,
@@ -338,23 +427,24 @@ export function PremiumToolsPage() {
         </div>
         
         <h1 style={{
-          fontSize: 48,
+          fontSize: 'clamp(32px, 6vw, 48px)',
           fontWeight: 700,
-          color: '#F4F5F7',
+          color: colors.textPrimary,
           marginBottom: 16,
           lineHeight: 1.2,
         }}>
           Professional Spreadsheets
           <br />
-          <span style={{ color: '#F6DBA6' }}>for Your Finances</span>
+          <span style={{ color: colors.accentText }}>for Your Finances</span>
         </h1>
         
         <p style={{
-          fontSize: 20,
-          color: '#A8B0C5',
+          fontSize: 'clamp(16px, 3vw, 20px)',
+          color: colors.textSecondary,
           maxWidth: 650,
           margin: '0 auto',
           lineHeight: 1.6,
+          padding: '0 16px',
         }}>
           Download CFO-grade Excel templates used by financial professionals.
           Fully customizable, offline-ready, and built for high earners.
@@ -369,11 +459,11 @@ export function PremiumToolsPage() {
       }}>
         <div style={{
           display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(350px, 1fr))',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',
           gap: 24,
         }}>
           {premiumTools.map((tool) => (
-            <ToolCard key={tool.id} tool={tool} hasPremium={hasPremium} />
+            <ToolCard key={tool.id} tool={tool} hasPremium={hasPremium} colors={colors} isDark={isDark} />
           ))}
         </div>
       </section>
@@ -381,15 +471,15 @@ export function PremiumToolsPage() {
       {/* Why Premium Tools */}
       <section style={{
         padding: '60px 32px',
-        background: 'rgba(201, 169, 98, 0.03)',
-        borderTop: '1px solid rgba(201, 169, 98, 0.1)',
-        borderBottom: '1px solid rgba(201, 169, 98, 0.1)',
+        background: isDark ? 'rgba(246,219,166,0.03)' : 'rgba(246,219,166,0.1)',
+        borderTop: `1px solid ${colors.border}`,
+        borderBottom: `1px solid ${colors.border}`,
       }}>
         <div style={{ maxWidth: 1000, margin: '0 auto', textAlign: 'center' }}>
           <h2 style={{
-            fontSize: 32,
+            fontSize: 'clamp(24px, 5vw, 32px)',
             fontWeight: 700,
-            color: '#F4F5F7',
+            color: colors.textPrimary,
             marginBottom: 40,
           }}>
             Why Use These Spreadsheets?
@@ -398,7 +488,7 @@ export function PremiumToolsPage() {
           <div style={{
             display: 'grid',
             gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
-            gap: 32,
+            gap: 24,
             textAlign: 'left',
           }}>
             {[
@@ -434,23 +524,24 @@ export function PremiumToolsPage() {
               },
             ].map((benefit, idx) => (
               <div key={idx} style={{
-                background: '#1A1D28',
+                background: colors.card,
                 padding: 24,
                 borderRadius: 12,
-                border: '1px solid rgba(201, 169, 98, 0.1)',
+                border: `1px solid ${colors.border}`,
+                boxShadow: isDark ? 'none' : '0 2px 8px rgba(0,0,0,0.04)',
               }}>
                 <div style={{ fontSize: 32, marginBottom: 12 }}>{benefit.icon}</div>
                 <h3 style={{
                   fontSize: 18,
                   fontWeight: 600,
-                  color: '#F4F5F7',
+                  color: colors.textPrimary,
                   marginBottom: 8,
                 }}>
                   {benefit.title}
                 </h3>
                 <p style={{
                   fontSize: 14,
-                  color: '#A8B0C5',
+                  color: colors.textSecondary,
                   lineHeight: 1.6,
                   margin: 0,
                 }}>
@@ -469,18 +560,19 @@ export function PremiumToolsPage() {
           textAlign: 'center',
         }}>
           <h2 style={{
-            fontSize: 36,
+            fontSize: 'clamp(24px, 5vw, 36px)',
             fontWeight: 700,
-            color: '#F4F5F7',
+            color: colors.textPrimary,
             marginBottom: 16,
           }}>
             Get All Premium Tools
           </h2>
           <p style={{
             fontSize: 18,
-            color: '#A8B0C5',
+            color: colors.textSecondary,
             maxWidth: 600,
             margin: '0 auto 32px',
+            padding: '0 16px',
           }}>
             One-time payment of $279 gives you lifetime access to all premium tools,
             plus AI-powered financial analysis and personalized advice.
@@ -490,8 +582,8 @@ export function PremiumToolsPage() {
               display: 'inline-flex',
               alignItems: 'center',
               gap: 8,
-              background: '#F6DBA6',
-              color: '#121212',
+              background: colors.accent,
+              color: '#4A3F2F',
               padding: '18px 36px',
               borderRadius: 8,
               fontWeight: 700,
@@ -511,19 +603,19 @@ export function PremiumToolsPage() {
       <footer style={{
         padding: '32px',
         textAlign: 'center',
-        color: '#6B7280',
+        color: colors.textMuted,
         fontSize: 14,
-        borderTop: '1px solid rgba(201, 169, 98, 0.1)',
+        borderTop: `1px solid ${colors.border}`,
       }}>
         <div style={{ marginBottom: 16 }}>
           <Link href="/tools">
-            <a style={{ color: '#A8B0C5', textDecoration: 'none', marginRight: 24 }}>Free Tools</a>
+            <a style={{ color: colors.textSecondary, textDecoration: 'none', marginRight: 24 }}>Free Tools</a>
           </Link>
           <Link href="/dashboard">
-            <a style={{ color: '#A8B0C5', textDecoration: 'none', marginRight: 24 }}>Dashboard</a>
+            <a style={{ color: colors.textSecondary, textDecoration: 'none', marginRight: 24 }}>Dashboard</a>
           </Link>
           <Link href="/take-charge">
-            <a style={{ color: '#A8B0C5', textDecoration: 'none' }}>Blog</a>
+            <a style={{ color: colors.textSecondary, textDecoration: 'none' }}>Blog</a>
           </Link>
         </div>
         © 2026 Charge Wealth. All rights reserved.
