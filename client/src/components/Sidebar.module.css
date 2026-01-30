@@ -170,6 +170,8 @@
 .navItem.active {
   background: var(--sidebar-active);
   color: var(--brand-primary);
+  border-left: 3px solid var(--brand-accent);
+  padding-left: calc(1rem - 3px);
 }
 
 .navIcon {
