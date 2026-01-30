@@ -80,12 +80,12 @@ export function registerPublicRoutes(app: Express) {
         return res.json(foundingStatsCache.data);
       }
       
-      // Using display count for marketing (actual database count available via storage.getFoundingMemberCount())
-      const displayClaimed = 203; // Hardcoded for marketing - update as spots are claimed
+      // Get real founding member count from database
+      const realCount = await storage.getFoundingMemberCount();
       const total = 250;
-      const remaining = Math.max(0, total - displayClaimed);
+      const remaining = Math.max(0, total - realCount);
       
-      const data = { total, claimed: displayClaimed, remaining };
+      const data = { total, claimed: realCount, remaining };
       foundingStatsCache = { data, timestamp: now };
       res.json(data);
     } catch (error) {

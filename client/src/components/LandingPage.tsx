@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useSupabaseAuth } from '../hooks/useSupabaseAuth';
 
 interface LandingPageProps {
@@ -13,6 +13,14 @@ export function LandingPage({ onShowLogin }: LandingPageProps) {
   const [signupLoading, setSignupLoading] = useState(false);
   const [signupSuccess, setSignupSuccess] = useState(false);
   const [socialLoading, setSocialLoading] = useState<string | null>(null);
+  const [foundingStats, setFoundingStats] = useState({ remaining: 0, claimed: 0, total: 250 });
+
+  useEffect(() => {
+    fetch('/api/stats/founding')
+      .then(res => res.json())
+      .then(data => setFoundingStats(data))
+      .catch(() => setFoundingStats({ remaining: 47, claimed: 203, total: 250 }));
+  }, []);
 
   const handleGoogleSignup = async () => {
     setSocialLoading('google');
@@ -147,7 +155,7 @@ export function LandingPage({ onShowLogin }: LandingPageProps) {
                   Join the Beta
                 </h2>
                 <p style={{ color: '#4B5563', fontSize: '0.9375rem' }}>
-                  Only <span style={{ color: '#B8860B', fontWeight: '600' }}>47 spots left</span> at the founding member price
+                  Only <span style={{ color: '#B8860B', fontWeight: '600' }}>{foundingStats.remaining} spots left</span> at the founding member price
                 </p>
               </div>
 
@@ -326,7 +334,7 @@ export function LandingPage({ onShowLogin }: LandingPageProps) {
             borderRadius: '50%',
             animation: 'pulse 2s infinite',
           }} />
-          Limited Beta: Only 47 spots remaining
+          Limited Beta: Only {foundingStats.remaining} spots remaining
         </div>
 
         <h1 style={{
