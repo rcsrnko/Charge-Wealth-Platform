@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      width: 1200px;
+      height: 630px;
+      background: #0F1117;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+    }
+    /* Decorative circles */
+    .circle {
+      position: absolute;
+      border-radius: 50%;
+      border: 1px solid rgba(212, 175, 55, 0.2);
+    }
+    .circle-1 {
+      width: 400px;
+      height: 400px;
+      right: -100px;
+      top: -100px;
+    }
+    .circle-2 {
+      width: 300px;
+      height: 300px;
+      right: -50px;
+      bottom: -100px;
+    }
+    .circle-3 {
+      width: 200px;
+      height: 200px;
+      left: -80px;
+      bottom: 100px;
+    }
+    /* Top accent bar */
+    .top-bar {
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 200px;
+      height: 4px;
+      background: linear-gradient(90deg, transparent, #D4AF37, transparent);
+    }
+    /* Logo and brand */
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 40px;
+    }
+    .logo-box {
+      width: 60px;
+      height: 60px;
+      background: linear-gradient(135deg, #D4AF37, #B8962E);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .logo-icon {
+      width: 36px;
+      height: 36px;
+    }
+    .brand-name {
+      font-size: 48px;
+      font-weight: 700;
+      color: white;
+      letter-spacing: -1px;
+    }
+    /* Main headline */
+    .headline {
+      font-size: 52px;
+      font-weight: 600;
+      color: white;
+      margin-bottom: 24px;
+      text-align: center;
+    }
+    .headline .gold {
+      color: #D4AF37;
+    }
+    /* Tagline */
+    .tagline {
+      font-size: 22px;
+      color: rgba(255, 255, 255, 0.7);
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      margin-bottom: 60px;
+    }
+    /* Footer */
+    .footer {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      color: rgba(255, 255, 255, 0.6);
+      font-size: 20px;
+    }
+    .dot {
+      width: 8px;
+      height: 8px;
+      background: #D4AF37;
+      border-radius: 50%;
+    }
+  </style>
+</head>
+<body>
+  <div class="circle circle-1"></div>
+  <div class="circle circle-2"></div>
+  <div class="circle circle-3"></div>
+  <div class="top-bar"></div>
+  
+  <div class="brand">
+    <div class="logo-box">
+      <svg class="logo-icon" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+        <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+        <path d="M2 17l10 5 10-5"/>
+        <path d="M2 12l10 5 10-5"/>
+      </svg>
+    </div>
+    <span class="brand-name">Charge Wealth</span>
+  </div>
+  
+  <h1 class="headline">Stop Leaving <span class="gold">$8,400/Year</span> on the Table</h1>
+  
+  <p class="tagline">Your 24/7 AI CFO</p>
+  
+  <div class="footer">
+    <span class="dot"></span>
+    <span>chargewealth.co</span>
+    <span class="dot"></span>
+  </div>
+</body>
+</html>
