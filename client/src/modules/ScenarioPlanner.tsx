@@ -2,6 +2,11 @@ import { useState, useEffect } from 'react';
 import styles from './ScenarioPlanner.module.css';
 import { fetchWithAuth } from '../lib/fetchWithAuth';
 import { EXPECTED_MARKET_RETURN } from '../constants/rates';
+import { Input } from '../components/ui/input';
+import { Button } from '../components/ui/button';
+import { Label } from '../components/ui/label';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../components/ui/card';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../components/ui/select';
 
 type ScenarioType = 'job_change' | 'home_purchase' | 'retirement' | 'side_income';
 

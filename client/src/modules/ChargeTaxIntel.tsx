@@ -3,6 +3,11 @@ import styles from './ChargeTaxIntel.module.css';
 import LoadingSpinner from '../components/LoadingSpinner';
 import { useToast } from '../components/Toast';
 import { fetchWithAuth } from '../lib/fetchWithAuth';
+import { Button } from '../components/ui/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../components/ui/card';
+import { Badge } from '../components/ui/badge';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '../components/ui/tabs';
+import { Skeleton } from '../components/ui/skeleton';
 
 interface TaxStrategy {
   strategy: string;

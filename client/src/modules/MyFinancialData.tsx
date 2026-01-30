@@ -1,6 +1,10 @@
 import { useState, useEffect } from 'react';
 import styles from './MyFinancialData.module.css';
 import { fetchWithAuth } from '../lib/fetchWithAuth';
+import { Button } from '../components/ui/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../components/ui/card';
+import { Badge } from '../components/ui/badge';
+import { Skeleton } from '../components/ui/skeleton';
 
 interface MyFinancialDataType {
   profile: {
