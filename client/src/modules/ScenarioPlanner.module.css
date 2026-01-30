@@ -33,7 +33,7 @@
   gap: 0.5rem;
   padding: 0.75rem 1rem;
   background: var(--deep-navy, #1a1d28);
-  border: 1px solid rgba(201, 169, 98, 0.2);
+  border: 1px solid var(--border-strong);
   border-radius: 8px;
   margin-bottom: 1.5rem;
 }
@@ -57,7 +57,7 @@
 
 .scenarioSelector {
   background: var(--deep-navy, #1a1d28);
-  border: 1px solid rgba(201, 169, 98, 0.15);
+  border: 1px solid var(--sidebar-active);
   border-radius: 12px;
   padding: 1.5rem;
 }
@@ -87,7 +87,7 @@
   align-items: center;
   gap: 0.5rem;
   padding: 1rem;
-  background: rgba(255, 255, 255, 0.03);
+  background: var(--input-bg);
   border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 10px;
   color: var(--muted-gray, #6b7280);
@@ -96,13 +96,13 @@
 }
 
 .scenarioBtn:hover {
-  background: rgba(201, 169, 98, 0.1);
-  border-color: rgba(201, 169, 98, 0.3);
+  background: var(--sidebar-hover);
+  border-color: var(--border-strong);
   color: var(--porcelain, #f4f5f7);
 }
 
 .scenarioBtn.active {
-  background: rgba(201, 169, 98, 0.15);
+  background: var(--sidebar-active);
   border-color: var(--gold-sand, #c9a962);
   color: var(--porcelain, #f4f5f7);
 }
@@ -130,7 +130,7 @@
 
 .inputsSection {
   background: var(--deep-navy, #1a1d28);
-  border: 1px solid rgba(201, 169, 98, 0.15);
+  border: 1px solid var(--sidebar-active);
   border-radius: 12px;
   padding: 1.5rem;
 }
@@ -155,7 +155,7 @@
 .inputWrapper {
   display: flex;
   align-items: center;
-  background: rgba(255, 255, 255, 0.05);
+  background: var(--input-bg-hover);
   border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 8px;
   overflow: hidden;
@@ -168,7 +168,7 @@
 .inputPrefix, .inputSuffix {
   padding: 0.75rem;
   color: var(--muted-gray, #6b7280);
-  background: rgba(255, 255, 255, 0.03);
+  background: var(--input-bg);
 }
 
 .inputWrapper input {
@@ -183,7 +183,7 @@
 
 .simpleInput {
   padding: 0.75rem;
-  background: rgba(255, 255, 255, 0.05);
+  background: var(--input-bg-hover);
   border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 8px;
   color: var(--porcelain, #f4f5f7);
@@ -224,7 +224,7 @@
 
 .resultItem {
   padding: 0.75rem 1rem;
-  background: rgba(255, 255, 255, 0.03);
+  background: var(--input-bg);
   border-radius: 8px;
   font-size: 0.9rem;
   color: var(--porcelain, #f4f5f7);
@@ -232,5 +232,5 @@
 }
 
 .resultItem:nth-child(odd) {
-  background: rgba(255, 255, 255, 0.05);
+  background: var(--input-bg-hover);
 }

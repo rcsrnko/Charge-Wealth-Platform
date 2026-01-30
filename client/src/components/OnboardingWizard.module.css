@@ -11,8 +11,8 @@
 }
 
 .wizard {
-  background: linear-gradient(135deg, #1A1D28 0%, #0F1117 100%);
-  border: 1px solid rgba(201, 169, 98, 0.2);
+  background: linear-gradient(135deg, var(--bg-secondary) 0%, var(--bg-primary) 100%);
+  border: 1px solid var(--border-strong);
   border-radius: 16px;
   max-width: 560px;
   width: 100%;
@@ -57,8 +57,8 @@
 .stepNumber {
   width: 40px;
   height: 40px;
-  background: rgba(201, 169, 98, 0.15);
-  border: 1px solid rgba(201, 169, 98, 0.3);
+  background: var(--sidebar-active);
+  border: 1px solid var(--border-strong);
   border-radius: 50%;
   display: flex;
   align-items: center;
@@ -118,7 +118,7 @@
   background: #C9A962;
   border-radius: 50%;
   cursor: pointer;
-  box-shadow: 0 2px 8px rgba(201, 169, 98, 0.4);
+  box-shadow: 0 2px 8px var(--border-strong);
 }
 
 .slider::-moz-range-thumb {
@@ -150,7 +150,7 @@
 }
 
 .select option {
-  background: #0F1117;
+  background: var(--bg-primary);
   color: #FAFAFA;
 }
 
@@ -163,7 +163,7 @@
 .primaryButton {
   width: 100%;
   background: linear-gradient(135deg, #C9A962 0%, #D4B87A 100%);
-  color: #0F1117;
+  color: var(--bg-primary);
   font-size: 1rem;
   font-weight: 600;
   padding: 1rem 2rem;
@@ -176,7 +176,7 @@
 
 .primaryButton:hover {
   transform: translateY(-2px);
-  box-shadow: 0 12px 32px rgba(201, 169, 98, 0.3);
+  box-shadow: 0 12px 32px var(--border-strong);
 }
 
 .primaryButton:disabled {
@@ -202,8 +202,8 @@
 }
 
 .resultCard {
-  background: rgba(201, 169, 98, 0.08);
-  border: 1px solid rgba(201, 169, 98, 0.2);
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border-strong);
   border-radius: 12px;
   padding: 1.25rem;
   margin-top: 1.5rem;
@@ -239,7 +239,7 @@
 }
 
 .dropzone {
-  border: 2px dashed rgba(201, 169, 98, 0.3);
+  border: 2px dashed var(--border-strong);
   border-radius: 12px;
   padding: 3rem 2rem;
   text-align: center;
@@ -250,7 +250,7 @@
 .dropzone:hover,
 .dragging {
   border-color: #C9A962;
-  background: rgba(201, 169, 98, 0.05);
+  background: var(--bg-tertiary);
 }
 
 .dropzone svg {
@@ -273,8 +273,8 @@
 
 .fileButton {
   display: inline-block;
-  background: rgba(201, 169, 98, 0.15);
-  border: 1px solid rgba(201, 169, 98, 0.3);
+  background: var(--sidebar-active);
+  border: 1px solid var(--border-strong);
   color: #C9A962;
   padding: 0.5rem 1rem;
   border-radius: 4px;
@@ -284,7 +284,7 @@
 }
 
 .fileButton:hover {
-  background: rgba(201, 169, 98, 0.25);
+  background: var(--border-strong);
 }
 
 .fileInfo {
@@ -318,7 +318,7 @@
 .spinner {
   width: 40px;
   height: 40px;
-  border: 3px solid rgba(201, 169, 98, 0.2);
+  border: 3px solid var(--border-strong);
   border-top-color: #C9A962;
   border-radius: 50%;
   margin: 0 auto;
@@ -364,7 +364,7 @@
 }
 
 .userMessage p {
-  background: rgba(255, 255, 255, 0.05);
+  background: var(--input-bg-hover);
   padding: 0.875rem 1rem;
   border-radius: 8px;
   font-size: 0.9375rem;
@@ -374,8 +374,8 @@
 }
 
 .aiMessage p {
-  background: rgba(201, 169, 98, 0.08);
-  border: 1px solid rgba(201, 169, 98, 0.15);
+  background: var(--bg-tertiary);
+  border: 1px solid var(--sidebar-active);
   padding: 0.875rem 1rem;
   border-radius: 8px;
   font-size: 0.9375rem;
@@ -436,7 +436,7 @@
   align-items: center;
   gap: 1rem;
   padding: 1rem 1.25rem;
-  background: rgba(255, 255, 255, 0.03);
+  background: var(--input-bg);
   border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 12px;
   cursor: pointer;
@@ -446,8 +446,8 @@
 }
 
 .documentOption:hover {
-  background: rgba(201, 169, 98, 0.08);
-  border-color: rgba(201, 169, 98, 0.3);
+  background: var(--bg-tertiary);
+  border-color: var(--border-strong);
 }
 
 .documentOption svg {

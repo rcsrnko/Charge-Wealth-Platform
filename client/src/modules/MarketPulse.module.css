@@ -43,7 +43,7 @@
 
 .refreshBtn {
   background: var(--accent-gold, #C9A962);
-  color: #0F1117;
+  color: var(--bg-primary);
   border: none;
   padding: 0.5rem 1rem;
   border-radius: 6px;
@@ -74,7 +74,7 @@
 .spinner {
   width: 40px;
   height: 40px;
-  border: 3px solid rgba(201, 169, 98, 0.2);
+  border: 3px solid var(--border-strong);
   border-top-color: var(--accent-gold, #C9A962);
   border-radius: 50%;
   animation: spin 1s linear infinite;
@@ -87,7 +87,7 @@
 
 .retryBtn {
   background: var(--accent-gold, #C9A962);
-  color: #0F1117;
+  color: var(--bg-primary);
   border: none;
   padding: 0.75rem 1.5rem;
   border-radius: 6px;
@@ -125,7 +125,7 @@
 }
 
 .indexCard {
-  background: var(--card-bg, rgba(255, 255, 255, 0.03));
+  background: var(--card-bg, var(--input-bg));
   border: 1px solid var(--border-color, rgba(255, 255, 255, 0.08));
   border-radius: 12px;
   padding: 1.25rem;
@@ -178,7 +178,7 @@
 }
 
 .moversSection {
-  background: var(--card-bg, rgba(255, 255, 255, 0.03));
+  background: var(--card-bg, var(--input-bg));
   border: 1px solid var(--border-color, rgba(255, 255, 255, 0.08));
   border-radius: 12px;
   padding: 1.25rem;
@@ -201,7 +201,7 @@
 }
 
 .moverItem:hover {
-  background: rgba(255, 255, 255, 0.05);
+  background: var(--input-bg-hover);
 }
 
 .moverRank {
@@ -210,7 +210,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: rgba(201, 169, 98, 0.15);
+  background: var(--sidebar-active);
   color: var(--accent-gold, #C9A962);
   border-radius: 50%;
   font-size: 0.75rem;
@@ -282,8 +282,8 @@
   align-items: flex-start;
   gap: 0.75rem;
   padding: 1rem;
-  background: rgba(201, 169, 98, 0.08);
-  border: 1px solid rgba(201, 169, 98, 0.2);
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border-strong);
   border-radius: 10px;
 }
 
@@ -319,7 +319,7 @@
 
 .watchlistCategory {
   background: var(--deep-navy, #1a1d28);
-  border: 1px solid rgba(201, 169, 98, 0.15);
+  border: 1px solid var(--sidebar-active);
   border-radius: 10px;
   padding: 1rem;
 }
@@ -343,8 +343,8 @@
   align-items: center;
   gap: 0.5rem;
   padding: 0.375rem 0.75rem;
-  background: rgba(201, 169, 98, 0.1);
-  border: 1px solid rgba(201, 169, 98, 0.25);
+  background: var(--sidebar-hover);
+  border: 1px solid var(--border-strong);
   border-radius: 6px;
   font-size: 0.8rem;
   font-weight: 600;
@@ -363,8 +363,8 @@
 
 .tickerInput {
   padding: 0.375rem 0.75rem;
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px dashed rgba(201, 169, 98, 0.4);
+  background: var(--input-bg-hover);
+  border: 1px dashed var(--border-strong);
   border-radius: 6px;
   font-size: 0.8rem;
   color: var(--porcelain, #f4f5f7);
@@ -377,8 +377,8 @@
 
 .editBtn {
   padding: 0.375rem 0.75rem;
-  background: rgba(201, 169, 98, 0.1);
-  border: 1px solid rgba(201, 169, 98, 0.3);
+  background: var(--sidebar-hover);
+  border: 1px solid var(--border-strong);
   border-radius: 6px;
   color: var(--gold-sand, #c9a962);
   font-size: 0.8rem;
@@ -386,7 +386,7 @@
 }
 
 .editBtn:hover {
-  background: rgba(201, 169, 98, 0.2);
+  background: var(--border-strong);
 }
 
 .deleteBtn {
@@ -404,14 +404,14 @@
   flex-direction: column;
   gap: 0.5rem;
   padding: 1rem;
-  background: rgba(255, 255, 255, 0.03);
-  border: 1px dashed rgba(201, 169, 98, 0.3);
+  background: var(--input-bg);
+  border: 1px dashed var(--border-strong);
   border-radius: 10px;
 }
 
 .addInput {
   padding: 0.5rem;
-  background: rgba(255, 255, 255, 0.05);
+  background: var(--input-bg-hover);
   border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 6px;
   color: var(--porcelain, #f4f5f7);
@@ -505,8 +505,8 @@
 }
 
 .commentaryCard {
-  background: linear-gradient(135deg, rgba(201, 169, 98, 0.08) 0%, rgba(201, 169, 98, 0.03) 100%);
-  border: 1px solid rgba(201, 169, 98, 0.2);
+  background: linear-gradient(135deg, var(--bg-tertiary) 0%, var(--bg-secondary) 100%);
+  border: 1px solid var(--border-strong);
   border-radius: 12px;
   padding: 1.5rem;
 }

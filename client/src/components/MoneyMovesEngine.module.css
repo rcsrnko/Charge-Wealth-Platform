@@ -1,5 +1,5 @@
 .container {
-  background: var(--deep-navy, #1A1D28);
+  background: var(--deep-navy, var(--bg-secondary));
   border: 1px solid var(--border, #2A3142);
   border-radius: 12px;
   padding: 24px;
@@ -57,7 +57,7 @@
   align-items: flex-start;
   gap: 16px;
   padding: 16px;
-  background: var(--charcoal, #242B38);
+  background: var(--charcoal, var(--bg-tertiary));
   border: 1px solid var(--border, #2A3142);
   border-radius: 8px;
   transition: border-color 0.2s;
@@ -73,7 +73,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: rgba(201, 169, 98, 0.15);
+  background: var(--sidebar-active);
   color: var(--gold, #C9A962);
   font-weight: 700;
   font-size: 14px;
@@ -122,17 +122,17 @@
 }
 
 .categoryBadge.allocation {
-  background: rgba(201, 169, 98, 0.15);
+  background: var(--sidebar-active);
   color: var(--gold-sand);
 }
 
 .categoryBadge.risk {
-  background: rgba(201, 169, 98, 0.2);
+  background: var(--border-strong);
   color: var(--gold-muted);
 }
 
 .categoryBadge.cash {
-  background: rgba(201, 169, 98, 0.12);
+  background: var(--sidebar-hover);
   color: var(--gold-sand);
 }
 
@@ -151,7 +151,7 @@
 }
 
 .urgencyBadge.soon {
-  background: rgba(201, 169, 98, 0.2);
+  background: var(--border-strong);
   color: var(--gold-sand);
 }
 
@@ -187,7 +187,7 @@
   background: var(--gold, #C9A962);
   border: none;
   border-radius: 6px;
-  color: var(--midnight, #0F1117);
+  color: var(--midnight, var(--bg-primary));
   font-size: 12px;
   font-weight: 600;
   cursor: pointer;
@@ -208,7 +208,7 @@
   width: 64px;
   height: 64px;
   margin: 0 auto 20px;
-  background: rgba(201, 169, 98, 0.15);
+  background: var(--sidebar-active);
   border-radius: 50%;
   display: flex;
   align-items: center;
@@ -241,7 +241,7 @@
 .emptyImpact {
   display: inline-block;
   padding: 8px 16px;
-  background: rgba(201, 169, 98, 0.15);
+  background: var(--sidebar-active);
   border-radius: 20px;
   font-size: 13px;
   font-weight: 600;
@@ -275,7 +275,7 @@
 
 .meterTrack {
   height: 8px;
-  background: rgba(255, 255, 255, 0.05);
+  background: var(--input-bg-hover);
   border-radius: 4px;
   overflow: hidden;
   margin-bottom: 8px;
@@ -308,7 +308,7 @@
 
 .onboardingCard:hover {
   border-color: var(--gold-sand);
-  background: rgba(201, 169, 98, 0.08);
+  background: var(--bg-tertiary);
 }
 
 .onboardingContent {

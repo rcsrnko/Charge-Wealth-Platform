@@ -3,8 +3,8 @@
   top: 0.75rem;
   left: 50%;
   transform: translateX(-50%);
-  background: linear-gradient(135deg, rgba(201, 169, 98, 0.15) 0%, rgba(201, 169, 98, 0.05) 100%);
-  border: 1px solid rgba(201, 169, 98, 0.4);
+  background: linear-gradient(135deg, var(--sidebar-active) 0%, var(--bg-tertiary) 100%);
+  border: 1px solid var(--border-strong);
   border-radius: 12px;
   padding: 0.5rem 1.25rem;
   cursor: pointer;
@@ -17,7 +17,7 @@
 .counter:hover {
   transform: translateX(-50%) translateY(-2px);
   border-color: var(--gold);
-  box-shadow: 0 8px 20px rgba(201, 169, 98, 0.2);
+  box-shadow: 0 8px 20px var(--border-strong);
 }
 
 .dismissBtn {
@@ -93,8 +93,8 @@
 }
 
 .modal {
-  background: linear-gradient(180deg, #1A1D28 0%, #0F1117 100%);
-  border: 1px solid rgba(201, 169, 98, 0.3);
+  background: linear-gradient(180deg, var(--bg-secondary) 0%, var(--bg-primary) 100%);
+  border: 1px solid var(--border-strong);
   border-radius: 16px;
   max-width: 520px;
   width: 100%;
@@ -147,8 +147,8 @@
 }
 
 .totalSection {
-  background: rgba(201, 169, 98, 0.1);
-  border: 1px solid rgba(201, 169, 98, 0.25);
+  background: var(--sidebar-hover);
+  border: 1px solid var(--border-strong);
   border-radius: 12px;
   padding: 1.25rem;
   text-align: center;
@@ -182,7 +182,7 @@
 }
 
 .breakdownItem {
-  background: rgba(255, 255, 255, 0.03);
+  background: var(--input-bg);
   border: 1px solid var(--border-color);
   border-radius: 10px;
   padding: 1rem;
@@ -240,7 +240,7 @@
   padding: 0.5rem 1rem;
   font-size: 0.8125rem;
   font-weight: 500;
-  background: rgba(255, 255, 255, 0.05);
+  background: var(--input-bg-hover);
   border: 1px solid var(--border-color);
   border-radius: 6px;
   color: var(--text-secondary);
@@ -253,7 +253,7 @@
 }
 
 .toggleBtn.active {
-  background: rgba(201, 169, 98, 0.15);
+  background: var(--sidebar-active);
   border-color: var(--gold);
   color: var(--gold);
 }

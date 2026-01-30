@@ -1,8 +1,8 @@
 .container {
-  background: linear-gradient(135deg, #1A1D28 0%, #242B38 100%);
+  background: linear-gradient(135deg, var(--bg-secondary) 0%, var(--bg-tertiary) 100%);
   border-radius: 16px;
   padding: 24px;
-  border: 1px solid rgba(201, 169, 98, 0.15);
+  border: 1px solid var(--sidebar-active);
 }
 
 .header {
@@ -51,13 +51,13 @@
 .pointsValue {
   font-size: 24px;
   font-weight: 700;
-  color: #0F1117;
+  color: var(--bg-primary);
   line-height: 1;
 }
 
 .pointsLabel {
   font-size: 11px;
-  color: #0F1117;
+  color: var(--bg-primary);
   opacity: 0.8;
   text-transform: uppercase;
   letter-spacing: 0.5px;
@@ -79,7 +79,7 @@
 
 .levelBadge {
   background: linear-gradient(135deg, #C9A962 0%, #B8954F 100%);
-  color: #0F1117;
+  color: var(--bg-primary);
   font-weight: 600;
   font-size: 12px;
   padding: 4px 12px;
@@ -161,7 +161,7 @@
 
 .generateButton {
   background: linear-gradient(135deg, #C9A962 0%, #B8954F 100%);
-  color: #0F1117;
+  color: var(--bg-primary);
   font-weight: 600;
   font-size: 14px;
   padding: 12px 24px;
@@ -173,7 +173,7 @@
 
 .generateButton:hover:not(:disabled) {
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(201, 169, 98, 0.3);
+  box-shadow: 0 4px 12px var(--border-strong);
 }
 
 .generateButton:disabled {
@@ -304,7 +304,7 @@
 
 .recDetails {
   padding: 0 16px 16px;
-  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  border-top: 1px solid var(--input-bg-hover);
 }
 
 .recDescription {
@@ -315,7 +315,7 @@
 }
 
 .cfpNote {
-  background: rgba(201, 169, 98, 0.1);
+  background: var(--sidebar-hover);
   border-left: 3px solid #C9A962;
   padding: 12px 16px;
   font-size: 13px;
@@ -404,7 +404,7 @@
 
 .refreshButton {
   width: 100%;
-  background: rgba(255, 255, 255, 0.05);
+  background: var(--input-bg-hover);
   color: #9ca3af;
   font-size: 13px;
   padding: 12px;

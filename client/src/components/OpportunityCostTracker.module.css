@@ -1,5 +1,5 @@
 .container {
-  background: var(--deep-navy, #1A1D28);
+  background: var(--deep-navy, var(--bg-secondary));
   border: 1px solid var(--border, #2A3142);
   border-radius: 12px;
   padding: 20px;
@@ -115,7 +115,7 @@
   background: var(--gold, #C9A962);
   border: none;
   border-radius: 6px;
-  color: var(--midnight, #0F1117);
+  color: var(--midnight, var(--bg-primary));
   font-size: 11px;
   font-weight: 600;
   cursor: pointer;
@@ -157,7 +157,7 @@
 .emptyHighlight {
   display: inline-block;
   padding: 6px 12px;
-  background: rgba(201, 169, 98, 0.15);
+  background: var(--sidebar-active);
   border-radius: 20px;
   font-size: 12px;
   font-weight: 600;

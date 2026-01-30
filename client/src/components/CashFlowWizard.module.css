@@ -38,7 +38,7 @@
 }
 
 .closeButton:hover {
-  color: var(--charcoal-slate, #242B38);
+  color: var(--charcoal-slate, var(--bg-tertiary));
 }
 
 .closeButton svg {
@@ -116,7 +116,7 @@
 .inputGroup label {
   font-size: 0.9375rem;
   font-weight: 500;
-  color: var(--charcoal-slate, #242B38);
+  color: var(--charcoal-slate, var(--bg-tertiary));
 }
 
 .inputWrapper {
@@ -165,7 +165,7 @@
   padding: 1rem;
   border-radius: 8px;
   text-align: center;
-  color: var(--charcoal-slate, #242B38);
+  color: var(--charcoal-slate, var(--bg-tertiary));
   font-size: 1.0625rem;
   margin-top: 0.5rem;
 }
@@ -196,7 +196,7 @@
 
 .backButton:hover {
   background: rgba(122, 133, 154, 0.1);
-  color: var(--charcoal-slate, #242B38);
+  color: var(--charcoal-slate, var(--bg-tertiary));
 }
 
 .nextButton,
@@ -260,7 +260,7 @@
 .summaryValue {
   font-size: 1.5rem;
   font-weight: 700;
-  color: var(--charcoal-slate, #242B38);
+  color: var(--charcoal-slate, var(--bg-tertiary));
 }
 
 .summaryCard.positive .summaryValue {
@@ -281,7 +281,7 @@
 .chartSection h4 {
   margin: 0 0 1rem;
   font-size: 1rem;
-  color: var(--charcoal-slate, #242B38);
+  color: var(--charcoal-slate, var(--bg-tertiary));
   text-align: center;
 }
 
@@ -331,7 +331,7 @@
 }
 
 .insightsText {
-  color: var(--charcoal-slate, #242B38);
+  color: var(--charcoal-slate, var(--bg-tertiary));
   line-height: 1.6;
 }
 

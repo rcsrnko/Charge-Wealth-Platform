@@ -49,7 +49,7 @@
 }
 
 .retryButton:hover {
-  background: rgba(201, 169, 98, 0.1);
+  background: var(--sidebar-hover);
 }
 
 .retryButton svg {
@@ -90,5 +90,5 @@
 }
 
 .compactRetry:hover {
-  background: rgba(201, 169, 98, 0.1);
+  background: var(--sidebar-hover);
 }

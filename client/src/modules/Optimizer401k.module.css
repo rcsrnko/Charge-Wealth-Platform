@@ -59,7 +59,7 @@
 
 .inputSection {
   background: var(--deep-navy, #1a1d28);
-  border: 1px solid rgba(201, 169, 98, 0.15);
+  border: 1px solid var(--sidebar-active);
   border-radius: 12px;
   padding: 1.5rem;
 }
@@ -91,7 +91,7 @@
 .inputWrapper {
   display: flex;
   align-items: center;
-  background: rgba(255, 255, 255, 0.05);
+  background: var(--input-bg-hover);
   border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 8px;
   overflow: hidden;
@@ -104,7 +104,7 @@
 .inputPrefix, .inputSuffix {
   padding: 0.75rem;
   color: var(--muted-gray, #6b7280);
-  background: rgba(255, 255, 255, 0.03);
+  background: var(--input-bg);
 }
 
 .inputWrapper input, .inputWrapper select {
@@ -267,7 +267,7 @@
   padding: 0.5rem 0;
   font-size: 0.85rem;
   color: var(--muted-gray, #6b7280);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  border-bottom: 1px solid var(--input-bg-hover);
 }
 
 .comparisonRow span:last-child {
@@ -290,7 +290,7 @@
 
 .actionCard {
   background: var(--deep-navy, #1a1d28);
-  border: 1px solid rgba(201, 169, 98, 0.3);
+  border: 1px solid var(--border-strong);
   border-radius: 12px;
   padding: 1.5rem;
 }

@@ -162,7 +162,7 @@
 }
 
 .dropdownItem:hover {
-  background: rgba(201, 169, 98, 0.1);
+  background: var(--sidebar-hover);
 }
 
 .dropdownItem svg {
@@ -230,7 +230,7 @@
 .loaderSpinner {
   width: 40px;
   height: 40px;
-  border: 3px solid rgba(201, 169, 98, 0.2);
+  border: 3px solid var(--border-strong);
   border-top-color: var(--soft-gold);
   border-radius: 50%;
   animation: spin 0.8s linear infinite;
@@ -276,7 +276,7 @@
 }
 
 .aiAdvisorPromo {
-  background: linear-gradient(135deg, rgba(201, 169, 98, 0.15) 0%, rgba(201, 169, 98, 0.05) 100%);
+  background: linear-gradient(135deg, var(--sidebar-active) 0%, var(--bg-tertiary) 100%);
   border: 1px solid var(--soft-gold);
   border-radius: 16px;
   padding: 1.5rem;
@@ -291,7 +291,7 @@
 .promoIcon {
   width: 56px;
   height: 56px;
-  background: rgba(201, 169, 98, 0.2);
+  background: var(--border-strong);
   border-radius: 14px;
   display: flex;
   align-items: center;
@@ -370,7 +370,7 @@
 
 .modulePreview.unlocked {
   opacity: 1;
-  border-color: rgba(201, 169, 98, 0.3);
+  border-color: var(--border-strong);
 }
 
 .moduleIcon {
@@ -434,8 +434,8 @@
 
 .moduleLink {
   padding: 0.375rem 0.75rem;
-  background: rgba(201, 169, 98, 0.15);
-  border: 1px solid rgba(201, 169, 98, 0.3);
+  background: var(--sidebar-active);
+  border: 1px solid var(--border-strong);
   border-radius: 6px;
   color: var(--soft-gold);
   font-size: 0.75rem;
@@ -445,7 +445,7 @@
 }
 
 .moduleLink:hover {
-  background: rgba(201, 169, 98, 0.25);
+  background: var(--border-strong);
 }
 
 .lockedModulePage {
@@ -566,12 +566,12 @@
   border-radius: 12px;
   text-decoration: none;
   transition: all 0.2s;
-  box-shadow: 0 4px 20px rgba(201, 169, 98, 0.3);
+  box-shadow: 0 4px 20px var(--border-strong);
 }
 
 .primaryCta:hover {
   transform: translateY(-2px);
-  box-shadow: 0 6px 30px rgba(201, 169, 98, 0.4);
+  box-shadow: 0 6px 30px var(--border-strong);
 }
 
 .ctaIcon {
@@ -646,20 +646,20 @@
 }
 
 .engineCard:hover {
-  border-color: rgba(201, 169, 98, 0.4);
-  background: rgba(201, 169, 98, 0.05);
+  border-color: var(--border-strong);
+  background: var(--bg-tertiary);
   transform: translateY(-2px);
 }
 
 .engineCard.primary {
   border-color: var(--soft-gold);
-  background: linear-gradient(135deg, rgba(201, 169, 98, 0.12) 0%, rgba(201, 169, 98, 0.04) 100%);
+  background: linear-gradient(135deg, var(--sidebar-hover) 0%, var(--bg-secondary) 100%);
 }
 
 .engineIcon {
   width: 48px;
   height: 48px;
-  background: rgba(201, 169, 98, 0.1);
+  background: var(--sidebar-hover);
   border-radius: 12px;
   display: flex;
   align-items: center;
@@ -804,8 +804,8 @@
 }
 
 .disclaimer {
-  background: rgba(201, 169, 98, 0.06);
-  border: 1px solid rgba(201, 169, 98, 0.15);
+  background: var(--bg-tertiary);
+  border: 1px solid var(--sidebar-active);
   border-radius: 8px;
   padding: 1rem 1.25rem;
   margin-top: 2rem;
@@ -936,12 +936,12 @@
 }
 
 .navItem:hover {
-  background: rgba(255, 255, 255, 0.05);
+  background: var(--input-bg-hover);
   color: var(--porcelain);
 }
 
 .navItem.active {
-  background: rgba(201, 169, 98, 0.15);
+  background: var(--sidebar-active);
   color: var(--gold);
 }
 
@@ -961,7 +961,7 @@
   left: 0;
   right: 0;
   background: linear-gradient(90deg, #C9A962 0%, #B8943E 100%);
-  color: #0F1117;
+  color: var(--bg-primary);
   text-align: center;
   padding: 0.5rem 1rem;
   font-size: 0.875rem;
@@ -974,13 +974,13 @@
 }
 
 .demoBanner a {
-  color: #0F1117;
+  color: var(--bg-primary);
   text-decoration: underline;
   margin-left: 0.5rem;
 }
 
 .demoTag {
-  background: rgba(201, 169, 98, 0.2);
+  background: var(--border-strong);
   color: var(--gold);
   padding: 0.25rem 0.5rem;
   border-radius: 4px;
@@ -1142,7 +1142,7 @@
   display: grid;
   grid-template-columns: 1fr 1fr 1fr 1.5fr;
   padding: 1rem 1.5rem;
-  background: rgba(255, 255, 255, 0.03);
+  background: var(--input-bg);
   border-bottom: 1px solid var(--card-border);
   font-size: 0.75rem;
   font-weight: 600;

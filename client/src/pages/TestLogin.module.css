@@ -35,8 +35,8 @@
   font-size: 0.6875rem;
   margin: 0;
   padding: 0.25rem 0.625rem;
-  background: rgba(201, 169, 98, 0.1);
-  border: 1px solid rgba(201, 169, 98, 0.2);
+  background: var(--sidebar-hover);
+  border: 1px solid var(--border-strong);
   border-radius: 3px;
   display: inline-block;
   letter-spacing: 0.05em;
@@ -62,8 +62,8 @@
 }
 
 .field input {
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(201, 169, 98, 0.2);
+  background: var(--input-bg-hover);
+  border: 1px solid var(--border-strong);
   border-radius: 4px;
   padding: 0.75rem 1rem;
   color: #fff;
@@ -108,7 +108,7 @@
 .submitBtn:hover:not(:disabled) {
   background: #D4B76D;
   transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(201, 169, 98, 0.25);
+  box-shadow: 0 4px 12px var(--border-strong);
 }
 
 .submitBtn:disabled {
@@ -119,8 +119,8 @@
 .testCredentials {
   margin-top: 1.5rem;
   padding: 0.875rem;
-  background: rgba(201, 169, 98, 0.06);
-  border: 1px solid rgba(201, 169, 98, 0.15);
+  background: var(--bg-tertiary);
+  border: 1px solid var(--sidebar-active);
   border-radius: 4px;
   font-size: 0.75rem;
   color: rgba(255, 255, 255, 0.5);

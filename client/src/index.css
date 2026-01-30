@@ -138,14 +138,14 @@
   --brand-accent: #E5C9A8;
   
   /* Background Colors */
-  --bg-primary: #0F1117;
-  --bg-secondary: #1A1D28;
+  --bg-primary: var(--bg-primary);
+  --bg-secondary: var(--bg-secondary);
   --bg-tertiary: #242838;
   --bg-elevated: #1E2130;
   
   /* Sidebar */
-  --sidebar-bg: #0F1117;
-  --sidebar-hover: #1A1D28;
+  --sidebar-bg: var(--bg-primary);
+  --sidebar-hover: var(--bg-secondary);
   --sidebar-active: #242838;
   
   /* Text Colors */
@@ -155,8 +155,8 @@
   --text-light: #6B7280;
   
   /* Legacy mappings */
-  --midnight-blue: #0F1117;
-  --deep-navy: #1A1D28;
+  --midnight-blue: var(--bg-primary);
+  --deep-navy: var(--bg-secondary);
   --gold-sand: #C9A962;
   --gold-muted: #A68B4A;
   --gold-light: #D4B873;
@@ -168,8 +168,8 @@
   --charcoal-slate: #242838;
   --muted-gray: #A8B0C5;
   --gold-text: #E5CA84;
-  --charcoal: #242B38;
-  --slate-navy: #0F1117;
+  --charcoal: var(--bg-tertiary);
+  --slate-navy: var(--bg-primary);
   --card-bg: var(--bg-elevated);
   
   /* Status Colors */
@@ -185,7 +185,7 @@
   /* Borders */
   --border: rgba(255, 255, 255, 0.08);
   --border-color: rgba(255, 255, 255, 0.1);
-  --subtle-border: rgba(255, 255, 255, 0.05);
+  --subtle-border: var(--input-bg-hover);
   --border-strong: rgba(255, 255, 255, 0.15);
   
   /* Shadows */
@@ -198,23 +198,23 @@
   --overlay: rgba(0, 0, 0, 0.7);
   
   /* Card styles */
-  --card-border: rgba(201, 169, 98, 0.12);
-  --card-border-hover: rgba(201, 169, 98, 0.25);
+  --card-border: var(--sidebar-hover);
+  --card-border-hover: var(--border-strong);
   --card-shadow: var(--shadow-sm);
   --card-shadow-hover: var(--shadow-md);
   
   /* Button Colors */
   --btn-primary-bg: var(--soft-gold);
-  --btn-primary-text: #0F1117;
+  --btn-primary-text: var(--bg-primary);
   --btn-primary-hover: #D4B76D;
   --btn-secondary-bg: transparent;
   --btn-secondary-text: var(--soft-gold);
   --btn-secondary-border: var(--soft-gold);
   
   /* Input styles */
-  --input-bg: rgba(255, 255, 255, 0.03);
-  --input-bg-hover: rgba(255, 255, 255, 0.05);
-  --input-bg-focus: rgba(201, 169, 98, 0.05);
+  --input-bg: var(--input-bg);
+  --input-bg-hover: var(--input-bg-hover);
+  --input-bg-focus: var(--bg-tertiary);
   --input-border: rgba(255, 255, 255, 0.1);
   --input-border-focus: var(--soft-gold);
 }
@@ -699,11 +699,11 @@ label {
 
 /* Glow effect for important elements */
 .glow {
-  box-shadow: 0 0 20px rgba(201, 169, 98, 0.3);
+  box-shadow: 0 0 20px var(--border-strong);
 }
 
 .glow-hover:hover {
-  box-shadow: 0 0 30px rgba(201, 169, 98, 0.4);
+  box-shadow: 0 0 30px var(--border-strong);
 }
 
 /* Status indicators */
@@ -874,7 +874,7 @@ label {
 }
 
 .badge-gold {
-  background: rgba(201, 169, 98, 0.15);
+  background: var(--sidebar-active);
   color: var(--gold-sand);
 }
 
