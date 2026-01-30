@@ -335,9 +335,28 @@
 }
 
 .scorePreview {
+  width: 100%;
   padding: 0.75rem;
   background: var(--bg-tertiary);
   border-radius: var(--radius-md);
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-align: left;
+}
+
+.scorePreview:hover {
+  background: #DBEAFE;
+  border-color: #3B82F6;
+  transform: translateY(-1px);
+}
+
+.scorePreview:hover .scoreHint {
+  opacity: 1;
+}
+
+.scorePreview:active {
+  transform: translateY(0);
 }
 
 .scoreMini {
@@ -372,6 +391,23 @@
   background: var(--brand-primary);
   border-radius: 2px;
   transition: width 0.5s ease;
+}
+
+.scoreHint {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.25rem;
+  margin-top: 0.5rem;
+  font-size: 0.6875rem;
+  color: var(--text-muted);
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.scoreHint svg {
+  width: 12px;
+  height: 12px;
 }
 
 .contextIndicator {

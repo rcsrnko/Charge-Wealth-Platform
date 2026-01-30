@@ -3,9 +3,7 @@ import { useSupabaseAuth } from '../hooks/useSupabaseAuth';
 import { useTheme } from '../contexts/ThemeContext';
 import { Route, Switch, useLocation } from 'wouter';
 import Sidebar from '../components/Sidebar';
-// Removed WealthReadiness and CfoRecommendations for cleaner UX
-// import WealthReadiness from '../components/WealthReadiness';
-// import CfoRecommendations from '../components/CfoRecommendations';
+import WealthReadinessModal from '../components/WealthReadinessModal';
 import QuickStartOnboarding from '../components/QuickStartOnboarding';
 import LoadingSpinner from '../components/LoadingSpinner';
 import ErrorBoundary from '../components/ErrorBoundary';
@@ -92,6 +90,7 @@ export default function Dashboard() {
   });
   const [showOnboarding, setShowOnboarding] = useState(false);
   const [showProfileEditor, setShowProfileEditor] = useState(false);
+  const [showWealthReadinessModal, setShowWealthReadinessModal] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -277,7 +276,11 @@ export default function Dashboard() {
 
   return (
     <div className={styles.dashboardLayout}>
-      <Sidebar onCollapse={setSidebarCollapsed} wealthScore={wealthScore} />
+      <Sidebar 
+        onCollapse={setSidebarCollapsed} 
+        wealthScore={wealthScore} 
+        onWealthReadinessClick={() => setShowWealthReadinessModal(true)}
+      />
 
       <FinancialProfileEditor
         isOpen={showProfileEditor}

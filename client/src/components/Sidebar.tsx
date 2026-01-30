@@ -161,9 +161,10 @@ const navItems: NavItem[] = [
 interface SidebarProps {
   onCollapse?: (collapsed: boolean) => void;
   wealthScore?: number;
+  onWealthReadinessClick?: () => void;
 }
 
-export default function Sidebar({ onCollapse, wealthScore = 0 }: SidebarProps) {
+export default function Sidebar({ onCollapse, wealthScore = 0, onWealthReadinessClick }: SidebarProps) {
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [isMobileOpen, setIsMobileOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
@@ -322,7 +323,11 @@ export default function Sidebar({ onCollapse, wealthScore = 0 }: SidebarProps) {
 
         {(!isCollapsed || isMobile) && (
           <div className={styles.footer}>
-            <div className={styles.scorePreview}>
+            <button 
+              className={styles.scorePreview}
+              onClick={onWealthReadinessClick}
+              aria-label="View Wealth Readiness details"
+            >
               <div className={styles.scoreMini}>
                 <span className={styles.scoreValue}>{wealthScore}%</span>
                 <span className={styles.scoreLabel}>Wealth Readiness</span>
@@ -333,7 +338,13 @@ export default function Sidebar({ onCollapse, wealthScore = 0 }: SidebarProps) {
                   style={{ width: `${wealthScore}%` }}
                 />
               </div>
-            </div>
+              <div className={styles.scoreHint}>
+                <span>Click for details</span>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <path d="M9 5l7 7-7 7"/>
+                </svg>
+              </div>
+            </button>
           </div>
         )}
       </aside>
