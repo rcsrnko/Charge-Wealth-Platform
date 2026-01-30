@@ -413,9 +413,9 @@
         
         function getCategoryFromSlug(slug) {
             if (slug.startsWith('finance-dailies')) return 'finance-dailies';
-            if (slug.startsWith('tax-')) return 'tax';
-            if (slug.startsWith('planning-')) return 'planning';
-            if (slug.startsWith('markets-') || slug.startsWith('capital-')) return 'markets';
+            if (slug.startsWith('tax-strategy')) return 'tax';
+            if (slug.startsWith('financial-planning')) return 'planning';
+            if (slug.startsWith('capital-markets')) return 'markets';
             return 'finance-dailies'; // default
         }
         
