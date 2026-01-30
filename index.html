@@ -31,10 +31,10 @@
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
     <link rel="apple-touch-icon" href="/apple-touch-icon.png">
     
-    <!-- Plus Jakarta Sans Font -->
+    <!-- Lora + Raleway - Premium Wellness Typography -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;500;600;700&family=Raleway:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     
     <!-- Schema.org Structured Data -->
     <script type="application/ld+json">
@@ -86,28 +86,29 @@
     
     <style>
         :root {
-            /* Premium Light Theme - Warm & Inviting */
+            /* Premium Minimal - High Contrast, Easy to Read */
             --midnight-blue: #FFFFFF;
-            --deep-navy: #F9FAFB;
-            --gold-sand: #0D9488;
-            --gold-muted: #0F766E;
-            --porcelain: #111827;
+            --deep-navy: #FAFAFA;
+            --gold-sand: #171717;
+            --gold-muted: #404040;
+            --porcelain: #171717;
             --snow-white: #FFFFFF;
-            --charcoal-slate: #111827;
-            --muted-gray: #6B7280;
-            --subtle-border: rgba(0, 0, 0, 0.06);
+            --charcoal-slate: #171717;
+            --muted-gray: #525252;
+            --subtle-border: rgba(0, 0, 0, 0.08);
             --bg-primary: #FFFFFF;
-            --bg-secondary: #F9FAFB;
-            --bg-tertiary: #F3F4F6;
+            --bg-secondary: #FAFAFA;
+            --bg-tertiary: #F5F5F5;
             --bg-elevated: #FFFFFF;
-            --text-primary: #111827;
-            --text-secondary: #4B5563;
-            --text-muted: #6B7280;
-            --brand-primary: #0D9488;
-            --brand-hover: #0F766E;
-            --brand-light: #CCFBF1;
-            --brand-secondary: #F59E0B;
-            --accent-warm: #FEF3C7;
+            --text-primary: #171717;
+            --text-secondary: #404040;
+            --text-muted: #525252;
+            --brand-primary: #171717;
+            --brand-hover: #404040;
+            --brand-accent: #D4AF37;
+            --brand-accent-hover: #B8960F;
+            --font-heading: 'Lora', Georgia, serif;
+            --font-body: 'Raleway', -apple-system, sans-serif;
         }
         
         * {
@@ -121,12 +122,19 @@
         }
         
         body {
-            font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            font-family: var(--font-body);
             color: var(--text-primary);
             background: var(--bg-primary);
-            line-height: 1.6;
+            line-height: 1.7;
             -webkit-font-smoothing: antialiased;
             font-size: 16px;
+            font-weight: 400;
+        }
+        
+        h1, h2, h3, h4, h5, h6 {
+            font-family: var(--font-heading);
+            font-weight: 500;
+            letter-spacing: -0.01em;
         }
         
         a {
@@ -236,12 +244,12 @@
         }
         
         .logo {
-            font-size: 1rem;
+            font-size: 1.125rem;
             font-weight: 500;
-            letter-spacing: 0.08em;
-            text-transform: uppercase;
-            color: var(--gold-sand);
+            letter-spacing: 0.02em;
+            color: var(--text-primary);
             text-decoration: none;
+            font-family: var(--font-heading);
         }
         
         .nav-links {
@@ -252,13 +260,14 @@
         }
         
         .nav-links a {
-            color: #374151;
+            color: var(--text-secondary);
             text-decoration: none;
             font-size: 0.875rem;
-            font-weight: 500;
+            font-weight: 400;
             letter-spacing: 0.01em;
             position: relative;
             transition: color 0.2s ease;
+            font-family: var(--font-body);
         }
         
         .nav-links a::after {
@@ -383,55 +392,49 @@
         
         /* Hero */
         .hero {
-            padding: 6rem 2rem 5rem;
+            padding: 8rem 2rem 6rem;
             text-align: center;
-            background: linear-gradient(180deg, #ECFDF5 0%, #FFFFFF 100%);
+            background: var(--bg-primary);
             position: relative;
-            min-height: 70vh;
+            min-height: 80vh;
             display: flex;
             align-items: center;
             justify-content: center;
         }
         
         .hero-content {
-            max-width: 760px;
+            max-width: 700px;
             margin: 0 auto;
         }
         
         .hero::before {
-            content: "";
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: radial-gradient(ellipse at center top, rgba(13, 148, 136, 0.08) 0%, transparent 60%);
-            pointer-events: none;
+            display: none;
         }
         
         h1 {
-            font-size: 2.75rem;
-            font-weight: 700;
+            font-size: 3.25rem;
+            font-weight: 500;
             letter-spacing: -0.02em;
-            line-height: 1.15;
+            line-height: 1.1;
             color: var(--text-primary);
             margin-bottom: 1.5rem;
+            font-family: var(--font-heading);
         }
         
         .hero-tagline {
-            font-size: 1.375rem;
-            color: var(--text-primary);
-            font-weight: 500;
-            margin-bottom: 1rem;
-            letter-spacing: -0.01em;
+            font-size: 1.25rem;
+            color: var(--text-secondary);
+            font-weight: 400;
+            margin-bottom: 1.5rem;
+            line-height: 1.6;
         }
         
         .hero-subline {
             font-size: 1.0625rem;
-            color: var(--text-secondary);
-            line-height: 1.75;
-            max-width: 620px;
-            margin: 0 auto 2rem;
+            color: var(--text-muted);
+            line-height: 1.7;
+            max-width: 540px;
+            margin: 0 auto 2.5rem;
         }
         
         .hero-trust-badges {
@@ -459,91 +462,99 @@
             display: inline-block;
             background: var(--brand-primary);
             color: #FFFFFF;
-            padding: 1rem 2rem;
-            font-size: 1rem;
-            font-weight: 600;
-            letter-spacing: 0.01em;
+            padding: 1rem 2.5rem;
+            font-size: 0.9375rem;
+            font-weight: 500;
+            letter-spacing: 0.02em;
             text-decoration: none;
-            border-radius: 10px;
+            border-radius: 6px;
             position: relative;
             overflow: hidden;
             transition: all 0.2s ease;
-            box-shadow: 0 4px 14px rgba(13, 148, 136, 0.3);
+            font-family: var(--font-body);
         }
         
         .cta-primary:hover {
             background: var(--brand-hover);
-            transform: translateY(-2px);
-            box-shadow: 0 8px 24px rgba(13, 148, 136, 0.4);
+            transform: translateY(-1px);
         }
         
         .cta-primary:active {
             transform: translateY(0);
-            box-shadow: 0 4px 14px rgba(13, 148, 136, 0.3);
+        }
+        
+        .cta-gold {
+            background: var(--brand-accent);
+            color: var(--text-primary);
+        }
+        
+        .cta-gold:hover {
+            background: var(--brand-accent-hover);
         }
         
         /* How It Works Section */
         .how-it-works {
-            padding: 5rem 2rem;
-            background: #FFFFFF;
+            padding: 6rem 2rem;
+            background: var(--bg-secondary);
         }
         
         .how-it-works-inner {
-            max-width: 1000px;
+            max-width: 960px;
             margin: 0 auto;
             text-align: center;
         }
         
         .how-it-works h2 {
-            font-size: 2rem;
-            font-weight: 700;
+            font-size: 2.25rem;
+            font-weight: 500;
             color: var(--text-primary);
             margin-bottom: 1rem;
+            font-family: var(--font-heading);
         }
         
         .how-it-works-intro {
             font-size: 1.0625rem;
             color: var(--text-secondary);
-            max-width: 700px;
-            margin: 0 auto 3rem;
+            max-width: 600px;
+            margin: 0 auto 3.5rem;
             line-height: 1.7;
         }
         
         .steps-grid {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
-            gap: 1.5rem;
-            margin-bottom: 2.5rem;
+            gap: 2rem;
+            margin-bottom: 3rem;
         }
         
         .step-card {
-            background: #FFFFFF;
-            border: 1px solid #E5E7EB;
-            border-radius: 16px;
-            padding: 2rem 1.5rem;
+            background: var(--bg-primary);
+            border: 1px solid var(--subtle-border);
+            border-radius: 12px;
+            padding: 2.5rem 1.5rem 2rem;
             text-align: center;
             transition: all 0.2s ease;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
         }
         
         .step-card:hover {
-            transform: translateY(-4px);
-            border-color: var(--brand-primary);
-            box-shadow: 0 12px 32px rgba(13, 148, 136, 0.15);
+            transform: translateY(-2px);
+            box-shadow: 0 12px 32px rgba(0, 0, 0, 0.08);
         }
         
         .step-number {
-            width: 48px;
-            height: 48px;
-            background: var(--brand-primary);
-            color: #FFFFFF;
-            font-size: 1.25rem;
-            font-weight: 700;
+            width: 40px;
+            height: 40px;
+            background: transparent;
+            border: 2px solid var(--text-primary);
+            color: var(--text-primary);
+            font-size: 1rem;
+            font-weight: 600;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            margin: 0 auto 1.25rem;
+            margin: 0 auto 1.5rem;
+            font-family: var(--font-body);
         }
         
         .step-card h3 {
@@ -552,18 +563,21 @@
             color: var(--text-primary);
             margin-bottom: 0.75rem;
             line-height: 1.4;
+            font-family: var(--font-body);
         }
         
         .step-card p {
             font-size: 0.875rem;
-            color: var(--text-secondary);
-            line-height: 1.6;
+            color: var(--text-muted);
+            line-height: 1.65;
         }
         
         .how-it-works-footer {
             font-size: 1.125rem;
-            color: var(--brand-primary);
-            font-weight: 600;
+            color: var(--text-primary);
+            font-weight: 500;
+            font-family: var(--font-heading);
+            font-style: italic;
         }
         
         @media (max-width: 900px) {
