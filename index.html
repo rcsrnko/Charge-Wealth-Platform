@@ -86,27 +86,30 @@
     
     <style>
         :root {
-            /* Premium Minimal - High Contrast, Easy to Read */
-            --midnight-blue: #FFFFFF;
-            --deep-navy: #FAFAFA;
-            --gold-sand: #171717;
-            --gold-muted: #404040;
-            --porcelain: #171717;
-            --snow-white: #FFFFFF;
-            --charcoal-slate: #171717;
-            --muted-gray: #525252;
+            /* Vanilla Bean Light Theme */
+            --midnight-blue: #F9F6F0;
+            --deep-navy: #F5F2ED;
+            --gold-sand: #4A3F2F;
+            --gold-muted: #6B5A45;
+            --porcelain: #1F2937;
+            --snow-white: #FFFDFB;
+            --charcoal-slate: #FFFDFB;
+            --muted-gray: #6B7280;
             --subtle-border: rgba(0, 0, 0, 0.08);
-            --bg-primary: #FFFFFF;
-            --bg-secondary: #FAFAFA;
-            --bg-tertiary: #F5F5F5;
-            --bg-elevated: #FFFFFF;
-            --text-primary: #171717;
-            --text-secondary: #404040;
-            --text-muted: #525252;
-            --brand-primary: #171717;
-            --brand-hover: #404040;
+            --bg-primary: #F9F6F0;
+            --bg-secondary: #F5F2ED;
+            --bg-tertiary: #FFFDFB;
+            --bg-elevated: #FFFDFB;
+            --text-primary: #1F2937;
+            --text-secondary: #6B7280;
+            --text-muted: #6B7280;
+            --brand-primary: #4A3F2F;
+            --brand-hover: #6B5A45;
             --brand-accent: #F6DBA6;
-            --brand-accent-hover: #B8960F;
+            --brand-accent-hover: #E8C88A;
+            --accent-blue: #DBEAFE;
+            --honey: #F6DBA6;
+            --text-on-honey: #4A3F2F;
             --font-heading: 'Lora', Georgia, serif;
             --font-body: 'Raleway', -apple-system, sans-serif;
         }
@@ -221,18 +224,18 @@
         header {
             position: sticky;
             top: 0;
-            background: rgba(255, 255, 255, 0.95);
+            background: rgba(255, 253, 251, 0.95);
             backdrop-filter: blur(12px);
             -webkit-backdrop-filter: blur(12px);
             padding: 1rem 2rem;
             z-index: 100;
-            border-bottom: 1px solid #E5E7EB;
+            border-bottom: 1px solid var(--subtle-border);
             transition: all 0.3s ease;
         }
         
         header.scrolled {
             padding: 0.75rem 2rem;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
         }
         
         nav {
@@ -460,11 +463,11 @@
         /* CTA Buttons */
         .cta-primary {
             display: inline-block;
-            background: var(--brand-primary);
-            color: #FFFFFF;
+            background: var(--honey);
+            color: var(--text-on-honey);
             padding: 1rem 2.5rem;
             font-size: 0.9375rem;
-            font-weight: 500;
+            font-weight: 600;
             letter-spacing: 0.02em;
             text-decoration: none;
             border-radius: 6px;
@@ -475,7 +478,7 @@
         }
         
         .cta-primary:hover {
-            background: var(--brand-hover);
+            background: var(--brand-accent-hover);
             transform: translateY(-1px);
         }
         
@@ -485,7 +488,7 @@
         
         .cta-gold {
             background: var(--brand-accent);
-            color: var(--text-primary);
+            color: var(--text-on-honey);
         }
         
         .cta-gold:hover {

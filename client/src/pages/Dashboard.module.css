@@ -17,8 +17,8 @@
 }
 
 .topHeader {
-  background: var(--midnight-blue);
-  border-bottom: 1px solid var(--subtle-border);
+  background: var(--bg-elevated);
+  border-bottom: 1px solid var(--border);
   position: sticky;
   top: 0;
   z-index: 90;
@@ -43,7 +43,7 @@
 .pageTitle {
   font-size: 1.25rem;
   font-weight: 600;
-  color: var(--porcelain);
+  color: var(--text-primary);
   margin: 0;
 }
 
@@ -79,19 +79,19 @@
 .userAvatar {
   width: 32px;
   height: 32px;
-  background: linear-gradient(135deg, var(--soft-gold) 0%, var(--brand-accent-hover) 100%);
+  background: linear-gradient(135deg, var(--brand-accent) 0%, var(--brand-accent-hover) 100%);
   border-radius: 8px;
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 0.875rem;
   font-weight: 600;
-  color: var(--midnight-blue);
+  color: var(--text-on-honey);
 }
 
 .userName {
   font-size: 0.875rem;
-  color: var(--porcelain);
+  color: var(--text-primary);
   font-weight: 500;
 }
 
@@ -111,10 +111,10 @@
   top: calc(100% + 8px);
   right: 0;
   width: 240px;
-  background: var(--deep-navy);
+  background: var(--bg-elevated);
   border: 1px solid var(--border);
   border-radius: 12px;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+  box-shadow: var(--shadow-lg);
   overflow: hidden;
   animation: dropdownFadeIn 0.15s ease-out;
   z-index: 100;
@@ -154,7 +154,7 @@
   padding: 0.875rem 1rem;
   background: transparent;
   border: none;
-  color: var(--porcelain);
+  color: var(--text-primary);
   font-size: 0.875rem;
   text-decoration: none;
   cursor: pointer;
@@ -162,13 +162,13 @@
 }
 
 .dropdownItem:hover {
-  background: var(--sidebar-hover);
+  background: var(--bg-secondary);
 }
 
 .dropdownItem svg {
   width: 18px;
   height: 18px;
-  color: var(--muted-gray);
+  color: var(--text-secondary);
 }
 
 .logoutButton {
@@ -463,7 +463,7 @@
 .lockedIcon {
   width: 80px;
   height: 80px;
-  background: var(--bg-tertiary);
+  background: var(--bg-secondary);
   border-radius: 20px;
   display: flex;
   align-items: center;
@@ -474,19 +474,19 @@
 .lockedIcon svg {
   width: 40px;
   height: 40px;
-  color: var(--muted-gray);
+  color: var(--text-secondary);
 }
 
 .lockedTitle {
   font-size: 1.5rem;
   font-weight: 600;
-  color: var(--porcelain);
+  color: var(--text-primary);
   margin: 0 0 0.75rem 0;
 }
 
 .lockedDesc {
   font-size: 1rem;
-  color: var(--muted-gray);
+  color: var(--text-secondary);
   margin: 0 0 1.5rem 0;
   line-height: 1.6;
 }
@@ -496,9 +496,9 @@
   align-items: center;
   gap: 0.5rem;
   padding: 0.875rem 1.5rem;
-  background: var(--soft-gold);
+  background: var(--brand-accent);
   border-radius: 10px;
-  color: var(--midnight-blue);
+  color: var(--text-on-honey);
   font-size: 0.9375rem;
   font-weight: 600;
   text-decoration: none;
@@ -506,7 +506,7 @@
 }
 
 .lockedAction:hover {
-  background: #D4B77A;
+  background: var(--brand-accent-hover);
   transform: translateY(-1px);
 }
 
@@ -1202,20 +1202,21 @@
 }
 
 .aiHeroCard {
-  background: linear-gradient(135deg, var(--deep-navy) 0%, #1a2744 100%);
-  border: 1px solid var(--soft-gold);
+  background: var(--bg-elevated);
+  border: 1px solid var(--brand-accent);
   border-radius: 20px;
   padding: 3rem;
   text-align: center;
   max-width: 500px;
   width: 100%;
+  box-shadow: 0 4px 20px rgba(246, 219, 166, 0.15);
 }
 
 .aiHeroIcon {
   width: 80px;
   height: 80px;
   margin: 0 auto 1.5rem;
-  color: var(--soft-gold);
+  color: var(--accent-blue-text);
 }
 
 .aiHeroIcon svg {
@@ -1226,13 +1227,13 @@
 .aiHeroTitle {
   font-size: 2rem;
   font-weight: 700;
-  color: var(--porcelain);
+  color: var(--text-primary);
   margin: 0 0 0.75rem 0;
 }
 
 .aiHeroDesc {
   font-size: 1.1rem;
-  color: var(--muted-gray);
+  color: var(--text-secondary);
   margin: 0 0 2rem 0;
   line-height: 1.5;
 }
@@ -1242,8 +1243,8 @@
   align-items: center;
   gap: 0.75rem;
   padding: 1rem 2rem;
-  background: var(--soft-gold);
-  color: var(--deep-navy);
+  background: var(--brand-accent);
+  color: var(--text-on-honey);
   border-radius: 10px;
   font-size: 1.1rem;
   font-weight: 600;
@@ -1252,7 +1253,7 @@
 }
 
 .aiHeroButton:hover {
-  background: #c9a832;
+  background: var(--brand-accent-hover);
   transform: translateY(-2px);
 }
 
@@ -1270,7 +1271,7 @@
 .quickLinksTitle {
   font-size: 1.25rem;
   font-weight: 600;
-  color: var(--porcelain);
+  color: var(--text-primary);
   margin: 0 0 1rem 0;
   text-align: center;
 }
@@ -1309,11 +1310,12 @@
 }
 
 .insightPlaceholder {
-  background: var(--deep-navy);
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
   border-radius: 12px;
   padding: 2rem;
   text-align: center;
-  color: var(--muted);
+  color: var(--text-secondary);
 }
 
 .quickLinkCard {
@@ -1321,22 +1323,24 @@
   align-items: center;
   gap: 1rem;
   padding: 1.25rem;
-  background: var(--deep-navy);
+  background: var(--bg-elevated);
   border: 1px solid var(--border);
   border-radius: 12px;
   text-decoration: none;
   transition: all 0.2s;
+  box-shadow: var(--shadow-sm);
 }
 
 .quickLinkCard:hover {
-  border-color: var(--soft-gold);
+  border-color: var(--brand-accent);
   transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
 }
 
 .quickLinkIcon {
   width: 40px;
   height: 40px;
-  color: var(--soft-gold);
+  color: var(--accent-blue-text);
   flex-shrink: 0;
 }
 
@@ -1352,23 +1356,23 @@
 .quickLinkText h3 {
   font-size: 1rem;
   font-weight: 600;
-  color: var(--porcelain);
+  color: var(--text-primary);
   margin: 0 0 0.25rem 0;
 }
 
 .quickLinkText p {
   font-size: 0.85rem;
-  color: var(--muted-gray);
+  color: var(--text-secondary);
   margin: 0;
 }
 
 .quickLinkArrow {
-  color: var(--muted-gray);
+  color: var(--text-secondary);
   font-size: 1.25rem;
   transition: transform 0.2s;
 }
 
 .quickLinkCard:hover .quickLinkArrow {
   transform: translateX(4px);
-  color: var(--soft-gold);
+  color: var(--brand-accent);
 }

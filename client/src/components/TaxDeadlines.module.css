@@ -1,8 +1,9 @@
 .container {
-  background: var(--deep-navy, #1a1d28);
-  border: 1px solid var(--sidebar-active);
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
   border-radius: 12px;
   padding: 1.25rem;
+  box-shadow: var(--shadow-sm);
 }
 
 .header {
@@ -12,14 +13,14 @@
 .title {
   font-size: 1rem;
   font-weight: 600;
-  color: var(--porcelain, #f4f5f7);
+  color: var(--text-primary);
   margin: 0;
 }
 
 .loading {
   padding: 2rem;
   text-align: center;
-  color: var(--muted-gray, #6b7280);
+  color: var(--text-secondary);
 }
 
 .deadlinesList {
@@ -33,7 +34,7 @@
   align-items: flex-start;
   gap: 1rem;
   padding: 0.875rem;
-  background: rgba(255, 255, 255, 0.02);
+  background: var(--bg-secondary);
   border-radius: 8px;
   border-left: 3px solid transparent;
 }
@@ -49,7 +50,7 @@
 }
 
 .deadlineItem.upcoming {
-  border-left-color: var(--gold-sand, #c9a962);
+  border-left-color: var(--brand-accent);
 }
 
 .dateColumn {
@@ -63,7 +64,7 @@
 .dateMonth {
   font-size: 0.7rem;
   font-weight: 600;
-  color: var(--muted-gray, #6b7280);
+  color: var(--text-secondary);
   text-transform: uppercase;
   letter-spacing: 0.05em;
 }
@@ -71,13 +72,13 @@
 .dateDay {
   font-size: 1.25rem;
   font-weight: 700;
-  color: var(--porcelain, #f4f5f7);
+  color: var(--text-primary);
   line-height: 1.2;
 }
 
 .daysUntil {
   font-size: 0.65rem;
-  color: var(--muted-gray, #6b7280);
+  color: var(--text-secondary);
   margin-top: 0.125rem;
 }
 
@@ -110,19 +111,19 @@
 .deadlineTitle {
   font-size: 0.9rem;
   font-weight: 600;
-  color: var(--porcelain, #f4f5f7);
+  color: var(--text-primary);
 }
 
 .deadlineDesc {
   font-size: 0.8rem;
-  color: var(--muted-gray, #6b7280);
+  color: var(--text-secondary);
   margin: 0;
   line-height: 1.4;
 }
 
 .personalNote {
   font-size: 0.75rem;
-  color: var(--gold-sand, #c9a962);
+  color: var(--accent-blue-text);
   margin: 0.375rem 0 0 0;
   font-style: italic;
 }
@@ -134,10 +135,10 @@
 .actionBtn {
   display: inline-block;
   padding: 0.375rem 0.75rem;
-  background: var(--sidebar-active);
+  background: var(--bg-tertiary);
   border: 1px solid var(--border-strong);
   border-radius: 6px;
-  color: var(--gold-sand, #c9a962);
+  color: var(--accent-blue-text);
   font-size: 0.75rem;
   font-weight: 500;
   text-decoration: none;
@@ -146,6 +147,6 @@
 }
 
 .actionBtn:hover {
-  background: var(--border-strong);
-  border-color: var(--gold-sand, #c9a962);
+  background: var(--bg-secondary);
+  border-color: var(--accent-blue-text);
 }

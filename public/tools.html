@@ -17,33 +17,35 @@
     
     <style>
         :root {
-            --midnight-blue: #F9F6F0;
-            --deep-navy: #F5F2ED;
-            --gold-sand: #F6DBA6;
-            --gold-muted: #E8C88A;
-            --porcelain: #F4F5F7;
-            --charcoal-slate: #242B38;
-            --muted-gray: #6B7280;
+            --bg-primary: #F9F6F0;
+            --bg-secondary: #F5F2ED;
+            --bg-card: #FFFDFB;
+            --honey: #F6DBA6;
+            --honey-hover: #E8C88A;
+            --text-primary: #1F2937;
+            --text-secondary: #6B7280;
+            --text-on-honey: #4A3F2F;
+            --accent-blue: #DBEAFE;
+            --border: rgba(0, 0, 0, 0.08);
         }
         
         * { margin: 0; padding: 0; box-sizing: border-box; }
         
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-            background: var(--midnight-blue);
-            color: var(--porcelain);
+            background: var(--bg-primary);
+            color: var(--text-primary);
             line-height: 1.6;
             min-height: 100vh;
         }
         
         header {
-            background: rgba(15, 17, 23, 0.95);
-            border-bottom: 1px solid rgba(201, 169, 98, 0.15);
+            background: var(--bg-card);
+            border-bottom: 1px solid var(--border);
             padding: 1rem 2rem;
             position: sticky;
             top: 0;
             z-index: 100;
-            backdrop-filter: blur(10px);
         }
         
         .header-content {
@@ -55,7 +57,7 @@
         }
         
         .logo {
-            color: var(--gold-sand);
+            color: var(--text-on-honey);
             font-size: 1.5rem;
             font-weight: 700;
             text-decoration: none;
@@ -69,34 +71,34 @@
         }
         
         .nav-links a {
-            color: var(--porcelain);
+            color: var(--text-secondary);
             text-decoration: none;
             font-size: 0.9rem;
             transition: color 0.2s;
         }
         
         .nav-links a:hover {
-            color: var(--gold-sand);
+            color: var(--text-on-honey);
         }
         
         .nav-links .btn-login {
-            background: var(--gold-sand);
-            color: var(--midnight-blue);
+            background: var(--honey);
+            color: var(--text-on-honey);
             padding: 0.5rem 1.25rem;
             border-radius: 6px;
             font-weight: 600;
         }
         
         .nav-links .btn-login:hover {
-            background: var(--gold-muted);
-            color: var(--midnight-blue);
+            background: var(--honey-hover);
+            color: var(--text-on-honey);
         }
         
         .mobile-menu-toggle {
             display: none;
             background: none;
             border: none;
-            color: var(--porcelain);
+            color: var(--text-primary);
             font-size: 1.5rem;
             cursor: pointer;
         }
@@ -104,21 +106,22 @@
         .hero {
             text-align: center;
             padding: 4rem 2rem;
-            background: linear-gradient(180deg, var(--midnight-blue) 0%, var(--deep-navy) 100%);
+            background: var(--bg-primary);
         }
         
         .hero h1 {
             font-size: 2.5rem;
             font-weight: 700;
             margin-bottom: 1rem;
+            color: var(--text-primary);
         }
         
         .hero h1 span {
-            color: var(--gold-sand);
+            color: var(--text-on-honey);
         }
         
         .hero p {
-            color: var(--muted-gray);
+            color: var(--text-secondary);
             font-size: 1.1rem;
             max-width: 600px;
             margin: 0 auto;
@@ -134,23 +137,23 @@
         }
         
         .tool-card {
-            background: var(--charcoal-slate);
-            border: 1px solid rgba(201, 169, 98, 0.15);
+            background: var(--bg-card);
+            border: 1px solid var(--border);
             border-radius: 12px;
             padding: 2rem;
             transition: all 0.3s ease;
         }
         
         .tool-card:hover {
-            border-color: var(--gold-sand);
+            border-color: var(--honey);
             transform: translateY(-4px);
-            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.08);
         }
         
         .tool-icon {
             width: 56px;
             height: 56px;
-            background: rgba(201, 169, 98, 0.15);
+            background: var(--accent-blue);
             border-radius: 12px;
             display: flex;
             align-items: center;
@@ -163,11 +166,11 @@
             font-size: 1.25rem;
             font-weight: 600;
             margin-bottom: 0.75rem;
-            color: var(--porcelain);
+            color: var(--text-primary);
         }
         
         .tool-card p {
-            color: var(--muted-gray);
+            color: var(--text-secondary);
             font-size: 0.95rem;
             margin-bottom: 1.5rem;
             line-height: 1.6;
@@ -176,8 +179,8 @@
         .tool-badge {
             display: inline-block;
             padding: 0.25rem 0.75rem;
-            background: rgba(201, 169, 98, 0.2);
-            color: var(--gold-sand);
+            background: var(--accent-blue);
+            color: var(--text-on-honey);
             border-radius: 20px;
             font-size: 0.75rem;
             font-weight: 600;
@@ -186,11 +189,15 @@
             margin-bottom: 1rem;
         }
         
+        .tool-badge.member {
+            background: rgba(246, 219, 166, 0.3);
+        }
+        
         .tool-link {
             display: inline-flex;
             align-items: center;
             gap: 0.5rem;
-            color: var(--gold-sand);
+            color: var(--text-on-honey);
             text-decoration: none;
             font-weight: 600;
             font-size: 0.9rem;
@@ -206,27 +213,28 @@
         }
         
         .cta-section {
-            background: linear-gradient(180deg, var(--deep-navy) 0%, var(--midnight-blue) 100%);
+            background: var(--bg-secondary);
             text-align: center;
             padding: 4rem 2rem;
-            border-top: 1px solid rgba(201, 169, 98, 0.1);
+            border-top: 1px solid var(--border);
         }
         
         .cta-section h2 {
             font-size: 2rem;
             margin-bottom: 1rem;
+            color: var(--text-primary);
         }
         
         .cta-section p {
-            color: var(--muted-gray);
+            color: var(--text-secondary);
             max-width: 500px;
             margin: 0 auto 2rem;
         }
         
         .cta-button {
             display: inline-block;
-            background: var(--gold-sand);
-            color: var(--midnight-blue);
+            background: var(--honey);
+            color: var(--text-on-honey);
             padding: 1rem 2rem;
             border-radius: 8px;
             text-decoration: none;
@@ -236,13 +244,13 @@
         }
         
         .cta-button:hover {
-            background: var(--gold-muted);
+            background: var(--honey-hover);
             transform: translateY(-2px);
         }
         
         footer {
-            background: var(--midnight-blue);
-            border-top: 1px solid rgba(201, 169, 98, 0.1);
+            background: var(--bg-card);
+            border-top: 1px solid var(--border);
             padding: 2rem;
             text-align: center;
         }
@@ -256,17 +264,17 @@
         }
         
         .footer-links a {
-            color: var(--muted-gray);
+            color: var(--text-secondary);
             text-decoration: none;
             font-size: 0.875rem;
         }
         
         .footer-links a:hover {
-            color: var(--gold-sand);
+            color: var(--text-on-honey);
         }
         
         .footer-copyright {
-            color: var(--muted-gray);
+            color: var(--text-secondary);
             font-size: 0.8rem;
         }
         
@@ -313,7 +321,7 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background: rgba(15, 17, 23, 0.98);
+            background: var(--bg-card);
             z-index: 200;
             flex-direction: column;
             align-items: center;
@@ -326,19 +334,19 @@
         }
         
         .mobile-menu-overlay a {
-            color: var(--porcelain);
+            color: var(--text-primary);
             text-decoration: none;
             font-size: 1.25rem;
             padding: 0.5rem 1rem;
         }
         
         .mobile-menu-overlay a:hover {
-            color: var(--gold-sand);
+            color: var(--text-on-honey);
         }
         
         .mobile-menu-overlay .btn-login {
-            background: var(--gold-sand);
-            color: var(--midnight-blue);
+            background: var(--honey);
+            color: var(--text-on-honey);
             padding: 0.75rem 1.5rem;
             border-radius: 6px;
             font-weight: 600;
@@ -350,7 +358,7 @@
             right: 1.5rem;
             background: none;
             border: none;
-            color: var(--porcelain);
+            color: var(--text-primary);
             font-size: 2rem;
             cursor: pointer;
         }
@@ -409,7 +417,7 @@
 
             <article class="tool-card">
                 <div class="tool-icon">💼</div>
-                <span class="tool-badge">Member</span>
+                <span class="tool-badge member">Member</span>
                 <h3>AI Tax Advisor</h3>
                 <p>Get personalized tax optimization recommendations powered by AI. Upload your tax return and receive actionable strategies tailored to your situation.</p>
                 <a href="/dashboard" class="tool-link">
@@ -420,7 +428,7 @@
 
             <article class="tool-card">
                 <div class="tool-icon">📈</div>
-                <span class="tool-badge">Member</span>
+                <span class="tool-badge member">Member</span>
                 <h3>Portfolio Analyzer</h3>
                 <p>CFA-level analysis of your investment portfolio. Get recommendations on asset allocation, tax-loss harvesting opportunities, and rebalancing strategies.</p>
                 <a href="/dashboard" class="tool-link">
@@ -431,7 +439,7 @@
 
             <article class="tool-card">
                 <div class="tool-icon">🤖</div>
-                <span class="tool-badge">Member</span>
+                <span class="tool-badge member">Member</span>
                 <h3>AI Financial Advisor</h3>
                 <p>Your 24/7 AI CFO. Ask questions, get proactive insights, and receive personalized financial guidance based on your complete financial picture.</p>
                 <a href="/dashboard" class="tool-link">
@@ -442,7 +450,7 @@
 
             <article class="tool-card">
                 <div class="tool-icon">📋</div>
-                <span class="tool-badge">Member</span>
+                <span class="tool-badge member">Member</span>
                 <h3>Custom Playbooks</h3>
                 <p>Step-by-step action plans for specific financial goals. From backdoor Roth conversions to real estate investing strategies.</p>
                 <a href="/dashboard" class="tool-link">
