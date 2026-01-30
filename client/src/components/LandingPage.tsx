@@ -502,6 +502,11 @@ export function LandingPage({ onShowLogin }: LandingPageProps) {
               title: 'Never Miss an Opportunity',
               description: '24/7 portfolio monitoring catches tax-loss harvesting moments, rebalancing needs, and dividend changes before they cost you money.',
             },
+            {
+              icon: '💬',
+              title: 'Private Discord Community',
+              description: 'Connect with other high earners. Real-time market alerts, tax strategy discussions, and exclusive insights from the community.',
+            },
           ].map((benefit, i) => (
             <div
               key={i}

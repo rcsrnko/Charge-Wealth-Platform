@@ -554,6 +554,7 @@ function PaywallPage() {
             <li>✓ Save $5,000+ per year on taxes</li>
             <li>✓ Get instant answers to any financial question</li>
             <li>✓ 24/7 portfolio monitoring and alerts</li>
+            <li>✓ Private Discord community access</li>
             <li>✓ Lifetime access, no recurring fees</li>
           </ul>
         </div>

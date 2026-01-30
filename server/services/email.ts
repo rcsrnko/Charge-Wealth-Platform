@@ -207,7 +207,18 @@ export const emailTemplates = {
           <li style="margin-bottom: 8px;"><strong style="color: ${BRAND.textPrimary};">Complete your financial profile</strong> - Takes 3 minutes, unlocks personalized insights</li>
           <li style="margin-bottom: 8px;"><strong style="color: ${BRAND.textPrimary};">Upload a tax return</strong> - Our AI finds hidden savings opportunities</li>
           <li style="margin-bottom: 8px;"><strong style="color: ${BRAND.textPrimary};">Ask your first question</strong> - Try "What tax strategies should I consider?"</li>
+          <li style="margin-bottom: 8px;"><strong style="color: ${BRAND.textPrimary};">Join the Discord community</strong> - Connect with other high earners, get market insights, and exclusive discussions</li>
         </ol>
+      `)}
+      
+      ${infoCard(`
+        <h3 style="color: ${BRAND.goldAccent}; margin: 0 0 12px 0; font-size: 16px;">🎉 Founding Member Perk: Discord Community</h3>
+        <p style="margin: 0 0 12px 0; color: ${BRAND.textSecondary}; line-height: 1.6;">
+          As a founding member, you get exclusive access to our private Discord community. Connect with other high earners, get real-time market alerts, discuss tax strategies, and more.
+        </p>
+        <p style="margin: 0;">
+          <a href="https://discord.gg/APkhRFRajN" style="color: ${BRAND.goldAccent}; font-weight: 600;">Join the Discord →</a>
+        </p>
       `)}
       
       <div style="text-align: center; margin: 32px 0;">
@@ -235,8 +246,14 @@ Here's what to do first:
 1. Complete your financial profile - Takes 3 minutes
 2. Upload a tax return - Our AI finds hidden savings
 3. Ask your first question
+4. Join the Discord community - Connect with other high earners
 
 Open your dashboard: ${BRAND.baseUrl}/dashboard
+
+FOUNDING MEMBER PERK: DISCORD COMMUNITY
+As a founding member, you get exclusive access to our private Discord.
+Connect with other high earners, get market alerts, and discuss strategies.
+Join here: https://discord.gg/APkhRFRajN
 
 Questions? Reply to this email.
 
