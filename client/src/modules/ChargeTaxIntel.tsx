@@ -569,72 +569,174 @@ export default function ChargeTaxIntel() {
 
       {taxData && (
         <div className={styles.resultsPage} ref={resultsRef}>
-          {/* Problem-Focused Hero */}
-          {taxProjection?.withholding?.status === 'under' && taxProjection.withholding.federalDifference ? (
-            <div className={styles.problemHero}>
-              <div className={styles.problemHeroMain}>
-                <span className={styles.problemHeroIcon}>⚠️</span>
-                <div className={styles.problemHeroText}>
-                  <span className={styles.problemHeroTitle}>You're on track to owe at tax time</span>
-                  <span className={styles.problemHeroAmount}>{formatCurrency(Math.abs(taxProjection.withholding.federalDifference))}</span>
+          {/* Two-Column Top Section: Tax Info (left) + Chat (right) */}
+          <div className={styles.topSectionLayout}>
+            {/* Left Column: Tax Info & Summary */}
+            <div className={styles.taxInfoColumn}>
+              {/* Problem-Focused Hero */}
+              {taxProjection?.withholding?.status === 'under' && taxProjection.withholding.federalDifference ? (
+                <div className={styles.problemHero}>
+                  <div className={styles.problemHeroMain}>
+                    <span className={styles.problemHeroIcon}>⚠️</span>
+                    <div className={styles.problemHeroText}>
+                      <span className={styles.problemHeroTitle}>You're on track to owe at tax time</span>
+                      <span className={styles.problemHeroAmount}>{formatCurrency(Math.abs(taxProjection.withholding.federalDifference))}</span>
+                    </div>
+                  </div>
+                  <div className={styles.problemHeroActions}>
+                    <span className={styles.problemHeroActionsTitle}>Here's how to fix it:</span>
+                    <div className={styles.problemHeroActionsList}>
+                      <div className={styles.problemHeroAction}>
+                        <span className={styles.actionNumber}>1</span>
+                        <span className={styles.actionText}>Increase 401(k) to $23,000</span>
+                        <span className={styles.actionSavings}>→ Save ~$5,500 in taxes</span>
+                      </div>
+                      <div className={styles.problemHeroAction}>
+                        <span className={styles.actionNumber}>2</span>
+                        <span className={styles.actionText}>Max HSA at $8,300</span>
+                        <span className={styles.actionSavings}>→ Save ~$2,000 in taxes</span>
+                      </div>
+                      <div className={styles.problemHeroAction}>
+                        <span className={styles.actionNumber}>3</span>
+                        <span className={styles.actionText}>Adjust W-4 withholding</span>
+                        <span className={styles.actionSavings}>→ Avoid underpayment penalty</span>
+                      </div>
+                    </div>
+                  </div>
                 </div>
-              </div>
-              <div className={styles.problemHeroActions}>
-                <span className={styles.problemHeroActionsTitle}>Here's how to fix it:</span>
-                <div className={styles.problemHeroActionsList}>
-                  <div className={styles.problemHeroAction}>
-                    <span className={styles.actionNumber}>1</span>
-                    <span className={styles.actionText}>Increase 401(k) to $23,000</span>
-                    <span className={styles.actionSavings}>→ Save ~$5,500 in taxes</span>
+              ) : (taxData.totalExtraPerYear || taxData.totalPotentialSavings || 0) > 0 ? (
+                <div className={styles.savingsHero}>
+                  <div className={styles.savingsHeroContent}>
+                    <span className={styles.savingsHeroLabel}>You could save</span>
+                    <span className={styles.savingsHeroAmount}>
+                      {formatCurrency(taxData.totalExtraPerYear || taxData.totalPotentialSavings || 0)}
+                    </span>
+                    <span className={styles.savingsHeroLabel}>per year</span>
                   </div>
-                  <div className={styles.problemHeroAction}>
-                    <span className={styles.actionNumber}>2</span>
-                    <span className={styles.actionText}>Max HSA at $8,300</span>
-                    <span className={styles.actionSavings}>→ Save ~$2,000 in taxes</span>
-                  </div>
-                  <div className={styles.problemHeroAction}>
-                    <span className={styles.actionNumber}>3</span>
-                    <span className={styles.actionText}>Adjust W-4 withholding</span>
-                    <span className={styles.actionSavings}>→ Avoid underpayment penalty</span>
+                  {taxData.summaryText && (
+                    <p className={styles.savingsHeroSummary}>{taxData.summaryText}</p>
+                  )}
+                </div>
+              ) : (
+                <div className={styles.potentialHero}>
+                  <div className={styles.potentialHeroContent}>
+                    <span className={styles.potentialHeroTitle}>At {formatCurrency(taxProjection?.projections?.annualGross || taxData.totalIncome || 0)} income in the {taxData.marginalTaxBracket || taxProjection?.rates?.marginalBracket}% bracket</span>
+                    <span className={styles.potentialHeroSubtitle}>High earners like you typically save:</span>
+                    <div className={styles.potentialHeroRanges}>
+                      <div className={styles.potentialRange}>
+                        <span className={styles.rangeAmount}>$3,000 - $8,000</span>
+                        <span className={styles.rangeLabel}>via pre-tax optimization</span>
+                      </div>
+                      <div className={styles.potentialRange}>
+                        <span className={styles.rangeAmount}>$2,000 - $5,000</span>
+                        <span className={styles.rangeLabel}>via tax-loss harvesting</span>
+                      </div>
+                      <div className={styles.potentialRange}>
+                        <span className={styles.rangeAmount}>$1,000 - $3,000</span>
+                        <span className={styles.rangeLabel}>via deduction strategies</span>
+                      </div>
+                    </div>
                   </div>
                 </div>
-              </div>
-            </div>
-          ) : (taxData.totalExtraPerYear || taxData.totalPotentialSavings || 0) > 0 ? (
-            <div className={styles.savingsHero}>
-              <div className={styles.savingsHeroContent}>
-                <span className={styles.savingsHeroLabel}>You could save</span>
-                <span className={styles.savingsHeroAmount}>
-                  {formatCurrency(taxData.totalExtraPerYear || taxData.totalPotentialSavings || 0)}
-                </span>
-                <span className={styles.savingsHeroLabel}>per year</span>
-              </div>
-              {taxData.summaryText && (
-                <p className={styles.savingsHeroSummary}>{taxData.summaryText}</p>
               )}
-            </div>
-          ) : (
-            <div className={styles.potentialHero}>
-              <div className={styles.potentialHeroContent}>
-                <span className={styles.potentialHeroTitle}>At {formatCurrency(taxProjection?.projections?.annualGross || taxData.totalIncome || 0)} income in the {taxData.marginalTaxBracket || taxProjection?.rates?.marginalBracket}% bracket</span>
-                <span className={styles.potentialHeroSubtitle}>High earners like you typically save:</span>
-                <div className={styles.potentialHeroRanges}>
-                  <div className={styles.potentialRange}>
-                    <span className={styles.rangeAmount}>$3,000 - $8,000</span>
-                    <span className={styles.rangeLabel}>via pre-tax optimization</span>
-                  </div>
-                  <div className={styles.potentialRange}>
-                    <span className={styles.rangeAmount}>$2,000 - $5,000</span>
-                    <span className={styles.rangeLabel}>via tax-loss harvesting</span>
-                  </div>
-                  <div className={styles.potentialRange}>
-                    <span className={styles.rangeAmount}>$1,000 - $3,000</span>
-                    <span className={styles.rangeLabel}>via deduction strategies</span>
-                  </div>
+
+              {/* Quick Stats in left column */}
+              <div className={styles.inlineQuickStats}>
+                <div className={styles.quickStat}>
+                  <span className={styles.quickStatLabel}>Effective Rate</span>
+                  <span className={styles.quickStatValue}>{formatPercent(taxData.effectiveTaxRate || taxProjection?.rates?.effectiveRate)}</span>
+                </div>
+                <div className={styles.quickStat}>
+                  <span className={styles.quickStatLabel}>Marginal Bracket</span>
+                  <span className={styles.quickStatValue}>{formatPercent(taxData.marginalTaxBracket || taxProjection?.rates?.marginalBracket)}</span>
+                </div>
+                <div className={styles.quickStat}>
+                  <span className={styles.quickStatLabel}>Federal Tax</span>
+                  <span className={styles.quickStatValue}>{formatCurrency(taxData.totalFederalTax || taxProjection?.projections?.federalTax)}</span>
                 </div>
               </div>
             </div>
-          )}
+
+            {/* Right Column: Tax Assistant Chat */}
+            <div className={styles.topChatColumn}>
+              <div className={`${styles.resultsChat} ${chatExpanded ? styles.chatExpanded : ''}`}>
+                <div className={styles.chatHeader}>
+                  <div className={styles.chatHeaderContent}>
+                    <h3>
+                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+                      </svg>
+                      Tax Assistant
+                    </h3>
+                    <p>Ask questions about your taxes</p>
+                  </div>
+                  <button 
+                    className={styles.chatExpandButton}
+                    onClick={() => setChatExpanded(!chatExpanded)}
+                  >
+                    {chatExpanded ? 'Minimize' : 'Expand'}
+                  </button>
+                </div>
+                
+                <div className={styles.chatMessages}>
+                  {chatMessages.length === 0 ? (
+                    <div className={styles.chatEmpty}>
+                      <p>Have questions about these recommendations?</p>
+                      <div className={styles.chatSuggestions}>
+                        <button onClick={() => setChatInput("Explain the 401(k) recommendation")}>
+                          Explain 401(k) recommendation
+                        </button>
+                        <button onClick={() => setChatInput("How do I adjust my W-4?")}>
+                          How do I adjust my W-4?
+                        </button>
+                        <button onClick={() => setChatInput("What's an HSA and should I use one?")}>
+                          What's an HSA?
+                        </button>
+                      </div>
+                    </div>
+                  ) : (
+                    <>
+                      {chatMessages.map((msg, i) => (
+                        <div key={i} className={`${styles.chatMessage} ${styles[msg.role]}`}>
+                          <div className={styles.chatMessageContent}>{msg.content}</div>
+                        </div>
+                      ))}
+                      <div ref={chatEndRef} />
+                    </>
+                  )}
+                  {isSendingMessage && (
+                    <div className={`${styles.chatMessage} ${styles.assistant}`}>
+                      <div className={styles.chatMessageContent}>
+                        <span className={styles.typingIndicator}>Thinking...</span>
+                      </div>
+                    </div>
+                  )}
+                </div>
+                
+                <div className={styles.chatInputArea}>
+                  <input
+                    type="text"
+                    value={chatInput}
+                    onChange={(e) => setChatInput(e.target.value)}
+                    onKeyPress={handleChatKeyPress}
+                    placeholder="Ask about your taxes..."
+                    className={styles.chatInput}
+                    disabled={isSendingMessage}
+                  />
+                  <button 
+                    className={styles.chatSendButton}
+                    onClick={sendChatMessage}
+                    disabled={!chatInput.trim() || isSendingMessage}
+                  >
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                      <line x1="22" y1="2" x2="11" y2="13"/>
+                      <polygon points="22 2 15 22 11 13 2 9 22 2"/>
+                    </svg>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
 
           {/* Tax Projection Section */}
           {taxProjection?.hasProjection && taxProjection.projections && (
@@ -763,204 +865,107 @@ export default function ChargeTaxIntel() {
             </div>
           </div>
 
-          <div className={styles.resultsLayout}>
-            {/* Left side: Recommendations */}
-            <div className={styles.recommendationsColumn}>
-              <h2 className={styles.recommendationsTitle}>Your Action Plan</h2>
-              <p className={styles.recommendationsSubtitle}>Here's exactly what to do, ranked by impact</p>
-              
-              {/* Optimizations from paystub analysis */}
-              {taxData.optimizations && taxData.optimizations.length > 0 && (
-                <div className={styles.resultsList}>
-                  {taxData.optimizations.map((opt, i) => (
-                    <OptimizationItem key={i} optimization={opt} index={i} formatCurrency={formatCurrency} />
-                  ))}
-                </div>
-              )}
+          {/* Recommendations Section - Now Full Width */}
+          <div className={styles.recommendationsSection}>
+            <h2 className={styles.recommendationsTitle}>Your Action Plan</h2>
+            <p className={styles.recommendationsSubtitle}>Here's exactly what to do, ranked by impact</p>
+            
+            {/* Optimizations from paystub analysis */}
+            {taxData.optimizations && taxData.optimizations.length > 0 && (
+              <div className={styles.resultsList}>
+                {taxData.optimizations.map((opt, i) => (
+                  <OptimizationItem key={i} optimization={opt} index={i} formatCurrency={formatCurrency} />
+                ))}
+              </div>
+            )}
 
-              {/* Insights (general tax insights) */}
-              {taxData.insights && taxData.insights.length > 0 && (
-                <div className={styles.resultsList}>
-                  {taxData.insights.map((insight, i) => (
-                    <div key={i} className={styles.resultCard}>
-                      <div className={styles.resultCardHeader}>
-                        <div className={styles.resultCardNumber}>{(taxData.optimizations?.length || 0) + i + 1}</div>
-                        <div className={styles.resultCardTitle}>
-                          <h4>{formatText(insight.title)}</h4>
-                          {insight.potentialImpact && insight.potentialImpact > 0 && (
-                            <span className={styles.resultCardSavings}>
-                              Save <strong>{formatCurrency(insight.potentialImpact)}</strong>/year
-                            </span>
-                          )}
-                        </div>
-                      </div>
-                      <div className={styles.resultCardBody}>
-                        <p className={styles.insightDescription}>{formatText(insight.description)}</p>
-                        {insight.action && (
-                          <div className={styles.howToFixSection}>
-                            <h5>How to fix this:</h5>
-                            <p>{formatText(insight.action)}</p>
-                          </div>
+            {/* Insights (general tax insights) */}
+            {taxData.insights && taxData.insights.length > 0 && (
+              <div className={styles.resultsList}>
+                {taxData.insights.map((insight, i) => (
+                  <div key={i} className={styles.resultCard}>
+                    <div className={styles.resultCardHeader}>
+                      <div className={styles.resultCardNumber}>{(taxData.optimizations?.length || 0) + i + 1}</div>
+                      <div className={styles.resultCardTitle}>
+                        <h4>{formatText(insight.title)}</h4>
+                        {insight.potentialImpact && insight.potentialImpact > 0 && (
+                          <span className={styles.resultCardSavings}>
+                            Save <strong>{formatCurrency(insight.potentialImpact)}</strong>/year
+                          </span>
                         )}
                       </div>
                     </div>
-                  ))}
-                </div>
-              )}
-
-              {/* Tax Strategies (from 1040/W2 analysis) */}
-              {taxData.taxStrategies && taxData.taxStrategies.length > 0 && (
-                <div className={styles.resultsList}>
-                  {taxData.taxStrategies.map((strategy, i) => (
-                    <div key={i} className={styles.resultCard}>
-                      <div className={styles.resultCardHeader}>
-                        <div className={styles.resultCardNumber}>
-                          {(taxData.optimizations?.length || 0) + (taxData.insights?.length || 0) + i + 1}
-                        </div>
-                        <div className={styles.resultCardTitle}>
-                          <h4>{formatText(strategy.strategy)}</h4>
-                          {strategy.potentialSavings > 0 && (
-                            <span className={styles.resultCardSavings}>
-                              Save <strong>{formatCurrency(strategy.potentialSavings)}</strong>/year
-                            </span>
-                          )}
-                        </div>
-                        <div 
-                          className={styles.priorityIndicator}
-                          style={{ 
-                            backgroundColor: strategy.priority === 'high' ? '#10b981' : 
-                                            strategy.priority === 'medium' ? '#f59e0b' : '#6b7280'
-                          }}
-                        >
-                          {strategy.priority}
-                        </div>
-                      </div>
-                      <div className={styles.resultCardBody}>
-                        <div className={styles.strategyInfo}>
-                          <div className={styles.strategyInfoItem}>
-                            <strong>Current Situation:</strong>
-                            <p>{formatText(strategy.currentSituation)}</p>
-                          </div>
-                          <div className={styles.strategyInfoItem}>
-                            <strong>Recommendation:</strong>
-                            <p>{formatText(strategy.recommendation)}</p>
-                          </div>
-                        </div>
+                    <div className={styles.resultCardBody}>
+                      <p className={styles.insightDescription}>{formatText(insight.description)}</p>
+                      {insight.action && (
                         <div className={styles.howToFixSection}>
-                          <h5>How to implement:</h5>
-                          <p>{formatText(strategy.howToImplement)}</p>
+                          <h5>How to fix this:</h5>
+                          <p>{formatText(insight.action)}</p>
                         </div>
-                      </div>
+                      )}
                     </div>
-                  ))}
-                </div>
-              )}
-
-              {/* Empty state */}
-              {(!taxData.optimizations || taxData.optimizations.length === 0) && 
-               (!taxData.insights || taxData.insights.length === 0) && 
-               (!taxData.taxStrategies || taxData.taxStrategies.length === 0) && (
-                <div className={styles.noResults}>
-                  <p>No specific recommendations found. Try uploading a clearer document.</p>
-                </div>
-              )}
-            </div>
-
-            {/* Right side: Chat */}
-            <div className={styles.chatColumn}>
-              <div className={`${styles.resultsChat} ${chatExpanded ? styles.chatExpanded : ''}`}>
-                <div className={styles.chatHeader}>
-                  <div className={styles.chatHeaderContent}>
-                    <h3>
-                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
-                      </svg>
-                      Tax Assistant
-                    </h3>
-                    <p>Ask questions about your taxes</p>
                   </div>
-                  <button 
-                    className={styles.chatExpandButton}
-                    onClick={() => setChatExpanded(!chatExpanded)}
-                  >
-                    {chatExpanded ? 'Minimize' : 'Expand'}
-                  </button>
-                </div>
-                
-                <div className={styles.chatMessages}>
-                  {chatMessages.length === 0 ? (
-                    <div className={styles.chatEmpty}>
-                      <p>Have questions about these recommendations?</p>
-                      <div className={styles.chatSuggestions}>
-                        <button onClick={() => setChatInput("Explain the 401(k) recommendation")}>
-                          Explain 401(k) recommendation
-                        </button>
-                        <button onClick={() => setChatInput("How do I adjust my W-4?")}>
-                          How do I adjust my W-4?
-                        </button>
-                        <button onClick={() => setChatInput("What's an HSA and should I use one?")}>
-                          What's an HSA?
-                        </button>
-                      </div>
-                    </div>
-                  ) : (
-                    <>
-                      {chatMessages.map((msg, i) => (
-                        <div key={i} className={`${styles.chatMessage} ${styles[msg.role]}`}>
-                          <div className={styles.chatMessageContent}>{msg.content}</div>
-                        </div>
-                      ))}
-                      <div ref={chatEndRef} />
-                    </>
-                  )}
-                  {isSendingMessage && (
-                    <div className={`${styles.chatMessage} ${styles.assistant}`}>
-                      <div className={styles.chatMessageContent}>
-                        <span className={styles.typingIndicator}>Thinking...</span>
-                      </div>
-                    </div>
-                  )}
-                </div>
-                
-                <div className={styles.chatInputArea}>
-                  <input
-                    type="text"
-                    value={chatInput}
-                    onChange={(e) => setChatInput(e.target.value)}
-                    onKeyPress={handleChatKeyPress}
-                    placeholder="Ask about your taxes..."
-                    className={styles.chatInput}
-                    disabled={isSendingMessage}
-                  />
-                  <button 
-                    className={styles.chatSendButton}
-                    onClick={sendChatMessage}
-                    disabled={!chatInput.trim() || isSendingMessage}
-                  >
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                      <line x1="22" y1="2" x2="11" y2="13"/>
-                      <polygon points="22 2 15 22 11 13 2 9 22 2"/>
-                    </svg>
-                  </button>
-                </div>
+                ))}
               </div>
+            )}
 
-              {/* Quick Stats */}
-              <div className={styles.quickStats}>
-                <div className={styles.quickStat}>
-                  <span className={styles.quickStatLabel}>Effective Rate</span>
-                  <span className={styles.quickStatValue}>{formatPercent(taxData.effectiveTaxRate)}</span>
-                </div>
-                <div className={styles.quickStat}>
-                  <span className={styles.quickStatLabel}>Marginal Bracket</span>
-                  <span className={styles.quickStatValue}>{formatPercent(taxData.marginalTaxBracket)}</span>
-                </div>
-                <div className={styles.quickStat}>
-                  <span className={styles.quickStatLabel}>Federal Tax Paid</span>
-                  <span className={styles.quickStatValue}>{formatCurrency(taxData.totalFederalTax)}</span>
-                </div>
+            {/* Tax Strategies (from 1040/W2 analysis) */}
+            {taxData.taxStrategies && taxData.taxStrategies.length > 0 && (
+              <div className={styles.resultsList}>
+                {taxData.taxStrategies.map((strategy, i) => (
+                  <div key={i} className={styles.resultCard}>
+                    <div className={styles.resultCardHeader}>
+                      <div className={styles.resultCardNumber}>
+                        {(taxData.optimizations?.length || 0) + (taxData.insights?.length || 0) + i + 1}
+                      </div>
+                      <div className={styles.resultCardTitle}>
+                        <h4>{formatText(strategy.strategy)}</h4>
+                        {strategy.potentialSavings > 0 && (
+                          <span className={styles.resultCardSavings}>
+                            Save <strong>{formatCurrency(strategy.potentialSavings)}</strong>/year
+                          </span>
+                        )}
+                      </div>
+                      <div 
+                        className={styles.priorityIndicator}
+                        style={{ 
+                          backgroundColor: strategy.priority === 'high' ? '#10b981' : 
+                                          strategy.priority === 'medium' ? '#f59e0b' : '#6b7280'
+                        }}
+                      >
+                        {strategy.priority}
+                      </div>
+                    </div>
+                    <div className={styles.resultCardBody}>
+                      <div className={styles.strategyInfo}>
+                        <div className={styles.strategyInfoItem}>
+                          <strong>Current Situation:</strong>
+                          <p>{formatText(strategy.currentSituation)}</p>
+                        </div>
+                        <div className={styles.strategyInfoItem}>
+                          <strong>Recommendation:</strong>
+                          <p>{formatText(strategy.recommendation)}</p>
+                        </div>
+                      </div>
+                      <div className={styles.howToFixSection}>
+                        <h5>How to implement:</h5>
+                        <p>{formatText(strategy.howToImplement)}</p>
+                      </div>
+                    </div>
+                  </div>
+                ))}
               </div>
-            </div>
+            )}
+
+            {/* Empty state - improved messaging */}
+            {(!taxData.optimizations || taxData.optimizations.length === 0) && 
+             (!taxData.insights || taxData.insights.length === 0) && 
+             (!taxData.taxStrategies || taxData.taxStrategies.length === 0) && (
+              <div className={styles.noResults}>
+                <p>We're analyzing your document for tax-saving opportunities. If you don't see recommendations, try uploading a clearer paystub or W-2 PDF.</p>
+                <p className={styles.noResultsTip}>💡 Tip: Make sure your document shows gross pay, federal withholding, and any pre-tax deductions like 401(k) or HSA.</p>
+              </div>
+            )}
           </div>
         </div>
       )}

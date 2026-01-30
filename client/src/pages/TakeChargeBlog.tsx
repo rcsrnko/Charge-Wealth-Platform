@@ -35,6 +35,64 @@ const CATEGORIES = [
   { id: 'free', label: 'Free Articles', premium: false },
 ];
 
+// Theme hook for dark/light mode
+function useTheme() {
+  const [isDark, setIsDark] = useState(() => {
+    if (typeof window !== 'undefined') {
+      const saved = localStorage.getItem('blog-theme');
+      if (saved) return saved === 'dark';
+      return window.matchMedia('(prefers-color-scheme: dark)').matches;
+    }
+    return false;
+  });
+
+  useEffect(() => {
+    localStorage.setItem('blog-theme', isDark ? 'dark' : 'light');
+    if (isDark) {
+      document.documentElement.setAttribute('data-theme', 'dark');
+    } else {
+      document.documentElement.removeAttribute('data-theme');
+    }
+  }, [isDark]);
+
+  return { isDark, toggleTheme: () => setIsDark(!isDark) };
+}
+
+// Theme toggle component
+function ThemeToggle({ isDark, onToggle }: { isDark: boolean; onToggle: () => void }) {
+  return (
+    <button
+      onClick={onToggle}
+      aria-label={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
+      style={{
+        background: isDark ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.05)',
+        border: 'none',
+        borderRadius: 8,
+        padding: '8px 12px',
+        cursor: 'pointer',
+        display: 'flex',
+        alignItems: 'center',
+        gap: 6,
+        fontSize: 14,
+        color: isDark ? '#F5F5F5' : '#1F2937',
+        transition: 'all 0.2s',
+      }}
+    >
+      {isDark ? (
+        <>
+          <span style={{ fontSize: 16 }}>☀️</span>
+          <span style={{ display: 'none' }} className="toggle-label">Light</span>
+        </>
+      ) : (
+        <>
+          <span style={{ fontSize: 16 }}>🌙</span>
+          <span style={{ display: 'none' }} className="toggle-label">Dark</span>
+        </>
+      )}
+    </button>
+  );
+}
+
 // Hook to check subscription status
 function useBlogSubscription() {
   return useQuery({
@@ -64,47 +122,77 @@ function useBlogPost(slug: string) {
   });
 }
 
+// Color scheme helper
+function getColors(isDark: boolean) {
+  return isDark ? {
+    bg: '#121212',
+    bgSecondary: '#1E1E1E',
+    bgTertiary: '#252525',
+    textPrimary: '#F5F5F5',
+    textSecondary: '#A3A3A3',
+    textMuted: '#737373',
+    accent: '#F6DBA6',
+    accentHover: '#E8C88A',
+    border: 'rgba(255,255,255,0.08)',
+    borderHover: 'rgba(255,255,255,0.15)',
+  } : {
+    bg: '#F9F6F0',
+    bgSecondary: '#F5F2ED',
+    bgTertiary: '#EFEBE5',
+    textPrimary: '#1F2937',
+    textSecondary: '#6B7280',
+    textMuted: '#9CA3AF',
+    accent: '#F6DBA6',
+    accentHover: '#E8C88A',
+    border: 'rgba(0,0,0,0.08)',
+    borderHover: 'rgba(0,0,0,0.12)',
+    card: '#FFFDFB',
+  };
+}
+
 // Components
-function BlogHeader() {
+function BlogHeader({ isDark, onToggleTheme }: { isDark: boolean; onToggleTheme: () => void }) {
   const { data: subStatus } = useBlogSubscription();
   const hasAccess = subStatus?.hasAccess || false;
+  const colors = getColors(isDark);
 
   return (
     <header style={{
       padding: '16px 32px',
-      borderBottom: '1px solid rgba(201, 169, 98, 0.1)',
-      background: '#0F1117',
+      borderBottom: `1px solid ${colors.border}`,
+      background: isDark ? '#121212' : '#FFFDFB',
     }}>
-      <div style={{ maxWidth: 1200, margin: '0 auto', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+      <div style={{ maxWidth: 1200, margin: '0 auto', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 16 }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 24 }}>
           <Link href="/take-charge">
-            <a style={{ color: '#C9A962', fontSize: 20, fontWeight: 700, textDecoration: 'none' }}>
+            <a style={{ color: colors.accent, fontSize: 20, fontWeight: 700, textDecoration: 'none' }}>
               Charge Wealth
             </a>
           </Link>
           <Link href="/take-charge">
-            <a style={{ color: '#F4F5F7', fontSize: 16, fontWeight: 600, textDecoration: 'none' }}>
+            <a style={{ color: colors.textPrimary, fontSize: 16, fontWeight: 600, textDecoration: 'none' }}>
               Take Charge
             </a>
           </Link>
         </div>
-        <div style={{ display: 'flex', gap: 16, alignItems: 'center' }}>
+        <div style={{ display: 'flex', gap: 12, alignItems: 'center' }}>
+          <ThemeToggle isDark={isDark} onToggle={onToggleTheme} />
           <Link href="/tools">
-            <a style={{ color: '#A8B0C5', fontSize: 14, textDecoration: 'none' }}>
+            <a style={{ color: colors.textSecondary, fontSize: 14, textDecoration: 'none' }}>
               Free Tools
             </a>
           </Link>
           {hasAccess ? (
             <Link href="/dashboard">
               <a style={{
-                background: 'rgba(201, 169, 98, 0.1)',
-                color: '#C9A962',
+                background: isDark ? 'rgba(246,219,166,0.1)' : 'rgba(246,219,166,0.3)',
+                color: colors.accent,
                 padding: '8px 16px',
                 borderRadius: 6,
                 fontWeight: 600,
                 textDecoration: 'none',
                 fontSize: 14,
-                border: '1px solid rgba(201, 169, 98, 0.3)',
+                border: `1px solid ${isDark ? 'rgba(246,219,166,0.3)' : 'rgba(246,219,166,0.5)'}`,
               }}>
                 Dashboard
               </a>
@@ -112,8 +200,8 @@ function BlogHeader() {
           ) : (
             <Link href="/take-charge/subscribe">
               <a style={{
-                background: '#C9A962',
-                color: '#0F1117',
+                background: colors.accent,
+                color: '#4A3F2F',
                 padding: '8px 16px',
                 borderRadius: 8,
                 fontWeight: 600,
@@ -131,6 +219,8 @@ function BlogHeader() {
 }
 
 function BlogIndex() {
+  const { isDark, toggleTheme } = useTheme();
+  const colors = getColors(isDark);
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [email, setEmail] = useState('');
   const [, setLocation] = useLocation();
@@ -164,30 +254,33 @@ function BlogIndex() {
   return (
     <div style={{
       minHeight: '100vh',
-      background: '#0F1117',
+      background: colors.bg,
       fontFamily: 'Inter, -apple-system, sans-serif',
     }}>
-      <BlogHeader />
+      <BlogHeader isDark={isDark} onToggleTheme={toggleTheme} />
 
       {/* Hero */}
       <section style={{
         padding: '60px 32px',
-        background: 'linear-gradient(180deg, #0F1117 0%, #1A1D28 100%)',
+        background: isDark 
+          ? 'linear-gradient(180deg, #121212 0%, #1E1E1E 100%)'
+          : 'linear-gradient(180deg, #F9F6F0 0%, #F5F2ED 100%)',
         textAlign: 'center',
       }}>
         <h1 style={{
-          fontSize: 56,
+          fontSize: 'clamp(36px, 8vw, 56px)',
           fontWeight: 700,
-          color: '#F4F5F7',
+          color: colors.textPrimary,
           marginBottom: 16,
         }}>
           Take Charge
         </h1>
         <p style={{
-          fontSize: 20,
-          color: '#A8B0C5',
+          fontSize: 'clamp(16px, 3vw, 20px)',
+          color: colors.textSecondary,
           maxWidth: 600,
           margin: '0 auto 32px',
+          padding: '0 16px',
         }}>
           Actionable financial insights for high earners. No fluff. No sales pitches. Just strategies that work.
         </p>
@@ -198,6 +291,9 @@ function BlogIndex() {
           margin: '0 auto',
           display: 'flex',
           gap: 12,
+          flexWrap: 'wrap',
+          justifyContent: 'center',
+          padding: '0 16px',
         }}>
           <input
             type="email"
@@ -205,13 +301,14 @@ function BlogIndex() {
             onChange={(e) => setEmail(e.target.value)}
             placeholder="Enter your email"
             style={{
-              flex: 1,
+              flex: '1 1 250px',
+              minWidth: 200,
               padding: '14px 20px',
               fontSize: 16,
-              background: '#1A1D28',
-              border: '1px solid rgba(201, 169, 98, 0.2)',
+              background: isDark ? '#1E1E1E' : '#FFFDFB',
+              border: `1px solid ${isDark ? 'rgba(246,219,166,0.2)' : 'rgba(0,0,0,0.1)'}`,
               borderRadius: 8,
-              color: '#F4F5F7',
+              color: colors.textPrimary,
             }}
           />
           <button 
@@ -220,17 +317,18 @@ function BlogIndex() {
               padding: '14px 28px',
               fontSize: 16,
               fontWeight: 600,
-              background: '#C9A962',
-              color: '#0F1117',
+              background: colors.accent,
+              color: '#4A3F2F',
               border: 'none',
               borderRadius: 8,
               cursor: 'pointer',
+              whiteSpace: 'nowrap',
             }}
           >
             Subscribe Free
           </button>
         </div>
-        <p style={{ color: '#6B7280', fontSize: 14, marginTop: 12 }}>
+        <p style={{ color: colors.textMuted, fontSize: 14, marginTop: 12 }}>
           Free weekly insights. Upgrade for daily premium content.
         </p>
       </section>
@@ -238,9 +336,9 @@ function BlogIndex() {
       {/* Categories */}
       <section style={{
         padding: '24px 32px',
-        borderBottom: '1px solid rgba(201, 169, 98, 0.1)',
+        borderBottom: `1px solid ${colors.border}`,
       }}>
-        <div style={{ maxWidth: 1200, margin: '0 auto', display: 'flex', gap: 16, flexWrap: 'wrap' }}>
+        <div style={{ maxWidth: 1200, margin: '0 auto', display: 'flex', gap: 12, flexWrap: 'wrap', justifyContent: 'center' }}>
           {CATEGORIES.map(cat => (
             <button
               key={cat.id}
@@ -249,14 +347,15 @@ function BlogIndex() {
                 padding: '8px 20px',
                 fontSize: 14,
                 fontWeight: 500,
-                background: selectedCategory === cat.id ? '#C9A962' : 'transparent',
-                color: selectedCategory === cat.id ? '#0F1117' : '#A8B0C5',
-                border: selectedCategory === cat.id ? 'none' : '1px solid rgba(201, 169, 98, 0.2)',
+                background: selectedCategory === cat.id ? colors.accent : 'transparent',
+                color: selectedCategory === cat.id ? '#4A3F2F' : colors.textSecondary,
+                border: selectedCategory === cat.id ? 'none' : `1px solid ${colors.border}`,
                 borderRadius: 20,
                 cursor: 'pointer',
                 display: 'flex',
                 alignItems: 'center',
                 gap: 6,
+                transition: 'all 0.2s',
               }}
             >
               {cat.label}
@@ -273,7 +372,7 @@ function BlogIndex() {
         margin: '0 auto',
       }}>
         {isLoading ? (
-          <div style={{ textAlign: 'center', color: '#A8B0C5', padding: 60 }}>
+          <div style={{ textAlign: 'center', color: colors.textSecondary, padding: 60 }}>
             Loading posts...
           </div>
         ) : error ? (
@@ -281,13 +380,13 @@ function BlogIndex() {
             Failed to load posts. Please try again.
           </div>
         ) : filteredPosts.length === 0 ? (
-          <div style={{ textAlign: 'center', color: '#A8B0C5', padding: 60 }}>
+          <div style={{ textAlign: 'center', color: colors.textSecondary, padding: 60 }}>
             No posts found in this category.
           </div>
         ) : (
           <div style={{
             display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(350px, 1fr))',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
             gap: 32,
           }}>
             {filteredPosts.map(post => {
@@ -302,26 +401,31 @@ function BlogIndex() {
                 <Link key={post.slug} href={`/take-charge/${post.slug}`}>
                   <a style={{
                     display: 'block',
-                    background: '#1A1D28',
+                    background: isDark ? '#1E1E1E' : '#FFFDFB',
                     borderRadius: 16,
                     overflow: 'hidden',
                     textDecoration: 'none',
-                    border: '1px solid rgba(201, 169, 98, 0.1)',
+                    border: `1px solid ${colors.border}`,
                     transition: 'all 0.2s',
+                    boxShadow: isDark ? 'none' : '0 2px 8px rgba(0,0,0,0.04)',
                   }}
                   onMouseEnter={(e) => {
-                    e.currentTarget.style.borderColor = '#C9A962';
+                    e.currentTarget.style.borderColor = colors.accent;
                     e.currentTarget.style.transform = 'translateY(-4px)';
+                    e.currentTarget.style.boxShadow = isDark ? '0 8px 24px rgba(0,0,0,0.3)' : '0 8px 24px rgba(0,0,0,0.08)';
                   }}
                   onMouseLeave={(e) => {
-                    e.currentTarget.style.borderColor = 'rgba(201, 169, 98, 0.1)';
+                    e.currentTarget.style.borderColor = colors.border;
                     e.currentTarget.style.transform = 'translateY(0)';
+                    e.currentTarget.style.boxShadow = isDark ? 'none' : '0 2px 8px rgba(0,0,0,0.04)';
                   }}
                   >
                     {/* Post image placeholder */}
                     <div style={{
                       height: 200,
-                      background: 'linear-gradient(135deg, #1A1D28 0%, #242838 100%)',
+                      background: isDark 
+                        ? 'linear-gradient(135deg, #1E1E1E 0%, #252525 100%)'
+                        : 'linear-gradient(135deg, #F5F2ED 0%, #EFEBE5 100%)',
                       display: 'flex',
                       alignItems: 'center',
                       justifyContent: 'center',
@@ -335,11 +439,11 @@ function BlogIndex() {
 
                     <div style={{ padding: 24 }}>
                       {/* Meta */}
-                      <div style={{ display: 'flex', gap: 12, marginBottom: 12 }}>
+                      <div style={{ display: 'flex', gap: 12, marginBottom: 12, flexWrap: 'wrap' }}>
                         <span style={{
                           padding: '4px 12px',
-                          background: 'rgba(201, 169, 98, 0.1)',
-                          color: '#C9A962',
+                          background: isDark ? 'rgba(246,219,166,0.1)' : 'rgba(246,219,166,0.3)',
+                          color: isDark ? colors.accent : '#8B6914',
                           fontSize: 12,
                           fontWeight: 600,
                           borderRadius: 20,
@@ -353,7 +457,7 @@ function BlogIndex() {
                       <h2 style={{
                         fontSize: 20,
                         fontWeight: 600,
-                        color: '#F4F5F7',
+                        color: colors.textPrimary,
                         marginBottom: 8,
                         lineHeight: 1.3,
                       }}>
@@ -362,7 +466,7 @@ function BlogIndex() {
 
                       <p style={{
                         fontSize: 14,
-                        color: '#A8B0C5',
+                        color: colors.textSecondary,
                         lineHeight: 1.5,
                         marginBottom: 16,
                       }}>
@@ -373,7 +477,7 @@ function BlogIndex() {
                         display: 'flex',
                         justifyContent: 'space-between',
                         fontSize: 12,
-                        color: '#6B7280',
+                        color: colors.textMuted,
                       }}>
                         <span>{date}</span>
                         <span>{readTime} read</span>
@@ -390,20 +494,20 @@ function BlogIndex() {
       {/* CTA */}
       <section style={{
         padding: '60px 32px',
-        background: 'rgba(201, 169, 98, 0.05)',
+        background: isDark ? 'rgba(246,219,166,0.05)' : 'rgba(246,219,166,0.15)',
         textAlign: 'center',
       }}>
-        <h2 style={{ fontSize: 32, fontWeight: 700, color: '#F4F5F7', marginBottom: 16 }}>
+        <h2 style={{ fontSize: 'clamp(24px, 5vw, 32px)', fontWeight: 700, color: colors.textPrimary, marginBottom: 16 }}>
           Want daily insights?
         </h2>
-        <p style={{ fontSize: 18, color: '#A8B0C5', marginBottom: 32 }}>
+        <p style={{ fontSize: 18, color: colors.textSecondary, marginBottom: 32, padding: '0 16px' }}>
           Upgrade to Take Charge Pro for daily tips, market alerts, and premium analysis.
         </p>
         <Link href="/take-charge/subscribe">
           <a style={{
             display: 'inline-block',
-            background: '#C9A962',
-            color: '#0F1117',
+            background: colors.accent,
+            color: '#4A3F2F',
             padding: '16px 32px',
             borderRadius: 8,
             fontWeight: 700,
@@ -419,6 +523,8 @@ function BlogIndex() {
 }
 
 function BlogPost() {
+  const { isDark, toggleTheme } = useTheme();
+  const colors = getColors(isDark);
   const [, params] = useRoute('/take-charge/:slug');
   const slug = params?.slug || '';
   
@@ -436,11 +542,11 @@ function BlogPost() {
     return (
       <div style={{
         minHeight: '100vh',
-        background: '#0F1117',
+        background: colors.bg,
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        color: '#F4F5F7',
+        color: colors.textPrimary,
       }}>
         Loading...
       </div>
@@ -451,18 +557,18 @@ function BlogPost() {
     return (
       <div style={{
         minHeight: '100vh',
-        background: '#0F1117',
+        background: colors.bg,
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
         justifyContent: 'center',
-        color: '#F4F5F7',
+        color: colors.textPrimary,
         gap: 24,
       }}>
         <div style={{ fontSize: 64 }}>📝</div>
         <h1>Post not found</h1>
         <Link href="/take-charge">
-          <a style={{ color: '#C9A962' }}>Back to Blog</a>
+          <a style={{ color: colors.accent }}>Back to Blog</a>
         </Link>
       </div>
     );
@@ -479,7 +585,7 @@ function BlogPost() {
   return (
     <div style={{
       minHeight: '100vh',
-      background: '#0F1117',
+      background: colors.bg,
       fontFamily: 'Inter, -apple-system, sans-serif',
     }}>
       <SEO 
@@ -489,19 +595,19 @@ function BlogPost() {
         type="article"
         publishedTime={post.published_at || post.date}
       />
-      <BlogHeader />
+      <BlogHeader isDark={isDark} onToggleTheme={toggleTheme} />
 
       <article style={{
         maxWidth: 700,
         margin: '0 auto',
-        padding: '60px 32px',
+        padding: '60px 24px',
       }}>
         {/* Meta */}
-        <div style={{ display: 'flex', gap: 12, marginBottom: 24, flexWrap: 'wrap' }}>
+        <div style={{ display: 'flex', gap: 12, marginBottom: 24, flexWrap: 'wrap', alignItems: 'center' }}>
           <span style={{
             padding: '6px 16px',
-            background: 'rgba(201, 169, 98, 0.1)',
-            color: '#C9A962',
+            background: isDark ? 'rgba(246,219,166,0.1)' : 'rgba(246,219,166,0.3)',
+            color: isDark ? colors.accent : '#8B6914',
             fontSize: 14,
             fontWeight: 600,
             borderRadius: 20,
@@ -510,16 +616,16 @@ function BlogPost() {
             {post.category.replace(/-/g, ' ')}
           </span>
           {isPremiumContent && <PaywallBadge />}
-          <span style={{ color: '#6B7280', fontSize: 14, lineHeight: '28px' }}>
+          <span style={{ color: colors.textMuted, fontSize: 14, lineHeight: '28px' }}>
             {date} · {readTime} read
           </span>
         </div>
 
         {/* Title */}
         <h1 style={{
-          fontSize: 40,
+          fontSize: 'clamp(28px, 6vw, 40px)',
           fontWeight: 700,
-          color: '#F4F5F7',
+          color: colors.textPrimary,
           lineHeight: 1.2,
           marginBottom: 24,
         }}>
@@ -540,11 +646,11 @@ function BlogPost() {
             {/* Full Content - render HTML */}
             <div 
               style={{
-                color: '#D1D5DB',
+                color: colors.textSecondary,
                 fontSize: 18,
                 lineHeight: 1.8,
               }}
-              className="blog-content"
+              className={`blog-content ${isDark ? 'blog-content-dark' : 'blog-content-light'}`}
               dangerouslySetInnerHTML={{ __html: content }}
             />
 
@@ -552,21 +658,21 @@ function BlogPost() {
             <div style={{
               marginTop: 60,
               padding: 32,
-              background: 'rgba(201, 169, 98, 0.05)',
+              background: isDark ? 'rgba(246,219,166,0.05)' : 'rgba(246,219,166,0.15)',
               borderRadius: 16,
-              border: '1px solid rgba(201, 169, 98, 0.2)',
+              border: `1px solid ${isDark ? 'rgba(246,219,166,0.2)' : 'rgba(246,219,166,0.4)'}`,
             }}>
-              <h3 style={{ color: '#F4F5F7', fontSize: 24, marginBottom: 12 }}>
+              <h3 style={{ color: colors.textPrimary, fontSize: 24, marginBottom: 12 }}>
                 Want more insights like this?
               </h3>
-              <p style={{ color: '#A8B0C5', marginBottom: 24 }}>
+              <p style={{ color: colors.textSecondary, marginBottom: 24 }}>
                 Take Charge Pro delivers daily actionable tips straight to your inbox.
               </p>
               <Link href="/take-charge/subscribe">
                 <a style={{
                   display: 'inline-block',
-                  background: '#C9A962',
-                  color: '#0F1117',
+                  background: colors.accent,
+                  color: '#4A3F2F',
                   padding: '14px 28px',
                   borderRadius: 8,
                   fontWeight: 600,
@@ -581,27 +687,52 @@ function BlogPost() {
         )}
       </article>
       
-      {/* Add styles for blog content */}
+      {/* Add styles for blog content - both light and dark modes */}
       <style>{`
-        .blog-content h1 { font-size: 32px; font-weight: 700; color: #F4F5F7; margin-top: 48px; margin-bottom: 24px; }
-        .blog-content h2 { font-size: 24px; font-weight: 600; color: #C9A962; margin-top: 40px; margin-bottom: 16px; }
-        .blog-content h3 { font-size: 20px; font-weight: 600; color: #F4F5F7; margin-top: 32px; margin-bottom: 12px; }
-        .blog-content p { margin-bottom: 16px; }
-        .blog-content ul, .blog-content ol { margin: 16px 0 16px 24px; }
-        .blog-content li { margin-bottom: 8px; }
-        .blog-content strong { color: #C9A962; }
-        .blog-content a { color: #C9A962; text-decoration: underline; }
-        .blog-content blockquote { border-left: 3px solid #C9A962; padding-left: 16px; margin: 16px 0; color: #A8B0C5; font-style: italic; }
-        .blog-content hr { border: none; border-top: 1px solid rgba(201, 169, 98, 0.2); margin: 40px 0; }
-        .blog-content .tldr { background: #1A1D28; border-left: 4px solid #C9A962; padding: 20px 24px; margin: 24px 0; border-radius: 0 8px 8px 0; }
-        .blog-content .tldr h3 { color: #C9A962; margin: 0 0 12px 0; font-size: 18px; }
-        .blog-content .tldr ul { margin: 0 0 0 20px; }
+        /* Light mode blog content */
+        .blog-content-light h1 { font-size: 32px; font-weight: 700; color: #1F2937; margin-top: 48px; margin-bottom: 24px; }
+        .blog-content-light h2 { font-size: 24px; font-weight: 600; color: #8B6914; margin-top: 40px; margin-bottom: 16px; }
+        .blog-content-light h3 { font-size: 20px; font-weight: 600; color: #1F2937; margin-top: 32px; margin-bottom: 12px; }
+        .blog-content-light p { margin-bottom: 16px; color: #4B5563; }
+        .blog-content-light ul, .blog-content-light ol { margin: 16px 0 16px 24px; color: #4B5563; }
+        .blog-content-light li { margin-bottom: 8px; }
+        .blog-content-light strong { color: #1F2937; }
+        .blog-content-light a { color: #8B6914; text-decoration: underline; }
+        .blog-content-light blockquote { border-left: 3px solid #F6DBA6; padding-left: 16px; margin: 16px 0; color: #6B7280; font-style: italic; }
+        .blog-content-light hr { border: none; border-top: 1px solid rgba(0,0,0,0.1); margin: 40px 0; }
+        .blog-content-light .tldr { background: #FFFDFB; border-left: 4px solid #F6DBA6; padding: 20px 24px; margin: 24px 0; border-radius: 0 8px 8px 0; }
+        .blog-content-light .tldr h3 { color: #8B6914; margin: 0 0 12px 0; font-size: 18px; }
+        .blog-content-light .tldr ul { margin: 0 0 0 20px; }
+        
+        /* Dark mode blog content */
+        .blog-content-dark h1 { font-size: 32px; font-weight: 700; color: #F5F5F5; margin-top: 48px; margin-bottom: 24px; }
+        .blog-content-dark h2 { font-size: 24px; font-weight: 600; color: #F6DBA6; margin-top: 40px; margin-bottom: 16px; }
+        .blog-content-dark h3 { font-size: 20px; font-weight: 600; color: #F5F5F5; margin-top: 32px; margin-bottom: 12px; }
+        .blog-content-dark p { margin-bottom: 16px; color: #D1D5DB; }
+        .blog-content-dark ul, .blog-content-dark ol { margin: 16px 0 16px 24px; color: #D1D5DB; }
+        .blog-content-dark li { margin-bottom: 8px; }
+        .blog-content-dark strong { color: #F6DBA6; }
+        .blog-content-dark a { color: #F6DBA6; text-decoration: underline; }
+        .blog-content-dark blockquote { border-left: 3px solid #F6DBA6; padding-left: 16px; margin: 16px 0; color: #A3A3A3; font-style: italic; }
+        .blog-content-dark hr { border: none; border-top: 1px solid rgba(255,255,255,0.1); margin: 40px 0; }
+        .blog-content-dark .tldr { background: #1E1E1E; border-left: 4px solid #F6DBA6; padding: 20px 24px; margin: 24px 0; border-radius: 0 8px 8px 0; }
+        .blog-content-dark .tldr h3 { color: #F6DBA6; margin: 0 0 12px 0; font-size: 18px; }
+        .blog-content-dark .tldr ul { margin: 0 0 0 20px; }
+        
+        /* Mobile responsive */
+        @media (max-width: 640px) {
+          .blog-content-light h1, .blog-content-dark h1 { font-size: 26px; }
+          .blog-content-light h2, .blog-content-dark h2 { font-size: 20px; }
+          .blog-content-light h3, .blog-content-dark h3 { font-size: 18px; }
+        }
       `}</style>
     </div>
   );
 }
 
 function SubscribePage() {
+  const { isDark, toggleTheme } = useTheme();
+  const colors = getColors(isDark);
   const [email, setEmail] = useState('');
   const [loading, setLoading] = useState(false);
   const { data: subStatus } = useBlogSubscription();
@@ -696,10 +827,10 @@ function SubscribePage() {
     return (
       <div style={{
         minHeight: '100vh',
-        background: '#0F1117',
+        background: colors.bg,
         fontFamily: 'Inter, -apple-system, sans-serif',
       }}>
-        <BlogHeader />
+        <BlogHeader isDark={isDark} onToggleTheme={toggleTheme} />
         <section style={{
           padding: '60px 32px',
           textAlign: 'center',
@@ -707,17 +838,17 @@ function SubscribePage() {
           margin: '0 auto',
         }}>
           <div style={{ fontSize: 64, marginBottom: 24 }}>✅</div>
-          <h1 style={{ fontSize: 36, fontWeight: 700, color: '#F4F5F7', marginBottom: 16 }}>
+          <h1 style={{ fontSize: 36, fontWeight: 700, color: colors.textPrimary, marginBottom: 16 }}>
             You're a Pro Member!
           </h1>
-          <p style={{ fontSize: 18, color: '#A8B0C5', marginBottom: 32 }}>
+          <p style={{ fontSize: 18, color: colors.textSecondary, marginBottom: 32 }}>
             You have full access to all premium content via your {subStatus.accessType === 'main_subscription' ? 'Charge Wealth' : 'blog'} subscription.
           </p>
           <Link href="/take-charge">
             <a style={{
               display: 'inline-block',
-              background: '#C9A962',
-              color: '#0F1117',
+              background: colors.accent,
+              color: '#4A3F2F',
               padding: '16px 32px',
               borderRadius: 8,
               fontWeight: 700,
@@ -735,19 +866,19 @@ function SubscribePage() {
   return (
     <div style={{
       minHeight: '100vh',
-      background: '#0F1117',
+      background: colors.bg,
       fontFamily: 'Inter, -apple-system, sans-serif',
     }}>
-      <BlogHeader />
+      <BlogHeader isDark={isDark} onToggleTheme={toggleTheme} />
 
       <section style={{
         padding: '60px 32px',
         textAlign: 'center',
       }}>
-        <h1 style={{ fontSize: 48, fontWeight: 700, color: '#F4F5F7', marginBottom: 16 }}>
+        <h1 style={{ fontSize: 'clamp(32px, 6vw, 48px)', fontWeight: 700, color: colors.textPrimary, marginBottom: 16 }}>
           Choose Your Plan
         </h1>
-        <p style={{ fontSize: 20, color: '#A8B0C5', maxWidth: 600, margin: '0 auto' }}>
+        <p style={{ fontSize: 'clamp(16px, 3vw, 20px)', color: colors.textSecondary, maxWidth: 600, margin: '0 auto' }}>
           From free weekly insights to full premium content access.
         </p>
       </section>
@@ -766,11 +897,16 @@ function SubscribePage() {
             <div
               key={plan.id}
               style={{
-                background: plan.highlighted ? 'linear-gradient(135deg, rgba(201, 169, 98, 0.1) 0%, rgba(201, 169, 98, 0.05) 100%)' : '#1A1D28',
+                background: plan.highlighted 
+                  ? (isDark ? 'linear-gradient(135deg, rgba(246,219,166,0.1) 0%, rgba(246,219,166,0.05) 100%)' : 'linear-gradient(135deg, rgba(246,219,166,0.3) 0%, rgba(246,219,166,0.15) 100%)')
+                  : (isDark ? '#1E1E1E' : '#FFFDFB'),
                 borderRadius: 16,
                 padding: 32,
-                border: plan.highlighted ? '2px solid #C9A962' : '1px solid rgba(201, 169, 98, 0.1)',
+                border: plan.highlighted 
+                  ? `2px solid ${colors.accent}` 
+                  : `1px solid ${colors.border}`,
                 position: 'relative',
+                boxShadow: isDark ? 'none' : '0 2px 8px rgba(0,0,0,0.04)',
               }}
             >
               {plan.savings && (
@@ -790,12 +926,12 @@ function SubscribePage() {
                 </div>
               )}
 
-              <h2 style={{ color: '#F4F5F7', fontSize: 24, marginBottom: 8 }}>{plan.name}</h2>
-              <p style={{ color: '#A8B0C5', fontSize: 14, marginBottom: 24 }}>{plan.description}</p>
+              <h2 style={{ color: colors.textPrimary, fontSize: 24, marginBottom: 8 }}>{plan.name}</h2>
+              <p style={{ color: colors.textSecondary, fontSize: 14, marginBottom: 24 }}>{plan.description}</p>
 
               <div style={{ marginBottom: 24 }}>
-                <span style={{ color: '#C9A962', fontSize: 48, fontWeight: 700 }}>{plan.price}</span>
-                <span style={{ color: '#6B7280', fontSize: 16 }}>{plan.period}</span>
+                <span style={{ color: colors.accent, fontSize: 48, fontWeight: 700 }}>{plan.price}</span>
+                <span style={{ color: colors.textMuted, fontSize: 16 }}>{plan.period}</span>
               </div>
 
               <ul style={{ listStyle: 'none', padding: 0, marginBottom: 32 }}>
@@ -805,7 +941,7 @@ function SubscribePage() {
                     alignItems: 'center',
                     gap: 12,
                     marginBottom: 12,
-                    color: '#D1D5DB',
+                    color: isDark ? '#D1D5DB' : '#4B5563',
                     fontSize: 15,
                   }}>
                     <span style={{ color: '#10B981' }}>✓</span>
@@ -822,9 +958,9 @@ function SubscribePage() {
                   padding: '14px 24px',
                   fontSize: 16,
                   fontWeight: 600,
-                  background: plan.highlighted ? '#C9A962' : 'transparent',
-                  color: plan.highlighted ? '#0F1117' : '#C9A962',
-                  border: plan.highlighted ? 'none' : '1px solid #C9A962',
+                  background: plan.highlighted ? colors.accent : 'transparent',
+                  color: plan.highlighted ? '#4A3F2F' : colors.accent,
+                  border: plan.highlighted ? 'none' : `1px solid ${colors.accent}`,
                   borderRadius: 8,
                   cursor: loading ? 'not-allowed' : 'pointer',
                   opacity: loading ? 0.7 : 1,
@@ -844,29 +980,31 @@ function SubscribePage() {
         margin: '0 auto',
       }}>
         <div style={{
-          background: 'linear-gradient(135deg, rgba(147, 51, 234, 0.1) 0%, rgba(201, 169, 98, 0.1) 100%)',
+          background: isDark 
+            ? 'linear-gradient(135deg, rgba(147,51,234,0.1) 0%, rgba(246,219,166,0.1) 100%)'
+            : 'linear-gradient(135deg, rgba(147,51,234,0.08) 0%, rgba(246,219,166,0.15) 100%)',
           borderRadius: 16,
           padding: 40,
-          border: '1px solid rgba(147, 51, 234, 0.3)',
+          border: `1px solid ${isDark ? 'rgba(147,51,234,0.3)' : 'rgba(147,51,234,0.2)'}`,
           textAlign: 'center',
         }}>
           <h3 style={{ color: '#A855F7', fontSize: 14, fontWeight: 600, marginBottom: 8 }}>
             WANT MORE?
           </h3>
-          <h2 style={{ color: '#F4F5F7', fontSize: 28, fontWeight: 700, marginBottom: 16 }}>
+          <h2 style={{ color: colors.textPrimary, fontSize: 'clamp(22px, 4vw, 28px)', fontWeight: 700, marginBottom: 16 }}>
             Charge Wealth - Full AI CFO Platform
           </h2>
-          <p style={{ color: '#A8B0C5', fontSize: 16, marginBottom: 24, maxWidth: 500, margin: '0 auto 24px' }}>
+          <p style={{ color: colors.textSecondary, fontSize: 16, marginBottom: 24, maxWidth: 500, margin: '0 auto 24px' }}>
             Get everything in Take Charge Pro, plus AI-powered tax optimization, portfolio analysis, personalized recommendations, and more.
           </p>
           <div style={{ marginBottom: 24 }}>
-            <span style={{ color: '#C9A962', fontSize: 36, fontWeight: 700 }}>$279</span>
-            <span style={{ color: '#6B7280', fontSize: 16 }}> one-time (lifetime access)</span>
+            <span style={{ color: colors.accent, fontSize: 36, fontWeight: 700 }}>$279</span>
+            <span style={{ color: colors.textMuted, fontSize: 16 }}> one-time (lifetime access)</span>
           </div>
           <button
             onClick={handleMainCheckout}
             style={{
-              background: 'linear-gradient(135deg, #A855F7 0%, #C9A962 100%)',
+              background: 'linear-gradient(135deg, #A855F7 0%, #F6DBA6 100%)',
               color: '#fff',
               padding: '16px 32px',
               borderRadius: 8,
@@ -884,10 +1022,10 @@ function SubscribePage() {
       {/* FAQ */}
       <section style={{
         padding: '60px 32px',
-        background: '#1A1D28',
+        background: isDark ? '#1E1E1E' : '#F5F2ED',
       }}>
         <div style={{ maxWidth: 700, margin: '0 auto' }}>
-          <h2 style={{ fontSize: 32, fontWeight: 700, color: '#F4F5F7', marginBottom: 32, textAlign: 'center' }}>
+          <h2 style={{ fontSize: 32, fontWeight: 700, color: colors.textPrimary, marginBottom: 32, textAlign: 'center' }}>
             Questions?
           </h2>
           
@@ -910,8 +1048,8 @@ function SubscribePage() {
             },
           ].map((faq, i) => (
             <div key={i} style={{ marginBottom: 24 }}>
-              <h3 style={{ color: '#F4F5F7', fontSize: 18, marginBottom: 8 }}>{faq.q}</h3>
-              <p style={{ color: '#A8B0C5', lineHeight: 1.6 }}>{faq.a}</p>
+              <h3 style={{ color: colors.textPrimary, fontSize: 18, marginBottom: 8 }}>{faq.q}</h3>
+              <p style={{ color: colors.textSecondary, lineHeight: 1.6 }}>{faq.a}</p>
             </div>
           ))}
         </div>

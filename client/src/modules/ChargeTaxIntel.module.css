@@ -1873,7 +1873,6 @@
   border-radius: 12px;
   padding: 1.25rem 1.5rem;
   text-align: center;
-  margin-bottom: 1.5rem;
 }
 
 .savingsHeroContent {
@@ -1911,7 +1910,6 @@
   border: 1px solid rgba(245, 158, 11, 0.4);
   border-radius: 16px;
   padding: 1.5rem;
-  margin-bottom: 2rem;
 }
 
 .problemHeroMain {
@@ -2007,7 +2005,6 @@
   border: 1px solid var(--border-strong);
   border-radius: 16px;
   padding: 2rem;
-  margin-bottom: 2.5rem;
 }
 
 .potentialHeroContent {
@@ -2058,11 +2055,62 @@
   color: var(--muted-gray);
 }
 
-.resultsLayout {
+/* Two-Column Top Section Layout */
+.topSectionLayout {
   display: grid;
   grid-template-columns: 1fr 400px;
   gap: 2rem;
+  margin-bottom: 2rem;
   align-items: start;
+}
+
+.taxInfoColumn {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.topChatColumn {
+  /* Chat stays sticky on scroll */
+}
+
+.topChatColumn .resultsChat {
+  height: 380px;
+  margin-bottom: 0;
+}
+
+/* Inline Quick Stats - horizontal layout in left column */
+.inlineQuickStats {
+  display: flex;
+  gap: 1rem;
+  padding: 1rem;
+  background: var(--deep-navy);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+}
+
+.inlineQuickStats .quickStat {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 0.5rem;
+  border-bottom: none;
+}
+
+.inlineQuickStats .quickStat:not(:last-child) {
+  border-right: 1px solid var(--border);
+}
+
+/* Recommendations Section - full width */
+.recommendationsSection {
+  max-width: 100%;
+}
+
+/* Legacy resultsLayout removed - now using topSectionLayout + recommendationsSection */
+.resultsLayout {
+  display: none; /* Deprecated */
 }
 
 .recommendationsColumn {
@@ -2256,6 +2304,25 @@
   color: var(--muted-gray);
 }
 
+.noResults p {
+  margin: 0 0 0.75rem 0;
+  line-height: 1.6;
+}
+
+.noResults p:last-child {
+  margin-bottom: 0;
+}
+
+.noResultsTip {
+  font-size: 0.875rem;
+  color: var(--soft-gold);
+  background: rgba(212, 175, 55, 0.1);
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+  display: inline-block;
+  text-align: left;
+}
+
 /* Chat Column */
 .chatColumn {
   position: sticky;
@@ -2319,6 +2386,31 @@
 
 /* Mobile Responsive */
 @media (max-width: 900px) {
+  .topSectionLayout {
+    grid-template-columns: 1fr;
+  }
+  
+  .topChatColumn {
+    order: -1;
+  }
+  
+  .topChatColumn .resultsChat {
+    height: 350px;
+  }
+  
+  .inlineQuickStats {
+    flex-wrap: wrap;
+  }
+  
+  .inlineQuickStats .quickStat {
+    flex: 1 1 45%;
+    min-width: 100px;
+  }
+  
+  .inlineQuickStats .quickStat:not(:last-child) {
+    border-right: none;
+  }
+  
   .resultsLayout {
     grid-template-columns: 1fr;
   }
@@ -2342,6 +2434,32 @@
 }
 
 @media (max-width: 640px) {
+  .topSectionLayout {
+    gap: 1rem;
+  }
+  
+  .topChatColumn .resultsChat {
+    height: 300px;
+  }
+  
+  .inlineQuickStats {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  
+  .inlineQuickStats .quickStat {
+    flex: 1 1 100%;
+    flex-direction: row;
+    justify-content: space-between;
+    padding: 0.75rem;
+    border-right: none !important;
+    border-bottom: 1px solid var(--border);
+  }
+  
+  .inlineQuickStats .quickStat:last-child {
+    border-bottom: none;
+  }
+  
   .resultCardAmounts {
     flex-direction: column;
     gap: 0.75rem;
@@ -2355,6 +2473,23 @@
   .savingsHeroContent {
     flex-direction: column;
     gap: 0.25rem;
+  }
+  
+  .problemHero {
+    padding: 1rem;
+  }
+  
+  .problemHeroAmount {
+    font-size: 1.5rem;
+  }
+  
+  .potentialHeroRanges {
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+  
+  .potentialRange {
+    padding: 0.75rem 1rem;
   }
 }
 

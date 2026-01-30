@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useLocation } from 'wouter';
 import styles from './TaxDeadlines.module.css';
 import { fetchWithAuth } from '../lib/fetchWithAuth';
 
@@ -25,6 +26,7 @@ interface UserTaxContext {
 }
 
 export default function TaxDeadlines() {
+  const [, setLocation] = useLocation();
   const [deadlines, setDeadlines] = useState<Deadline[]>([]);
   const [userContext, setUserContext] = useState<UserTaxContext>({});
   const [loading, setLoading] = useState(true);
@@ -32,6 +34,36 @@ export default function TaxDeadlines() {
   useEffect(() => {
     loadUserContext();
   }, []);
+
+  // Handle button actions
+  const handleAction = (action: string, actionUrl?: string) => {
+    if (actionUrl?.startsWith('/')) {
+      // Internal navigation
+      setLocation(actionUrl);
+    } else if (actionUrl) {
+      // External link - open in new tab
+      window.open(actionUrl, '_blank', 'noopener,noreferrer');
+    } else {
+      // Handle specific actions without URLs
+      switch (action) {
+        case 'Contribute Now':
+          // Open IRA contribution info - link to Fidelity's IRA page or internal tool
+          window.open('https://www.fidelity.com/retirement-ira/ira-contribution', '_blank', 'noopener,noreferrer');
+          break;
+        case 'Calculate Payment':
+          // Navigate to tax intel page or open estimated tax calculator
+          window.open('https://www.irs.gov/individuals/tax-withholding-estimator', '_blank', 'noopener,noreferrer');
+          break;
+        case 'Check Status':
+          // Navigate to 401k optimizer
+          setLocation('/dashboard/401k-optimizer');
+          break;
+        default:
+          // Fallback - navigate to tax intel
+          setLocation('/dashboard/tax-intel');
+      }
+    }
+  };
 
   const loadUserContext = async () => {
     try {
@@ -271,17 +303,12 @@ export default function TaxDeadlines() {
             </div>
             {deadline.action && (
               <div className={styles.actionColumn}>
-                {deadline.actionUrl?.startsWith('/') ? (
-                  <a href={deadline.actionUrl} className={styles.actionBtn}>
-                    {deadline.action}
-                  </a>
-                ) : deadline.actionUrl ? (
-                  <a href={deadline.actionUrl} target="_blank" rel="noopener noreferrer" className={styles.actionBtn}>
-                    {deadline.action}
-                  </a>
-                ) : (
-                  <button className={styles.actionBtn}>{deadline.action}</button>
-                )}
+                <button 
+                  className={styles.actionBtn}
+                  onClick={() => handleAction(deadline.action!, deadline.actionUrl)}
+                >
+                  {deadline.action}
+                </button>
               </div>
             )}
           </div>

@@ -832,11 +832,14 @@ RULES:
       const data = await openaiResponse.json();
       const content = data.choices[0]?.message?.content || '';
       
+      console.log('AI Analysis response received, length:', content.length);
+      
       let taxData;
       try {
         const jsonMatch = content.match(/\{[\s\S]*\}/);
         if (jsonMatch) {
           taxData = JSON.parse(jsonMatch[0]);
+          console.log('Parsed AI response - optimizations count:', taxData.optimizations?.length || 0);
           
           // VALIDATION: Fix any per-paycheck amounts that look like annual amounts
           if (taxData.optimizations && Array.isArray(taxData.optimizations)) {
@@ -885,37 +888,90 @@ RULES:
         console.error("Failed to parse AI response as JSON:", parseErr);
       }
       
-      // If no valid taxData from AI, create fallback based on profile
+      // If no valid taxData from AI, create fallback based on extracted data
       if (!taxData) {
-        const estimatedIncome = parseInt(userContext.income) || 200000;
-        const estimatedTax = Math.round(estimatedIncome * 0.22);
+        const income = estimatedAnnualIncome || 200000;
+        const marginalRate = income > 243725 ? 35 : income > 191950 ? 32 : income > 100525 ? 24 : 22;
+        const estimatedTax = Math.round(income * (marginalRate / 100) * 0.7); // Rough estimate
+        
+        // Generate default optimizations based on what we know
+        const defaultOptimizations = [];
+        const current401k = extractedData.retirement401k || extractedData.preTaxDeductions?.retirement401k || 0;
+        const currentHSA = extractedData.hsaContribution || extractedData.preTaxDeductions?.hsa || 0;
+        const maxPerPaycheck401k = Math.round(23500 / payPeriods);
+        const maxPerPaycheckHSA = Math.round(4150 / payPeriods);
+        
+        // 401k optimization if not maxed
+        if (current401k < maxPerPaycheck401k * 0.9) {
+          const increase = maxPerPaycheck401k - current401k;
+          const annualSavings = Math.round(increase * payPeriods * (marginalRate / 100));
+          defaultOptimizations.push({
+            action: 'Increase 401(k) contribution',
+            currentAmount: current401k,
+            suggestedAmount: maxPerPaycheck401k,
+            extraPerPaycheck: increase,
+            taxSavingsPerYear: annualSavings,
+            howToFix: 'Log into your employer benefits portal (ADP, Workday, etc.) and increase your 401(k) contribution to the maximum. This reduces your taxable income by the contribution amount.',
+            priority: 'high' as const
+          });
+        }
+        
+        // HSA optimization if not contributing
+        if (currentHSA < maxPerPaycheckHSA * 0.5) {
+          const suggestedHSA = Math.min(maxPerPaycheckHSA, Math.max(currentHSA + 100, maxPerPaycheckHSA / 2));
+          const increase = suggestedHSA - currentHSA;
+          const annualSavings = Math.round(increase * payPeriods * (marginalRate / 100));
+          defaultOptimizations.push({
+            action: 'Start or increase HSA contributions',
+            currentAmount: currentHSA,
+            suggestedAmount: suggestedHSA,
+            extraPerPaycheck: increase,
+            taxSavingsPerYear: annualSavings,
+            howToFix: 'If you have a high-deductible health plan (HDHP), you can contribute to an HSA. Set up payroll deductions through your employer or contribute directly through your HSA provider.',
+            priority: 'high' as const
+          });
+        }
+        
+        const totalSavings = defaultOptimizations.reduce((sum, opt) => sum + opt.taxSavingsPerYear, 0);
+        
         taxData = {
           taxYear: 2024,
-          totalIncome: estimatedIncome,
-          agi: Math.round(estimatedIncome * 0.9),
-          taxableIncome: Math.round(estimatedIncome * 0.78),
+          totalIncome: income,
+          agi: Math.round(income * 0.9),
+          taxableIncome: Math.round(income * 0.78),
           totalFederalTax: estimatedTax,
-          effectiveTaxRate: 22,
-          marginalTaxBracket: 24,
+          effectiveTaxRate: Math.round((estimatedTax / income) * 100 * 10) / 10,
+          marginalTaxBracket: marginalRate,
           filingStatus: userContext.filing || "single",
           incomeBreakdown: {
-            wages: estimatedIncome,
+            wages: income,
             dividends: 0,
             capitalGains: 0,
             business: 0,
             other: 0
           },
-          insights: [
+          insights: defaultOptimizations.length === 0 ? [
             {
               type: "upload_more",
               severity: "info",
-              title: "Upload your paystub for personalized insights",
-              description: "We couldn't fully extract data from your document. Try uploading a clearer PDF or a recent paystub to get specific optimization recommendations.",
+              title: "Upload a clearer document for personalized insights",
+              description: "We couldn't fully extract data from your document. Try uploading a clearer PDF paystub with visible gross pay and deduction amounts.",
               potentialImpact: 0
             }
-          ],
-          optimizations: []
+          ] : [],
+          optimizations: defaultOptimizations,
+          totalExtraPerYear: totalSavings,
+          summaryText: defaultOptimizations.length > 0 
+            ? `Based on your income, you could save approximately $${totalSavings.toLocaleString()} per year by optimizing your pre-tax contributions.`
+            : undefined
         };
+        
+        console.log('Using fallback taxData with', defaultOptimizations.length, 'optimizations');
+      }
+      
+      // Ensure optimizations array exists even if AI returned empty
+      if (!taxData.optimizations) {
+        taxData.optimizations = [];
       }
 
       // Only save to database if we have valid tax data
