@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import styles from './FinancialProfileEditor.module.css';
 import { useToast } from './Toast';
 import { fetchWithAuth } from '../lib/fetchWithAuth';
+import { getAllStates, STATE_DATA } from '../constants/stateData';
 import { Input } from './ui/input';
 import { Button } from './ui/button';
 import { Label } from './ui/label';
@@ -24,25 +25,6 @@ interface FinancialProfileEditorProps {
   onClose: () => void;
   onSave: () => void;
 }
-
-const stateTaxRates: Record<string, { name: string; rate: number }> = {
-  'CA': { name: 'California', rate: 13.3 },
-  'NY': { name: 'New York', rate: 10.9 },
-  'NJ': { name: 'New Jersey', rate: 10.75 },
-  'TX': { name: 'Texas', rate: 0 },
-  'FL': { name: 'Florida', rate: 0 },
-  'WA': { name: 'Washington', rate: 0 },
-  'NV': { name: 'Nevada', rate: 0 },
-  'IL': { name: 'Illinois', rate: 4.95 },
-  'CO': { name: 'Colorado', rate: 4.4 },
-  'MA': { name: 'Massachusetts', rate: 5 },
-  'PA': { name: 'Pennsylvania', rate: 3.07 },
-  'OH': { name: 'Ohio', rate: 3.99 },
-  'GA': { name: 'Georgia', rate: 5.49 },
-  'NC': { name: 'North Carolina', rate: 4.75 },
-  'AZ': { name: 'Arizona', rate: 2.5 },
-  'OTHER': { name: 'Other State', rate: 5 }
-};
 
 export default function FinancialProfileEditor({ isOpen, onClose, onSave }: FinancialProfileEditorProps) {
   const { showSuccess, showError } = useToast();
@@ -202,9 +184,9 @@ export default function FinancialProfileEditor({ isOpen, onClose, onSave }: Fina
                     value={profile.stateOfResidence}
                     onChange={(e) => setProfile({ ...profile, stateOfResidence: e.target.value })}
                   >
-                    {Object.entries(stateTaxRates).map(([code, { name, rate }]) => (
-                      <option key={code} value={code}>
-                        {name} ({rate === 0 ? 'No state tax' : `${rate}% state tax`})
+                    {getAllStates().map((state) => (
+                      <option key={state.abbreviation} value={state.abbreviation}>
+                        {state.name} ({state.hasNoIncomeTax ? 'No state income tax' : `${state.incomeTaxRate}% income tax`})
                       </option>
                     ))}
                   </select>

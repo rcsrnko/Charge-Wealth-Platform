@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import styles from './ScenarioPlanner.module.css';
 import { fetchWithAuth } from '../lib/fetchWithAuth';
 import { EXPECTED_MARKET_RETURN } from '../constants/rates';
+import { NATIONAL_MORTGAGE_RATE, getPropertyTaxRate, getIncomeTaxRate, getStateData } from '../constants/stateData';
 import { Input } from '../components/ui/input';
 import { Button } from '../components/ui/button';
 import { Label } from '../components/ui/label';
@@ -16,6 +17,7 @@ interface BaselineData {
   effectiveRate: number;
   current401k: number;
   filingStatus: string;
+  stateOfResidence?: string;
 }
 
 interface ScenarioResult {
@@ -34,7 +36,12 @@ export default function ScenarioPlanner() {
 
   // Scenario inputs
   const [jobChange, setJobChange] = useState({ newSalary: 0, hasBonus: false, bonusAmount: 0 });
-  const [homePurchase, setHomePurchase] = useState({ price: 500000, downPayment: 20, interestRate: 6.5, propertyTax: 1.2 });
+  const [homePurchase, setHomePurchase] = useState({ 
+    price: 500000, 
+    downPayment: 20, 
+    interestRate: NATIONAL_MORTGAGE_RATE, 
+    propertyTax: 1.1 // Will be updated based on user's state
+  });
   const [retirement, setRetirement] = useState({ targetAge: 65, currentAge: 35, monthlyExpenses: 8000, currentSavings: 200000 });
   const [sideIncome, setSideIncome] = useState({ monthlyRevenue: 5000, expenses: 1000, isLLC: false });
 
@@ -44,17 +51,49 @@ export default function ScenarioPlanner() {
 
   const loadBaseline = async () => {
     try {
+      // Fetch tax projection data
       const response = await fetchWithAuth('/api/tax-intel/projection');
+      let stateCode = '';
+      
       if (response.ok) {
         const data = await response.json();
+        stateCode = data.stateOfResidence || '';
+        
         setBaseline({
           annualIncome: data.projections?.annualGross || 150000,
           marginalBracket: data.rates?.marginalBracket || 24,
           effectiveRate: data.rates?.effectiveRate || 18,
           current401k: (data.currentPeriod?.retirement401k || 0) * (data.periodsPerYear || 24),
           filingStatus: data.filingStatus || 'single',
+          stateOfResidence: stateCode,
         });
         setJobChange(prev => ({ ...prev, newSalary: data.projections?.annualGross || 150000 }));
+      }
+      
+      // Also try to get state from financial profile if not in projection
+      if (!stateCode) {
+        try {
+          const profileResponse = await fetchWithAuth('/api/charge-ai/context');
+          if (profileResponse.ok) {
+            const profileData = await profileResponse.json();
+            stateCode = profileData.profile?.stateOfResidence || '';
+            if (stateCode) {
+              setBaseline(prev => prev ? { ...prev, stateOfResidence: stateCode } : null);
+            }
+          }
+        } catch (e) {
+          // Profile fetch failed, continue with defaults
+        }
+      }
+      
+      // Update home purchase defaults based on user's state
+      if (stateCode) {
+        const statePropertyTax = getPropertyTaxRate(stateCode);
+        setHomePurchase(prev => ({
+          ...prev,
+          interestRate: NATIONAL_MORTGAGE_RATE,
+          propertyTax: statePropertyTax,
+        }));
       }
     } catch (err) {
       console.error('Failed to load baseline:', err);
@@ -339,6 +378,12 @@ export default function ScenarioPlanner() {
 
             {selectedScenario === 'home_purchase' && (
               <div className={styles.inputsGrid}>
+                {baseline?.stateOfResidence && (
+                  <div className={styles.stateNote}>
+                    <span className={styles.stateNoteIcon}>📍</span>
+                    <span>Using {getStateData(baseline.stateOfResidence)?.name || baseline.stateOfResidence} rates from your profile</span>
+                  </div>
+                )}
                 <div className={styles.inputGroup}>
                   <label>Home Price</label>
                   <div className={styles.inputWrapper}>
@@ -372,6 +417,7 @@ export default function ScenarioPlanner() {
                     />
                     <span className={styles.inputSuffix}>%</span>
                   </div>
+                  <span className={styles.inputHint}>Current national avg: {NATIONAL_MORTGAGE_RATE}%</span>
                 </div>
                 <div className={styles.inputGroup}>
                   <label>Property Tax Rate</label>
@@ -384,6 +430,11 @@ export default function ScenarioPlanner() {
                     />
                     <span className={styles.inputSuffix}>%</span>
                   </div>
+                  {baseline?.stateOfResidence && (
+                    <span className={styles.inputHint}>
+                      {getStateData(baseline.stateOfResidence)?.name} avg: {getPropertyTaxRate(baseline.stateOfResidence)}%
+                    </span>
+                  )}
                 </div>
               </div>
             )}

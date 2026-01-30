@@ -238,3 +238,57 @@
 .resultItem:nth-child(odd) {
   background: var(--input-bg-hover);
 }
+
+.stateNote {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.625rem 0.875rem;
+  background: rgba(201, 169, 98, 0.1);
+  border: 1px solid rgba(201, 169, 98, 0.25);
+  border-radius: 8px;
+  margin-bottom: 0.5rem;
+  grid-column: 1 / -1;
+}
+
+.stateNoteIcon {
+  font-size: 1rem;
+}
+
+.stateNote span:last-child {
+  font-size: 0.8125rem;
+  color: var(--gold-sand, #c9a962);
+  line-height: 1.4;
+}
+
+.inputHint {
+  font-size: 0.75rem;
+  color: var(--muted-gray, #6b7280);
+  margin-top: 0.25rem;
+}
+
+@media (max-width: 768px) {
+  .container {
+    padding: 1rem;
+  }
+  
+  .title {
+    font-size: 1.5rem;
+  }
+  
+  .baseline {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.25rem;
+  }
+  
+  .scenarioSelector, .inputsSection, .resultsSection {
+    padding: 1rem;
+  }
+  
+  .stateNote {
+    flex-direction: column;
+    align-items: flex-start;
+    text-align: left;
+  }
+}
