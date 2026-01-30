@@ -69,11 +69,29 @@ interface UserDataState {
 export default function Dashboard() {
   const { user: supabaseUser } = useSupabaseAuth();
   
-  // Get user data from Supabase auth
+  // Check for test user auth in localStorage
+  const [testUserAuth, setTestUserAuth] = useState<any>(null);
+  
+  useEffect(() => {
+    const storedAuth = localStorage.getItem('testUserAuth');
+    if (storedAuth) {
+      try {
+        setTestUserAuth(JSON.parse(storedAuth));
+      } catch {
+        // Invalid stored auth, ignore
+      }
+    }
+  }, []);
+  
+  // Get user data from Supabase auth or test user
   const user = supabaseUser ? {
     firstName: supabaseUser.user_metadata?.first_name || supabaseUser.user_metadata?.full_name?.split(' ')[0] || supabaseUser.user_metadata?.name?.split(' ')[0] || '',
     lastName: supabaseUser.user_metadata?.last_name || supabaseUser.user_metadata?.full_name?.split(' ').slice(1).join(' ') || '',
     email: supabaseUser.email,
+  } : testUserAuth ? {
+    firstName: testUserAuth.firstName || testUserAuth.email?.split('@')[0] || '',
+    lastName: testUserAuth.lastName || '',
+    email: testUserAuth.email,
   } : null;
   
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
@@ -518,7 +536,7 @@ export default function Dashboard() {
             <Route path="/dashboard/my-data">
               <ErrorBoundary moduleName="my-data">
                 <Suspense fallback={<ModuleLoader />}>
-                  <MyFinancialData />
+                  <MyFinancialData onEditProfile={() => setShowProfileEditor(true)} />
                 </Suspense>
               </ErrorBoundary>
             </Route>

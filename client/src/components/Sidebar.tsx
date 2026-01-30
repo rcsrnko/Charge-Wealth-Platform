@@ -239,7 +239,7 @@ export default function Sidebar({ onCollapse, wealthScore = 0, onWealthReadiness
       <aside className={`${styles.sidebar} ${isCollapsed ? styles.collapsed : ''} ${isMobileOpen ? styles.mobileOpen : ''}`}>
         <div className={styles.header}>
           {!isCollapsed && (
-            <Link href="/dashboard">
+            <Link href="/">
               <a className={styles.logoLink}>
                 <h1 className={styles.logo}>Charge</h1>
                 <span className={styles.tagline}>Wealth</span>

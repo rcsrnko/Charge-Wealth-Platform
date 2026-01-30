@@ -41,7 +41,11 @@ interface MyFinancialDataType {
   }>;
 }
 
-export default function MyFinancialData() {
+interface MyFinancialDataProps {
+  onEditProfile?: () => void;
+}
+
+export default function MyFinancialData({ onEditProfile }: MyFinancialDataProps) {
   const [data, setData] = useState<MyFinancialDataType | null>(null);
   const [loading, setLoading] = useState(true);
 
@@ -136,7 +140,15 @@ export default function MyFinancialData() {
               <h2>Profile</h2>
               <button 
                 className={styles.editButton}
-                onClick={() => window.location.href = '/dashboard?editProfile=true'}
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  if (onEditProfile) {
+                    onEditProfile();
+                  } else {
+                    window.location.href = '/dashboard?editProfile=true';
+                  }
+                }}
               >
                 Edit
               </button>
@@ -213,7 +225,15 @@ export default function MyFinancialData() {
               <h2>Portfolio</h2>
               <button 
                 className={styles.editButton}
-                onClick={() => window.location.href = '/dashboard?editProfile=true'}
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  if (onEditProfile) {
+                    onEditProfile();
+                  } else {
+                    window.location.href = '/dashboard?editProfile=true';
+                  }
+                }}
               >
                 Add
               </button>
@@ -261,7 +281,15 @@ export default function MyFinancialData() {
               <h2>Cash Flow</h2>
               <button 
                 className={styles.editButton}
-                onClick={() => window.location.href = '/dashboard?editProfile=true'}
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  if (onEditProfile) {
+                    onEditProfile();
+                  } else {
+                    window.location.href = '/dashboard?editProfile=true';
+                  }
+                }}
               >
                 Add
               </button>
