@@ -2,7 +2,7 @@ import type { Express } from "express";
 import { db } from "../db";
 import { newsletterSubscribers } from "../../shared/schema";
 import { eq } from "drizzle-orm";
-import { sendWelcomeSequence } from "../emailService";
+import { sendWelcomeSequence } from "../services/email";
 
 export function registerNewsletterRoutes(app: Express) {
   app.post('/api/newsletter/subscribe', async (req, res) => {

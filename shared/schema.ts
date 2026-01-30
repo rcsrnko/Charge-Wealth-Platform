@@ -739,6 +739,36 @@ export const marketWatchlist = pgTable("market_watchlist", {
 });
 
 // ============================================
+// EMAIL SEND LOG
+// ============================================
+
+// Track all email communications for history and deduplication
+export const emailSendLog = pgTable("email_send_log", {
+  id: serial("id").primaryKey(),
+  userId: varchar("user_id").references(() => users.id, { onDelete: 'cascade' }),
+  email: varchar("email", { length: 255 }).notNull(),
+  
+  // Email details
+  emailType: varchar("email_type", { length: 50 }).notNull(), // welcome, onboarding-nudge, weekly-digest, tax-deadline, opportunity-alert
+  subject: varchar("subject", { length: 500 }),
+  
+  // Status tracking
+  status: varchar("status", { length: 20 }).default('sent'), // sent, delivered, opened, clicked, bounced, failed
+  messageId: varchar("message_id", { length: 255 }), // Resend message ID
+  
+  // Metadata
+  metadata: jsonb("metadata"), // Additional context like template data
+  
+  sentAt: timestamp("sent_at").defaultNow(),
+  deliveredAt: timestamp("delivered_at"),
+  openedAt: timestamp("opened_at"),
+}, (table) => [
+  index("idx_email_send_log_user").on(table.userId),
+  index("idx_email_send_log_type").on(table.emailType),
+  index("idx_email_send_log_sent").on(table.sentAt),
+]);
+
+// ============================================
 // TYPE EXPORTS
 // ============================================
 
@@ -827,3 +857,7 @@ export type InsertPriceAlert = typeof priceAlerts.$inferInsert;
 // Market Watchlist types
 export type MarketWatchlistItem = typeof marketWatchlist.$inferSelect;
 export type InsertMarketWatchlistItem = typeof marketWatchlist.$inferInsert;
+
+// Email Send Log types
+export type EmailSendLog = typeof emailSendLog.$inferSelect;
+export type InsertEmailSendLog = typeof emailSendLog.$inferInsert;

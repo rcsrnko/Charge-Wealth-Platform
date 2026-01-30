@@ -4,6 +4,7 @@ import { storage } from "../storage";
 import { db } from "../db";
 import { authLimiter } from "../middleware/rateLimit";
 import { getUncachableStripeClient } from "../stripeClient";
+import { triggerWelcomeEmail } from "./email";
 
 // Demo credentials from environment (never hardcode)
 const TEST_EMAIL = 'testuser@test.com';
@@ -387,6 +388,9 @@ export function registerAuthRoutes(app: Express, isAuthenticated: RequestHandler
           console.log('Referral completion skipped:', e);
         }
       }
+      
+      // Trigger welcome email for new paid member
+      triggerWelcomeEmail(user.id, email, firstName || undefined);
       
       const sessionUser = {
         claims: { sub: user.id },

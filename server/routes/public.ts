@@ -1,6 +1,6 @@
 import type { Express } from "express";
 import { storage } from "../storage";
-import { sendWelcomeSequence } from "../emailService";
+import { sendWelcomeSequence } from "../services/email";
 
 let testimonialsCache: { data: any[]; timestamp: number } | null = null;
 const TESTIMONIALS_CACHE_TTL = 60 * 60 * 1000;

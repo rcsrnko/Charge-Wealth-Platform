@@ -19,6 +19,7 @@ import { registerContextRoutes } from "./routes/context";
 import { registerSettingsRoutes } from "./routes/settings";
 import { registerNewsletterRoutes } from "./routes/newsletter";
 import { registerMarketPulseRoutes } from "./routes/marketpulse";
+import { registerEmailRoutes } from "./routes/email";
 
 const upload = multer({
   storage: multer.memoryStorage(),
@@ -51,6 +52,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   registerSettingsRoutes(app, isAuthenticated);
   registerNewsletterRoutes(app);
   registerMarketPulseRoutes(app, isAuthenticated);
+  registerEmailRoutes(app, isAuthenticated);
 
   const httpServer = createServer(app);
   return httpServer;
