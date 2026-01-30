@@ -68,6 +68,8 @@
   /* Accent Colors - Soft Blue palette */
   --accent-blue: #DBEAFE;        /* Soft blue accent */
   --accent-blue-hover: #BFDBFE;  /* Blue hover */
+  --accent-blue-text: #3B82F6;   /* Blue text/links */
+  --accent-blue-border: rgba(59, 130, 246, 0.3); /* Subtle blue border */
   --accent-sage: #2E7D32;        /* Success, growth */
   --accent-sage-light: rgba(46, 125, 50, 0.1);
   --accent-terracotta: #A5573E;  /* Warm secondary */
@@ -1129,6 +1131,44 @@ label {
 .badge-neutral {
   background: var(--bg-tertiary);
   color: var(--text-secondary);
+}
+
+.badge-blue {
+  background: var(--accent-blue);
+  color: var(--accent-blue-text);
+}
+
+/* Blue accent utilities */
+.text-blue {
+  color: var(--accent-blue-text);
+}
+
+.bg-blue-soft {
+  background: var(--accent-blue);
+}
+
+.border-blue {
+  border-color: var(--accent-blue-border);
+}
+
+.btn-blue-outline {
+  background: transparent;
+  color: var(--accent-blue-text);
+  border: 1.5px solid var(--accent-blue-text);
+}
+
+.btn-blue-outline:hover:not(:disabled) {
+  background: var(--accent-blue);
+  color: var(--accent-blue-text);
+}
+
+/* Blue quote block */
+.quote-blue {
+  border-left: 4px solid var(--accent-blue-text);
+  padding-left: var(--space-4);
+  margin: var(--space-4) 0;
+  color: var(--text-secondary);
+  font-style: italic;
 }
 
 @theme inline {
