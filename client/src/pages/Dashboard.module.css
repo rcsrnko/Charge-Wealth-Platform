@@ -617,7 +617,7 @@
 .sectionLabel {
   font-size: 0.75rem;
   font-weight: 600;
-  color: var(--soft-gold);
+  color: #3B82F6;
   text-transform: uppercase;
   letter-spacing: 0.08em;
   margin: 0 0 1rem 0;
@@ -1084,7 +1084,7 @@
 }
 
 .opportunityCard.medium {
-  border-left: 3px solid var(--info);
+  border-left: 3px solid #3B82F6;
 }
 
 .oppHeader {

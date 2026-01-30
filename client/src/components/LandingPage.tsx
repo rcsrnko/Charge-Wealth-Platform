@@ -296,7 +296,7 @@ export function LandingPage({ onShowLogin }: LandingPageProps) {
           style={{
             background: 'none',
             border: 'none',
-            color: 'var(--text-secondary)',
+            color: '#3B82F6',
             fontSize: '0.9375rem',
             cursor: 'pointer',
             fontWeight: '500',
@@ -506,6 +506,7 @@ export function LandingPage({ onShowLogin }: LandingPageProps) {
                   borderRadius: '12px',
                   padding: '1.5rem',
                   textAlign: 'left',
+                  borderLeft: '3px solid #3B82F6',
                 }}
               >
                 <div style={{ color: 'var(--brand-accent)', marginBottom: '0.75rem' }}>★★★★★</div>

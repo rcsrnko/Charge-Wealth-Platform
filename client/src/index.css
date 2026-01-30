@@ -210,6 +210,8 @@
   /* Accent Blue - Brighter for dark mode */
   --accent-blue: #3B82F6;        /* Brighter blue */
   --accent-blue-hover: #2563EB;
+  --accent-blue-text: #60A5FA;   /* Lighter blue text for dark mode */
+  --accent-blue-border: rgba(96, 165, 250, 0.4);
 
   /* Background Colors - True Dark */
   --bg-primary: #121212;         /* True dark background */

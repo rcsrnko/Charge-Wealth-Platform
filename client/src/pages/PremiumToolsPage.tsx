@@ -1,0 +1,535 @@
+import React, { useState } from 'react';
+import { Link } from 'wouter';
+
+interface PremiumTool {
+  id: string;
+  name: string;
+  description: string;
+  icon: string;
+  filename: string;
+  features: string[];
+  preview?: string;
+}
+
+const premiumTools: PremiumTool[] = [
+  {
+    id: 'cash-flow',
+    name: 'Cash Flow Projection Template',
+    description: '12-month cash flow forecast to plan your financial future with confidence.',
+    icon: '💰',
+    filename: 'cash-flow-projection.xlsx',
+    features: [
+      '12-month income vs expenses tracking',
+      'Auto-calculating surplus/deficit',
+      'Multiple income & expense categories',
+      'Year-end totals and summaries',
+      'Instructions sheet included'
+    ]
+  },
+  {
+    id: 'tax-planning',
+    name: 'Tax Planning Worksheet',
+    description: 'Estimate quarterly taxes and track deductions like a CFO.',
+    icon: '📋',
+    filename: 'tax-planning-worksheet.xlsx',
+    features: [
+      'Quarterly estimated tax calculator',
+      'Comprehensive deduction tracker',
+      'Federal & state tax estimation',
+      'Self-employment tax calculations',
+      'Payment schedule with due dates'
+    ]
+  },
+  {
+    id: 'net-worth',
+    name: 'Net Worth Tracker',
+    description: 'Track your assets, liabilities, and net worth month-by-month.',
+    icon: '📈',
+    filename: 'net-worth-tracker.xlsx',
+    features: [
+      'Monthly asset tracking',
+      'Liability monitoring',
+      'Auto-calculated net worth',
+      'Year-over-year change tracking',
+      'Investment & retirement accounts'
+    ]
+  },
+  {
+    id: 'debt-payoff',
+    name: 'Debt Payoff Calculator',
+    description: 'Compare avalanche vs snowball methods and create your payoff plan.',
+    icon: '🎯',
+    filename: 'debt-payoff-calculator.xlsx',
+    features: [
+      'Avalanche vs snowball comparison',
+      'Automatic priority ranking',
+      'Interest cost calculations',
+      'Extra payment scenarios',
+      'Sample payoff schedule'
+    ]
+  },
+  {
+    id: 'fee-analyzer',
+    name: 'Investment Fee Analyzer',
+    description: 'See the shocking true cost of fees over 10, 20, and 30 years.',
+    icon: '🔍',
+    filename: 'investment-fee-analyzer.xlsx',
+    features: [
+      'Compare multiple fee scenarios',
+      '10/20/30 year projections',
+      'Hidden cost visualization',
+      'Advisor fee vs DIY comparison',
+      'Chart data for visualization'
+    ]
+  }
+];
+
+// Check if user has premium access
+function usePremiumAccess(): { hasPremium: boolean; loading: boolean } {
+  // This would connect to your auth system
+  // For now, returning true for demo
+  const [hasPremium] = useState(true);
+  return { hasPremium, loading: false };
+}
+
+function ToolCard({ tool, hasPremium }: { tool: PremiumTool; hasPremium: boolean }) {
+  const [downloading, setDownloading] = useState(false);
+
+  const handleDownload = async () => {
+    if (!hasPremium) return;
+    
+    setDownloading(true);
+    try {
+      // Create download link
+      const link = document.createElement('a');
+      link.href = `/tools/${tool.filename}`;
+      link.download = tool.filename;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    } catch (error) {
+      console.error('Download failed:', error);
+    } finally {
+      setDownloading(false);
+    }
+  };
+
+  return (
+    <div style={{
+      background: '#1A1D28',
+      borderRadius: 16,
+      padding: 32,
+      border: '1px solid rgba(201, 169, 98, 0.15)',
+      display: 'flex',
+      flexDirection: 'column',
+      height: '100%',
+    }}>
+      <div style={{ fontSize: 48, marginBottom: 16 }}>{tool.icon}</div>
+      
+      <h3 style={{
+        fontSize: 22,
+        fontWeight: 600,
+        color: '#F4F5F7',
+        marginBottom: 8,
+      }}>
+        {tool.name}
+      </h3>
+      
+      <p style={{
+        fontSize: 15,
+        color: '#A8B0C5',
+        lineHeight: 1.6,
+        marginBottom: 20,
+      }}>
+        {tool.description}
+      </p>
+
+      <div style={{
+        background: 'rgba(201, 169, 98, 0.08)',
+        borderRadius: 12,
+        padding: 16,
+        marginBottom: 20,
+        flex: 1,
+      }}>
+        <div style={{
+          fontSize: 12,
+          fontWeight: 600,
+          color: '#F6DBA6',
+          marginBottom: 12,
+          textTransform: 'uppercase',
+          letterSpacing: '0.05em',
+        }}>
+          What's Included
+        </div>
+        <ul style={{
+          margin: 0,
+          paddingLeft: 20,
+          color: '#A8B0C5',
+          fontSize: 14,
+          lineHeight: 1.8,
+        }}>
+          {tool.features.map((feature, idx) => (
+            <li key={idx}>{feature}</li>
+          ))}
+        </ul>
+      </div>
+
+      {hasPremium ? (
+        <button
+          onClick={handleDownload}
+          disabled={downloading}
+          style={{
+            background: '#F6DBA6',
+            color: '#121212',
+            border: 'none',
+            padding: '14px 24px',
+            borderRadius: 8,
+            fontWeight: 600,
+            fontSize: 15,
+            cursor: downloading ? 'wait' : 'pointer',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            gap: 8,
+            transition: 'all 0.2s',
+            opacity: downloading ? 0.7 : 1,
+          }}
+          onMouseEnter={(e) => {
+            if (!downloading) {
+              e.currentTarget.style.background = '#D4B872';
+              e.currentTarget.style.transform = 'translateY(-2px)';
+            }
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.background = '#F6DBA6';
+            e.currentTarget.style.transform = 'translateY(0)';
+          }}
+        >
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+            <polyline points="7 10 12 15 17 10" />
+            <line x1="12" y1="15" x2="12" y2="3" />
+          </svg>
+          {downloading ? 'Downloading...' : 'Download Excel'}
+        </button>
+      ) : (
+        <Link href="/dashboard">
+          <a style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            gap: 8,
+            background: 'transparent',
+            color: '#F6DBA6',
+            border: '2px solid #F6DBA6',
+            padding: '12px 24px',
+            borderRadius: 8,
+            fontWeight: 600,
+            fontSize: 15,
+            textDecoration: 'none',
+            transition: 'all 0.2s',
+          }}>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/>
+            </svg>
+            Unlock with Premium
+          </a>
+        </Link>
+      )}
+    </div>
+  );
+}
+
+export function PremiumToolsPage() {
+  const { hasPremium, loading } = usePremiumAccess();
+
+  return (
+    <div style={{
+      minHeight: '100vh',
+      background: 'linear-gradient(180deg, #121212 0%, #1A1D28 100%)',
+      fontFamily: 'Inter, -apple-system, sans-serif',
+    }}>
+      {/* Header */}
+      <header style={{
+        padding: '20px 32px',
+        borderBottom: '1px solid rgba(201, 169, 98, 0.1)',
+        position: 'sticky',
+        top: 0,
+        background: 'rgba(15, 17, 23, 0.95)',
+        backdropFilter: 'blur(10px)',
+        zIndex: 100,
+      }}>
+        <div style={{
+          maxWidth: 1200,
+          margin: '0 auto',
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center'
+        }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 24 }}>
+            <Link href="/">
+              <a style={{
+                color: '#F6DBA6',
+                fontSize: 22,
+                fontWeight: 700,
+                textDecoration: 'none',
+                letterSpacing: '0.02em'
+              }}>
+                Charge Wealth
+              </a>
+            </Link>
+            <Link href="/tools">
+              <a style={{
+                color: '#A8B0C5',
+                fontSize: 14,
+                textDecoration: 'none'
+              }}>
+                ← Free Tools
+              </a>
+            </Link>
+          </div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
+            {hasPremium && (
+              <span style={{
+                background: 'rgba(201, 169, 98, 0.15)',
+                color: '#F6DBA6',
+                padding: '6px 12px',
+                borderRadius: 20,
+                fontSize: 12,
+                fontWeight: 600,
+              }}>
+                ⚡ Premium Member
+              </span>
+            )}
+            <Link href="/dashboard">
+              <a style={{
+                background: hasPremium ? 'transparent' : '#F6DBA6',
+                color: hasPremium ? '#F6DBA6' : '#121212',
+                border: hasPremium ? '1px solid #F6DBA6' : 'none',
+                padding: '10px 20px',
+                borderRadius: 8,
+                fontWeight: 600,
+                textDecoration: 'none',
+                fontSize: 14,
+              }}>
+                {hasPremium ? 'Dashboard' : 'Get Premium'}
+              </a>
+            </Link>
+          </div>
+        </div>
+      </header>
+
+      {/* Hero */}
+      <section style={{
+        padding: '60px 32px 40px',
+        textAlign: 'center',
+      }}>
+        <div style={{
+          display: 'inline-block',
+          background: 'rgba(201, 169, 98, 0.1)',
+          color: '#F6DBA6',
+          padding: '8px 16px',
+          borderRadius: 20,
+          fontSize: 13,
+          fontWeight: 600,
+          marginBottom: 20,
+        }}>
+          ⚡ PREMIUM CFO TOOLS
+        </div>
+        
+        <h1 style={{
+          fontSize: 48,
+          fontWeight: 700,
+          color: '#F4F5F7',
+          marginBottom: 16,
+          lineHeight: 1.2,
+        }}>
+          Professional Spreadsheets
+          <br />
+          <span style={{ color: '#F6DBA6' }}>for Your Finances</span>
+        </h1>
+        
+        <p style={{
+          fontSize: 20,
+          color: '#A8B0C5',
+          maxWidth: 650,
+          margin: '0 auto',
+          lineHeight: 1.6,
+        }}>
+          Download CFO-grade Excel templates used by financial professionals.
+          Fully customizable, offline-ready, and built for high earners.
+        </p>
+      </section>
+
+      {/* Tools Grid */}
+      <section style={{
+        padding: '20px 32px 80px',
+        maxWidth: 1200,
+        margin: '0 auto',
+      }}>
+        <div style={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(350px, 1fr))',
+          gap: 24,
+        }}>
+          {premiumTools.map((tool) => (
+            <ToolCard key={tool.id} tool={tool} hasPremium={hasPremium} />
+          ))}
+        </div>
+      </section>
+
+      {/* Why Premium Tools */}
+      <section style={{
+        padding: '60px 32px',
+        background: 'rgba(201, 169, 98, 0.03)',
+        borderTop: '1px solid rgba(201, 169, 98, 0.1)',
+        borderBottom: '1px solid rgba(201, 169, 98, 0.1)',
+      }}>
+        <div style={{ maxWidth: 1000, margin: '0 auto', textAlign: 'center' }}>
+          <h2 style={{
+            fontSize: 32,
+            fontWeight: 700,
+            color: '#F4F5F7',
+            marginBottom: 40,
+          }}>
+            Why Use These Spreadsheets?
+          </h2>
+          
+          <div style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
+            gap: 32,
+            textAlign: 'left',
+          }}>
+            {[
+              {
+                icon: '🔒',
+                title: 'Your Data Stays Private',
+                desc: 'No cloud sync, no third-party access. Your financial data stays on your computer.'
+              },
+              {
+                icon: '⚡',
+                title: 'Works Offline',
+                desc: 'No internet required. Work on your finances anywhere, anytime.'
+              },
+              {
+                icon: '🎨',
+                title: 'Fully Customizable',
+                desc: 'Add your own categories, formulas, and formatting. Make it yours.'
+              },
+              {
+                icon: '📊',
+                title: 'Professional Grade',
+                desc: 'Built with the same rigor as tools used by CFOs and financial advisors.'
+              },
+              {
+                icon: '🔄',
+                title: 'Always Yours',
+                desc: 'Download once, use forever. No subscription required for updates.'
+              },
+              {
+                icon: '📱',
+                title: 'Excel & Google Sheets',
+                desc: 'Compatible with Microsoft Excel, Google Sheets, and Numbers.'
+              },
+            ].map((benefit, idx) => (
+              <div key={idx} style={{
+                background: '#1A1D28',
+                padding: 24,
+                borderRadius: 12,
+                border: '1px solid rgba(201, 169, 98, 0.1)',
+              }}>
+                <div style={{ fontSize: 32, marginBottom: 12 }}>{benefit.icon}</div>
+                <h3 style={{
+                  fontSize: 18,
+                  fontWeight: 600,
+                  color: '#F4F5F7',
+                  marginBottom: 8,
+                }}>
+                  {benefit.title}
+                </h3>
+                <p style={{
+                  fontSize: 14,
+                  color: '#A8B0C5',
+                  lineHeight: 1.6,
+                  margin: 0,
+                }}>
+                  {benefit.desc}
+                </p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* CTA */}
+      {!hasPremium && (
+        <section style={{
+          padding: '80px 32px',
+          textAlign: 'center',
+        }}>
+          <h2 style={{
+            fontSize: 36,
+            fontWeight: 700,
+            color: '#F4F5F7',
+            marginBottom: 16,
+          }}>
+            Get All Premium Tools
+          </h2>
+          <p style={{
+            fontSize: 18,
+            color: '#A8B0C5',
+            maxWidth: 600,
+            margin: '0 auto 32px',
+          }}>
+            One-time payment of $279 gives you lifetime access to all premium tools,
+            plus AI-powered financial analysis and personalized advice.
+          </p>
+          <Link href="/dashboard">
+            <a style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: 8,
+              background: '#F6DBA6',
+              color: '#121212',
+              padding: '18px 36px',
+              borderRadius: 8,
+              fontWeight: 700,
+              fontSize: 18,
+              textDecoration: 'none',
+            }}>
+              Get Premium Access
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <path d="M5 12h14M12 5l7 7-7 7"/>
+              </svg>
+            </a>
+          </Link>
+        </section>
+      )}
+
+      {/* Footer */}
+      <footer style={{
+        padding: '32px',
+        textAlign: 'center',
+        color: '#6B7280',
+        fontSize: 14,
+        borderTop: '1px solid rgba(201, 169, 98, 0.1)',
+      }}>
+        <div style={{ marginBottom: 16 }}>
+          <Link href="/tools">
+            <a style={{ color: '#A8B0C5', textDecoration: 'none', marginRight: 24 }}>Free Tools</a>
+          </Link>
+          <Link href="/dashboard">
+            <a style={{ color: '#A8B0C5', textDecoration: 'none', marginRight: 24 }}>Dashboard</a>
+          </Link>
+          <Link href="/take-charge">
+            <a style={{ color: '#A8B0C5', textDecoration: 'none' }}>Blog</a>
+          </Link>
+        </div>
+        © 2026 Charge Wealth. All rights reserved.
+      </footer>
+    </div>
+  );
+}
+
+export default PremiumToolsPage;

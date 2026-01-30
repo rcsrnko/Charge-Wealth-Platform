@@ -8,6 +8,7 @@ import {
   NetWorthTracker,
   Contribution401kCalculator
 } from '../tools';
+import { PremiumToolsPage } from './PremiumToolsPage';
 
 // Tools index page
 function ToolsIndex() {
@@ -167,10 +168,97 @@ function ToolsIndex() {
         </div>
       </section>
 
-      {/* CTA */}
+      {/* Premium Tools Section */}
       <section style={{
         padding: '60px 32px',
         background: 'rgba(201, 169, 98, 0.05)',
+        borderTop: '1px solid rgba(201, 169, 98, 0.1)',
+      }}>
+        <div style={{ maxWidth: 1200, margin: '0 auto', textAlign: 'center' }}>
+          <div style={{
+            display: 'inline-block',
+            background: 'rgba(201, 169, 98, 0.15)',
+            color: '#F6DBA6',
+            padding: '6px 14px',
+            borderRadius: 20,
+            fontSize: 12,
+            fontWeight: 600,
+            marginBottom: 20,
+          }}>
+            ⚡ PREMIUM
+          </div>
+          <h2 style={{
+            fontSize: 36,
+            fontWeight: 700,
+            color: '#F4F5F7',
+            marginBottom: 16,
+          }}>
+            Download CFO-Grade Spreadsheets
+          </h2>
+          <p style={{
+            fontSize: 18,
+            color: '#A8B0C5',
+            maxWidth: 600,
+            margin: '0 auto 32px',
+          }}>
+            Professional Excel templates for cash flow projection, tax planning, debt payoff, and more.
+          </p>
+          
+          <div style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
+            gap: 16,
+            maxWidth: 800,
+            margin: '0 auto 32px',
+            textAlign: 'left',
+          }}>
+            {[
+              { icon: '💰', name: 'Cash Flow Projection' },
+              { icon: '📋', name: 'Tax Planning Worksheet' },
+              { icon: '📈', name: 'Net Worth Tracker' },
+              { icon: '🎯', name: 'Debt Payoff Calculator' },
+              { icon: '🔍', name: 'Investment Fee Analyzer' },
+            ].map((tool, idx) => (
+              <div key={idx} style={{
+                background: '#1A1D28',
+                padding: '16px 20px',
+                borderRadius: 10,
+                display: 'flex',
+                alignItems: 'center',
+                gap: 12,
+                border: '1px solid rgba(201, 169, 98, 0.1)',
+              }}>
+                <span style={{ fontSize: 24 }}>{tool.icon}</span>
+                <span style={{ color: '#F4F5F7', fontSize: 14, fontWeight: 500 }}>{tool.name}</span>
+              </div>
+            ))}
+          </div>
+          
+          <Link href="/tools/premium">
+            <a style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: 8,
+              background: '#F6DBA6',
+              color: '#121212',
+              padding: '16px 32px',
+              borderRadius: 8,
+              fontWeight: 700,
+              fontSize: 16,
+              textDecoration: 'none',
+            }}>
+              View Premium Tools
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <path d="M5 12h14M12 5l7 7-7 7"/>
+              </svg>
+            </a>
+          </Link>
+        </div>
+      </section>
+
+      {/* CTA */}
+      <section style={{
+        padding: '60px 32px',
         textAlign: 'center',
       }}>
         <h2 style={{
@@ -273,6 +361,7 @@ export function ToolsPage() {
   return (
     <Switch>
       <Route path="/tools" component={ToolsIndex} />
+      <Route path="/tools/premium" component={PremiumToolsPage} />
       <Route path="/tools/tax-bracket-calculator">
         <ToolWrapper title="Tax Bracket Calculator">
           <TaxBracketCalculator />

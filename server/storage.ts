@@ -158,6 +158,39 @@ export class DatabaseStorage implements IStorage {
       .returning();
     return user;
   }
+
+  async updateBlogSubscription(userId: string, subscriptionData: {
+    blogSubscriptionStatus?: string;
+    blogSubscriptionType?: string | null;
+    blogSubscriptionStartDate?: Date | null;
+    blogSubscriptionEndDate?: Date | null;
+    stripeBlogSubscriptionId?: string | null;
+  }): Promise<User | undefined> {
+    const updateData: any = { updatedAt: new Date() };
+    
+    if (subscriptionData.blogSubscriptionStatus !== undefined) {
+      updateData.blogSubscriptionStatus = subscriptionData.blogSubscriptionStatus;
+    }
+    if (subscriptionData.blogSubscriptionType !== undefined) {
+      updateData.blogSubscriptionType = subscriptionData.blogSubscriptionType;
+    }
+    if (subscriptionData.blogSubscriptionStartDate !== undefined) {
+      updateData.blogSubscriptionStartDate = subscriptionData.blogSubscriptionStartDate;
+    }
+    if (subscriptionData.blogSubscriptionEndDate !== undefined) {
+      updateData.blogSubscriptionEndDate = subscriptionData.blogSubscriptionEndDate;
+    }
+    if (subscriptionData.stripeBlogSubscriptionId !== undefined) {
+      updateData.stripeBlogSubscriptionId = subscriptionData.stripeBlogSubscriptionId;
+    }
+
+    const [user] = await db
+      .update(users)
+      .set(updateData)
+      .where(eq(users.id, userId))
+      .returning();
+    return user;
+  }
   
   // Net Worth operations
   async getNetWorthSnapshots(userId: string, limit: number = 10): Promise<NetWorthSnapshot[]> {

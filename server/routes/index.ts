@@ -4,6 +4,7 @@ export { registerReferralRoutes } from './referrals';
 export { registerStripeRoutes } from './stripe';
 export { registerFinancialRoutes } from './financial';
 export { registerBlogRoutes } from './blog';
+export { registerBlogSubscriptionRoutes } from './blogSubscription';
 export { registerChargeAIRoutes } from './chargeai';
 export { registerTaxIntelRoutes } from './taxintel';
 export { registerCfoRoutes } from './cfo';

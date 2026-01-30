@@ -9,6 +9,7 @@ import { registerReferralRoutes } from "./routes/referrals";
 import { registerStripeRoutes } from "./routes/stripe";
 import { registerFinancialRoutes } from "./routes/financial";
 import { registerBlogRoutes } from "./routes/blog";
+import { registerBlogSubscriptionRoutes } from "./routes/blogSubscription";
 import { registerChargeAIRoutes } from "./routes/chargeai";
 import { registerTaxIntelRoutes } from "./routes/taxintel";
 import { registerCfoRoutes } from "./routes/cfo";
@@ -43,6 +44,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   registerStripeRoutes(app, isAuthenticated);
   registerFinancialRoutes(app, isAuthenticated);
   await registerBlogRoutes(app);
+  registerBlogSubscriptionRoutes(app, isAuthenticated);
   registerChargeAIRoutes(app, isAuthenticated);
   registerTaxIntelRoutes(app, isAuthenticated, upload);
   registerCfoRoutes(app, isAuthenticated);
