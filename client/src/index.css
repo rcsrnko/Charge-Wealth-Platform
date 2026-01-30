@@ -1,8 +1,10 @@
-/* Charge Wealth Design System - Premium Wealth Management Theme */
-/* Default: Light mode (warm, inviting) */
+/* Charge Wealth Design System - Premium Minimal Theme */
+/* High contrast, easy to read, Dose Daily vibe */
 :root {
   /* Typography */
-  --font-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-heading: 'Lora', Georgia, serif;
+  --font-body: 'Raleway', -apple-system, sans-serif;
+  --font-sans: 'Raleway', -apple-system, sans-serif;
   --font-mono: 'SF Mono', 'Fira Code', monospace;
   
   /* Font Sizes */
@@ -27,11 +29,11 @@
   --space-12: 3rem;
   --space-16: 4rem;
   
-  /* Border Radius - Softer, rounder */
-  --radius-sm: 6px;
-  --radius-md: 10px;
-  --radius-lg: 16px;
-  --radius-xl: 24px;
+  /* Border Radius - Clean, subtle */
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-xl: 16px;
   --radius-full: 9999px;
   
   /* Transitions */
@@ -41,44 +43,45 @@
   --transition-spring: 500ms cubic-bezier(0.16, 1, 0.3, 1);
   
   /* ========== LIGHT MODE (Default) ========== */
-  /* Warm, inviting wealth management aesthetic */
+  /* Premium minimal - high contrast, easy to read */
   
-  /* Brand Colors - Sophisticated earth tones */
-  --brand-primary: #1B4D3E;      /* Deep forest green - trust, growth */
-  --brand-secondary: #B8860B;    /* Dark goldenrod - wealth, premium */
-  --brand-accent: #D4A574;       /* Warm tan - approachable */
+  /* Brand Colors */
+  --brand-primary: #171717;      /* Near black - primary actions */
+  --brand-secondary: #404040;    /* Dark gray */
+  --brand-accent: #D4AF37;       /* Gold accent */
+  --brand-accent-hover: #B8960F;
   
-  /* Background Colors - Warm creams */
-  --bg-primary: #FDFCFA;         /* Warm white */
-  --bg-secondary: #F8F6F3;       /* Light cream */
-  --bg-tertiary: #F1EDE8;        /* Warmer cream */
-  --bg-elevated: #FFFFFF;        /* Pure white for cards */
+  /* Background Colors - Clean whites */
+  --bg-primary: #FFFFFF;
+  --bg-secondary: #FAFAFA;
+  --bg-tertiary: #F5F5F5;
+  --bg-elevated: #FFFFFF;
   
-  /* Sidebar - Subtle contrast */
-  --sidebar-bg: #F5F3EF;
-  --sidebar-hover: #EBE8E3;
-  --sidebar-active: #E5E1DB;
+  /* Sidebar */
+  --sidebar-bg: #FAFAFA;
+  --sidebar-hover: #F0F0F0;
+  --sidebar-active: #E8E8E8;
   
-  /* Text Colors - Warm grays */
-  --text-primary: #1A1A1A;       /* Near black */
-  --text-secondary: #4A4A4A;     /* Dark gray */
-  --text-muted: #7A7A7A;         /* Medium gray */
-  --text-light: #9A9A9A;         /* Light gray */
+  /* Text Colors - High contrast */
+  --text-primary: #171717;       /* Near black */
+  --text-secondary: #404040;     /* Dark gray */
+  --text-muted: #525252;         /* Medium gray */
+  --text-light: #737373;         /* Light gray */
   
   /* Legacy variable mappings */
   --midnight-blue: var(--sidebar-bg);
   --deep-navy: var(--bg-secondary);
-  --gold-sand: var(--brand-secondary);
-  --gold-muted: #96700A;
-  --gold-light: #CCA43D;
-  --soft-gold: var(--brand-secondary);
-  --gold: var(--brand-secondary);
+  --gold-sand: var(--brand-primary);
+  --gold-muted: var(--brand-secondary);
+  --gold-light: var(--brand-accent);
+  --soft-gold: var(--brand-primary);
+  --gold: var(--brand-accent);
   --off-white: var(--text-primary);
   --porcelain: var(--text-primary);
   --snow-white: var(--text-primary);
   --charcoal-slate: var(--bg-tertiary);
   --muted-gray: var(--text-secondary);
-  --gold-text: #7A5D0A;
+  --gold-text: var(--brand-accent);
   --charcoal: var(--bg-tertiary);
   --slate-navy: var(--sidebar-bg);
   --card-bg: var(--bg-elevated);
