@@ -30,22 +30,24 @@
 }
 
 .label {
-  font-size: 0.8rem;
-  color: var(--muted-gray, #6b7280);
+  font-size: 0.8125rem;
+  color: var(--text-muted);
   text-transform: uppercase;
-  letter-spacing: 0.05em;
+  letter-spacing: 0.04em;
+  line-height: 1.4;
 }
 
 .totalAmount {
-  font-size: 2rem;
+  font-size: 2.25rem;
   font-weight: 700;
-  color: #10b981;
-  line-height: 1.2;
+  color: var(--success);
+  line-height: 1.15;
 }
 
 .period {
-  font-size: 0.85rem;
-  color: var(--porcelain, #f4f5f7);
+  font-size: 0.9375rem;
+  color: var(--text-primary);
+  line-height: 1.4;
 }
 
 .breakdown {
@@ -67,24 +69,26 @@
 }
 
 .breakdownLabel {
-  font-size: 0.85rem;
-  color: var(--muted-gray, #6b7280);
+  font-size: 0.9375rem;
+  color: var(--text-secondary);
+  line-height: 1.4;
 }
 
 .breakdownValue {
-  font-size: 0.9rem;
+  font-size: 1rem;
   font-weight: 600;
-  color: var(--porcelain, #f4f5f7);
+  color: var(--text-primary);
 }
 
 .footer {
-  margin-top: 0.75rem;
-  padding-top: 0.75rem;
-  border-top: 1px solid var(--input-bg-hover);
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--border);
 }
 
 .footerNote {
-  font-size: 0.7rem;
-  color: var(--muted-gray, #6b7280);
+  font-size: 0.8125rem;
+  color: var(--text-muted);
   font-style: italic;
+  line-height: 1.5;
 }

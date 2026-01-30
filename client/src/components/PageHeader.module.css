@@ -1,13 +1,14 @@
 .pageHeader {
-  margin-bottom: 2rem;
+  margin-bottom: 2.5rem;
 }
 
 .breadcrumbs {
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  margin-bottom: 1rem;
-  font-size: 0.875rem;
+  margin-bottom: 1.25rem;
+  font-size: 0.9375rem;
+  line-height: 1.4;
 }
 
 .breadcrumbItem {
@@ -46,8 +47,10 @@
 .title {
   font-size: 2rem;
   font-weight: 600;
-  color: var(--midnight-blue);
+  color: var(--text-primary);
   margin: 0;
+  line-height: 1.25;
+  letter-spacing: -0.02em;
 }
 
 .actions {
