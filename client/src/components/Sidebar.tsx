@@ -16,10 +16,10 @@ interface NavItem {
 const navItems: NavItem[] = [
   { 
     id: 'command-center', 
-    label: 'Command Center', 
+    label: 'Overview', 
     path: '/dashboard',
-    description: 'Your Wealth Readiness',
-    lockedDescription: 'Your Wealth Readiness',
+    description: 'The big picture',
+    lockedDescription: 'The big picture',
     requiredScore: 0,
     icon: (
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
@@ -34,8 +34,8 @@ const navItems: NavItem[] = [
     id: 'ai-advisor', 
     label: 'AI Advisor', 
     path: '/dashboard/ai',
-    description: 'Your Private CFO',
-    lockedDescription: 'Your Private CFO',
+    description: 'Ask me anything',
+    lockedDescription: 'Ask me anything',
     badge: 'Start Here',
     requiredScore: 0,
     icon: (
@@ -48,10 +48,10 @@ const navItems: NavItem[] = [
   },
   { 
     id: 'tax-intel', 
-    label: 'Tax Advisor', 
+    label: 'Tax Strategy', 
     path: '/dashboard/tax-intel',
-    description: 'Tax Optimization Engine',
-    lockedDescription: 'Unlock Tax Savings',
+    description: 'Find money you\'re leaving on the table',
+    lockedDescription: 'Unlock tax savings',
     requiredScore: 0,
     icon: (
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
@@ -62,10 +62,10 @@ const navItems: NavItem[] = [
   },
   { 
     id: 'market-pulse', 
-    label: 'Market Pulse', 
+    label: 'Markets', 
     path: '/dashboard/market-pulse',
-    description: 'Real-Time Markets',
-    lockedDescription: 'Live Market Data',
+    description: 'What\'s moving today',
+    lockedDescription: 'Live market data',
     requiredScore: 0,
     icon: (
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
@@ -75,10 +75,10 @@ const navItems: NavItem[] = [
   },
   { 
     id: '401k-optimizer', 
-    label: '401(k) Optimizer', 
+    label: '401(k)', 
     path: '/dashboard/401k-optimizer',
-    description: 'Max Your Match',
-    lockedDescription: 'Retirement Optimization',
+    description: 'Get your full match',
+    lockedDescription: 'Retirement optimization',
     requiredScore: 0,
     icon: (
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
@@ -90,8 +90,8 @@ const navItems: NavItem[] = [
     id: 'scenarios', 
     label: 'What If?', 
     path: '/dashboard/scenarios',
-    description: 'Scenario Planner',
-    lockedDescription: 'Life Change Calculator',
+    description: 'Run the numbers',
+    lockedDescription: 'Life change calculator',
     requiredScore: 0,
     icon: (
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
@@ -113,10 +113,10 @@ const navItems: NavItem[] = [
   // },
   { 
     id: 'my-data', 
-    label: 'My Financial Data', 
+    label: 'My Data', 
     path: '/dashboard/my-data',
-    description: 'What the AI Knows',
-    lockedDescription: 'Your Financial Profile',
+    description: 'Your financial profile',
+    lockedDescription: 'Your financial profile',
     requiredScore: 0,
     icon: (
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
@@ -130,8 +130,8 @@ const navItems: NavItem[] = [
     id: 'referrals', 
     label: 'Referrals', 
     path: '/dashboard/referrals',
-    description: 'Earn $50 Per Friend',
-    lockedDescription: 'Share & Earn',
+    description: 'Get $50 per invite',
+    lockedDescription: 'Share & earn',
     requiredScore: 0,
     icon: (
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
@@ -146,8 +146,8 @@ const navItems: NavItem[] = [
     id: 'settings', 
     label: 'Settings', 
     path: '/dashboard/settings',
-    description: 'Account & Preferences',
-    lockedDescription: 'Account & Preferences',
+    description: '',
+    lockedDescription: '',
     requiredScore: 0,
     icon: (
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">

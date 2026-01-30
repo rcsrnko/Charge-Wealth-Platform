@@ -108,7 +108,7 @@ export default function MyFinancialData() {
     <div className={styles.container}>
       <div className={styles.header}>
         <h1 className={styles.title}>My Financial Data</h1>
-        <p className={styles.subtitle}>This is what the AI knows about you and uses to generate personalized recommendations</p>
+        <p className={styles.subtitle}>Your financial profile. The more we know, the better we can help.</p>
       </div>
 
       {!hasAnyData ? (

@@ -664,7 +664,7 @@ export default function ChargeAI() {
       {showDataPanel && (
         <div className={styles.dataPanel}>
           <h3 className={styles.dataPanelTitle}>My Financial Data</h3>
-          <p className={styles.dataPanelSubtitle}>What the AI knows about you</p>
+          <p className={styles.dataPanelSubtitle}>Your data at a glance</p>
           
           {myData ? (
             <div className={styles.dataList}>
