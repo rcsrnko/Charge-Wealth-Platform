@@ -107,33 +107,35 @@ export const NetWorthTracker: React.FC = () => {
       margin: '0 auto',
       padding: 32,
       fontFamily: 'Inter, -apple-system, sans-serif',
-      background: '#121212',
+      background: 'var(--bg-elevated)',
       borderRadius: 16,
-      color: '#F4F5F7',
+      color: 'var(--text-primary)',
+      border: '1px solid var(--border)',
+      boxShadow: 'var(--shadow-sm)',
     }}>
-      <h1 style={{ color: '#F6DBA6', marginBottom: 8, fontSize: 32 }}>
+      <h1 style={{ color: 'var(--brand-accent)', marginBottom: 8, fontSize: 32 }}>
         Net Worth Tracker
       </h1>
-      <p style={{ color: '#A8B0C5', marginBottom: 32 }}>
+      <p style={{ color: 'var(--text-secondary)', marginBottom: 32 }}>
         See your complete financial picture in one place.
       </p>
       
       {/* Net Worth Display */}
       <div style={{
         background: calculations.netWorth >= 0 
-          ? 'linear-gradient(135deg, rgba(16, 185, 129, 0.1) 0%, rgba(16, 185, 129, 0.05) 100%)'
-          : 'linear-gradient(135deg, rgba(239, 68, 68, 0.1) 0%, rgba(239, 68, 68, 0.05) 100%)',
-        border: `2px solid ${calculations.netWorth >= 0 ? 'rgba(16, 185, 129, 0.3)' : 'rgba(239, 68, 68, 0.3)'}`,
+          ? 'var(--success-light)'
+          : 'var(--error-light)',
+        border: `2px solid ${calculations.netWorth >= 0 ? 'var(--success)' : 'var(--error)'}`,
         borderRadius: 16,
         padding: 32,
         marginBottom: 32,
         textAlign: 'center',
       }}>
-        <div style={{ color: '#A8B0C5', fontSize: 18, marginBottom: 8 }}>
+        <div style={{ color: 'var(--text-secondary)', fontSize: 18, marginBottom: 8 }}>
           Your Net Worth
         </div>
         <div style={{ 
-          color: calculations.netWorth >= 0 ? '#10B981' : '#EF4444', 
+          color: calculations.netWorth >= 0 ? 'var(--success)' : 'var(--error)', 
           fontSize: 56, 
           fontWeight: 700 
         }}>
@@ -142,28 +144,28 @@ export const NetWorthTracker: React.FC = () => {
         
         <div style={{ 
           display: 'grid', 
-          gridTemplateColumns: '1fr 1fr 1fr', 
+          gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))', 
           gap: 24, 
           marginTop: 24,
           paddingTop: 24,
-          borderTop: '1px solid rgba(255,255,255,0.1)',
+          borderTop: '1px solid var(--border)',
         }}>
           <div>
-            <div style={{ color: '#A8B0C5', fontSize: 12 }}>Total Assets</div>
-            <div style={{ color: '#10B981', fontSize: 24, fontWeight: 600 }}>
+            <div style={{ color: 'var(--text-secondary)', fontSize: 12 }}>Total Assets</div>
+            <div style={{ color: 'var(--success)', fontSize: 24, fontWeight: 600 }}>
               {formatCurrency(calculations.totalAssets)}
             </div>
           </div>
           <div>
-            <div style={{ color: '#A8B0C5', fontSize: 12 }}>Total Liabilities</div>
-            <div style={{ color: '#EF4444', fontSize: 24, fontWeight: 600 }}>
+            <div style={{ color: 'var(--text-secondary)', fontSize: 12 }}>Total Liabilities</div>
+            <div style={{ color: 'var(--error)', fontSize: 24, fontWeight: 600 }}>
               {formatCurrency(calculations.totalLiabilities)}
             </div>
           </div>
           <div>
-            <div style={{ color: '#A8B0C5', fontSize: 12 }}>Debt-to-Asset Ratio</div>
+            <div style={{ color: 'var(--text-secondary)', fontSize: 12 }}>Debt-to-Asset Ratio</div>
             <div style={{ 
-              color: calculations.debtToAssetRatio < 0.5 ? '#10B981' : '#F59E0B', 
+              color: calculations.debtToAssetRatio < 0.5 ? 'var(--success)' : 'var(--warning)', 
               fontSize: 24, 
               fontWeight: 600 
             }}>
@@ -173,10 +175,10 @@ export const NetWorthTracker: React.FC = () => {
         </div>
       </div>
       
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 32, marginBottom: 32 }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: 32, marginBottom: 32 }}>
         {/* Assets */}
         <div>
-          <h3 style={{ color: '#10B981', marginBottom: 16, display: 'flex', alignItems: 'center', gap: 8 }}>
+          <h3 style={{ color: 'var(--success)', marginBottom: 16, display: 'flex', alignItems: 'center', gap: 8 }}>
             <span>📈</span> Assets
           </h3>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
@@ -185,9 +187,10 @@ export const NetWorthTracker: React.FC = () => {
                 display: 'flex',
                 gap: 8,
                 padding: 12,
-                background: '#1E1E1E',
+                background: 'var(--bg-secondary)',
                 borderRadius: 8,
                 borderLeft: `3px solid ${categoryColors[asset.category]}`,
+                flexWrap: 'wrap',
               }}>
                 <input
                   type="text"
@@ -196,11 +199,12 @@ export const NetWorthTracker: React.FC = () => {
                   placeholder="Asset name"
                   style={{
                     flex: 1,
+                    minWidth: 120,
                     padding: '8px 12px',
                     fontSize: 14,
                     background: 'transparent',
                     border: 'none',
-                    color: '#F4F5F7',
+                    color: 'var(--text-primary)',
                   }}
                 />
                 <input
@@ -211,10 +215,10 @@ export const NetWorthTracker: React.FC = () => {
                     width: 100,
                     padding: '8px 12px',
                     fontSize: 14,
-                    background: '#121212',
-                    border: '1px solid rgba(201, 169, 98, 0.2)',
+                    background: 'var(--bg-tertiary)',
+                    border: '1px solid var(--border)',
                     borderRadius: 4,
-                    color: '#10B981',
+                    color: 'var(--success)',
                     textAlign: 'right',
                   }}
                 />
@@ -224,10 +228,10 @@ export const NetWorthTracker: React.FC = () => {
                   style={{
                     padding: '8px',
                     fontSize: 12,
-                    background: '#121212',
-                    border: '1px solid rgba(201, 169, 98, 0.2)',
+                    background: 'var(--bg-tertiary)',
+                    border: '1px solid var(--border)',
                     borderRadius: 4,
-                    color: '#A8B0C5',
+                    color: 'var(--text-secondary)',
                   }}
                 >
                   <option value="cash">Cash</option>
@@ -242,9 +246,9 @@ export const NetWorthTracker: React.FC = () => {
               style={{
                 padding: '12px',
                 background: 'transparent',
-                border: '1px dashed rgba(16, 185, 129, 0.3)',
+                border: '1px dashed var(--success)',
                 borderRadius: 8,
-                color: '#10B981',
+                color: 'var(--success)',
                 cursor: 'pointer',
               }}
             >
@@ -253,18 +257,18 @@ export const NetWorthTracker: React.FC = () => {
           </div>
           
           {/* Asset Breakdown */}
-          <div style={{ marginTop: 16, padding: 16, background: '#1E1E1E', borderRadius: 8 }}>
+          <div style={{ marginTop: 16, padding: 16, background: 'var(--bg-secondary)', borderRadius: 8 }}>
             {Object.entries(calculations.assetsByCategory).map(([category, value]) => (
               <div key={category} style={{ 
                 display: 'flex', 
                 justifyContent: 'space-between',
                 padding: '8px 0',
-                borderBottom: '1px solid rgba(255,255,255,0.05)',
+                borderBottom: '1px solid var(--border)',
               }}>
                 <span style={{ color: categoryColors[category as keyof typeof categoryColors], textTransform: 'capitalize' }}>
                   {category}
                 </span>
-                <span style={{ color: '#F4F5F7' }}>{formatCurrency(value)}</span>
+                <span style={{ color: 'var(--text-primary)' }}>{formatCurrency(value)}</span>
               </div>
             ))}
           </div>
@@ -272,7 +276,7 @@ export const NetWorthTracker: React.FC = () => {
         
         {/* Liabilities */}
         <div>
-          <h3 style={{ color: '#EF4444', marginBottom: 16, display: 'flex', alignItems: 'center', gap: 8 }}>
+          <h3 style={{ color: 'var(--error)', marginBottom: 16, display: 'flex', alignItems: 'center', gap: 8 }}>
             <span>📉</span> Liabilities
           </h3>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
@@ -281,9 +285,10 @@ export const NetWorthTracker: React.FC = () => {
                 display: 'flex',
                 gap: 8,
                 padding: 12,
-                background: '#1E1E1E',
+                background: 'var(--bg-secondary)',
                 borderRadius: 8,
                 borderLeft: `3px solid ${categoryColors[liability.category]}`,
+                flexWrap: 'wrap',
               }}>
                 <input
                   type="text"
@@ -292,11 +297,12 @@ export const NetWorthTracker: React.FC = () => {
                   placeholder="Liability name"
                   style={{
                     flex: 1,
+                    minWidth: 120,
                     padding: '8px 12px',
                     fontSize: 14,
                     background: 'transparent',
                     border: 'none',
-                    color: '#F4F5F7',
+                    color: 'var(--text-primary)',
                   }}
                 />
                 <input
@@ -307,10 +313,10 @@ export const NetWorthTracker: React.FC = () => {
                     width: 100,
                     padding: '8px 12px',
                     fontSize: 14,
-                    background: '#121212',
-                    border: '1px solid rgba(201, 169, 98, 0.2)',
+                    background: 'var(--bg-tertiary)',
+                    border: '1px solid var(--border)',
                     borderRadius: 4,
-                    color: '#EF4444',
+                    color: 'var(--error)',
                     textAlign: 'right',
                   }}
                 />
@@ -320,10 +326,10 @@ export const NetWorthTracker: React.FC = () => {
                   style={{
                     padding: '8px',
                     fontSize: 12,
-                    background: '#121212',
-                    border: '1px solid rgba(201, 169, 98, 0.2)',
+                    background: 'var(--bg-tertiary)',
+                    border: '1px solid var(--border)',
                     borderRadius: 4,
-                    color: '#A8B0C5',
+                    color: 'var(--text-secondary)',
                   }}
                 >
                   <option value="mortgage">Mortgage</option>
@@ -339,9 +345,9 @@ export const NetWorthTracker: React.FC = () => {
               style={{
                 padding: '12px',
                 background: 'transparent',
-                border: '1px dashed rgba(239, 68, 68, 0.3)',
+                border: '1px dashed var(--error)',
                 borderRadius: 8,
-                color: '#EF4444',
+                color: 'var(--error)',
                 cursor: 'pointer',
               }}
             >
@@ -350,18 +356,18 @@ export const NetWorthTracker: React.FC = () => {
           </div>
           
           {/* Liability Breakdown */}
-          <div style={{ marginTop: 16, padding: 16, background: '#1E1E1E', borderRadius: 8 }}>
+          <div style={{ marginTop: 16, padding: 16, background: 'var(--bg-secondary)', borderRadius: 8 }}>
             {Object.entries(calculations.liabilitiesByCategory).map(([category, value]) => (
               <div key={category} style={{ 
                 display: 'flex', 
                 justifyContent: 'space-between',
                 padding: '8px 0',
-                borderBottom: '1px solid rgba(255,255,255,0.05)',
+                borderBottom: '1px solid var(--border)',
               }}>
                 <span style={{ color: categoryColors[category as keyof typeof categoryColors], textTransform: 'capitalize' }}>
                   {category}
                 </span>
-                <span style={{ color: '#F4F5F7' }}>{formatCurrency(value)}</span>
+                <span style={{ color: 'var(--text-primary)' }}>{formatCurrency(value)}</span>
               </div>
             ))}
           </div>
@@ -370,26 +376,27 @@ export const NetWorthTracker: React.FC = () => {
       
       {/* Insights */}
       <div style={{
-        background: '#1E1E1E',
+        background: 'var(--bg-secondary)',
         borderRadius: 12,
         padding: 24,
         marginBottom: 24,
+        border: '1px solid var(--border)',
       }}>
-        <h3 style={{ color: '#F4F5F7', marginBottom: 16 }}>💡 Quick Insights</h3>
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
-          <div style={{ padding: 16, background: '#121212', borderRadius: 8 }}>
-            <div style={{ color: '#A8B0C5', fontSize: 12, marginBottom: 4 }}>Liquid Assets</div>
+        <h3 style={{ color: 'var(--text-primary)', marginBottom: 16 }}>💡 Quick Insights</h3>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: 16 }}>
+          <div style={{ padding: 16, background: 'var(--bg-tertiary)', borderRadius: 8 }}>
+            <div style={{ color: 'var(--text-secondary)', fontSize: 12, marginBottom: 4 }}>Liquid Assets</div>
             <div style={{ color: '#3B82F6', fontSize: 20, fontWeight: 600 }}>
               {formatCurrency(calculations.liquidAssets)}
             </div>
-            <div style={{ color: '#6B7280', fontSize: 12 }}>Cash + Investments</div>
+            <div style={{ color: 'var(--text-muted)', fontSize: 12 }}>Cash + Investments</div>
           </div>
-          <div style={{ padding: 16, background: '#121212', borderRadius: 8 }}>
-            <div style={{ color: '#A8B0C5', fontSize: 12, marginBottom: 4 }}>Illiquid Assets</div>
+          <div style={{ padding: 16, background: 'var(--bg-tertiary)', borderRadius: 8 }}>
+            <div style={{ color: 'var(--text-secondary)', fontSize: 12, marginBottom: 4 }}>Illiquid Assets</div>
             <div style={{ color: '#8B5CF6', fontSize: 20, fontWeight: 600 }}>
               {formatCurrency(calculations.illiquidAssets)}
             </div>
-            <div style={{ color: '#6B7280', fontSize: 12 }}>Property + Other</div>
+            <div style={{ color: 'var(--text-muted)', fontSize: 12 }}>Property + Other</div>
           </div>
         </div>
       </div>
@@ -403,8 +410,8 @@ export const NetWorthTracker: React.FC = () => {
             padding: '16px 24px',
             fontSize: 18,
             fontWeight: 600,
-            background: '#F6DBA6',
-            color: '#121212',
+            background: 'var(--brand-accent)',
+            color: 'var(--text-on-honey)',
             border: 'none',
             borderRadius: 8,
             cursor: 'pointer',
@@ -414,18 +421,18 @@ export const NetWorthTracker: React.FC = () => {
         </button>
       ) : (
         <div style={{
-          background: 'rgba(201, 169, 98, 0.1)',
-          border: '1px solid #F6DBA6',
+          background: 'var(--brand-accent-light)',
+          border: '1px solid var(--brand-accent)',
           borderRadius: 12,
           padding: 24,
         }}>
-          <h3 style={{ color: '#F4F5F7', marginBottom: 8 }}>
+          <h3 style={{ color: 'var(--text-primary)', marginBottom: 8 }}>
             Track your net worth automatically
           </h3>
-          <p style={{ color: '#A8B0C5', marginBottom: 16, fontSize: 14 }}>
+          <p style={{ color: 'var(--text-secondary)', marginBottom: 16, fontSize: 14 }}>
             Charge Wealth connects to all your accounts and tracks your net worth in real-time, plus finds opportunities to grow it faster.
           </p>
-          <div style={{ display: 'flex', gap: 12 }}>
+          <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
             <input
               type="email"
               value={email}
@@ -433,12 +440,13 @@ export const NetWorthTracker: React.FC = () => {
               placeholder="your@email.com"
               style={{
                 flex: 1,
+                minWidth: 200,
                 padding: '12px 16px',
                 fontSize: 16,
-                background: '#1E1E1E',
-                border: '1px solid rgba(201, 169, 98, 0.2)',
+                background: 'var(--input-bg)',
+                border: '1px solid var(--input-border)',
                 borderRadius: 8,
-                color: '#F4F5F7',
+                color: 'var(--text-primary)',
               }}
             />
             <button
@@ -446,8 +454,8 @@ export const NetWorthTracker: React.FC = () => {
                 padding: '12px 24px',
                 fontSize: 16,
                 fontWeight: 600,
-                background: '#F6DBA6',
-                color: '#121212',
+                background: 'var(--brand-accent)',
+                color: 'var(--text-on-honey)',
                 border: 'none',
                 borderRadius: 8,
                 cursor: 'pointer',
@@ -459,8 +467,8 @@ export const NetWorthTracker: React.FC = () => {
         </div>
       )}
       
-      <p style={{ color: '#6B7280', fontSize: 12, marginTop: 24, textAlign: 'center' }}>
-        Powered by <a href="https://chargewealth.co" style={{ color: '#F6DBA6' }}>Charge Wealth</a>
+      <p style={{ color: 'var(--text-muted)', fontSize: 12, marginTop: 24, textAlign: 'center' }}>
+        Powered by <a href="https://chargewealth.co" style={{ color: 'var(--brand-accent)' }}>Charge Wealth</a>
       </p>
     </div>
   );

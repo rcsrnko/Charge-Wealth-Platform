@@ -80,21 +80,23 @@ export const RothVsTraditionalCalculator: React.FC = () => {
       margin: '0 auto',
       padding: 32,
       fontFamily: 'Inter, -apple-system, sans-serif',
-      background: '#121212',
+      background: 'var(--bg-elevated)',
       borderRadius: 16,
-      color: '#F4F5F7',
+      color: 'var(--text-primary)',
+      border: '1px solid var(--border)',
+      boxShadow: 'var(--shadow-sm)',
     }}>
-      <h1 style={{ color: '#F6DBA6', marginBottom: 8, fontSize: 32 }}>
+      <h1 style={{ color: 'var(--brand-accent)', marginBottom: 8, fontSize: 32 }}>
         Roth vs. Traditional IRA Calculator
       </h1>
-      <p style={{ color: '#A8B0C5', marginBottom: 32 }}>
+      <p style={{ color: 'var(--text-secondary)', marginBottom: 32 }}>
         Find out which IRA type will leave you with more money in retirement.
       </p>
       
       {/* Inputs */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: 24, marginBottom: 32 }}>
         <div>
-          <label style={{ display: 'block', marginBottom: 8, color: '#A8B0C5', fontSize: 14 }}>
+          <label style={{ display: 'block', marginBottom: 8, color: 'var(--text-secondary)', fontSize: 14 }}>
             Current Annual Income
           </label>
           <input
@@ -105,16 +107,16 @@ export const RothVsTraditionalCalculator: React.FC = () => {
               width: '100%',
               padding: '12px 16px',
               fontSize: 18,
-              background: '#1E1E1E',
-              border: '1px solid rgba(201, 169, 98, 0.2)',
+              background: 'var(--input-bg)',
+              border: '1px solid var(--input-border)',
               borderRadius: 8,
-              color: '#F4F5F7',
+              color: 'var(--text-primary)',
             }}
           />
         </div>
         
         <div>
-          <label style={{ display: 'block', marginBottom: 8, color: '#A8B0C5', fontSize: 14 }}>
+          <label style={{ display: 'block', marginBottom: 8, color: 'var(--text-secondary)', fontSize: 14 }}>
             Annual IRA Contribution
           </label>
           <input
@@ -125,19 +127,19 @@ export const RothVsTraditionalCalculator: React.FC = () => {
               width: '100%',
               padding: '12px 16px',
               fontSize: 18,
-              background: '#1E1E1E',
-              border: '1px solid rgba(201, 169, 98, 0.2)',
+              background: 'var(--input-bg)',
+              border: '1px solid var(--input-border)',
               borderRadius: 8,
-              color: '#F4F5F7',
+              color: 'var(--text-primary)',
             }}
           />
-          <div style={{ color: '#6B7280', fontSize: 12, marginTop: 4 }}>
+          <div style={{ color: 'var(--text-muted)', fontSize: 12, marginTop: 4 }}>
             2026 limit: $7,000 ($8,000 if 50+)
           </div>
         </div>
         
         <div>
-          <label style={{ display: 'block', marginBottom: 8, color: '#A8B0C5', fontSize: 14 }}>
+          <label style={{ display: 'block', marginBottom: 8, color: 'var(--text-secondary)', fontSize: 14 }}>
             Expected Retirement Income
           </label>
           <input
@@ -148,16 +150,16 @@ export const RothVsTraditionalCalculator: React.FC = () => {
               width: '100%',
               padding: '12px 16px',
               fontSize: 18,
-              background: '#1E1E1E',
-              border: '1px solid rgba(201, 169, 98, 0.2)',
+              background: 'var(--input-bg)',
+              border: '1px solid var(--input-border)',
               borderRadius: 8,
-              color: '#F4F5F7',
+              color: 'var(--text-primary)',
             }}
           />
         </div>
         
         <div>
-          <label style={{ display: 'block', marginBottom: 8, color: '#A8B0C5', fontSize: 14 }}>
+          <label style={{ display: 'block', marginBottom: 8, color: 'var(--text-secondary)', fontSize: 14 }}>
             Years to Retirement
           </label>
           <input
@@ -168,10 +170,10 @@ export const RothVsTraditionalCalculator: React.FC = () => {
               width: '100%',
               padding: '12px 16px',
               fontSize: 18,
-              background: '#1E1E1E',
-              border: '1px solid rgba(201, 169, 98, 0.2)',
+              background: 'var(--input-bg)',
+              border: '1px solid var(--input-border)',
               borderRadius: 8,
-              color: '#F4F5F7',
+              color: 'var(--text-primary)',
             }}
           />
         </div>
@@ -180,9 +182,9 @@ export const RothVsTraditionalCalculator: React.FC = () => {
       {/* Recommendation */}
       <div style={{
         background: calculations.rothWins 
-          ? 'linear-gradient(135deg, rgba(147, 51, 234, 0.1) 0%, rgba(147, 51, 234, 0.05) 100%)'
-          : 'linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(59, 130, 246, 0.05) 100%)',
-        border: `2px solid ${calculations.rothWins ? 'rgba(147, 51, 234, 0.3)' : 'rgba(59, 130, 246, 0.3)'}`,
+          ? 'rgba(147, 51, 234, 0.1)'
+          : 'rgba(59, 130, 246, 0.1)',
+        border: `2px solid ${calculations.rothWins ? 'rgba(147, 51, 234, 0.4)' : 'rgba(59, 130, 246, 0.4)'}`,
         borderRadius: 16,
         padding: 32,
         marginBottom: 24,
@@ -191,7 +193,7 @@ export const RothVsTraditionalCalculator: React.FC = () => {
         <div style={{ fontSize: 64, marginBottom: 16 }}>
           {calculations.rothWins ? '🟣' : '🔵'}
         </div>
-        <div style={{ color: '#A8B0C5', fontSize: 18, marginBottom: 8 }}>
+        <div style={{ color: 'var(--text-secondary)', fontSize: 18, marginBottom: 8 }}>
           Based on your inputs, you should use:
         </div>
         <div style={{ 
@@ -202,7 +204,7 @@ export const RothVsTraditionalCalculator: React.FC = () => {
         }}>
           {calculations.recommendation} IRA
         </div>
-        <div style={{ color: '#A8B0C5', fontSize: 16 }}>
+        <div style={{ color: 'var(--text-secondary)', fontSize: 16 }}>
           You'll have {formatCurrency(calculations.difference)} more at retirement
         </div>
       </div>
@@ -210,59 +212,59 @@ export const RothVsTraditionalCalculator: React.FC = () => {
       {/* Comparison */}
       <div style={{
         display: 'grid',
-        gridTemplateColumns: '1fr 1fr',
+        gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))',
         gap: 24,
         marginBottom: 24,
       }}>
         <div style={{
-          background: calculations.rothWins ? 'rgba(147, 51, 234, 0.1)' : '#1E1E1E',
-          border: `1px solid ${calculations.rothWins ? '#A855F7' : 'rgba(201, 169, 98, 0.2)'}`,
+          background: calculations.rothWins ? 'rgba(147, 51, 234, 0.1)' : 'var(--bg-secondary)',
+          border: `1px solid ${calculations.rothWins ? '#A855F7' : 'var(--border)'}`,
           borderRadius: 12,
           padding: 24,
         }}>
           <h3 style={{ color: '#A855F7', marginBottom: 16 }}>Roth IRA</h3>
           <div style={{ marginBottom: 16 }}>
-            <div style={{ color: '#A8B0C5', fontSize: 12 }}>You pay taxes now at</div>
-            <div style={{ color: '#F4F5F7', fontSize: 24, fontWeight: 600 }}>
+            <div style={{ color: 'var(--text-secondary)', fontSize: 12 }}>You pay taxes now at</div>
+            <div style={{ color: 'var(--text-primary)', fontSize: 24, fontWeight: 600 }}>
               {(calculations.currentTaxRate * 100).toFixed(0)}%
             </div>
           </div>
           <div style={{ marginBottom: 16 }}>
-            <div style={{ color: '#A8B0C5', fontSize: 12 }}>Future value</div>
-            <div style={{ color: '#F4F5F7', fontSize: 24, fontWeight: 600 }}>
+            <div style={{ color: 'var(--text-secondary)', fontSize: 12 }}>Future value</div>
+            <div style={{ color: 'var(--text-primary)', fontSize: 24, fontWeight: 600 }}>
               {formatCurrency(calculations.rothFutureValue)}
             </div>
           </div>
           <div>
-            <div style={{ color: '#A8B0C5', fontSize: 12 }}>After-tax at retirement</div>
-            <div style={{ color: '#10B981', fontSize: 28, fontWeight: 700 }}>
+            <div style={{ color: 'var(--text-secondary)', fontSize: 12 }}>After-tax at retirement</div>
+            <div style={{ color: 'var(--success)', fontSize: 28, fontWeight: 700 }}>
               {formatCurrency(calculations.rothAfterTax)}
             </div>
           </div>
         </div>
         
         <div style={{
-          background: !calculations.rothWins ? 'rgba(59, 130, 246, 0.1)' : '#1E1E1E',
-          border: `1px solid ${!calculations.rothWins ? '#3B82F6' : 'rgba(201, 169, 98, 0.2)'}`,
+          background: !calculations.rothWins ? 'rgba(59, 130, 246, 0.1)' : 'var(--bg-secondary)',
+          border: `1px solid ${!calculations.rothWins ? '#3B82F6' : 'var(--border)'}`,
           borderRadius: 12,
           padding: 24,
         }}>
           <h3 style={{ color: '#3B82F6', marginBottom: 16 }}>Traditional IRA</h3>
           <div style={{ marginBottom: 16 }}>
-            <div style={{ color: '#A8B0C5', fontSize: 12 }}>Tax savings now</div>
-            <div style={{ color: '#F4F5F7', fontSize: 24, fontWeight: 600 }}>
+            <div style={{ color: 'var(--text-secondary)', fontSize: 12 }}>Tax savings now</div>
+            <div style={{ color: 'var(--text-primary)', fontSize: 24, fontWeight: 600 }}>
               {formatCurrency(calculations.traditionalTaxSavingsNow)}
             </div>
           </div>
           <div style={{ marginBottom: 16 }}>
-            <div style={{ color: '#A8B0C5', fontSize: 12 }}>Future value (pre-tax)</div>
-            <div style={{ color: '#F4F5F7', fontSize: 24, fontWeight: 600 }}>
+            <div style={{ color: 'var(--text-secondary)', fontSize: 12 }}>Future value (pre-tax)</div>
+            <div style={{ color: 'var(--text-primary)', fontSize: 24, fontWeight: 600 }}>
               {formatCurrency(calculations.traditionalFutureValue)}
             </div>
           </div>
           <div>
-            <div style={{ color: '#A8B0C5', fontSize: 12 }}>After-tax at retirement</div>
-            <div style={{ color: '#10B981', fontSize: 28, fontWeight: 700 }}>
+            <div style={{ color: 'var(--text-secondary)', fontSize: 12 }}>After-tax at retirement</div>
+            <div style={{ color: 'var(--success)', fontSize: 28, fontWeight: 700 }}>
               {formatCurrency(calculations.traditionalAfterTax)}
             </div>
           </div>
@@ -271,17 +273,18 @@ export const RothVsTraditionalCalculator: React.FC = () => {
       
       {/* Why */}
       <div style={{
-        background: '#1E1E1E',
+        background: 'var(--bg-secondary)',
         borderRadius: 12,
         padding: 24,
         marginBottom: 24,
+        border: '1px solid var(--border)',
       }}>
-        <h3 style={{ color: '#F4F5F7', marginBottom: 16 }}>Why {calculations.recommendation}?</h3>
-        <div style={{ color: '#A8B0C5', lineHeight: 1.6 }}>
+        <h3 style={{ color: 'var(--text-primary)', marginBottom: 16 }}>Why {calculations.recommendation}?</h3>
+        <div style={{ color: 'var(--text-secondary)', lineHeight: 1.6 }}>
           {calculations.rothWins ? (
             <>
               <p style={{ marginBottom: 12 }}>
-                <strong style={{ color: '#F4F5F7' }}>Your current tax rate ({(calculations.currentTaxRate * 100).toFixed(0)}%) is lower than your expected retirement rate ({(calculations.retirementTaxRate * 100).toFixed(0)}%).</strong>
+                <strong style={{ color: 'var(--text-primary)' }}>Your current tax rate ({(calculations.currentTaxRate * 100).toFixed(0)}%) is lower than your expected retirement rate ({(calculations.retirementTaxRate * 100).toFixed(0)}%).</strong>
               </p>
               <p>
                 Pay taxes now while you're in a lower bracket. Your money grows tax-free and you won't owe anything when you withdraw in retirement.
@@ -290,7 +293,7 @@ export const RothVsTraditionalCalculator: React.FC = () => {
           ) : (
             <>
               <p style={{ marginBottom: 12 }}>
-                <strong style={{ color: '#F4F5F7' }}>Your current tax rate ({(calculations.currentTaxRate * 100).toFixed(0)}%) is higher than your expected retirement rate ({(calculations.retirementTaxRate * 100).toFixed(0)}%).</strong>
+                <strong style={{ color: 'var(--text-primary)' }}>Your current tax rate ({(calculations.currentTaxRate * 100).toFixed(0)}%) is higher than your expected retirement rate ({(calculations.retirementTaxRate * 100).toFixed(0)}%).</strong>
               </p>
               <p>
                 Get the tax deduction now while you're in a higher bracket. You'll pay taxes in retirement when your income (and tax rate) is lower.
@@ -309,8 +312,8 @@ export const RothVsTraditionalCalculator: React.FC = () => {
             padding: '16px 24px',
             fontSize: 18,
             fontWeight: 600,
-            background: '#F6DBA6',
-            color: '#121212',
+            background: 'var(--brand-accent)',
+            color: 'var(--text-on-honey)',
             border: 'none',
             borderRadius: 8,
             cursor: 'pointer',
@@ -320,18 +323,18 @@ export const RothVsTraditionalCalculator: React.FC = () => {
         </button>
       ) : (
         <div style={{
-          background: 'rgba(201, 169, 98, 0.1)',
-          border: '1px solid #F6DBA6',
+          background: 'var(--brand-accent-light)',
+          border: '1px solid var(--brand-accent)',
           borderRadius: 12,
           padding: 24,
         }}>
-          <h3 style={{ color: '#F4F5F7', marginBottom: 8 }}>
+          <h3 style={{ color: 'var(--text-primary)', marginBottom: 8 }}>
             Want the full picture?
           </h3>
-          <p style={{ color: '#A8B0C5', marginBottom: 16, fontSize: 14 }}>
+          <p style={{ color: 'var(--text-secondary)', marginBottom: 16, fontSize: 14 }}>
             Charge Wealth analyzes your 401k, IRA, HSA, and taxable accounts together to find the optimal strategy.
           </p>
-          <div style={{ display: 'flex', gap: 12 }}>
+          <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
             <input
               type="email"
               value={email}
@@ -339,12 +342,13 @@ export const RothVsTraditionalCalculator: React.FC = () => {
               placeholder="your@email.com"
               style={{
                 flex: 1,
+                minWidth: 200,
                 padding: '12px 16px',
                 fontSize: 16,
-                background: '#1E1E1E',
-                border: '1px solid rgba(201, 169, 98, 0.2)',
+                background: 'var(--input-bg)',
+                border: '1px solid var(--input-border)',
                 borderRadius: 8,
-                color: '#F4F5F7',
+                color: 'var(--text-primary)',
               }}
             />
             <button
@@ -352,8 +356,8 @@ export const RothVsTraditionalCalculator: React.FC = () => {
                 padding: '12px 24px',
                 fontSize: 16,
                 fontWeight: 600,
-                background: '#F6DBA6',
-                color: '#121212',
+                background: 'var(--brand-accent)',
+                color: 'var(--text-on-honey)',
                 border: 'none',
                 borderRadius: 8,
                 cursor: 'pointer',
@@ -365,8 +369,8 @@ export const RothVsTraditionalCalculator: React.FC = () => {
         </div>
       )}
       
-      <p style={{ color: '#6B7280', fontSize: 12, marginTop: 24, textAlign: 'center' }}>
-        Powered by <a href="https://chargewealth.co" style={{ color: '#F6DBA6' }}>Charge Wealth</a> • 
+      <p style={{ color: 'var(--text-muted)', fontSize: 12, marginTop: 24, textAlign: 'center' }}>
+        Powered by <a href="https://chargewealth.co" style={{ color: 'var(--brand-accent)' }}>Charge Wealth</a> • 
         This calculator is for informational purposes only. Consider consulting a tax professional.
       </p>
     </div>

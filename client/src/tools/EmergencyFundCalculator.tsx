@@ -69,9 +69,9 @@ export const EmergencyFundCalculator: React.FC = () => {
   }, [housing, utilities, food, transportation, insurance, debt, other, currentSavings, jobStability]);
 
   const getStatusColor = () => {
-    if (calculations.currentMonths >= calculations.recommendedMonths) return '#10B981';
-    if (calculations.currentMonths >= 3) return '#F59E0B';
-    return '#EF4444';
+    if (calculations.currentMonths >= calculations.recommendedMonths) return 'var(--success)';
+    if (calculations.currentMonths >= 3) return 'var(--warning)';
+    return 'var(--error)';
   };
 
   const getStatusText = () => {
@@ -86,20 +86,22 @@ export const EmergencyFundCalculator: React.FC = () => {
       margin: '0 auto',
       padding: 32,
       fontFamily: 'Inter, -apple-system, sans-serif',
-      background: '#121212',
+      background: 'var(--bg-elevated)',
       borderRadius: 16,
-      color: '#F4F5F7',
+      color: 'var(--text-primary)',
+      border: '1px solid var(--border)',
+      boxShadow: 'var(--shadow-sm)',
     }}>
-      <h1 style={{ color: '#F6DBA6', marginBottom: 8, fontSize: 32 }}>
+      <h1 style={{ color: 'var(--brand-accent)', marginBottom: 8, fontSize: 32 }}>
         Emergency Fund Calculator
       </h1>
-      <p style={{ color: '#A8B0C5', marginBottom: 32 }}>
+      <p style={{ color: 'var(--text-secondary)', marginBottom: 32 }}>
         Find out exactly how much you need in your emergency fund and where to keep it.
       </p>
       
       {/* Monthly Expenses */}
       <div style={{ marginBottom: 32 }}>
-        <h3 style={{ color: '#F4F5F7', marginBottom: 16 }}>Monthly Essential Expenses</h3>
+        <h3 style={{ color: 'var(--text-primary)', marginBottom: 16 }}>Monthly Essential Expenses</h3>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))', gap: 16 }}>
           {[
             { label: 'Housing/Rent', value: housing, setter: setHousing, icon: '🏠' },
@@ -111,7 +113,7 @@ export const EmergencyFundCalculator: React.FC = () => {
             { label: 'Other', value: other, setter: setOther, icon: '📦' },
           ].map(({ label, value, setter, icon }) => (
             <div key={label}>
-              <label style={{ display: 'block', marginBottom: 4, color: '#A8B0C5', fontSize: 12 }}>
+              <label style={{ display: 'block', marginBottom: 4, color: 'var(--text-secondary)', fontSize: 12 }}>
                 {icon} {label}
               </label>
               <input
@@ -122,10 +124,10 @@ export const EmergencyFundCalculator: React.FC = () => {
                   width: '100%',
                   padding: '10px 12px',
                   fontSize: 16,
-                  background: '#1E1E1E',
-                  border: '1px solid rgba(201, 169, 98, 0.2)',
+                  background: 'var(--input-bg)',
+                  border: '1px solid var(--input-border)',
                   borderRadius: 8,
-                  color: '#F4F5F7',
+                  color: 'var(--text-primary)',
                 }}
                 placeholder="0"
               />
@@ -135,22 +137,24 @@ export const EmergencyFundCalculator: React.FC = () => {
         <div style={{
           marginTop: 16,
           padding: 16,
-          background: '#1E1E1E',
+          background: 'var(--bg-secondary)',
           borderRadius: 8,
           display: 'flex',
           justifyContent: 'space-between',
+          flexWrap: 'wrap',
+          gap: 8,
         }}>
-          <span style={{ color: '#A8B0C5' }}>Total Monthly Expenses:</span>
-          <span style={{ color: '#F6DBA6', fontWeight: 700, fontSize: 20 }}>
+          <span style={{ color: 'var(--text-secondary)' }}>Total Monthly Expenses:</span>
+          <span style={{ color: 'var(--brand-accent)', fontWeight: 700, fontSize: 20 }}>
             {formatCurrency(calculations.monthlyExpenses)}
           </span>
         </div>
       </div>
       
       {/* Current Savings & Stability */}
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 24, marginBottom: 32 }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: 24, marginBottom: 32 }}>
         <div>
-          <label style={{ display: 'block', marginBottom: 8, color: '#A8B0C5', fontSize: 14 }}>
+          <label style={{ display: 'block', marginBottom: 8, color: 'var(--text-secondary)', fontSize: 14 }}>
             Current Emergency Savings
           </label>
           <input
@@ -161,16 +165,16 @@ export const EmergencyFundCalculator: React.FC = () => {
               width: '100%',
               padding: '12px 16px',
               fontSize: 18,
-              background: '#1E1E1E',
-              border: '1px solid rgba(201, 169, 98, 0.2)',
+              background: 'var(--input-bg)',
+              border: '1px solid var(--input-border)',
               borderRadius: 8,
-              color: '#F4F5F7',
+              color: 'var(--text-primary)',
             }}
           />
         </div>
         
         <div>
-          <label style={{ display: 'block', marginBottom: 8, color: '#A8B0C5', fontSize: 14 }}>
+          <label style={{ display: 'block', marginBottom: 8, color: 'var(--text-secondary)', fontSize: 14 }}>
             Job Stability
           </label>
           <select
@@ -180,10 +184,10 @@ export const EmergencyFundCalculator: React.FC = () => {
               width: '100%',
               padding: '12px 16px',
               fontSize: 18,
-              background: '#1E1E1E',
-              border: '1px solid rgba(201, 169, 98, 0.2)',
+              background: 'var(--input-bg)',
+              border: '1px solid var(--input-border)',
               borderRadius: 8,
-              color: '#F4F5F7',
+              color: 'var(--text-primary)',
             }}
           >
             <option value="stable">Stable (government, tenure)</option>
@@ -195,18 +199,19 @@ export const EmergencyFundCalculator: React.FC = () => {
       
       {/* Progress */}
       <div style={{
-        background: '#1E1E1E',
+        background: 'var(--bg-secondary)',
         borderRadius: 16,
         padding: 24,
         marginBottom: 24,
+        border: '1px solid var(--border)',
       }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 16 }}>
-          <span style={{ color: '#A8B0C5' }}>Emergency Fund Status</span>
+        <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 16, flexWrap: 'wrap', gap: 8 }}>
+          <span style={{ color: 'var(--text-secondary)' }}>Emergency Fund Status</span>
           <span style={{ 
             color: getStatusColor(), 
             fontWeight: 600,
             padding: '4px 12px',
-            background: `${getStatusColor()}20`,
+            background: 'var(--bg-tertiary)',
             borderRadius: 20,
             fontSize: 14,
           }}>
@@ -217,7 +222,7 @@ export const EmergencyFundCalculator: React.FC = () => {
         {/* Progress bar */}
         <div style={{
           height: 24,
-          background: '#121212',
+          background: 'var(--bg-tertiary)',
           borderRadius: 12,
           overflow: 'hidden',
           marginBottom: 16,
@@ -225,25 +230,25 @@ export const EmergencyFundCalculator: React.FC = () => {
           <div style={{
             height: '100%',
             width: `${calculations.percentComplete}%`,
-            background: `linear-gradient(90deg, ${getStatusColor()} 0%, ${getStatusColor()}CC 100%)`,
+            background: `linear-gradient(90deg, var(--brand-accent) 0%, var(--brand-accent-hover) 100%)`,
             borderRadius: 12,
             transition: 'width 0.3s ease',
           }} />
         </div>
         
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', flexWrap: 'wrap', gap: 16 }}>
           <div>
-            <div style={{ color: '#A8B0C5', fontSize: 12 }}>Current</div>
-            <div style={{ color: '#F4F5F7', fontSize: 24, fontWeight: 700 }}>
+            <div style={{ color: 'var(--text-secondary)', fontSize: 12 }}>Current</div>
+            <div style={{ color: 'var(--text-primary)', fontSize: 24, fontWeight: 700 }}>
               {formatCurrency(calculations.current)}
             </div>
-            <div style={{ color: '#A8B0C5', fontSize: 14 }}>
+            <div style={{ color: 'var(--text-secondary)', fontSize: 14 }}>
               {calculations.currentMonths.toFixed(1)} months
             </div>
           </div>
           <div style={{ textAlign: 'right' }}>
-            <div style={{ color: '#A8B0C5', fontSize: 12 }}>Target ({calculations.recommendedMonths} months)</div>
-            <div style={{ color: '#F6DBA6', fontSize: 24, fontWeight: 700 }}>
+            <div style={{ color: 'var(--text-secondary)', fontSize: 12 }}>Target ({calculations.recommendedMonths} months)</div>
+            <div style={{ color: 'var(--brand-accent)', fontSize: 24, fontWeight: 700 }}>
               {formatCurrency(calculations.targets.recommended)}
             </div>
           </div>
@@ -253,13 +258,13 @@ export const EmergencyFundCalculator: React.FC = () => {
           <div style={{
             marginTop: 16,
             padding: 16,
-            background: 'rgba(201, 169, 98, 0.1)',
+            background: 'var(--brand-accent-light)',
             borderRadius: 8,
           }}>
-            <div style={{ color: '#A8B0C5', fontSize: 14, marginBottom: 4 }}>
+            <div style={{ color: 'var(--text-secondary)', fontSize: 14, marginBottom: 4 }}>
               To reach your goal in 12 months, save:
             </div>
-            <div style={{ color: '#F6DBA6', fontSize: 20, fontWeight: 600 }}>
+            <div style={{ color: 'var(--brand-accent)', fontSize: 20, fontWeight: 600 }}>
               {formatCurrency(calculations.monthlySavingsNeeded)}/month
             </div>
           </div>
@@ -269,22 +274,23 @@ export const EmergencyFundCalculator: React.FC = () => {
       {/* Targets */}
       <div style={{
         display: 'grid',
-        gridTemplateColumns: 'repeat(3, 1fr)',
+        gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))',
         gap: 16,
         marginBottom: 24,
       }}>
         {[
-          { label: 'Minimum (3 mo)', value: calculations.targets.minimum, color: '#F59E0B' },
-          { label: `Recommended (${calculations.recommendedMonths} mo)`, value: calculations.targets.recommended, color: '#F6DBA6' },
-          { label: 'Comfortable (12 mo)', value: calculations.targets.comfortable, color: '#10B981' },
+          { label: 'Minimum (3 mo)', value: calculations.targets.minimum, color: 'var(--warning)' },
+          { label: `Recommended (${calculations.recommendedMonths} mo)`, value: calculations.targets.recommended, color: 'var(--brand-accent)' },
+          { label: 'Comfortable (12 mo)', value: calculations.targets.comfortable, color: 'var(--success)' },
         ].map(({ label, value, color }) => (
           <div key={label} style={{
-            background: '#1E1E1E',
+            background: 'var(--bg-secondary)',
             padding: 16,
             borderRadius: 12,
             textAlign: 'center',
+            border: '1px solid var(--border)',
           }}>
-            <div style={{ color: '#A8B0C5', fontSize: 12, marginBottom: 8 }}>{label}</div>
+            <div style={{ color: 'var(--text-secondary)', fontSize: 12, marginBottom: 8 }}>{label}</div>
             <div style={{ color, fontSize: 20, fontWeight: 700 }}>{formatCurrency(value)}</div>
           </div>
         ))}
@@ -292,15 +298,16 @@ export const EmergencyFundCalculator: React.FC = () => {
       
       {/* Where to Keep It */}
       <div style={{
-        background: '#1E1E1E',
+        background: 'var(--bg-secondary)',
         borderRadius: 12,
         padding: 24,
         marginBottom: 24,
+        border: '1px solid var(--border)',
       }}>
-        <h3 style={{ color: '#F4F5F7', marginBottom: 16 }}>Where to Keep Your Emergency Fund</h3>
-        <p style={{ color: '#A8B0C5', fontSize: 14, marginBottom: 16 }}>
+        <h3 style={{ color: 'var(--text-primary)', marginBottom: 16 }}>Where to Keep Your Emergency Fund</h3>
+        <p style={{ color: 'var(--text-secondary)', fontSize: 14, marginBottom: 16 }}>
           A High-Yield Savings Account (HYSA) gives you instant access while earning ~4-5% APY. 
-          At your recommended target, you'd earn <span style={{ color: '#10B981', fontWeight: 600 }}>{formatCurrency(calculations.annualInterest)}/year</span> in interest.
+          At your recommended target, you'd earn <span style={{ color: 'var(--success)', fontWeight: 600 }}>{formatCurrency(calculations.annualInterest)}/year</span> in interest.
         </p>
         <div style={{ display: 'grid', gap: 8 }}>
           {HYSA_PROVIDERS.map(({ name, rate }) => (
@@ -308,11 +315,11 @@ export const EmergencyFundCalculator: React.FC = () => {
               display: 'flex',
               justifyContent: 'space-between',
               padding: '12px 16px',
-              background: '#121212',
+              background: 'var(--bg-tertiary)',
               borderRadius: 8,
             }}>
-              <span style={{ color: '#F4F5F7' }}>{name}</span>
-              <span style={{ color: '#10B981', fontWeight: 600 }}>{rate}% APY</span>
+              <span style={{ color: 'var(--text-primary)' }}>{name}</span>
+              <span style={{ color: 'var(--success)', fontWeight: 600 }}>{rate}% APY</span>
             </div>
           ))}
         </div>
@@ -327,8 +334,8 @@ export const EmergencyFundCalculator: React.FC = () => {
             padding: '16px 24px',
             fontSize: 18,
             fontWeight: 600,
-            background: '#F6DBA6',
-            color: '#121212',
+            background: 'var(--brand-accent)',
+            color: 'var(--text-on-honey)',
             border: 'none',
             borderRadius: 8,
             cursor: 'pointer',
@@ -338,18 +345,18 @@ export const EmergencyFundCalculator: React.FC = () => {
         </button>
       ) : (
         <div style={{
-          background: 'rgba(201, 169, 98, 0.1)',
-          border: '1px solid #F6DBA6',
+          background: 'var(--brand-accent-light)',
+          border: '1px solid var(--brand-accent)',
           borderRadius: 12,
           padding: 24,
         }}>
-          <h3 style={{ color: '#F4F5F7', marginBottom: 8 }}>
+          <h3 style={{ color: 'var(--text-primary)', marginBottom: 8 }}>
             Want to optimize your entire financial picture?
           </h3>
-          <p style={{ color: '#A8B0C5', marginBottom: 16, fontSize: 14 }}>
+          <p style={{ color: 'var(--text-secondary)', marginBottom: 16, fontSize: 14 }}>
             Charge Wealth looks at your emergency fund, investments, taxes, and more to find opportunities.
           </p>
-          <div style={{ display: 'flex', gap: 12 }}>
+          <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
             <input
               type="email"
               value={email}
@@ -357,12 +364,13 @@ export const EmergencyFundCalculator: React.FC = () => {
               placeholder="your@email.com"
               style={{
                 flex: 1,
+                minWidth: 200,
                 padding: '12px 16px',
                 fontSize: 16,
-                background: '#1E1E1E',
-                border: '1px solid rgba(201, 169, 98, 0.2)',
+                background: 'var(--input-bg)',
+                border: '1px solid var(--input-border)',
                 borderRadius: 8,
-                color: '#F4F5F7',
+                color: 'var(--text-primary)',
               }}
             />
             <button
@@ -370,8 +378,8 @@ export const EmergencyFundCalculator: React.FC = () => {
                 padding: '12px 24px',
                 fontSize: 16,
                 fontWeight: 600,
-                background: '#F6DBA6',
-                color: '#121212',
+                background: 'var(--brand-accent)',
+                color: 'var(--text-on-honey)',
                 border: 'none',
                 borderRadius: 8,
                 cursor: 'pointer',
@@ -383,8 +391,8 @@ export const EmergencyFundCalculator: React.FC = () => {
         </div>
       )}
       
-      <p style={{ color: '#6B7280', fontSize: 12, marginTop: 24, textAlign: 'center' }}>
-        Powered by <a href="https://chargewealth.co" style={{ color: '#F6DBA6' }}>Charge Wealth</a>
+      <p style={{ color: 'var(--text-muted)', fontSize: 12, marginTop: 24, textAlign: 'center' }}>
+        Powered by <a href="https://chargewealth.co" style={{ color: 'var(--brand-accent)' }}>Charge Wealth</a>
       </p>
     </div>
   );
