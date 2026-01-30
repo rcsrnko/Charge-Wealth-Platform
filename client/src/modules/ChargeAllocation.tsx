@@ -3,6 +3,7 @@ import styles from './ChargeAllocation.module.css';
 import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
 import LoadingSpinner from '../components/LoadingSpinner';
 import { fetchWithAuth } from '../lib/fetchWithAuth';
+import { EXPECTED_MARKET_RETURN } from '../constants/rates';
 
 interface Position {
   id: number;
@@ -130,7 +131,7 @@ export default function ChargeAllocation() {
     // Cash allocation insight - use real data
     if (portfolio.allocation?.cash > 10) {
       const excessCash = portfolio.totalValue * ((portfolio.allocation.cash - 5) / 100);
-      const potentialReturn = Math.round(excessCash * 0.07); // 7% estimated annual return
+      const potentialReturn = Math.round(excessCash * EXPECTED_MARKET_RETURN);
       insights.push({
         type: 'action',
         title: 'Cash allocation above target',

@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import styles from './ScenarioPlanner.module.css';
 import { fetchWithAuth } from '../lib/fetchWithAuth';
+import { EXPECTED_MARKET_RETURN } from '../constants/rates';
 
 type ScenarioType = 'job_change' | 'home_purchase' | 'retirement' | 'side_income';
 
@@ -148,14 +149,15 @@ export default function ScenarioPlanner() {
         const annualExpenses = retirement.monthlyExpenses * 12;
         const targetNestEgg = annualExpenses * 25; // 4% rule
         
-        // Assuming 7% average return
+        // Using expected market return from centralized config
+        const r = EXPECTED_MARKET_RETURN;
         const annualContribution = baseline.current401k;
-        const futureValue = retirement.currentSavings * Math.pow(1.07, yearsToRetirement) +
-                          annualContribution * ((Math.pow(1.07, yearsToRetirement) - 1) / 0.07);
+        const futureValue = retirement.currentSavings * Math.pow(1 + r, yearsToRetirement) +
+                          annualContribution * ((Math.pow(1 + r, yearsToRetirement) - 1) / r);
         
         const gap = targetNestEgg - futureValue;
         const additionalMonthly = gap > 0 ? 
-          (gap * 0.07) / ((Math.pow(1.07, yearsToRetirement) - 1)) / 12 : 0;
+          (gap * r) / ((Math.pow(1 + r, yearsToRetirement) - 1)) / 12 : 0;
         
         recommendations.push(`Target retirement nest egg: $${targetNestEgg.toLocaleString()}`);
         recommendations.push(`Projected savings at ${retirement.targetAge}: $${Math.round(futureValue).toLocaleString()}`);

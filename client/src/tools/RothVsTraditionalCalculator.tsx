@@ -1,4 +1,5 @@
 import React, { useState, useMemo } from 'react';
+import { EXPECTED_MARKET_RETURN, EXPECTED_MARKET_RETURN_PERCENT } from '../constants/rates';
 
 const formatCurrency = (num: number) => 
   new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(num);
@@ -25,7 +26,7 @@ export const RothVsTraditionalCalculator: React.FC = () => {
   const [contribution, setContribution] = useState<string>('7000');
   const [retirementIncome, setRetirementIncome] = useState<string>('80000');
   const [yearsToRetirement, setYearsToRetirement] = useState<number>(25);
-  const [expectedReturn, setExpectedReturn] = useState<string>('7');
+  const [expectedReturn, setExpectedReturn] = useState<string>(String(EXPECTED_MARKET_RETURN_PERCENT));
   const [email, setEmail] = useState<string>('');
   const [showEmailCapture, setShowEmailCapture] = useState(false);
 
@@ -33,7 +34,7 @@ export const RothVsTraditionalCalculator: React.FC = () => {
     const currentIncomeNum = parseFloat(currentIncome.replace(/,/g, '')) || 0;
     const contributionNum = parseFloat(contribution.replace(/,/g, '')) || 0;
     const retirementIncomeNum = parseFloat(retirementIncome.replace(/,/g, '')) || 0;
-    const returnRate = parseFloat(expectedReturn) / 100 || 0.07;
+    const returnRate = parseFloat(expectedReturn) / 100 || EXPECTED_MARKET_RETURN;
     
     const currentTaxRate = getMarginalRate(currentIncomeNum);
     const retirementTaxRate = getMarginalRate(retirementIncomeNum);

@@ -1,15 +1,8 @@
 import React, { useState, useMemo } from 'react';
+import { HYSA_APY, HYSA_PROVIDERS } from '../constants/rates';
 
 const formatCurrency = (num: number) => 
   new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(num);
-
-const HYSA_RATES = [
-  { name: 'Marcus by Goldman Sachs', rate: 4.40 },
-  { name: 'Ally Bank', rate: 4.20 },
-  { name: 'Discover', rate: 4.25 },
-  { name: 'Capital One 360', rate: 4.25 },
-  { name: 'Wealthfront Cash', rate: 4.50 },
-];
 
 export const EmergencyFundCalculator: React.FC = () => {
   const [housing, setHousing] = useState<string>('2000');
@@ -58,8 +51,8 @@ export const EmergencyFundCalculator: React.FC = () => {
     // Monthly savings needed to reach goal in 1 year
     const monthlySavingsNeeded = gap > 0 ? gap / 12 : 0;
     
-    // Annual interest earned at 4.5% APY
-    const annualInterest = targets.recommended * 0.045;
+    // Annual interest earned at current HYSA APY
+    const annualInterest = targets.recommended * HYSA_APY;
     
     return {
       monthlyExpenses,
@@ -310,7 +303,7 @@ export const EmergencyFundCalculator: React.FC = () => {
           At your recommended target, you'd earn <span style={{ color: '#10B981', fontWeight: 600 }}>{formatCurrency(calculations.annualInterest)}/year</span> in interest.
         </p>
         <div style={{ display: 'grid', gap: 8 }}>
-          {HYSA_RATES.map(({ name, rate }) => (
+          {HYSA_PROVIDERS.map(({ name, rate }) => (
             <div key={name} style={{
               display: 'flex',
               justifyContent: 'space-between',

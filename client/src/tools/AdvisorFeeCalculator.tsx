@@ -1,4 +1,5 @@
 import React, { useState, useMemo } from 'react';
+import { EXPECTED_MARKET_RETURN, EXPECTED_MARKET_RETURN_PERCENT } from '../constants/rates';
 
 const formatCurrency = (num: number) => 
   new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(num);
@@ -7,14 +8,14 @@ export const AdvisorFeeCalculator: React.FC = () => {
   const [portfolio, setPortfolio] = useState<string>('500000');
   const [feePercent, setFeePercent] = useState<string>('1.0');
   const [years, setYears] = useState<number>(30);
-  const [expectedReturn, setExpectedReturn] = useState<string>('7');
+  const [expectedReturn, setExpectedReturn] = useState<string>(String(EXPECTED_MARKET_RETURN_PERCENT));
   const [email, setEmail] = useState<string>('');
   const [showEmailCapture, setShowEmailCapture] = useState(false);
 
   const calculations = useMemo(() => {
     const portfolioNum = parseFloat(portfolio.replace(/,/g, '')) || 0;
     const fee = parseFloat(feePercent) / 100 || 0.01;
-    const returnRate = parseFloat(expectedReturn) / 100 || 0.07;
+    const returnRate = parseFloat(expectedReturn) / 100 || EXPECTED_MARKET_RETURN;
     
     // Calculate with and without fees
     let withAdvisor = portfolioNum;
