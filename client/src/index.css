@@ -1,3 +1,8 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
 /* Charge Wealth Design System - Premium Minimal Theme */
 /* High contrast, easy to read, Dose Daily vibe */
 :root {
@@ -6,7 +11,7 @@
   --font-body: 'Raleway', -apple-system, sans-serif;
   --font-sans: 'Raleway', -apple-system, sans-serif;
   --font-mono: 'SF Mono', 'Fira Code', monospace;
-  
+
   /* Font Sizes */
   --text-xs: 0.75rem;
   --text-sm: 0.875rem;
@@ -16,7 +21,7 @@
   --text-2xl: 1.5rem;
   --text-3xl: 1.875rem;
   --text-4xl: 2.25rem;
-  
+
   /* Spacing Scale (4px base) */
   --space-1: 0.25rem;
   --space-2: 0.5rem;
@@ -28,46 +33,46 @@
   --space-10: 2.5rem;
   --space-12: 3rem;
   --space-16: 4rem;
-  
+
   /* Border Radius - Clean, subtle */
   --radius-sm: 4px;
   --radius-md: 8px;
   --radius-lg: 12px;
   --radius-xl: 16px;
   --radius-full: 9999px;
-  
+
   /* Transitions */
   --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
   --transition-base: 200ms cubic-bezier(0.4, 0, 0.2, 1);
   --transition-slow: 300ms cubic-bezier(0.4, 0, 0.2, 1);
   --transition-spring: 500ms cubic-bezier(0.16, 1, 0.3, 1);
-  
+
   /* ========== LIGHT MODE (Default) ========== */
   /* Premium minimal - high contrast, easy to read */
-  
+
   /* Brand Colors */
   --brand-primary: #171717;      /* Near black - primary actions */
   --brand-secondary: #404040;    /* Dark gray */
   --brand-accent: #D4AF37;       /* Gold accent */
   --brand-accent-hover: #B8960F;
-  
+
   /* Background Colors - Warm cream palette (easy on the eyes) */
   --bg-primary: #FAF8F5;         /* Warm cream - main background */
   --bg-secondary: #F5F2ED;       /* Slightly darker cream */
   --bg-tertiary: #EFEBE5;        /* Warm stone */
   --bg-elevated: #FFFDFB;        /* Cards - just slightly brighter */
-  
+
   /* Sidebar - Warm tones */
   --sidebar-bg: #F5F2ED;
   --sidebar-hover: #EFEBE5;
   --sidebar-active: #E8E3DB;
-  
+
   /* Text Colors - High contrast */
   --text-primary: #171717;       /* Near black */
   --text-secondary: #404040;     /* Dark gray */
   --text-muted: #525252;         /* Medium gray */
   --text-light: #737373;         /* Light gray */
-  
+
   /* Legacy variable mappings */
   --midnight-blue: var(--sidebar-bg);
   --deep-navy: var(--bg-secondary);
@@ -85,7 +90,7 @@
   --charcoal: var(--bg-tertiary);
   --slate-navy: var(--sidebar-bg);
   --card-bg: var(--bg-elevated);
-  
+
   /* Status Colors - Softer versions */
   --error: #DC3545;
   --error-light: #FDF2F2;
@@ -95,13 +100,13 @@
   --warning-light: #FFFBEB;
   --info: #0D6EFD;
   --info-light: #EFF6FF;
-  
+
   /* Borders - Warm subtle */
-  --border: rgba(139, 119, 101, 0.12);
+  --border: oklch(0.922 0 0);
   --border-color: rgba(0, 0, 0, 0.08);
   --subtle-border: rgba(0, 0, 0, 0.04);
   --border-strong: rgba(0, 0, 0, 0.12);
-  
+
   /* Shadows - Soft and diffused */
   --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.04);
   --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.04), 0 1px 2px rgba(0, 0, 0, 0.02);
@@ -110,13 +115,13 @@
   --shadow-xl: 0 16px 48px rgba(0, 0, 0, 0.1), 0 8px 16px rgba(0, 0, 0, 0.05);
   --shadow: var(--shadow-md);
   --overlay: rgba(0, 0, 0, 0.4);
-  
+
   /* Card styles */
   --card-border: var(--border);
   --card-border-hover: rgba(0, 0, 0, 0.1);
   --card-shadow: var(--shadow-sm);
   --card-shadow-hover: var(--shadow-md);
-  
+
   /* Button Colors */
   --btn-primary-bg: var(--brand-primary);
   --btn-primary-text: #FFFFFF;
@@ -124,13 +129,45 @@
   --btn-secondary-bg: transparent;
   --btn-secondary-text: var(--brand-primary);
   --btn-secondary-border: var(--brand-primary);
-  
+
   /* Input styles */
   --input-bg: #FFFFFF;
   --input-bg-hover: #FAFAFA;
   --input-bg-focus: #FFFFFF;
   --input-border: rgba(0, 0, 0, 0.12);
   --input-border-focus: var(--brand-primary);
+  --radius: 0.625rem;
+  /* shadcn vars - warm cream palette */
+  --background: oklch(0.98 0.008 85);        /* Warm cream */
+  --foreground: oklch(0.145 0 0);
+  --card: oklch(0.995 0.005 85);             /* Slightly brighter cream for cards */
+  --card-foreground: oklch(0.145 0 0);
+  --popover: oklch(0.995 0.005 85);
+  --popover-foreground: oklch(0.145 0 0);
+  --primary: oklch(0.205 0 0);               /* Near black */
+  --primary-foreground: oklch(0.98 0.008 85);
+  --secondary: oklch(0.96 0.01 85);          /* Warm secondary */
+  --secondary-foreground: oklch(0.205 0 0);
+  --muted: oklch(0.94 0.012 85);             /* Warm stone */
+  --muted-foreground: oklch(0.45 0 0);
+  --accent: oklch(0.75 0.12 85);             /* Gold accent */
+  --accent-foreground: oklch(0.205 0 0);
+  --destructive: oklch(0.577 0.245 27.325);
+  --input: oklch(0.96 0.01 85);
+  --ring: oklch(0.75 0.12 85);               /* Gold ring */
+  --chart-1: oklch(0.75 0.12 85);            /* Gold */
+  --chart-2: oklch(0.6 0.118 184.704);
+  --chart-3: oklch(0.398 0.07 227.392);
+  --chart-4: oklch(0.828 0.189 84.429);
+  --chart-5: oklch(0.769 0.188 70.08);
+  --sidebar: oklch(0.96 0.01 85);
+  --sidebar-foreground: oklch(0.145 0 0);
+  --sidebar-primary: oklch(0.205 0 0);
+  --sidebar-primary-foreground: oklch(0.98 0.008 85);
+  --sidebar-accent: oklch(0.94 0.012 85);
+  --sidebar-accent-foreground: oklch(0.205 0 0);
+  --sidebar-border: oklch(0.92 0.015 85);
+  --sidebar-ring: oklch(0.75 0.12 85);
 }
 
 /* ========== DARK MODE ========== */
@@ -139,24 +176,24 @@
   --brand-primary: #4ADE80;      /* Bright green */
   --brand-secondary: #F0C674;    /* Soft gold */
   --brand-accent: #E5C9A8;
-  
+
   /* Background Colors */
   --bg-primary: var(--bg-primary);
   --bg-secondary: var(--bg-secondary);
   --bg-tertiary: #242838;
   --bg-elevated: #1E2130;
-  
+
   /* Sidebar */
   --sidebar-bg: var(--bg-primary);
   --sidebar-hover: var(--bg-secondary);
   --sidebar-active: #242838;
-  
+
   /* Text Colors */
   --text-primary: #F4F5F7;
   --text-secondary: #A8B0C5;
   --text-muted: #8B92A5;
   --text-light: #6B7280;
-  
+
   /* Legacy mappings */
   --midnight-blue: var(--bg-primary);
   --deep-navy: var(--bg-secondary);
@@ -174,7 +211,7 @@
   --charcoal: var(--bg-tertiary);
   --slate-navy: var(--bg-primary);
   --card-bg: var(--bg-elevated);
-  
+
   /* Status Colors */
   --error: #ef4444;
   --error-light: rgba(239, 68, 68, 0.1);
@@ -184,13 +221,13 @@
   --warning-light: rgba(245, 158, 11, 0.1);
   --info: #3B82F6;
   --info-light: rgba(59, 130, 246, 0.1);
-  
+
   /* Borders */
   --border: rgba(255, 255, 255, 0.08);
   --border-color: rgba(255, 255, 255, 0.1);
   --subtle-border: var(--input-bg-hover);
   --border-strong: rgba(255, 255, 255, 0.15);
-  
+
   /* Shadows */
   --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.2);
   --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.2);
@@ -199,13 +236,13 @@
   --shadow-xl: 0 16px 48px rgba(0, 0, 0, 0.5);
   --shadow: var(--shadow-md);
   --overlay: rgba(0, 0, 0, 0.7);
-  
+
   /* Card styles */
   --card-border: var(--sidebar-hover);
   --card-border-hover: var(--border-strong);
   --card-shadow: var(--shadow-sm);
   --card-shadow-hover: var(--shadow-md);
-  
+
   /* Button Colors */
   --btn-primary-bg: var(--soft-gold);
   --btn-primary-text: var(--bg-primary);
@@ -213,7 +250,7 @@
   --btn-secondary-bg: transparent;
   --btn-secondary-text: var(--soft-gold);
   --btn-secondary-border: var(--soft-gold);
-  
+
   /* Input styles */
   --input-bg: var(--input-bg);
   --input-bg-hover: var(--input-bg-hover);
@@ -297,7 +334,7 @@ textarea:focus-visible {
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
   }
-  
+
   .card:hover,
   .btn:hover {
     transform: none !important;
@@ -894,4 +931,88 @@ label {
 .badge-neutral {
   background: var(--bg-tertiary);
   color: var(--text-secondary);
+}
+
+@theme inline {
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --radius-2xl: calc(var(--radius) + 8px);
+  --radius-3xl: calc(var(--radius) + 12px);
+  --radius-4xl: calc(var(--radius) + 16px);
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+}
+
+.dark {
+  --background: oklch(0.145 0 0);
+  --foreground: oklch(0.985 0 0);
+  --card: oklch(0.205 0 0);
+  --card-foreground: oklch(0.985 0 0);
+  --popover: oklch(0.205 0 0);
+  --popover-foreground: oklch(0.985 0 0);
+  --primary: oklch(0.922 0 0);
+  --primary-foreground: oklch(0.205 0 0);
+  --secondary: oklch(0.269 0 0);
+  --secondary-foreground: oklch(0.985 0 0);
+  --muted: oklch(0.269 0 0);
+  --muted-foreground: oklch(0.708 0 0);
+  --accent: oklch(0.269 0 0);
+  --accent-foreground: oklch(0.985 0 0);
+  --destructive: oklch(0.704 0.191 22.216);
+  --border: oklch(1 0 0 / 10%);
+  --input: oklch(1 0 0 / 15%);
+  --ring: oklch(0.556 0 0);
+  --chart-1: oklch(0.488 0.243 264.376);
+  --chart-2: oklch(0.696 0.17 162.48);
+  --chart-3: oklch(0.769 0.188 70.08);
+  --chart-4: oklch(0.627 0.265 303.9);
+  --chart-5: oklch(0.645 0.246 16.439);
+  --sidebar: oklch(0.205 0 0);
+  --sidebar-foreground: oklch(0.985 0 0);
+  --sidebar-primary: oklch(0.488 0.243 264.376);
+  --sidebar-primary-foreground: oklch(0.985 0 0);
+  --sidebar-accent: oklch(0.269 0 0);
+  --sidebar-accent-foreground: oklch(0.985 0 0);
+  --sidebar-border: oklch(1 0 0 / 10%);
+  --sidebar-ring: oklch(0.556 0 0);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
 }
