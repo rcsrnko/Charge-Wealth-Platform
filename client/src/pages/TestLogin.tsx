@@ -78,11 +78,7 @@ export default function TestLogin({ onLogin }: TestLoginProps) {
           </button>
         </form>
 
-        <div className={styles.testCredentials}>
-          <strong>Test Credentials:</strong>
-          <p>Username: testuser</p>
-          <p>Password: charge2026</p>
-        </div>
+{/* Test credentials should be configured via DEMO_PASSWORD environment variable */}
       </div>
     </div>
   );
