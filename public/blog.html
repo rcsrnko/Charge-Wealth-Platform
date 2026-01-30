@@ -346,6 +346,13 @@
     </section>
     
     <main>
+        <div class="categories" id="categories">
+            <button class="category-btn active" data-category="all">All</button>
+            <button class="category-btn" data-category="finance-dailies">Finance Dailies</button>
+            <button class="category-btn" data-category="tax">Tax Insights</button>
+            <button class="category-btn" data-category="planning">Financial Planning</button>
+            <button class="category-btn" data-category="markets">Capital Markets</button>
+        </div>
         <div class="posts-grid" id="posts-grid">
             <div class="loading">Loading articles...</div>
         </div>
@@ -392,24 +399,42 @@
     </footer>
     
     <script>
-        async function loadPosts() {
+        let allPosts = [];
+        let currentCategory = 'all';
+        
+        function getCategoryFromSlug(slug) {
+            if (slug.startsWith('finance-dailies')) return 'finance-dailies';
+            if (slug.startsWith('tax-')) return 'tax';
+            if (slug.startsWith('planning-')) return 'planning';
+            if (slug.startsWith('markets-') || slug.startsWith('capital-')) return 'markets';
+            return 'finance-dailies'; // default
+        }
+        
+        function getCategoryLabel(cat) {
+            const labels = {
+                'finance-dailies': 'Finance Dailies',
+                'tax': 'Tax Insights',
+                'planning': 'Financial Planning',
+                'markets': 'Capital Markets'
+            };
+            return labels[cat] || 'Finance Dailies';
+        }
+        
+        function renderPosts(posts) {
             const grid = document.getElementById('posts-grid');
-            grid.innerHTML = '<div class="loading">Loading articles...</div>';
+            if (!posts || posts.length === 0) {
+                grid.innerHTML = '<p class="loading">No articles in this category yet.</p>';
+                return;
+            }
             
-            try {
-                const res = await fetch('/api/blog/posts');
-                const data = await res.json();
-                
-                if (!data.posts || data.posts.length === 0) {
-                    grid.innerHTML = '<p class="loading">No articles found.</p>';
-                    return;
-                }
-                
-                grid.innerHTML = data.posts.map(post => `
-                    <article class="post-card">
+            grid.innerHTML = posts.map(post => {
+                const category = getCategoryFromSlug(post.slug);
+                return `
+                    <article class="post-card" data-category="${category}">
                         <a href="/blog/${post.slug}">
                             ${post.featured_image ? `<img src="${post.featured_image}" alt="${post.title}" style="width:100%;height:180px;object-fit:cover;">` : ''}
                             <div class="post-content">
+                                <div class="post-category">${getCategoryLabel(category)}</div>
                                 <h2 class="post-title">${post.title}</h2>
                                 <p class="post-excerpt">${post.preview || ''}</p>
                                 <div class="post-meta">
@@ -419,12 +444,42 @@
                             </div>
                         </a>
                     </article>
-                `).join('');
+                `;
+            }).join('');
+        }
+        
+        function filterPosts(category) {
+            currentCategory = category;
+            document.querySelectorAll('.category-btn').forEach(btn => {
+                btn.classList.toggle('active', btn.dataset.category === category);
+            });
+            
+            if (category === 'all') {
+                renderPosts(allPosts);
+            } else {
+                renderPosts(allPosts.filter(p => getCategoryFromSlug(p.slug) === category));
+            }
+        }
+        
+        async function loadPosts() {
+            const grid = document.getElementById('posts-grid');
+            grid.innerHTML = '<div class="loading">Loading articles...</div>';
+            
+            try {
+                const res = await fetch('/api/blog/posts');
+                const data = await res.json();
+                allPosts = data.posts || [];
+                renderPosts(allPosts);
             } catch (err) {
                 console.error('Failed to load posts:', err);
                 grid.innerHTML = '<p class="loading">Failed to load articles.</p>';
             }
         }
+        
+        // Category button handlers
+        document.querySelectorAll('.category-btn').forEach(btn => {
+            btn.addEventListener('click', () => filterPosts(btn.dataset.category));
+        });
         
         loadPosts();
         
