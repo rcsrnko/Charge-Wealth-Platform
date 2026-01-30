@@ -282,6 +282,21 @@ export default function Dashboard() {
         onWealthReadinessClick={() => setShowWealthReadinessModal(true)}
       />
 
+      <WealthReadinessModal
+        isOpen={showWealthReadinessModal}
+        onClose={() => setShowWealthReadinessModal(false)}
+        hasTaxData={userData.hasTaxData}
+        hasPositions={userData.hasPositions}
+        hasProfile={userData.hasProfile}
+        hasCashFlow={userData.hasCashFlow}
+        onStepClick={(step) => {
+          setShowWealthReadinessModal(false);
+          if (step === 'profile' || step === 'cashflow') {
+            setShowProfileEditor(true);
+          }
+        }}
+      />
+
       <FinancialProfileEditor
         isOpen={showProfileEditor}
         onClose={() => setShowProfileEditor(false)}
