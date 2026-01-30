@@ -3,19 +3,21 @@ import { storage } from "../storage";
 import { getUncachableStripeClient } from "../stripeClient";
 import { checkBlogAccess } from "../middleware/blogAccess";
 
-// Blog subscription pricing
+// Blog subscription pricing - uses pre-created Stripe prices for cleaner management
 const BLOG_PLANS = {
   blog_monthly: {
-    name: 'Take Charge Blog - Monthly',
+    name: 'Take Charge Blog Pro - Monthly',
     amount: 900, // $9.00
     interval: 'month' as const,
     description: 'Monthly access to all premium blog content',
+    priceId: process.env.STRIPE_BLOG_MONTHLY_PRICE_ID || null,
   },
   blog_yearly: {
-    name: 'Take Charge Blog - Yearly',
+    name: 'Take Charge Blog Pro - Yearly',
     amount: 8700, // $87.00
     interval: 'year' as const,
     description: 'Yearly access to all premium blog content (save $21!)',
+    priceId: process.env.STRIPE_BLOG_YEARLY_PRICE_ID || null,
   },
 };
 
@@ -100,6 +102,24 @@ export function registerBlogSubscriptionRoutes(app: Express, isAuthenticated: Re
         : `https://${process.env.REPLIT_DOMAINS?.split(',')[0] || 'chargewealth.co'}`;
 
       // For subscriptions, we need to use mode: 'subscription'
+      // Use pre-created price IDs when available for cleaner Stripe dashboard management
+      const lineItems = plan.priceId 
+        ? [{ price: plan.priceId, quantity: 1 }]
+        : [{
+            price_data: {
+              currency: 'usd',
+              product_data: {
+                name: plan.name,
+                description: plan.description,
+              },
+              unit_amount: plan.amount,
+              recurring: {
+                interval: plan.interval,
+              },
+            },
+            quantity: 1,
+          }];
+
       const sessionParams: any = {
         payment_method_types: ['card'],
         mode: 'subscription',
@@ -110,20 +130,7 @@ export function registerBlogSubscriptionRoutes(app: Express, isAuthenticated: Re
           userId: userId || '',
           email: email || '',
         },
-        line_items: [{
-          price_data: {
-            currency: 'usd',
-            product_data: {
-              name: plan.name,
-              description: plan.description,
-            },
-            unit_amount: plan.amount,
-            recurring: {
-              interval: plan.interval,
-            },
-          },
-          quantity: 1,
-        }],
+        line_items: lineItems,
       };
 
       // Set customer email
