@@ -28,6 +28,21 @@ interface BlogPost {
 // Premium categories that require subscription
 const PREMIUM_CATEGORIES = ['financial-planning', 'tax-strategy', 'capital-markets'];
 
+// Category default images (Unsplash - free to use)
+const CATEGORY_IMAGES: Record<string, string> = {
+  'finance-dailies': 'https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=600&h=400&fit=crop', // Stock market screens
+  'tax-strategy': 'https://images.unsplash.com/photo-1554224155-6726b3ff858f?w=600&h=400&fit=crop', // Calculator & documents
+  'financial-planning': 'https://images.unsplash.com/photo-1579621970563-ebec7560ff3e?w=600&h=400&fit=crop', // Money & planning
+  'capital-markets': 'https://images.unsplash.com/photo-1590283603385-17ffb3a7f29f?w=600&h=400&fit=crop', // Trading charts
+  'free': 'https://images.unsplash.com/photo-1553729459-efe14ef6055d?w=600&h=400&fit=crop', // Money/coins
+};
+
+// Get image for a post (featured_image or category default)
+function getPostImage(post: BlogPost): string {
+  if (post.featured_image) return post.featured_image;
+  return CATEGORY_IMAGES[post.category] || CATEGORY_IMAGES['finance-dailies'];
+}
+
 const CATEGORIES = [
   { id: 'all', label: 'All Posts' },
   { id: 'finance-dailies', label: 'Finance Dailies', premium: false },
@@ -476,21 +491,30 @@ function BlogIndex() {
                     e.currentTarget.style.boxShadow = isDark ? 'none' : '0 2px 12px rgba(0,0,0,0.08), 0 1px 3px rgba(0,0,0,0.06)';
                   }}
                   >
-                    {/* Post image placeholder */}
+                    {/* Post image */}
                     <div style={{
                       height: 200,
                       background: isDark 
                         ? 'linear-gradient(135deg, #1E1E1E 0%, #252525 100%)'
                         : 'linear-gradient(135deg, #F5F2ED 0%, #EFEBE5 100%)',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
+                      overflow: 'hidden',
                     }}>
-                      <span style={{ fontSize: 64 }}>
-                        {post.category === 'tax-strategy' ? '📋' : 
-                         post.category === 'capital-markets' ? '📈' : 
-                         post.category === 'financial-planning' ? '🎯' : '🛠️'}
-                      </span>
+                      <img 
+                        src={getPostImage(post)}
+                        alt={post.title}
+                        style={{
+                          width: '100%',
+                          height: '100%',
+                          objectFit: 'cover',
+                        }}
+                        onError={(e) => {
+                          // Fallback to gradient + emoji if image fails
+                          e.currentTarget.style.display = 'none';
+                          e.currentTarget.parentElement!.style.display = 'flex';
+                          e.currentTarget.parentElement!.style.alignItems = 'center';
+                          e.currentTarget.parentElement!.style.justifyContent = 'center';
+                        }}
+                      />
                     </div>
 
                     <div style={{ padding: 24 }}>
