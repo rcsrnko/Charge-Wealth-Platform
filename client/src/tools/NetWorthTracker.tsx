@@ -107,11 +107,11 @@ export const NetWorthTracker: React.FC = () => {
       margin: '0 auto',
       padding: 32,
       fontFamily: 'Inter, -apple-system, sans-serif',
-      background: '#0F1117',
+      background: '#121212',
       borderRadius: 16,
       color: '#F4F5F7',
     }}>
-      <h1 style={{ color: '#C9A962', marginBottom: 8, fontSize: 32 }}>
+      <h1 style={{ color: '#F6DBA6', marginBottom: 8, fontSize: 32 }}>
         Net Worth Tracker
       </h1>
       <p style={{ color: '#A8B0C5', marginBottom: 32 }}>
@@ -185,7 +185,7 @@ export const NetWorthTracker: React.FC = () => {
                 display: 'flex',
                 gap: 8,
                 padding: 12,
-                background: '#1A1D28',
+                background: '#1E1E1E',
                 borderRadius: 8,
                 borderLeft: `3px solid ${categoryColors[asset.category]}`,
               }}>
@@ -211,7 +211,7 @@ export const NetWorthTracker: React.FC = () => {
                     width: 100,
                     padding: '8px 12px',
                     fontSize: 14,
-                    background: '#0F1117',
+                    background: '#121212',
                     border: '1px solid rgba(201, 169, 98, 0.2)',
                     borderRadius: 4,
                     color: '#10B981',
@@ -224,7 +224,7 @@ export const NetWorthTracker: React.FC = () => {
                   style={{
                     padding: '8px',
                     fontSize: 12,
-                    background: '#0F1117',
+                    background: '#121212',
                     border: '1px solid rgba(201, 169, 98, 0.2)',
                     borderRadius: 4,
                     color: '#A8B0C5',
@@ -253,7 +253,7 @@ export const NetWorthTracker: React.FC = () => {
           </div>
           
           {/* Asset Breakdown */}
-          <div style={{ marginTop: 16, padding: 16, background: '#1A1D28', borderRadius: 8 }}>
+          <div style={{ marginTop: 16, padding: 16, background: '#1E1E1E', borderRadius: 8 }}>
             {Object.entries(calculations.assetsByCategory).map(([category, value]) => (
               <div key={category} style={{ 
                 display: 'flex', 
@@ -281,7 +281,7 @@ export const NetWorthTracker: React.FC = () => {
                 display: 'flex',
                 gap: 8,
                 padding: 12,
-                background: '#1A1D28',
+                background: '#1E1E1E',
                 borderRadius: 8,
                 borderLeft: `3px solid ${categoryColors[liability.category]}`,
               }}>
@@ -307,7 +307,7 @@ export const NetWorthTracker: React.FC = () => {
                     width: 100,
                     padding: '8px 12px',
                     fontSize: 14,
-                    background: '#0F1117',
+                    background: '#121212',
                     border: '1px solid rgba(201, 169, 98, 0.2)',
                     borderRadius: 4,
                     color: '#EF4444',
@@ -320,7 +320,7 @@ export const NetWorthTracker: React.FC = () => {
                   style={{
                     padding: '8px',
                     fontSize: 12,
-                    background: '#0F1117',
+                    background: '#121212',
                     border: '1px solid rgba(201, 169, 98, 0.2)',
                     borderRadius: 4,
                     color: '#A8B0C5',
@@ -350,7 +350,7 @@ export const NetWorthTracker: React.FC = () => {
           </div>
           
           {/* Liability Breakdown */}
-          <div style={{ marginTop: 16, padding: 16, background: '#1A1D28', borderRadius: 8 }}>
+          <div style={{ marginTop: 16, padding: 16, background: '#1E1E1E', borderRadius: 8 }}>
             {Object.entries(calculations.liabilitiesByCategory).map(([category, value]) => (
               <div key={category} style={{ 
                 display: 'flex', 
@@ -370,21 +370,21 @@ export const NetWorthTracker: React.FC = () => {
       
       {/* Insights */}
       <div style={{
-        background: '#1A1D28',
+        background: '#1E1E1E',
         borderRadius: 12,
         padding: 24,
         marginBottom: 24,
       }}>
         <h3 style={{ color: '#F4F5F7', marginBottom: 16 }}>💡 Quick Insights</h3>
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
-          <div style={{ padding: 16, background: '#0F1117', borderRadius: 8 }}>
+          <div style={{ padding: 16, background: '#121212', borderRadius: 8 }}>
             <div style={{ color: '#A8B0C5', fontSize: 12, marginBottom: 4 }}>Liquid Assets</div>
             <div style={{ color: '#3B82F6', fontSize: 20, fontWeight: 600 }}>
               {formatCurrency(calculations.liquidAssets)}
             </div>
             <div style={{ color: '#6B7280', fontSize: 12 }}>Cash + Investments</div>
           </div>
-          <div style={{ padding: 16, background: '#0F1117', borderRadius: 8 }}>
+          <div style={{ padding: 16, background: '#121212', borderRadius: 8 }}>
             <div style={{ color: '#A8B0C5', fontSize: 12, marginBottom: 4 }}>Illiquid Assets</div>
             <div style={{ color: '#8B5CF6', fontSize: 20, fontWeight: 600 }}>
               {formatCurrency(calculations.illiquidAssets)}
@@ -403,8 +403,8 @@ export const NetWorthTracker: React.FC = () => {
             padding: '16px 24px',
             fontSize: 18,
             fontWeight: 600,
-            background: '#C9A962',
-            color: '#0F1117',
+            background: '#F6DBA6',
+            color: '#121212',
             border: 'none',
             borderRadius: 8,
             cursor: 'pointer',
@@ -415,7 +415,7 @@ export const NetWorthTracker: React.FC = () => {
       ) : (
         <div style={{
           background: 'rgba(201, 169, 98, 0.1)',
-          border: '1px solid #C9A962',
+          border: '1px solid #F6DBA6',
           borderRadius: 12,
           padding: 24,
         }}>
@@ -435,7 +435,7 @@ export const NetWorthTracker: React.FC = () => {
                 flex: 1,
                 padding: '12px 16px',
                 fontSize: 16,
-                background: '#1A1D28',
+                background: '#1E1E1E',
                 border: '1px solid rgba(201, 169, 98, 0.2)',
                 borderRadius: 8,
                 color: '#F4F5F7',
@@ -446,8 +446,8 @@ export const NetWorthTracker: React.FC = () => {
                 padding: '12px 24px',
                 fontSize: 16,
                 fontWeight: 600,
-                background: '#C9A962',
-                color: '#0F1117',
+                background: '#F6DBA6',
+                color: '#121212',
                 border: 'none',
                 borderRadius: 8,
                 cursor: 'pointer',
@@ -460,7 +460,7 @@ export const NetWorthTracker: React.FC = () => {
       )}
       
       <p style={{ color: '#6B7280', fontSize: 12, marginTop: 24, textAlign: 'center' }}>
-        Powered by <a href="https://chargewealth.co" style={{ color: '#C9A962' }}>Charge Wealth</a>
+        Powered by <a href="https://chargewealth.co" style={{ color: '#F6DBA6' }}>Charge Wealth</a>
       </p>
     </div>
   );

@@ -67,7 +67,7 @@
 }
 
 .moveCard:hover {
-  border-color: var(--gold, #C9A962);
+  border-color: var(--gold, var(--brand-accent));
 }
 
 .moveRank {
@@ -77,7 +77,7 @@
   align-items: center;
   justify-content: center;
   background: var(--sidebar-active);
-  color: var(--gold, #C9A962);
+  color: var(--gold, var(--brand-accent));
   font-weight: 700;
   font-size: 14px;
   border-radius: 50%;
@@ -188,7 +188,7 @@
 
 .moveCta {
   padding: 8px 16px;
-  background: var(--gold, #C9A962);
+  background: var(--gold, var(--brand-accent));
   border: none;
   border-radius: 6px;
   color: var(--midnight, var(--bg-primary));
@@ -222,7 +222,7 @@
 .emptyIcon svg {
   width: 44px;
   height: 44px;
-  color: var(--gold, #C9A962);
+  color: var(--gold, var(--brand-accent));
 }
 
 .emptyTitle {

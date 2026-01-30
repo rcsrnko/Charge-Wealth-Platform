@@ -92,9 +92,9 @@
   flex-shrink: 0;
   padding: 0.375rem 0.75rem;
   background: transparent;
-  border: 1px solid var(--soft-gold, #C9A962);
+  border: 1px solid var(--soft-gold, var(--brand-accent));
   border-radius: 6px;
-  color: var(--soft-gold, #C9A962);
+  color: var(--soft-gold, var(--brand-accent));
   font-size: 0.8125rem;
   font-weight: 500;
   cursor: pointer;

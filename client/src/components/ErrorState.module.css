@@ -11,7 +11,7 @@
   width: 56px;
   height: 56px;
   margin-bottom: 1.25rem;
-  color: var(--soft-gold, #C9A962);
+  color: var(--soft-gold, var(--brand-accent));
   opacity: 0.7;
 }
 
@@ -39,9 +39,9 @@
   gap: 0.5rem;
   padding: 0.625rem 1.25rem;
   background: transparent;
-  border: 1px solid var(--soft-gold, #C9A962);
+  border: 1px solid var(--soft-gold, var(--brand-accent));
   border-radius: 8px;
-  color: var(--soft-gold, #C9A962);
+  color: var(--soft-gold, var(--brand-accent));
   font-size: 0.875rem;
   font-weight: 500;
   cursor: pointer;
@@ -80,9 +80,9 @@
   margin-left: auto;
   padding: 0.25rem 0.75rem;
   background: transparent;
-  border: 1px solid var(--soft-gold, #C9A962);
+  border: 1px solid var(--soft-gold, var(--brand-accent));
   border-radius: 4px;
-  color: var(--soft-gold, #C9A962);
+  color: var(--soft-gold, var(--brand-accent));
   font-size: 0.8125rem;
   font-weight: 500;
   cursor: pointer;

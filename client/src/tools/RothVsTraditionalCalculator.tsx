@@ -80,11 +80,11 @@ export const RothVsTraditionalCalculator: React.FC = () => {
       margin: '0 auto',
       padding: 32,
       fontFamily: 'Inter, -apple-system, sans-serif',
-      background: '#0F1117',
+      background: '#121212',
       borderRadius: 16,
       color: '#F4F5F7',
     }}>
-      <h1 style={{ color: '#C9A962', marginBottom: 8, fontSize: 32 }}>
+      <h1 style={{ color: '#F6DBA6', marginBottom: 8, fontSize: 32 }}>
         Roth vs. Traditional IRA Calculator
       </h1>
       <p style={{ color: '#A8B0C5', marginBottom: 32 }}>
@@ -105,7 +105,7 @@ export const RothVsTraditionalCalculator: React.FC = () => {
               width: '100%',
               padding: '12px 16px',
               fontSize: 18,
-              background: '#1A1D28',
+              background: '#1E1E1E',
               border: '1px solid rgba(201, 169, 98, 0.2)',
               borderRadius: 8,
               color: '#F4F5F7',
@@ -125,7 +125,7 @@ export const RothVsTraditionalCalculator: React.FC = () => {
               width: '100%',
               padding: '12px 16px',
               fontSize: 18,
-              background: '#1A1D28',
+              background: '#1E1E1E',
               border: '1px solid rgba(201, 169, 98, 0.2)',
               borderRadius: 8,
               color: '#F4F5F7',
@@ -148,7 +148,7 @@ export const RothVsTraditionalCalculator: React.FC = () => {
               width: '100%',
               padding: '12px 16px',
               fontSize: 18,
-              background: '#1A1D28',
+              background: '#1E1E1E',
               border: '1px solid rgba(201, 169, 98, 0.2)',
               borderRadius: 8,
               color: '#F4F5F7',
@@ -168,7 +168,7 @@ export const RothVsTraditionalCalculator: React.FC = () => {
               width: '100%',
               padding: '12px 16px',
               fontSize: 18,
-              background: '#1A1D28',
+              background: '#1E1E1E',
               border: '1px solid rgba(201, 169, 98, 0.2)',
               borderRadius: 8,
               color: '#F4F5F7',
@@ -215,7 +215,7 @@ export const RothVsTraditionalCalculator: React.FC = () => {
         marginBottom: 24,
       }}>
         <div style={{
-          background: calculations.rothWins ? 'rgba(147, 51, 234, 0.1)' : '#1A1D28',
+          background: calculations.rothWins ? 'rgba(147, 51, 234, 0.1)' : '#1E1E1E',
           border: `1px solid ${calculations.rothWins ? '#A855F7' : 'rgba(201, 169, 98, 0.2)'}`,
           borderRadius: 12,
           padding: 24,
@@ -242,7 +242,7 @@ export const RothVsTraditionalCalculator: React.FC = () => {
         </div>
         
         <div style={{
-          background: !calculations.rothWins ? 'rgba(59, 130, 246, 0.1)' : '#1A1D28',
+          background: !calculations.rothWins ? 'rgba(59, 130, 246, 0.1)' : '#1E1E1E',
           border: `1px solid ${!calculations.rothWins ? '#3B82F6' : 'rgba(201, 169, 98, 0.2)'}`,
           borderRadius: 12,
           padding: 24,
@@ -271,7 +271,7 @@ export const RothVsTraditionalCalculator: React.FC = () => {
       
       {/* Why */}
       <div style={{
-        background: '#1A1D28',
+        background: '#1E1E1E',
         borderRadius: 12,
         padding: 24,
         marginBottom: 24,
@@ -309,8 +309,8 @@ export const RothVsTraditionalCalculator: React.FC = () => {
             padding: '16px 24px',
             fontSize: 18,
             fontWeight: 600,
-            background: '#C9A962',
-            color: '#0F1117',
+            background: '#F6DBA6',
+            color: '#121212',
             border: 'none',
             borderRadius: 8,
             cursor: 'pointer',
@@ -321,7 +321,7 @@ export const RothVsTraditionalCalculator: React.FC = () => {
       ) : (
         <div style={{
           background: 'rgba(201, 169, 98, 0.1)',
-          border: '1px solid #C9A962',
+          border: '1px solid #F6DBA6',
           borderRadius: 12,
           padding: 24,
         }}>
@@ -341,7 +341,7 @@ export const RothVsTraditionalCalculator: React.FC = () => {
                 flex: 1,
                 padding: '12px 16px',
                 fontSize: 16,
-                background: '#1A1D28',
+                background: '#1E1E1E',
                 border: '1px solid rgba(201, 169, 98, 0.2)',
                 borderRadius: 8,
                 color: '#F4F5F7',
@@ -352,8 +352,8 @@ export const RothVsTraditionalCalculator: React.FC = () => {
                 padding: '12px 24px',
                 fontSize: 16,
                 fontWeight: 600,
-                background: '#C9A962',
-                color: '#0F1117',
+                background: '#F6DBA6',
+                color: '#121212',
                 border: 'none',
                 borderRadius: 8,
                 cursor: 'pointer',
@@ -366,7 +366,7 @@ export const RothVsTraditionalCalculator: React.FC = () => {
       )}
       
       <p style={{ color: '#6B7280', fontSize: 12, marginTop: 24, textAlign: 'center' }}>
-        Powered by <a href="https://chargewealth.co" style={{ color: '#C9A962' }}>Charge Wealth</a> • 
+        Powered by <a href="https://chargewealth.co" style={{ color: '#F6DBA6' }}>Charge Wealth</a> • 
         This calculator is for informational purposes only. Consider consulting a tax professional.
       </p>
     </div>

@@ -18,7 +18,7 @@
   width: 64px;
   height: 64px;
   margin-bottom: 1.5rem;
-  color: var(--soft-gold, #C9A962);
+  color: var(--soft-gold, var(--brand-accent));
   opacity: 0.8;
 }
 
@@ -46,7 +46,7 @@
   align-items: center;
   gap: 0.5rem;
   padding: 0.75rem 1.5rem;
-  background: linear-gradient(135deg, var(--soft-gold, #C9A962) 0%, #B8963F 100%);
+  background: linear-gradient(135deg, var(--soft-gold, var(--brand-accent)) 0%, #B8963F 100%);
   border: none;
   border-radius: 8px;
   color: var(--midnight-blue, #0F172A);

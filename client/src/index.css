@@ -3,8 +3,8 @@
 
 @custom-variant dark (&:is(.dark *));
 
-/* Charge Wealth Design System - Premium Minimal Theme */
-/* High contrast, easy to read, WCAG AA compliant */
+/* Charge Wealth Design System - Vanilla Bean Theme */
+/* Light, warm, and accessible */
 :root {
   /* Typography */
   --font-heading: 'Lora', Georgia, serif;
@@ -56,78 +56,81 @@
   --transition-slow: 300ms cubic-bezier(0.4, 0, 0.2, 1);
   --transition-spring: 500ms cubic-bezier(0.16, 1, 0.3, 1);
 
-  /* ========== LIGHT MODE (Default) ========== */
-  /* Premium minimal - WCAG AA compliant, easy to read */
-
-  /* Brand Colors */
-  --brand-primary: #171717;      /* Near black - primary actions */
-  --brand-secondary: #374151;    /* Dark gray - improved contrast */
-  --brand-accent: #B8860B;       /* Darker gold - better contrast on light bg */
-  --brand-accent-hover: #996F09;
-  --brand-accent-light: rgba(184, 134, 11, 0.12);  /* Gold tint for backgrounds */
+  /* ========== LIGHT MODE (Default) - Vanilla Bean Theme ========== */
   
-  /* Accent Colors - Visual hierarchy (WCAG AA compliant) */
-  --accent-sage: #2E7D32;        /* Success, growth - darker for contrast */
+  /* Brand Colors */
+  --brand-primary: #1F2937;      /* Text primary - main actions */
+  --brand-secondary: #6B7280;    /* Text secondary */
+  --brand-accent: #F6DBA6;       /* Honey/Sand - CTAs */
+  --brand-accent-hover: #E8C88A; /* Honey hover */
+  --brand-accent-light: rgba(246, 219, 166, 0.2);  /* Honey tint for backgrounds */
+  
+  /* Accent Colors - Soft Blue palette */
+  --accent-blue: #DBEAFE;        /* Soft blue accent */
+  --accent-blue-hover: #BFDBFE;  /* Blue hover */
+  --accent-sage: #2E7D32;        /* Success, growth */
   --accent-sage-light: rgba(46, 125, 50, 0.1);
-  --accent-terracotta: #A5573E;  /* Warm secondary - darkened */
-  --accent-teal: #1D4E4E;        /* Data viz, trust - darker */
+  --accent-terracotta: #A5573E;  /* Warm secondary */
+  --accent-teal: #1D4E4E;        /* Data viz, trust */
   --accent-teal-light: rgba(29, 78, 78, 0.1);
 
-  /* Background Colors - Warm cream palette (easy on the eyes) */
-  --bg-primary: #FAF8F5;         /* Warm cream - main background */
+  /* Background Colors - Vanilla Bean palette */
+  --bg-primary: #F9F6F0;         /* Vanilla Bean - main background */
   --bg-secondary: #F5F2ED;       /* Slightly darker cream */
   --bg-tertiary: #EFEBE5;        /* Warm stone */
-  --bg-elevated: #FFFFFF;        /* Cards - pure white for max contrast */
+  --bg-elevated: #FFFDFB;        /* Cards/Surfaces - almost white */
 
   /* Sidebar - Warm tones */
   --sidebar-bg: #F5F2ED;
   --sidebar-hover: #EFEBE5;
   --sidebar-active: #E8E3DB;
 
-  /* Text Colors - WCAG AA compliant (4.5:1 minimum) */
-  --text-primary: #1A1A1A;       /* Near black - 15.3:1 on white */
-  --text-secondary: #374151;     /* Dark gray - 9.2:1 on white */
-  --text-muted: #4B5563;         /* Medium gray - 7.2:1 on white */
-  --text-light: #6B7280;         /* Light gray - 5.0:1 on white (AA for large text) */
-  --text-placeholder: #9CA3AF;  /* Placeholder only - 3.0:1 */
+  /* Text Colors - WCAG AA compliant */
+  --text-primary: #1F2937;       /* Dark gray - primary text */
+  --text-secondary: #6B7280;     /* Medium gray - secondary text */
+  --text-muted: #6B7280;         /* Same as secondary for consistency */
+  --text-light: #9CA3AF;         /* Light gray */
+  --text-placeholder: #9CA3AF;   /* Placeholder */
+  --text-on-honey: #4A3F2F;      /* Warm dark brown - text on honey buttons */
 
-  /* Legacy variable mappings */
-  --midnight-blue: var(--sidebar-bg);
+  /* Legacy variable mappings for compatibility */
+  --midnight-blue: var(--bg-primary);
   --deep-navy: var(--bg-secondary);
-  --gold-sand: var(--brand-primary);
-  --gold-muted: var(--brand-secondary);
+  --gold-sand: var(--brand-accent);
+  --gold-muted: var(--brand-accent-hover);
   --gold-light: var(--brand-accent);
-  --soft-gold: var(--brand-primary);
+  --soft-gold: var(--brand-accent);
   --gold: var(--brand-accent);
   --off-white: var(--text-primary);
   --porcelain: var(--text-primary);
   --snow-white: var(--text-primary);
   --charcoal-slate: var(--bg-tertiary);
   --muted-gray: var(--text-secondary);
-  --gold-text: var(--brand-accent);
+  --gold-text: var(--brand-accent-hover);
   --charcoal: var(--bg-tertiary);
   --slate-navy: var(--sidebar-bg);
   --card-bg: var(--bg-elevated);
+  --accent-gold: var(--brand-accent);
 
   /* Status Colors - WCAG AA compliant */
-  --error: #B91C1C;              /* Darker red - 5.9:1 on white */
+  --error: #B91C1C;
   --error-light: #FEF2F2;
-  --error-text: #991B1B;         /* Text on light backgrounds */
-  --success: #15803D;            /* Darker green - 5.1:1 on white */
+  --error-text: #991B1B;
+  --success: #15803D;
   --success-light: #F0FDF4;
-  --success-text: #166534;       /* Text on light backgrounds */
-  --warning: #B45309;            /* Darker amber - 5.0:1 on white */
+  --success-text: #166534;
+  --warning: #B45309;
   --warning-light: #FFFBEB;
-  --warning-text: #92400E;       /* Text on light backgrounds */
-  --info: #1D4ED8;               /* Darker blue - 7.1:1 on white */
+  --warning-text: #92400E;
+  --info: #1D4ED8;
   --info-light: #EFF6FF;
-  --info-text: #1E40AF;          /* Text on light backgrounds */
+  --info-text: #1E40AF;
 
-  /* Borders - Warm subtle but visible */
-  --border: rgba(0, 0, 0, 0.1);
-  --border-color: rgba(0, 0, 0, 0.1);
-  --subtle-border: rgba(0, 0, 0, 0.06);
-  --border-strong: rgba(0, 0, 0, 0.15);
+  /* Borders - Warm subtle */
+  --border: rgba(0, 0, 0, 0.08);
+  --border-color: rgba(0, 0, 0, 0.08);
+  --subtle-border: rgba(0, 0, 0, 0.05);
+  --border-strong: rgba(0, 0, 0, 0.12);
 
   /* Shadows - Soft and diffused */
   --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.04);
@@ -140,150 +143,195 @@
 
   /* Card styles */
   --card-border: var(--border);
-  --card-border-hover: rgba(0, 0, 0, 0.1);
+  --card-border-hover: rgba(0, 0, 0, 0.12);
   --card-shadow: var(--shadow-sm);
   --card-shadow-hover: var(--shadow-md);
 
   /* Button Colors */
-  --btn-primary-bg: var(--brand-primary);
-  --btn-primary-text: #FFFFFF;
-  --btn-primary-hover: #164035;
+  --btn-primary-bg: var(--brand-accent);
+  --btn-primary-text: var(--text-on-honey);
+  --btn-primary-hover: var(--brand-accent-hover);
   --btn-secondary-bg: transparent;
-  --btn-secondary-text: var(--brand-primary);
-  --btn-secondary-border: var(--brand-primary);
+  --btn-secondary-text: var(--text-primary);
+  --btn-secondary-border: var(--border-strong);
 
   /* Input styles */
   --input-bg: #FFFFFF;
   --input-bg-hover: #FAFAFA;
   --input-bg-focus: #FFFFFF;
   --input-border: rgba(0, 0, 0, 0.12);
-  --input-border-focus: var(--brand-primary);
+  --input-border-focus: var(--brand-accent);
   --radius: 0.625rem;
-  /* shadcn vars - warm cream palette */
-  --background: oklch(0.98 0.008 85);        /* Warm cream */
-  --foreground: oklch(0.145 0 0);
-  --card: oklch(0.995 0.005 85);             /* Slightly brighter cream for cards */
-  --card-foreground: oklch(0.145 0 0);
-  --popover: oklch(0.995 0.005 85);
-  --popover-foreground: oklch(0.145 0 0);
-  --primary: oklch(0.205 0 0);               /* Near black */
-  --primary-foreground: oklch(0.98 0.008 85);
-  --secondary: oklch(0.96 0.01 85);          /* Warm secondary */
-  --secondary-foreground: oklch(0.205 0 0);
-  --muted: oklch(0.94 0.012 85);             /* Warm stone */
+  
+  /* shadcn vars - Vanilla Bean palette */
+  --background: oklch(0.975 0.008 85);        /* Vanilla Bean */
+  --foreground: oklch(0.2 0.02 250);
+  --card: oklch(0.995 0.003 85);              /* Cards/surfaces */
+  --card-foreground: oklch(0.2 0.02 250);
+  --popover: oklch(0.995 0.003 85);
+  --popover-foreground: oklch(0.2 0.02 250);
+  --primary: oklch(0.88 0.08 85);             /* Honey */
+  --primary-foreground: oklch(0.3 0.04 60);   /* Dark brown text on honey */
+  --secondary: oklch(0.96 0.01 85);           /* Warm secondary */
+  --secondary-foreground: oklch(0.2 0.02 250);
+  --muted: oklch(0.94 0.012 85);              /* Warm stone */
   --muted-foreground: oklch(0.45 0 0);
-  --accent: oklch(0.75 0.12 85);             /* Gold accent */
-  --accent-foreground: oklch(0.205 0 0);
+  --accent: oklch(0.92 0.03 220);             /* Soft blue */
+  --accent-foreground: oklch(0.2 0.02 250);
   --destructive: oklch(0.577 0.245 27.325);
   --input: oklch(0.96 0.01 85);
-  --ring: oklch(0.75 0.12 85);               /* Gold ring */
-  --chart-1: oklch(0.75 0.12 85);            /* Gold */
+  --ring: oklch(0.88 0.08 85);                /* Honey ring */
+  --chart-1: oklch(0.88 0.08 85);             /* Honey */
   --chart-2: oklch(0.6 0.118 184.704);
   --chart-3: oklch(0.398 0.07 227.392);
   --chart-4: oklch(0.828 0.189 84.429);
   --chart-5: oklch(0.769 0.188 70.08);
   --sidebar: oklch(0.96 0.01 85);
-  --sidebar-foreground: oklch(0.145 0 0);
-  --sidebar-primary: oklch(0.205 0 0);
-  --sidebar-primary-foreground: oklch(0.98 0.008 85);
+  --sidebar-foreground: oklch(0.2 0.02 250);
+  --sidebar-primary: oklch(0.2 0.02 250);
+  --sidebar-primary-foreground: oklch(0.975 0.008 85);
   --sidebar-accent: oklch(0.94 0.012 85);
-  --sidebar-accent-foreground: oklch(0.205 0 0);
+  --sidebar-accent-foreground: oklch(0.2 0.02 250);
   --sidebar-border: oklch(0.92 0.015 85);
-  --sidebar-ring: oklch(0.75 0.12 85);
+  --sidebar-ring: oklch(0.88 0.08 85);
 }
 
-/* ========== DARK MODE ========== */
+/* ========== DARK MODE - True Dark ========== */
 [data-theme="dark"] {
-  /* Brand Colors - Adjusted for dark, WCAG AA compliant */
-  --brand-primary: #4ADE80;      /* Bright green */
-  --brand-secondary: #F0C674;    /* Soft gold */
-  --brand-accent: #F0C674;       /* Gold accent - good on dark */
+  /* Brand Colors - Adjusted for dark mode */
+  --brand-primary: #F5F5F5;      /* Light text */
+  --brand-secondary: #A3A3A3;    /* Muted text */
+  --brand-accent: #F6DBA6;       /* Honey/Sand - same as light */
+  --brand-accent-hover: #E8C88A;
+  --brand-accent-light: rgba(246, 219, 166, 0.15);
+  
+  /* Accent Blue - Brighter for dark mode */
+  --accent-blue: #3B82F6;        /* Brighter blue */
+  --accent-blue-hover: #2563EB;
 
-  /* Background Colors */
-  --bg-primary: #0F1117;
-  --bg-secondary: #1A1D28;
-  --bg-tertiary: #242838;
-  --bg-elevated: #1E2130;
+  /* Background Colors - True Dark */
+  --bg-primary: #121212;         /* True dark background */
+  --bg-secondary: #1E1E1E;       /* Cards/surfaces */
+  --bg-tertiary: #252525;        /* Elevated surfaces */
+  --bg-elevated: #1E1E1E;        /* Same as secondary */
 
   /* Sidebar */
-  --sidebar-bg: #0F1117;
-  --sidebar-hover: #1A1D28;
-  --sidebar-active: #242838;
+  --sidebar-bg: #121212;
+  --sidebar-hover: #1E1E1E;
+  --sidebar-active: #252525;
 
   /* Text Colors - WCAG AA compliant on dark backgrounds */
-  --text-primary: #F9FAFB;       /* Near white - 15.8:1 on #0F1117 */
-  --text-secondary: #D1D5DB;     /* Light gray - 11.2:1 */
-  --text-muted: #9CA3AF;         /* Medium gray - 6.3:1 */
-  --text-light: #9CA3AF;         /* Same as muted for dark mode */
-  --text-placeholder: #6B7280;   /* Placeholder - 4.5:1 */
+  --text-primary: #F5F5F5;       /* Near white */
+  --text-secondary: #A3A3A3;     /* Light gray */
+  --text-muted: #A3A3A3;         /* Same as secondary */
+  --text-light: #737373;         /* Dimmer gray */
+  --text-placeholder: #737373;
+  --text-on-honey: #4A3F2F;      /* Dark brown - text on honey buttons */
 
-  /* Legacy mappings */
+  /* Legacy mappings for dark */
   --midnight-blue: var(--bg-primary);
   --deep-navy: var(--bg-secondary);
-  --gold-sand: #C9A962;
-  --gold-muted: #A68B4A;
-  --gold-light: #D4B873;
-  --soft-gold: #C9A962;
-  --gold: #C9A962;
-  --off-white: #F4F5F7;
-  --porcelain: #F4F5F7;
-  --snow-white: #FAFAFA;
-  --charcoal-slate: #242838;
-  --muted-gray: #A8B0C5;
-  --gold-text: #E5CA84;
+  --gold-sand: var(--brand-accent);
+  --gold-muted: var(--brand-accent-hover);
+  --gold-light: var(--brand-accent);
+  --soft-gold: var(--brand-accent);
+  --gold: var(--brand-accent);
+  --off-white: var(--text-primary);
+  --porcelain: var(--text-primary);
+  --snow-white: var(--text-primary);
+  --charcoal-slate: var(--bg-tertiary);
+  --muted-gray: var(--text-secondary);
+  --gold-text: var(--brand-accent);
   --charcoal: var(--bg-tertiary);
   --slate-navy: var(--bg-primary);
   --card-bg: var(--bg-elevated);
+  --accent-gold: var(--brand-accent);
 
   /* Status Colors - WCAG AA compliant on dark */
-  --error: #F87171;              /* Lighter red for dark bg - 5.7:1 */
+  --error: #F87171;
   --error-light: rgba(248, 113, 113, 0.1);
-  --error-text: #FCA5A5;         /* Even lighter for text */
-  --success: #34D399;            /* Bright green - 7.1:1 */
+  --error-text: #FCA5A5;
+  --success: #34D399;
   --success-light: rgba(52, 211, 153, 0.1);
-  --success-text: #6EE7B7;       /* Lighter green for text */
-  --warning: #FBBF24;            /* Bright amber - 8.9:1 */
+  --success-text: #6EE7B7;
+  --warning: #FBBF24;
   --warning-light: rgba(251, 191, 36, 0.1);
-  --warning-text: #FCD34D;       /* Lighter for text */
-  --info: #60A5FA;               /* Bright blue - 5.3:1 */
+  --warning-text: #FCD34D;
+  --info: #60A5FA;
   --info-light: rgba(96, 165, 250, 0.1);
-  --info-text: #93C5FD;          /* Lighter for text */
+  --info-text: #93C5FD;
 
   /* Borders - More visible on dark */
-  --border: rgba(255, 255, 255, 0.1);
-  --border-color: rgba(255, 255, 255, 0.12);
-  --subtle-border: rgba(255, 255, 255, 0.06);
-  --border-strong: rgba(255, 255, 255, 0.18);
+  --border: rgba(255, 255, 255, 0.08);
+  --border-color: rgba(255, 255, 255, 0.1);
+  --subtle-border: rgba(255, 255, 255, 0.05);
+  --border-strong: rgba(255, 255, 255, 0.15);
 
   /* Shadows */
-  --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.2);
-  --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.2);
-  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.3);
-  --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.4);
-  --shadow-xl: 0 16px 48px rgba(0, 0, 0, 0.5);
+  --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.3);
+  --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.4);
+  --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.5);
+  --shadow-xl: 0 16px 48px rgba(0, 0, 0, 0.6);
   --shadow: var(--shadow-md);
   --overlay: rgba(0, 0, 0, 0.7);
 
   /* Card styles */
-  --card-border: var(--sidebar-hover);
+  --card-border: var(--border);
   --card-border-hover: var(--border-strong);
   --card-shadow: var(--shadow-sm);
   --card-shadow-hover: var(--shadow-md);
 
   /* Button Colors */
-  --btn-primary-bg: var(--soft-gold);
-  --btn-primary-text: var(--bg-primary);
-  --btn-primary-hover: #D4B76D;
+  --btn-primary-bg: var(--brand-accent);
+  --btn-primary-text: var(--text-on-honey);
+  --btn-primary-hover: var(--brand-accent-hover);
   --btn-secondary-bg: transparent;
-  --btn-secondary-text: var(--soft-gold);
-  --btn-secondary-border: var(--soft-gold);
+  --btn-secondary-text: var(--text-primary);
+  --btn-secondary-border: var(--border-strong);
 
   /* Input styles */
-  --input-bg: var(--input-bg);
-  --input-bg-hover: var(--input-bg-hover);
+  --input-bg: var(--bg-secondary);
+  --input-bg-hover: var(--bg-tertiary);
   --input-bg-focus: var(--bg-tertiary);
   --input-border: rgba(255, 255, 255, 0.1);
-  --input-border-focus: var(--soft-gold);
+  --input-border-focus: var(--brand-accent);
+}
+
+/* Dark mode shadcn overrides */
+.dark,
+[data-theme="dark"] {
+  --background: oklch(0.1 0 0);              /* #121212 */
+  --foreground: oklch(0.96 0 0);             /* #F5F5F5 */
+  --card: oklch(0.14 0 0);                   /* #1E1E1E */
+  --card-foreground: oklch(0.96 0 0);
+  --popover: oklch(0.14 0 0);
+  --popover-foreground: oklch(0.96 0 0);
+  --primary: oklch(0.88 0.08 85);            /* Honey */
+  --primary-foreground: oklch(0.3 0.04 60);  /* Dark brown */
+  --secondary: oklch(0.17 0 0);              /* #252525 */
+  --secondary-foreground: oklch(0.96 0 0);
+  --muted: oklch(0.17 0 0);
+  --muted-foreground: oklch(0.65 0 0);
+  --accent: oklch(0.58 0.2 250);             /* Brighter blue #3B82F6 */
+  --accent-foreground: oklch(0.96 0 0);
+  --destructive: oklch(0.704 0.191 22.216);
+  --border: oklch(1 0 0 / 8%);
+  --input: oklch(1 0 0 / 10%);
+  --ring: oklch(0.88 0.08 85);               /* Honey */
+  --chart-1: oklch(0.58 0.2 250);
+  --chart-2: oklch(0.696 0.17 162.48);
+  --chart-3: oklch(0.769 0.188 70.08);
+  --chart-4: oklch(0.627 0.265 303.9);
+  --chart-5: oklch(0.645 0.246 16.439);
+  --sidebar: oklch(0.1 0 0);
+  --sidebar-foreground: oklch(0.96 0 0);
+  --sidebar-primary: oklch(0.88 0.08 85);
+  --sidebar-primary-foreground: oklch(0.3 0.04 60);
+  --sidebar-accent: oklch(0.17 0 0);
+  --sidebar-accent-foreground: oklch(0.96 0 0);
+  --sidebar-border: oklch(1 0 0 / 8%);
+  --sidebar-ring: oklch(0.88 0.08 85);
 }
 
 * {
@@ -303,7 +351,7 @@ a {
 }
 
 *:focus-visible {
-  outline: 2px solid var(--brand-primary);
+  outline: 2px solid var(--brand-accent);
   outline-offset: 2px;
 }
 
@@ -312,9 +360,9 @@ a:focus-visible,
 input:focus-visible,
 select:focus-visible,
 textarea:focus-visible {
-  outline: 2px solid var(--brand-primary);
+  outline: 2px solid var(--brand-accent);
   outline-offset: 2px;
-  box-shadow: 0 0 0 4px rgba(27, 77, 62, 0.15);
+  box-shadow: 0 0 0 4px rgba(246, 219, 166, 0.2);
 }
 
 /* Skip to content link */
@@ -324,8 +372,8 @@ textarea:focus-visible {
   left: 50%;
   transform: translateX(-50%);
   padding: 1rem 2rem;
-  background: var(--soft-gold);
-  color: var(--midnight-blue);
+  background: var(--brand-accent);
+  color: var(--text-on-honey);
   font-weight: 600;
   border-radius: 0 0 8px 8px;
   z-index: 9999;
@@ -335,7 +383,7 @@ textarea:focus-visible {
 
 .skip-link:focus {
   top: 0;
-  outline: 2px solid var(--porcelain);
+  outline: 2px solid var(--text-primary);
   outline-offset: 2px;
 }
 
@@ -563,7 +611,7 @@ input:focus, select:focus, textarea:focus {
   outline: none;
   border-color: var(--input-border-focus);
   background: var(--input-bg-focus);
-  box-shadow: 0 0 0 3px rgba(27, 77, 62, 0.12);
+  box-shadow: 0 0 0 3px rgba(246, 219, 166, 0.2);
 }
 
 input::placeholder, textarea::placeholder {
@@ -809,7 +857,7 @@ label {
   height: 64px;
   margin-bottom: var(--space-4);
   opacity: 0.5;
-  color: var(--gold-muted);
+  color: var(--brand-accent);
 }
 
 .empty-state-title {
@@ -874,11 +922,11 @@ label {
 
 /* Glow effect for important elements */
 .glow {
-  box-shadow: 0 0 20px var(--border-strong);
+  box-shadow: 0 0 20px var(--brand-accent-light);
 }
 
 .glow-hover:hover {
-  box-shadow: 0 0 30px var(--border-strong);
+  box-shadow: 0 0 30px var(--brand-accent-light);
 }
 
 /* Status indicators */
@@ -918,7 +966,7 @@ label {
 
 .progress-bar-fill {
   height: 100%;
-  background: linear-gradient(90deg, var(--gold-muted), var(--gold-sand));
+  background: linear-gradient(90deg, var(--brand-accent-hover), var(--brand-accent));
   border-radius: var(--radius-full);
   transition: width var(--transition-slow);
 }
@@ -1030,7 +1078,7 @@ label {
   left: 50%;
   transform: translateX(-50%) translateY(-4px);
   padding: var(--space-2) var(--space-3);
-  background: var(--bg-primary);
+  background: var(--bg-elevated);
   color: var(--text-primary);
   font-size: var(--text-xs);
   border-radius: var(--radius-md);
@@ -1040,7 +1088,7 @@ label {
   visibility: hidden;
   transition: all var(--transition-fast);
   z-index: 1000;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  box-shadow: var(--shadow-md);
 }
 
 [data-tooltip]:hover::after {
@@ -1064,8 +1112,8 @@ label {
 }
 
 .badge-gold {
-  background: var(--sidebar-active);
-  color: var(--gold-sand);
+  background: var(--brand-accent-light);
+  color: var(--text-on-honey);
 }
 
 .badge-success {
@@ -1122,40 +1170,6 @@ label {
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-ring: var(--sidebar-ring);
-}
-
-.dark {
-  --background: oklch(0.145 0 0);
-  --foreground: oklch(0.985 0 0);
-  --card: oklch(0.205 0 0);
-  --card-foreground: oklch(0.985 0 0);
-  --popover: oklch(0.205 0 0);
-  --popover-foreground: oklch(0.985 0 0);
-  --primary: oklch(0.922 0 0);
-  --primary-foreground: oklch(0.205 0 0);
-  --secondary: oklch(0.269 0 0);
-  --secondary-foreground: oklch(0.985 0 0);
-  --muted: oklch(0.269 0 0);
-  --muted-foreground: oklch(0.708 0 0);
-  --accent: oklch(0.269 0 0);
-  --accent-foreground: oklch(0.985 0 0);
-  --destructive: oklch(0.704 0.191 22.216);
-  --border: oklch(1 0 0 / 10%);
-  --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.556 0 0);
-  --chart-1: oklch(0.488 0.243 264.376);
-  --chart-2: oklch(0.696 0.17 162.48);
-  --chart-3: oklch(0.769 0.188 70.08);
-  --chart-4: oklch(0.627 0.265 303.9);
-  --chart-5: oklch(0.645 0.246 16.439);
-  --sidebar: oklch(0.205 0 0);
-  --sidebar-foreground: oklch(0.985 0 0);
-  --sidebar-primary: oklch(0.488 0.243 264.376);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.269 0 0);
-  --sidebar-accent-foreground: oklch(0.985 0 0);
-  --sidebar-border: oklch(1 0 0 / 10%);
-  --sidebar-ring: oklch(0.556 0 0);
 }
 
 @layer base {

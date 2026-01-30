@@ -90,11 +90,11 @@ export const TaxBracketCalculator: React.FC = () => {
       margin: '0 auto',
       padding: 32,
       fontFamily: 'Inter, -apple-system, sans-serif',
-      background: '#0F1117',
+      background: '#121212',
       borderRadius: 16,
       color: '#F4F5F7',
     }}>
-      <h1 style={{ color: '#C9A962', marginBottom: 8, fontSize: 32 }}>
+      <h1 style={{ color: '#F6DBA6', marginBottom: 8, fontSize: 32 }}>
         Tax Bracket Calculator
       </h1>
       <p style={{ color: '#A8B0C5', marginBottom: 32 }}>
@@ -115,7 +115,7 @@ export const TaxBracketCalculator: React.FC = () => {
               width: '100%',
               padding: '12px 16px',
               fontSize: 18,
-              background: '#1A1D28',
+              background: '#1E1E1E',
               border: '1px solid rgba(201, 169, 98, 0.2)',
               borderRadius: 8,
               color: '#F4F5F7',
@@ -135,7 +135,7 @@ export const TaxBracketCalculator: React.FC = () => {
               width: '100%',
               padding: '12px 16px',
               fontSize: 18,
-              background: '#1A1D28',
+              background: '#1E1E1E',
               border: '1px solid rgba(201, 169, 98, 0.2)',
               borderRadius: 8,
               color: '#F4F5F7',
@@ -157,7 +157,7 @@ export const TaxBracketCalculator: React.FC = () => {
               width: '100%',
               padding: '12px 16px',
               fontSize: 18,
-              background: '#1A1D28',
+              background: '#1E1E1E',
               border: '1px solid rgba(201, 169, 98, 0.2)',
               borderRadius: 8,
               color: '#F4F5F7',
@@ -172,7 +172,7 @@ export const TaxBracketCalculator: React.FC = () => {
       
       {/* Results */}
       <div style={{
-        background: '#1A1D28',
+        background: '#1E1E1E',
         borderRadius: 12,
         padding: 24,
         marginBottom: 24,
@@ -208,13 +208,13 @@ export const TaxBracketCalculator: React.FC = () => {
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))', gap: 16 }}>
             <div>
               <div style={{ color: '#A8B0C5', fontSize: 12 }}>Effective Tax Rate</div>
-              <div style={{ color: '#C9A962', fontSize: 20, fontWeight: 600 }}>
+              <div style={{ color: '#F6DBA6', fontSize: 20, fontWeight: 600 }}>
                 {formatPercent(calculations.effectiveRate)}
               </div>
             </div>
             <div>
               <div style={{ color: '#A8B0C5', fontSize: 12 }}>Marginal Tax Rate</div>
-              <div style={{ color: '#C9A962', fontSize: 20, fontWeight: 600 }}>
+              <div style={{ color: '#F6DBA6', fontSize: 20, fontWeight: 600 }}>
                 {formatPercent(calculations.marginalRate)}
               </div>
             </div>
@@ -230,7 +230,7 @@ export const TaxBracketCalculator: React.FC = () => {
       
       {/* Bracket Visualization */}
       <div style={{
-        background: '#1A1D28',
+        background: '#1E1E1E',
         borderRadius: 12,
         padding: 24,
         marginBottom: 24,
@@ -251,10 +251,10 @@ export const TaxBracketCalculator: React.FC = () => {
                 marginBottom: 8,
                 background: isCurrentBracket ? 'rgba(201, 169, 98, 0.1)' : 'transparent',
                 borderRadius: 8,
-                border: isCurrentBracket ? '1px solid #C9A962' : '1px solid transparent',
+                border: isCurrentBracket ? '1px solid #F6DBA6' : '1px solid transparent',
               }}>
                 <div>
-                  <span style={{ color: '#C9A962', fontWeight: 600 }}>{formatPercent(bracket.rate)}</span>
+                  <span style={{ color: '#F6DBA6', fontWeight: 600 }}>{formatPercent(bracket.rate)}</span>
                   <span style={{ color: '#A8B0C5', marginLeft: 12 }}>
                     {formatCurrency(bracket.min)} - {bracket.max === Infinity ? '∞' : formatCurrency(bracket.max)}
                   </span>
@@ -276,8 +276,8 @@ export const TaxBracketCalculator: React.FC = () => {
             padding: '16px 24px',
             fontSize: 18,
             fontWeight: 600,
-            background: '#C9A962',
-            color: '#0F1117',
+            background: '#F6DBA6',
+            color: '#121212',
             border: 'none',
             borderRadius: 8,
             cursor: 'pointer',
@@ -288,7 +288,7 @@ export const TaxBracketCalculator: React.FC = () => {
       ) : (
         <div style={{
           background: 'rgba(201, 169, 98, 0.1)',
-          border: '1px solid #C9A962',
+          border: '1px solid #F6DBA6',
           borderRadius: 12,
           padding: 24,
         }}>
@@ -308,7 +308,7 @@ export const TaxBracketCalculator: React.FC = () => {
                 flex: 1,
                 padding: '12px 16px',
                 fontSize: 16,
-                background: '#1A1D28',
+                background: '#1E1E1E',
                 border: '1px solid rgba(201, 169, 98, 0.2)',
                 borderRadius: 8,
                 color: '#F4F5F7',
@@ -319,8 +319,8 @@ export const TaxBracketCalculator: React.FC = () => {
                 padding: '12px 24px',
                 fontSize: 16,
                 fontWeight: 600,
-                background: '#C9A962',
-                color: '#0F1117',
+                background: '#F6DBA6',
+                color: '#121212',
                 border: 'none',
                 borderRadius: 8,
                 cursor: 'pointer',
@@ -333,7 +333,7 @@ export const TaxBracketCalculator: React.FC = () => {
       )}
       
       <p style={{ color: '#6B7280', fontSize: 12, marginTop: 24, textAlign: 'center' }}>
-        Powered by <a href="https://chargewealth.co" style={{ color: '#C9A962' }}>Charge Wealth</a> • 
+        Powered by <a href="https://chargewealth.co" style={{ color: '#F6DBA6' }}>Charge Wealth</a> • 
         This calculator is for informational purposes only and does not constitute tax advice.
       </p>
     </div>

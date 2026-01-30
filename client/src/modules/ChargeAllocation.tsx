@@ -758,15 +758,15 @@ export default function ChargeAllocation() {
                           tickFormatter={(val) => `$${val.toFixed(0)}`}
                         />
                         <Tooltip 
-                          contentStyle={{ background: '#1A1D28', border: '1px solid #333', borderRadius: 8 }}
-                          labelStyle={{ color: '#C9A962' }}
+                          contentStyle={{ background: '#1E1E1E', border: '1px solid #333', borderRadius: 8 }}
+                          labelStyle={{ color: '#F6DBA6' }}
                           formatter={(value: number) => [`$${value.toFixed(2)}`, 'Price']}
                           labelFormatter={(label) => new Date(label).toLocaleDateString()}
                         />
                         <Line 
                           type="monotone" 
                           dataKey="close" 
-                          stroke="#C9A962" 
+                          stroke="#F6DBA6" 
                           strokeWidth={2}
                           dot={false}
                         />

@@ -90,7 +90,7 @@ export default function WealthReadiness({
     if (readinessScore < 30) return '#E74C3C';
     if (readinessScore < 60) return '#F39C12';
     if (readinessScore < 100) return '#3498DB';
-    return '#C9A962';
+    return '#F6DBA6';
   };
 
   const incompleteSteps = steps.filter(s => !s.completed);

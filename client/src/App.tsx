@@ -165,10 +165,10 @@ function LoginPage({ onBack }: { onBack?: () => void }) {
     width: '100%',
     padding: '0.875rem 1rem',
     fontSize: '1rem',
-    border: '1px solid #E5E1DA',
+    border: '1px solid rgba(0, 0, 0, 0.1)',
     borderRadius: '8px',
     background: '#FFFFFF',
-    color: '#1A1A1A',
+    color: '#1F2937',
     marginBottom: '0.75rem',
     outline: 'none',
   };
@@ -196,7 +196,7 @@ function LoginPage({ onBack }: { onBack?: () => void }) {
       flexDirection: 'column',
       alignItems: 'center',
       justifyContent: 'center',
-      background: '#FAF8F5',
+      background: '#F9F6F0',
       padding: '2rem',
       fontFamily: "'Raleway', -apple-system, sans-serif",
     }}>
@@ -208,7 +208,7 @@ function LoginPage({ onBack }: { onBack?: () => void }) {
         <h1 style={{
           fontSize: '1.75rem',
           fontWeight: '600',
-          color: '#1A1A1A',
+          color: '#1F2937',
           marginBottom: '0.5rem',
           fontFamily: "'Lora', Georgia, serif",
         }}>
@@ -216,7 +216,7 @@ function LoginPage({ onBack }: { onBack?: () => void }) {
         </h1>
         <p style={{
           fontSize: '1rem',
-          color: '#4B5563',
+          color: '#6B7280',
           marginBottom: '2rem',
         }}>
           Sign in to access your financial tools
@@ -224,7 +224,7 @@ function LoginPage({ onBack }: { onBack?: () => void }) {
 
         {showMemberLogin ? (
           <form onSubmit={handleMemberLogin}>
-            <p style={{ color: '#4B5563', marginBottom: '1.5rem', fontSize: '0.9375rem' }}>
+            <p style={{ color: '#6B7280', marginBottom: '1.5rem', fontSize: '0.9375rem' }}>
               Already paid? Enter the email you used during checkout.
             </p>
             <input
@@ -246,8 +246,8 @@ function LoginPage({ onBack }: { onBack?: () => void }) {
               disabled={memberLoading}
               style={{
                 ...buttonStyle,
-                background: '#1A1A1A',
-                color: '#FFFFFF',
+                background: '#F6DBA6',
+                color: '#4A3F2F',
                 opacity: memberLoading ? 0.7 : 1,
               }}
             >
@@ -260,7 +260,7 @@ function LoginPage({ onBack }: { onBack?: () => void }) {
               style={{
                 ...buttonStyle,
                 background: 'transparent',
-                color: '#4B5563',
+                color: '#6B7280',
                 border: 'none',
               }}
             >
@@ -296,8 +296,8 @@ function LoginPage({ onBack }: { onBack?: () => void }) {
                 disabled={signinLoading}
                 style={{
                   ...buttonStyle,
-                  background: '#1A1A1A',
-                  color: '#FFFFFF',
+                  background: '#F6DBA6',
+                  color: '#4A3F2F',
                   opacity: signinLoading ? 0.7 : 1,
                 }}
               >
@@ -311,9 +311,9 @@ function LoginPage({ onBack }: { onBack?: () => void }) {
               margin: '1rem 0',
               gap: '1rem',
             }}>
-              <div style={{ flex: 1, height: '1px', background: '#E5E1DA' }} />
+              <div style={{ flex: 1, height: '1px', background: 'rgba(0,0,0,0.1)' }} />
               <span style={{ color: '#9CA3AF', fontSize: '0.75rem' }}>or</span>
-              <div style={{ flex: 1, height: '1px', background: '#E5E1DA' }} />
+              <div style={{ flex: 1, height: '1px', background: 'rgba(0,0,0,0.1)' }} />
             </div>
             
             <button
@@ -323,8 +323,8 @@ function LoginPage({ onBack }: { onBack?: () => void }) {
               style={{
                 ...buttonStyle,
                 background: '#FFFFFF',
-                color: '#1A1A1A',
-                border: '1px solid #E5E1DA',
+                color: '#1F2937',
+                border: '1px solid rgba(0,0,0,0.1)',
               }}
             >
               <svg width="18" height="18" viewBox="0 0 24 24">
@@ -342,8 +342,8 @@ function LoginPage({ onBack }: { onBack?: () => void }) {
               style={{
                 ...buttonStyle,
                 background: 'transparent',
-                color: '#B8860B',
-                border: '1px solid #B8860B',
+                color: '#4A3F2F',
+                border: '1px solid #F6DBA6',
                 marginTop: '0.5rem',
               }}
             >
@@ -358,7 +358,7 @@ function LoginPage({ onBack }: { onBack?: () => void }) {
             style={{
               background: 'none',
               border: 'none',
-              color: '#4B5563',
+              color: '#6B7280',
               fontSize: '0.9375rem',
               cursor: 'pointer',
               marginTop: '1.5rem',
@@ -380,11 +380,11 @@ function LoadingPage() {
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
-      background: '#FAF8F5',
+      background: '#F9F6F0',
     }}>
       <div style={{
         textAlign: 'center',
-        color: '#B8860B',
+        color: '#4A3F2F',
       }}>
         <p>Loading...</p>
       </div>
@@ -413,7 +413,7 @@ function PaywallPage() {
       flexDirection: 'column',
       alignItems: 'center',
       justifyContent: 'center',
-      background: '#FAF8F5',
+      background: '#F9F6F0',
       padding: '2rem',
       fontFamily: "'Raleway', -apple-system, sans-serif",
     }}>
@@ -424,7 +424,7 @@ function PaywallPage() {
         <h1 style={{
           fontSize: '2rem',
           fontWeight: '600',
-          color: '#1A1A1A',
+          color: '#1F2937',
           marginBottom: '0.5rem',
           fontFamily: "'Lora', Georgia, serif",
         }}>
@@ -432,7 +432,7 @@ function PaywallPage() {
         </h1>
         <p style={{
           fontSize: '1rem',
-          color: '#4B5563',
+          color: '#6B7280',
           marginBottom: '2rem',
           lineHeight: '1.6',
         }}>
@@ -441,18 +441,18 @@ function PaywallPage() {
         </p>
         
         <div style={{
-          background: '#FFFFFF',
-          border: '1px solid #E5E1DA',
+          background: '#FFFDFB',
+          border: '1px solid rgba(0,0,0,0.08)',
           borderRadius: '12px',
           padding: '1.5rem',
           marginBottom: '2rem',
         }}>
-          <h3 style={{ color: '#B8860B', marginBottom: '1rem', fontSize: '1.25rem' }}>
+          <h3 style={{ color: '#4A3F2F', marginBottom: '1rem', fontSize: '1.25rem' }}>
             Founding Member - $279 Lifetime
           </h3>
           <ul style={{
             textAlign: 'left',
-            color: '#374151',
+            color: '#1F2937',
             fontSize: '0.9375rem',
             lineHeight: '1.8',
             listStyle: 'none',
@@ -469,8 +469,8 @@ function PaywallPage() {
           href="/"
           style={{
             display: 'inline-block',
-            background: '#1A1A1A',
-            color: '#FFFFFF',
+            background: '#F6DBA6',
+            color: '#4A3F2F',
             padding: '1rem 2rem',
             fontSize: '1rem',
             fontWeight: '600',

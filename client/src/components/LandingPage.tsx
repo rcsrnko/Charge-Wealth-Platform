@@ -71,10 +71,10 @@ export function LandingPage({ onShowLogin }: LandingPageProps) {
     width: '100%',
     padding: '0.875rem 1rem',
     fontSize: '1rem',
-    border: '1px solid #E5E1DA',
+    border: '1px solid rgba(0,0,0,0.1)',
     borderRadius: '8px',
     background: '#FFFFFF',
-    color: '#1A1A1A',
+    color: '#1F2937',
     marginBottom: '0.75rem',
     outline: 'none',
   };
@@ -92,8 +92,8 @@ export function LandingPage({ onShowLogin }: LandingPageProps) {
     borderRadius: '8px',
     cursor: 'pointer',
     transition: 'all 0.2s',
-    background: '#1A1A1A',
-    color: '#FFFFFF',
+    background: '#F6DBA6',
+    color: '#4A3F2F',
     marginBottom: '0.75rem',
   };
 
@@ -111,7 +111,7 @@ export function LandingPage({ onShowLogin }: LandingPageProps) {
         zIndex: 1000,
       }}>
         <div style={{
-          background: '#FAF8F5',
+          background: '#F9F6F0',
           borderRadius: '16px',
           padding: '2rem',
           maxWidth: '420px',
@@ -137,8 +137,8 @@ export function LandingPage({ onShowLogin }: LandingPageProps) {
           {signupSuccess ? (
             <div style={{ textAlign: 'center' }}>
               <div style={{ fontSize: '3rem', marginBottom: '1rem', color: '#2E7D32' }}>✓</div>
-              <h2 style={{ color: '#1A1A1A', fontSize: '1.5rem', marginBottom: '0.5rem' }}>Check Your Email</h2>
-              <p style={{ color: '#4B5563', marginBottom: '1.5rem' }}>
+              <h2 style={{ color: '#1F2937', fontSize: '1.5rem', marginBottom: '0.5rem' }}>Check Your Email</h2>
+              <p style={{ color: '#6B7280', marginBottom: '1.5rem' }}>
                 We sent a confirmation link to <strong>{signupData.email}</strong>. Click the link to activate your account.
               </p>
               <button
@@ -151,11 +151,11 @@ export function LandingPage({ onShowLogin }: LandingPageProps) {
           ) : (
             <>
               <div style={{ textAlign: 'center', marginBottom: '1.5rem' }}>
-                <h2 style={{ fontSize: '1.5rem', fontWeight: '600', color: '#1A1A1A', marginBottom: '0.5rem' }}>
+                <h2 style={{ fontSize: '1.5rem', fontWeight: '600', color: '#1F2937', marginBottom: '0.5rem' }}>
                   Join the Beta
                 </h2>
-                <p style={{ color: '#4B5563', fontSize: '0.9375rem' }}>
-                  Only <span style={{ color: '#B8860B', fontWeight: '600' }}>{foundingStats.remaining} spots left</span> at the founding member price
+                <p style={{ color: '#6B7280', fontSize: '0.9375rem' }}>
+                  Only <span style={{ color: '#4A3F2F', fontWeight: '600' }}>{foundingStats.remaining} spots left</span> at the founding member price
                 </p>
               </div>
 
@@ -165,8 +165,8 @@ export function LandingPage({ onShowLogin }: LandingPageProps) {
                 style={{
                   ...buttonPrimary,
                   background: '#FFFFFF',
-                  color: '#1A1A1A',
-                  border: '1px solid #E5E1DA',
+                  color: '#1F2937',
+                  border: '1px solid rgba(0,0,0,0.1)',
                 }}
               >
                 <svg width="18" height="18" viewBox="0 0 24 24">
@@ -184,9 +184,9 @@ export function LandingPage({ onShowLogin }: LandingPageProps) {
                 margin: '1rem 0',
                 gap: '1rem',
               }}>
-                <div style={{ flex: 1, height: '1px', background: '#E5E1DA' }} />
+                <div style={{ flex: 1, height: '1px', background: 'rgba(0,0,0,0.1)' }} />
                 <span style={{ color: '#9CA3AF', fontSize: '0.75rem' }}>or</span>
-                <div style={{ flex: 1, height: '1px', background: '#E5E1DA' }} />
+                <div style={{ flex: 1, height: '1px', background: 'rgba(0,0,0,0.1)' }} />
               </div>
 
               <form onSubmit={handleSignup}>
@@ -252,7 +252,7 @@ export function LandingPage({ onShowLogin }: LandingPageProps) {
                   style={{
                     background: 'none',
                     border: 'none',
-                    color: '#4B5563',
+                    color: '#6B7280',
                     fontSize: '0.875rem',
                     cursor: 'pointer',
                     textDecoration: 'underline',
@@ -271,7 +271,7 @@ export function LandingPage({ onShowLogin }: LandingPageProps) {
   return (
     <div style={{
       minHeight: '100vh',
-      background: '#FAF8F5',
+      background: '#F9F6F0',
       fontFamily: "'Raleway', -apple-system, sans-serif",
     }}>
       {/* Header */}
@@ -286,7 +286,7 @@ export function LandingPage({ onShowLogin }: LandingPageProps) {
         <div style={{
           fontSize: '1.25rem',
           fontWeight: '600',
-          color: '#1A1A1A',
+          color: '#1F2937',
           fontFamily: "'Lora', Georgia, serif",
         }}>
           Charge Wealth
@@ -296,7 +296,7 @@ export function LandingPage({ onShowLogin }: LandingPageProps) {
           style={{
             background: 'none',
             border: 'none',
-            color: '#4B5563',
+            color: '#6B7280',
             fontSize: '0.9375rem',
             cursor: 'pointer',
             fontWeight: '500',
@@ -318,19 +318,19 @@ export function LandingPage({ onShowLogin }: LandingPageProps) {
           display: 'inline-flex',
           alignItems: 'center',
           gap: '0.5rem',
-          background: 'rgba(184, 134, 11, 0.1)',
-          border: '1px solid rgba(184, 134, 11, 0.3)',
+          background: 'rgba(246, 219, 166, 0.3)',
+          border: '1px solid rgba(246, 219, 166, 0.5)',
           borderRadius: '100px',
           padding: '0.5rem 1rem',
           marginBottom: '1.5rem',
           fontSize: '0.875rem',
-          color: '#996F09',
+          color: '#4A3F2F',
           fontWeight: '500',
         }}>
           <span style={{ 
             width: '8px', 
             height: '8px', 
-            background: '#B8860B', 
+            background: '#F6DBA6', 
             borderRadius: '50%',
             animation: 'pulse 2s infinite',
           }} />
@@ -340,18 +340,18 @@ export function LandingPage({ onShowLogin }: LandingPageProps) {
         <h1 style={{
           fontSize: 'clamp(2rem, 5vw, 3rem)',
           fontWeight: '600',
-          color: '#1A1A1A',
+          color: '#1F2937',
           marginBottom: '1rem',
           lineHeight: '1.2',
           fontFamily: "'Lora', Georgia, serif",
         }}>
           Stop Overpaying Taxes.<br />
-          <span style={{ color: '#B8860B' }}>Keep $5K+ More</span> This Year.
+          <span style={{ color: '#4A3F2F' }}>Keep $5K+ More</span> This Year.
         </h1>
 
         <p style={{
           fontSize: '1.125rem',
-          color: '#4B5563',
+          color: '#6B7280',
           marginBottom: '2rem',
           maxWidth: '600px',
           margin: '0 auto 2rem',
@@ -374,8 +374,8 @@ export function LandingPage({ onShowLogin }: LandingPageProps) {
             borderRadius: '8px',
             cursor: 'pointer',
             transition: 'all 0.2s',
-            background: '#1A1A1A',
-            color: '#FFFFFF',
+            background: '#F6DBA6',
+            color: '#4A3F2F',
             marginBottom: '1rem',
           }}
         >
@@ -421,24 +421,24 @@ export function LandingPage({ onShowLogin }: LandingPageProps) {
             <div
               key={i}
               style={{
-                background: '#FFFFFF',
+                background: '#FFFDFB',
                 borderRadius: '12px',
                 padding: '1.75rem',
-                border: '1px solid #E5E1DA',
+                border: '1px solid rgba(0,0,0,0.08)',
               }}
             >
               <div style={{ fontSize: '2rem', marginBottom: '1rem' }}>{benefit.icon}</div>
               <h3 style={{
                 fontSize: '1.125rem',
                 fontWeight: '600',
-                color: '#1A1A1A',
+                color: '#1F2937',
                 marginBottom: '0.75rem',
               }}>
                 {benefit.title}
               </h3>
               <p style={{
                 fontSize: '0.9375rem',
-                color: '#4B5563',
+                color: '#6B7280',
                 lineHeight: '1.5',
               }}>
                 {benefit.description}
@@ -461,7 +461,7 @@ export function LandingPage({ onShowLogin }: LandingPageProps) {
           <h2 style={{
             fontSize: '1.5rem',
             fontWeight: '600',
-            color: '#1A1A1A',
+            color: '#1F2937',
             marginBottom: '2rem',
             fontFamily: "'Lora', Georgia, serif",
           }}>
@@ -493,16 +493,16 @@ export function LandingPage({ onShowLogin }: LandingPageProps) {
               <div
                 key={i}
                 style={{
-                  background: '#FFFFFF',
+                  background: '#FFFDFB',
                   borderRadius: '12px',
                   padding: '1.5rem',
                   textAlign: 'left',
                 }}
               >
-                <div style={{ color: '#B8860B', marginBottom: '0.75rem' }}>★★★★★</div>
+                <div style={{ color: '#F6DBA6', marginBottom: '0.75rem' }}>★★★★★</div>
                 <p style={{
                   fontSize: '0.9375rem',
-                  color: '#374151',
+                  color: '#1F2937',
                   lineHeight: '1.5',
                   marginBottom: '1rem',
                   fontStyle: 'italic',
@@ -510,7 +510,7 @@ export function LandingPage({ onShowLogin }: LandingPageProps) {
                   "{testimonial.quote}"
                 </p>
                 <div>
-                  <div style={{ fontWeight: '600', color: '#1A1A1A', fontSize: '0.9375rem' }}>
+                  <div style={{ fontWeight: '600', color: '#1F2937', fontSize: '0.9375rem' }}>
                     {testimonial.name}
                   </div>
                   <div style={{ color: '#6B7280', fontSize: '0.8125rem' }}>
@@ -532,7 +532,7 @@ export function LandingPage({ onShowLogin }: LandingPageProps) {
         <h2 style={{
           fontSize: '1.5rem',
           fontWeight: '600',
-          color: '#1A1A1A',
+          color: '#1F2937',
           marginBottom: '2rem',
           textAlign: 'center',
           fontFamily: "'Lora', Georgia, serif",
@@ -541,10 +541,10 @@ export function LandingPage({ onShowLogin }: LandingPageProps) {
         </h2>
 
         <div style={{
-          background: '#FFFFFF',
+          background: '#FFFDFB',
           borderRadius: '16px',
           padding: '2rem',
-          border: '1px solid #E5E1DA',
+          border: '1px solid rgba(0,0,0,0.08)',
         }}>
           <ul style={{
             listStyle: 'none',
@@ -569,7 +569,7 @@ export function LandingPage({ onShowLogin }: LandingPageProps) {
                 }}
               >
                 <span style={{ color: '#2E7D32', fontWeight: 'bold' }}>✓</span>
-                <span style={{ color: '#374151', fontSize: '1rem' }}>{item}</span>
+                <span style={{ color: '#1F2937', fontSize: '1rem' }}>{item}</span>
               </li>
             ))}
           </ul>
@@ -578,7 +578,7 @@ export function LandingPage({ onShowLogin }: LandingPageProps) {
 
       {/* Final CTA */}
       <section style={{
-        background: '#1A1A1A',
+        background: '#1F2937',
         padding: '4rem 2rem',
         textAlign: 'center',
       }}>
@@ -613,8 +613,8 @@ export function LandingPage({ onShowLogin }: LandingPageProps) {
               borderRadius: '8px',
               cursor: 'pointer',
               transition: 'all 0.2s',
-              background: '#B8860B',
-              color: '#FFFFFF',
+              background: '#F6DBA6',
+              color: '#4A3F2F',
               marginBottom: '1rem',
             }}
           >

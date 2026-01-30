@@ -79,7 +79,7 @@
 .userAvatar {
   width: 32px;
   height: 32px;
-  background: linear-gradient(135deg, var(--soft-gold) 0%, #B8963D 100%);
+  background: linear-gradient(135deg, var(--soft-gold) 0%, var(--brand-accent-hover) 100%);
   border-radius: 8px;
   display: flex;
   align-items: center;
@@ -562,7 +562,7 @@
   align-items: center;
   gap: 1rem;
   padding: 1.25rem 2rem;
-  background: linear-gradient(135deg, var(--soft-gold) 0%, #B8963D 100%);
+  background: linear-gradient(135deg, var(--soft-gold) 0%, var(--brand-accent-hover) 100%);
   border-radius: 12px;
   text-decoration: none;
   transition: all 0.2s;
@@ -960,7 +960,7 @@
   top: 0;
   left: 0;
   right: 0;
-  background: linear-gradient(90deg, #C9A962 0%, #B8943E 100%);
+  background: linear-gradient(90deg, var(--brand-accent) 0%, #B8943E 100%);
   color: var(--bg-primary);
   text-align: center;
   padding: 0.5rem 1rem;

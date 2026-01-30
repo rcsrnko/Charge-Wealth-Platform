@@ -45,7 +45,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  background: linear-gradient(135deg, #C9A962 0%, #B8954F 100%);
+  background: linear-gradient(135deg, var(--brand-accent) 0%, #B8954F 100%);
   border-radius: 12px;
   padding: 10px 16px;
   min-width: 70px;
@@ -81,7 +81,7 @@
 }
 
 .levelBadge {
-  background: linear-gradient(135deg, #C9A962 0%, #B8954F 100%);
+  background: linear-gradient(135deg, var(--brand-accent) 0%, #B8954F 100%);
   color: var(--bg-primary);
   font-weight: 600;
   font-size: 12px;
@@ -104,7 +104,7 @@
 
 .progressFill {
   height: 100%;
-  background: linear-gradient(90deg, #C9A962, #E0C088);
+  background: linear-gradient(90deg, var(--brand-accent), #E0C088);
   border-radius: 3px;
   transition: width 0.5s ease;
 }
@@ -146,7 +146,7 @@
 .emptyState svg {
   width: 48px;
   height: 48px;
-  color: #C9A962;
+  color: var(--brand-accent);
   margin-bottom: 16px;
 }
 
@@ -163,7 +163,7 @@
 }
 
 .generateButton {
-  background: linear-gradient(135deg, #C9A962 0%, #B8954F 100%);
+  background: linear-gradient(135deg, var(--brand-accent) 0%, #B8954F 100%);
   color: var(--bg-primary);
   font-weight: 600;
   font-size: 14px;

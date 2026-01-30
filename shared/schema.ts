@@ -52,6 +52,12 @@ export const users = pgTable("users", {
   emailWeeklyDigest: boolean("email_weekly_digest").default(true),
   emailTaxDeadlines: boolean("email_tax_deadlines").default(true),
   emailProductUpdates: boolean("email_product_updates").default(false),
+  // Blog subscription fields (Take Charge Blog)
+  blogSubscriptionStatus: varchar("blog_subscription_status", { length: 20 }).default('none'), // none, active, cancelled
+  blogSubscriptionType: varchar("blog_subscription_type", { length: 20 }), // monthly, yearly
+  blogSubscriptionStartDate: timestamp("blog_subscription_start_date"),
+  blogSubscriptionEndDate: timestamp("blog_subscription_end_date"),
+  stripeBlogSubscriptionId: varchar("stripe_blog_subscription_id"),
   createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at").defaultNow(),
 });

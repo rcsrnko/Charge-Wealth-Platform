@@ -112,7 +112,7 @@
 
 .costAction {
   padding: 6px 12px;
-  background: var(--gold, #C9A962);
+  background: var(--gold, var(--brand-accent));
   border: none;
   border-radius: 6px;
   color: var(--midnight, var(--bg-primary));

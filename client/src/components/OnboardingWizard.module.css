@@ -30,7 +30,7 @@
 
 .progressFill {
   height: 100%;
-  background: linear-gradient(90deg, #C9A962, #E0C170);
+  background: linear-gradient(90deg, var(--brand-accent), #E0C170);
   transition: width 0.5s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
@@ -63,7 +63,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #C9A962;
+  color: var(--brand-accent);
   font-weight: 600;
   font-size: 1.125rem;
   flex-shrink: 0;
@@ -98,7 +98,7 @@
 .sliderValue {
   font-size: 1.25rem;
   font-weight: 600;
-  color: #C9A962;
+  color: var(--brand-accent);
   margin-bottom: 0.5rem;
 }
 
@@ -116,7 +116,7 @@
   -webkit-appearance: none;
   width: 20px;
   height: 20px;
-  background: #C9A962;
+  background: var(--brand-accent);
   border-radius: 50%;
   cursor: pointer;
   box-shadow: 0 2px 8px var(--border-strong);
@@ -125,7 +125,7 @@
 .slider::-moz-range-thumb {
   width: 20px;
   height: 20px;
-  background: #C9A962;
+  background: var(--brand-accent);
   border-radius: 50%;
   cursor: pointer;
   border: none;
@@ -147,7 +147,7 @@
 
 .select:focus,
 .input:focus {
-  border-color: #C9A962;
+  border-color: var(--brand-accent);
 }
 
 .select option {
@@ -163,7 +163,7 @@
 
 .primaryButton {
   width: 100%;
-  background: linear-gradient(135deg, #C9A962 0%, #D4B87A 100%);
+  background: linear-gradient(135deg, var(--brand-accent) 0%, #D4B87A 100%);
   color: var(--bg-primary);
   font-size: 1rem;
   font-weight: 600;
@@ -214,7 +214,7 @@
 .resultHighlight {
   font-size: 1.25rem;
   font-weight: 600;
-  color: #C9A962;
+  color: var(--brand-accent);
   margin-bottom: 0.5rem;
 }
 
@@ -235,7 +235,7 @@
 .thesisHighlight {
   font-size: 1rem;
   font-weight: 600;
-  color: #C9A962;
+  color: var(--brand-accent);
   margin-bottom: 0.75rem;
 }
 
@@ -250,7 +250,7 @@
 
 .dropzone:hover,
 .dragging {
-  border-color: #C9A962;
+  border-color: var(--brand-accent);
   background: var(--bg-tertiary);
 }
 
@@ -276,7 +276,7 @@
   display: inline-block;
   background: var(--sidebar-active);
   border: 1px solid var(--border-strong);
-  color: #C9A962;
+  color: var(--brand-accent);
   padding: 0.5rem 1rem;
   border-radius: 4px;
   font-size: 0.875rem;
@@ -293,15 +293,15 @@
   align-items: center;
   justify-content: center;
   gap: 0.75rem;
-  color: #C9A962;
+  color: var(--brand-accent);
 }
 
 .fileInfo svg {
-  color: #C9A962;
+  color: var(--brand-accent);
 }
 
 .fileInfo p {
-  color: #C9A962;
+  color: var(--brand-accent);
   font-weight: 500;
 }
 
@@ -320,7 +320,7 @@
   width: 40px;
   height: 40px;
   border: 3px solid var(--border-strong);
-  border-top-color: #C9A962;
+  border-top-color: var(--brand-accent);
   border-radius: 50%;
   margin: 0 auto;
   animation: spin 1s linear infinite;
@@ -361,7 +361,7 @@
 }
 
 .aiMessage .messageLabel {
-  color: #C9A962;
+  color: var(--brand-accent);
 }
 
 .userMessage p {
@@ -452,7 +452,7 @@
 }
 
 .documentOption svg {
-  color: #C9A962;
+  color: var(--brand-accent);
   flex-shrink: 0;
 }
 
@@ -486,7 +486,7 @@
 }
 
 .backButton:hover {
-  color: #C9A962;
+  color: var(--brand-accent);
 }
 
 @media (max-width: 768px) {

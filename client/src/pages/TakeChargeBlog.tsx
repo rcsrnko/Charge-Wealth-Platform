@@ -214,12 +214,12 @@ function BlogHeader() {
     <header style={{
       padding: '16px 32px',
       borderBottom: '1px solid rgba(201, 169, 98, 0.1)',
-      background: '#0F1117',
+      background: '#121212',
     }}>
       <div style={{ maxWidth: 1200, margin: '0 auto', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 24 }}>
           <Link href="/take-charge">
-            <a style={{ color: '#C9A962', fontSize: 20, fontWeight: 700, textDecoration: 'none' }}>
+            <a style={{ color: '#F6DBA6', fontSize: 20, fontWeight: 700, textDecoration: 'none' }}>
               Charge Wealth
             </a>
           </Link>
@@ -237,8 +237,8 @@ function BlogHeader() {
           </Link>
           <Link href="/take-charge/subscribe">
             <a style={{
-              background: '#C9A962',
-              color: '#0F1117',
+              background: '#F6DBA6',
+              color: '#121212',
               padding: '8px 16px',
               borderRadius: 6,
               fontWeight: 600,
@@ -265,7 +265,7 @@ function BlogIndex() {
   return (
     <div style={{
       minHeight: '100vh',
-      background: '#0F1117',
+      background: '#121212',
       fontFamily: 'Inter, -apple-system, sans-serif',
     }}>
       <BlogHeader />
@@ -273,7 +273,7 @@ function BlogIndex() {
       {/* Hero */}
       <section style={{
         padding: '60px 32px',
-        background: 'linear-gradient(180deg, #0F1117 0%, #1A1D28 100%)',
+        background: 'linear-gradient(180deg, #121212 0%, #1E1E1E 100%)',
         textAlign: 'center',
       }}>
         <h1 style={{
@@ -309,7 +309,7 @@ function BlogIndex() {
               flex: 1,
               padding: '14px 20px',
               fontSize: 16,
-              background: '#1A1D28',
+              background: '#1E1E1E',
               border: '1px solid rgba(201, 169, 98, 0.2)',
               borderRadius: 8,
               color: '#F4F5F7',
@@ -319,8 +319,8 @@ function BlogIndex() {
             padding: '14px 28px',
             fontSize: 16,
             fontWeight: 600,
-            background: '#C9A962',
-            color: '#0F1117',
+            background: '#F6DBA6',
+            color: '#121212',
             border: 'none',
             borderRadius: 8,
             cursor: 'pointer',
@@ -347,8 +347,8 @@ function BlogIndex() {
                 padding: '8px 20px',
                 fontSize: 14,
                 fontWeight: 500,
-                background: selectedCategory === cat.id ? '#C9A962' : 'transparent',
-                color: selectedCategory === cat.id ? '#0F1117' : '#A8B0C5',
+                background: selectedCategory === cat.id ? '#F6DBA6' : 'transparent',
+                color: selectedCategory === cat.id ? '#121212' : '#A8B0C5',
                 border: selectedCategory === cat.id ? 'none' : '1px solid rgba(201, 169, 98, 0.2)',
                 borderRadius: 20,
                 cursor: 'pointer',
@@ -375,7 +375,7 @@ function BlogIndex() {
             <Link key={post.slug} href={`/take-charge/${post.slug}`}>
               <a style={{
                 display: 'block',
-                background: '#1A1D28',
+                background: '#1E1E1E',
                 borderRadius: 16,
                 overflow: 'hidden',
                 textDecoration: 'none',
@@ -383,7 +383,7 @@ function BlogIndex() {
                 transition: 'all 0.2s',
               }}
               onMouseEnter={(e) => {
-                e.currentTarget.style.borderColor = '#C9A962';
+                e.currentTarget.style.borderColor = '#F6DBA6';
                 e.currentTarget.style.transform = 'translateY(-4px)';
               }}
               onMouseLeave={(e) => {
@@ -394,7 +394,7 @@ function BlogIndex() {
                 {/* Post image placeholder */}
                 <div style={{
                   height: 200,
-                  background: 'linear-gradient(135deg, #1A1D28 0%, #242838 100%)',
+                  background: 'linear-gradient(135deg, #1E1E1E 0%, #252525 100%)',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
@@ -412,7 +412,7 @@ function BlogIndex() {
                     <span style={{
                       padding: '4px 12px',
                       background: 'rgba(201, 169, 98, 0.1)',
-                      color: '#C9A962',
+                      color: '#F6DBA6',
                       fontSize: 12,
                       fontWeight: 600,
                       borderRadius: 20,
@@ -484,8 +484,8 @@ function BlogIndex() {
         <Link href="/take-charge/subscribe">
           <a style={{
             display: 'inline-block',
-            background: '#C9A962',
-            color: '#0F1117',
+            background: '#F6DBA6',
+            color: '#121212',
             padding: '16px 32px',
             borderRadius: 8,
             fontWeight: 700,
@@ -508,7 +508,7 @@ function BlogPost() {
     return (
       <div style={{
         minHeight: '100vh',
-        background: '#0F1117',
+        background: '#121212',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
@@ -523,7 +523,7 @@ function BlogPost() {
     return (
       <div style={{
         minHeight: '100vh',
-        background: '#0F1117',
+        background: '#121212',
         fontFamily: 'Inter, -apple-system, sans-serif',
       }}>
         <BlogHeader />
@@ -541,8 +541,8 @@ function BlogPost() {
           <Link href="/take-charge/subscribe">
             <a style={{
               display: 'inline-block',
-              background: '#C9A962',
-              color: '#0F1117',
+              background: '#F6DBA6',
+              color: '#121212',
               padding: '16px 32px',
               borderRadius: 8,
               fontWeight: 700,
@@ -560,7 +560,7 @@ function BlogPost() {
   return (
     <div style={{
       minHeight: '100vh',
-      background: '#0F1117',
+      background: '#121212',
       fontFamily: 'Inter, -apple-system, sans-serif',
     }}>
       <SEO 
@@ -582,7 +582,7 @@ function BlogPost() {
           <span style={{
             padding: '6px 16px',
             background: 'rgba(201, 169, 98, 0.1)',
-            color: '#C9A962',
+            color: '#F6DBA6',
             fontSize: 14,
             fontWeight: 600,
             borderRadius: 20,
@@ -641,7 +641,7 @@ function BlogPost() {
               return (
                 <p key={i} style={{ marginBottom: 16 }}>
                   {parts[0]}
-                  <a href={linkMatch[2]} style={{ color: '#C9A962', textDecoration: 'underline' }}>{linkMatch[1]}</a>
+                  <a href={linkMatch[2]} style={{ color: '#F6DBA6', textDecoration: 'underline' }}>{linkMatch[1]}</a>
                   {parts[3]}
                 </p>
               );
@@ -667,8 +667,8 @@ function BlogPost() {
           <Link href="/take-charge/subscribe">
             <a style={{
               display: 'inline-block',
-              background: '#C9A962',
-              color: '#0F1117',
+              background: '#F6DBA6',
+              color: '#121212',
               padding: '14px 28px',
               borderRadius: 8,
               fontWeight: 600,
@@ -739,7 +739,7 @@ function SubscribePage() {
   return (
     <div style={{
       minHeight: '100vh',
-      background: '#0F1117',
+      background: '#121212',
       fontFamily: 'Inter, -apple-system, sans-serif',
     }}>
       <BlogHeader />
@@ -770,10 +770,10 @@ function SubscribePage() {
             <div
               key={plan.id}
               style={{
-                background: plan.highlighted ? 'linear-gradient(135deg, rgba(201, 169, 98, 0.1) 0%, rgba(201, 169, 98, 0.05) 100%)' : '#1A1D28',
+                background: plan.highlighted ? 'linear-gradient(135deg, rgba(201, 169, 98, 0.1) 0%, rgba(201, 169, 98, 0.05) 100%)' : '#1E1E1E',
                 borderRadius: 16,
                 padding: 32,
-                border: plan.highlighted ? '2px solid #C9A962' : '1px solid rgba(201, 169, 98, 0.1)',
+                border: plan.highlighted ? '2px solid #F6DBA6' : '1px solid rgba(201, 169, 98, 0.1)',
                 position: 'relative',
               }}
             >
@@ -783,8 +783,8 @@ function SubscribePage() {
                   top: -12,
                   left: '50%',
                   transform: 'translateX(-50%)',
-                  background: '#C9A962',
-                  color: '#0F1117',
+                  background: '#F6DBA6',
+                  color: '#121212',
                   padding: '4px 16px',
                   borderRadius: 20,
                   fontSize: 12,
@@ -798,7 +798,7 @@ function SubscribePage() {
               <p style={{ color: '#A8B0C5', fontSize: 14, marginBottom: 24 }}>{plan.description}</p>
 
               <div style={{ marginBottom: 24 }}>
-                <span style={{ color: '#C9A962', fontSize: 48, fontWeight: 700 }}>{plan.price}</span>
+                <span style={{ color: '#F6DBA6', fontSize: 48, fontWeight: 700 }}>{plan.price}</span>
                 <span style={{ color: '#6B7280', fontSize: 16 }}>{plan.period}</span>
               </div>
 
@@ -825,9 +825,9 @@ function SubscribePage() {
                   padding: '14px 24px',
                   fontSize: 16,
                   fontWeight: 600,
-                  background: plan.highlighted ? '#C9A962' : 'transparent',
-                  color: plan.highlighted ? '#0F1117' : '#C9A962',
-                  border: plan.highlighted ? 'none' : '1px solid #C9A962',
+                  background: plan.highlighted ? '#F6DBA6' : 'transparent',
+                  color: plan.highlighted ? '#121212' : '#F6DBA6',
+                  border: plan.highlighted ? 'none' : '1px solid #F6DBA6',
                   borderRadius: 8,
                   cursor: 'pointer',
                 }}
@@ -842,7 +842,7 @@ function SubscribePage() {
       {/* FAQ */}
       <section style={{
         padding: '60px 32px',
-        background: '#1A1D28',
+        background: '#1E1E1E',
       }}>
         <div style={{ maxWidth: 700, margin: '0 auto' }}>
           <h2 style={{ fontSize: 32, fontWeight: 700, color: '#F4F5F7', marginBottom: 32, textAlign: 'center' }}>

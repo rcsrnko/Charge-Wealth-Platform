@@ -32,7 +32,7 @@
   position: absolute;
   border-radius: 50%;
   border: 2px solid transparent;
-  border-top-color: var(--soft-gold, #C9A962);
+  border-top-color: var(--soft-gold, var(--brand-accent));
   animation: pulse-spin 1.5s ease-in-out infinite;
 }
 
@@ -64,7 +64,7 @@
 .dot {
   width: 20%;
   height: 20%;
-  background: var(--soft-gold, #C9A962);
+  background: var(--soft-gold, var(--brand-accent));
   border-radius: 50%;
   animation: pulse-glow 1.5s ease-in-out infinite;
 }

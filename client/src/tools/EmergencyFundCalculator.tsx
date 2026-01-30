@@ -86,11 +86,11 @@ export const EmergencyFundCalculator: React.FC = () => {
       margin: '0 auto',
       padding: 32,
       fontFamily: 'Inter, -apple-system, sans-serif',
-      background: '#0F1117',
+      background: '#121212',
       borderRadius: 16,
       color: '#F4F5F7',
     }}>
-      <h1 style={{ color: '#C9A962', marginBottom: 8, fontSize: 32 }}>
+      <h1 style={{ color: '#F6DBA6', marginBottom: 8, fontSize: 32 }}>
         Emergency Fund Calculator
       </h1>
       <p style={{ color: '#A8B0C5', marginBottom: 32 }}>
@@ -122,7 +122,7 @@ export const EmergencyFundCalculator: React.FC = () => {
                   width: '100%',
                   padding: '10px 12px',
                   fontSize: 16,
-                  background: '#1A1D28',
+                  background: '#1E1E1E',
                   border: '1px solid rgba(201, 169, 98, 0.2)',
                   borderRadius: 8,
                   color: '#F4F5F7',
@@ -135,13 +135,13 @@ export const EmergencyFundCalculator: React.FC = () => {
         <div style={{
           marginTop: 16,
           padding: 16,
-          background: '#1A1D28',
+          background: '#1E1E1E',
           borderRadius: 8,
           display: 'flex',
           justifyContent: 'space-between',
         }}>
           <span style={{ color: '#A8B0C5' }}>Total Monthly Expenses:</span>
-          <span style={{ color: '#C9A962', fontWeight: 700, fontSize: 20 }}>
+          <span style={{ color: '#F6DBA6', fontWeight: 700, fontSize: 20 }}>
             {formatCurrency(calculations.monthlyExpenses)}
           </span>
         </div>
@@ -161,7 +161,7 @@ export const EmergencyFundCalculator: React.FC = () => {
               width: '100%',
               padding: '12px 16px',
               fontSize: 18,
-              background: '#1A1D28',
+              background: '#1E1E1E',
               border: '1px solid rgba(201, 169, 98, 0.2)',
               borderRadius: 8,
               color: '#F4F5F7',
@@ -180,7 +180,7 @@ export const EmergencyFundCalculator: React.FC = () => {
               width: '100%',
               padding: '12px 16px',
               fontSize: 18,
-              background: '#1A1D28',
+              background: '#1E1E1E',
               border: '1px solid rgba(201, 169, 98, 0.2)',
               borderRadius: 8,
               color: '#F4F5F7',
@@ -195,7 +195,7 @@ export const EmergencyFundCalculator: React.FC = () => {
       
       {/* Progress */}
       <div style={{
-        background: '#1A1D28',
+        background: '#1E1E1E',
         borderRadius: 16,
         padding: 24,
         marginBottom: 24,
@@ -217,7 +217,7 @@ export const EmergencyFundCalculator: React.FC = () => {
         {/* Progress bar */}
         <div style={{
           height: 24,
-          background: '#0F1117',
+          background: '#121212',
           borderRadius: 12,
           overflow: 'hidden',
           marginBottom: 16,
@@ -243,7 +243,7 @@ export const EmergencyFundCalculator: React.FC = () => {
           </div>
           <div style={{ textAlign: 'right' }}>
             <div style={{ color: '#A8B0C5', fontSize: 12 }}>Target ({calculations.recommendedMonths} months)</div>
-            <div style={{ color: '#C9A962', fontSize: 24, fontWeight: 700 }}>
+            <div style={{ color: '#F6DBA6', fontSize: 24, fontWeight: 700 }}>
               {formatCurrency(calculations.targets.recommended)}
             </div>
           </div>
@@ -259,7 +259,7 @@ export const EmergencyFundCalculator: React.FC = () => {
             <div style={{ color: '#A8B0C5', fontSize: 14, marginBottom: 4 }}>
               To reach your goal in 12 months, save:
             </div>
-            <div style={{ color: '#C9A962', fontSize: 20, fontWeight: 600 }}>
+            <div style={{ color: '#F6DBA6', fontSize: 20, fontWeight: 600 }}>
               {formatCurrency(calculations.monthlySavingsNeeded)}/month
             </div>
           </div>
@@ -275,11 +275,11 @@ export const EmergencyFundCalculator: React.FC = () => {
       }}>
         {[
           { label: 'Minimum (3 mo)', value: calculations.targets.minimum, color: '#F59E0B' },
-          { label: `Recommended (${calculations.recommendedMonths} mo)`, value: calculations.targets.recommended, color: '#C9A962' },
+          { label: `Recommended (${calculations.recommendedMonths} mo)`, value: calculations.targets.recommended, color: '#F6DBA6' },
           { label: 'Comfortable (12 mo)', value: calculations.targets.comfortable, color: '#10B981' },
         ].map(({ label, value, color }) => (
           <div key={label} style={{
-            background: '#1A1D28',
+            background: '#1E1E1E',
             padding: 16,
             borderRadius: 12,
             textAlign: 'center',
@@ -292,7 +292,7 @@ export const EmergencyFundCalculator: React.FC = () => {
       
       {/* Where to Keep It */}
       <div style={{
-        background: '#1A1D28',
+        background: '#1E1E1E',
         borderRadius: 12,
         padding: 24,
         marginBottom: 24,
@@ -308,7 +308,7 @@ export const EmergencyFundCalculator: React.FC = () => {
               display: 'flex',
               justifyContent: 'space-between',
               padding: '12px 16px',
-              background: '#0F1117',
+              background: '#121212',
               borderRadius: 8,
             }}>
               <span style={{ color: '#F4F5F7' }}>{name}</span>
@@ -327,8 +327,8 @@ export const EmergencyFundCalculator: React.FC = () => {
             padding: '16px 24px',
             fontSize: 18,
             fontWeight: 600,
-            background: '#C9A962',
-            color: '#0F1117',
+            background: '#F6DBA6',
+            color: '#121212',
             border: 'none',
             borderRadius: 8,
             cursor: 'pointer',
@@ -339,7 +339,7 @@ export const EmergencyFundCalculator: React.FC = () => {
       ) : (
         <div style={{
           background: 'rgba(201, 169, 98, 0.1)',
-          border: '1px solid #C9A962',
+          border: '1px solid #F6DBA6',
           borderRadius: 12,
           padding: 24,
         }}>
@@ -359,7 +359,7 @@ export const EmergencyFundCalculator: React.FC = () => {
                 flex: 1,
                 padding: '12px 16px',
                 fontSize: 16,
-                background: '#1A1D28',
+                background: '#1E1E1E',
                 border: '1px solid rgba(201, 169, 98, 0.2)',
                 borderRadius: 8,
                 color: '#F4F5F7',
@@ -370,8 +370,8 @@ export const EmergencyFundCalculator: React.FC = () => {
                 padding: '12px 24px',
                 fontSize: 16,
                 fontWeight: 600,
-                background: '#C9A962',
-                color: '#0F1117',
+                background: '#F6DBA6',
+                color: '#121212',
                 border: 'none',
                 borderRadius: 8,
                 cursor: 'pointer',
@@ -384,7 +384,7 @@ export const EmergencyFundCalculator: React.FC = () => {
       )}
       
       <p style={{ color: '#6B7280', fontSize: 12, marginTop: 24, textAlign: 'center' }}>
-        Powered by <a href="https://chargewealth.co" style={{ color: '#C9A962' }}>Charge Wealth</a>
+        Powered by <a href="https://chargewealth.co" style={{ color: '#F6DBA6' }}>Charge Wealth</a>
       </p>
     </div>
   );

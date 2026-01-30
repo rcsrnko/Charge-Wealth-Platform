@@ -5,7 +5,7 @@ interface SuccessCheckProps {
   color?: string;
 }
 
-export default function SuccessCheck({ size = 48, color = '#C9A962' }: SuccessCheckProps) {
+export default function SuccessCheck({ size = 48, color = '#F6DBA6' }: SuccessCheckProps) {
   return (
     <div className={styles.container} style={{ width: size, height: size }}>
       <svg viewBox="0 0 52 52" className={styles.checkmark}>

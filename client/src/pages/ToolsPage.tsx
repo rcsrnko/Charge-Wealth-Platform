@@ -53,7 +53,7 @@ function ToolsIndex() {
   return (
     <div style={{
       minHeight: '100vh',
-      background: 'linear-gradient(180deg, #0F1117 0%, #1A1D28 100%)',
+      background: 'linear-gradient(180deg, #121212 0%, #1E1E1E 100%)',
       fontFamily: 'Inter, -apple-system, sans-serif',
     }}>
       {/* Header */}
@@ -63,14 +63,14 @@ function ToolsIndex() {
       }}>
         <div style={{ maxWidth: 1200, margin: '0 auto', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <Link href="/tools">
-            <a style={{ color: '#C9A962', fontSize: 24, fontWeight: 700, textDecoration: 'none' }}>
+            <a style={{ color: '#F6DBA6', fontSize: 24, fontWeight: 700, textDecoration: 'none' }}>
               Charge Wealth
             </a>
           </Link>
           <Link href="/dashboard">
             <a style={{
-              background: '#C9A962',
-              color: '#0F1117',
+              background: '#F6DBA6',
+              color: '#121212',
               padding: '10px 20px',
               borderRadius: 8,
               fontWeight: 600,
@@ -121,7 +121,7 @@ function ToolsIndex() {
             <Link key={tool.path} href={tool.path}>
               <a style={{
                 display: 'block',
-                background: '#1A1D28',
+                background: '#1E1E1E',
                 borderRadius: 16,
                 padding: 32,
                 textDecoration: 'none',
@@ -129,7 +129,7 @@ function ToolsIndex() {
                 transition: 'all 0.2s',
               }}
               onMouseEnter={(e) => {
-                e.currentTarget.style.borderColor = '#C9A962';
+                e.currentTarget.style.borderColor = '#F6DBA6';
                 e.currentTarget.style.transform = 'translateY(-4px)';
               }}
               onMouseLeave={(e) => {
@@ -155,7 +155,7 @@ function ToolsIndex() {
                 </p>
                 <div style={{
                   marginTop: 16,
-                  color: '#C9A962',
+                  color: '#F6DBA6',
                   fontWeight: 600,
                   fontSize: 14,
                 }}>
@@ -192,8 +192,8 @@ function ToolsIndex() {
         <Link href="/dashboard">
           <a style={{
             display: 'inline-block',
-            background: '#C9A962',
-            color: '#0F1117',
+            background: '#F6DBA6',
+            color: '#121212',
             padding: '16px 32px',
             borderRadius: 8,
             fontWeight: 700,
@@ -223,7 +223,7 @@ function ToolWrapper({ children, title }: { children: React.ReactNode; title: st
   return (
     <div style={{
       minHeight: '100vh',
-      background: 'linear-gradient(180deg, #0F1117 0%, #1A1D28 100%)',
+      background: 'linear-gradient(180deg, #121212 0%, #1E1E1E 100%)',
       fontFamily: 'Inter, -apple-system, sans-serif',
     }}>
       {/* Header */}
@@ -234,7 +234,7 @@ function ToolWrapper({ children, title }: { children: React.ReactNode; title: st
         <div style={{ maxWidth: 1200, margin: '0 auto', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 24 }}>
             <Link href="/tools">
-              <a style={{ color: '#C9A962', fontSize: 20, fontWeight: 700, textDecoration: 'none' }}>
+              <a style={{ color: '#F6DBA6', fontSize: 20, fontWeight: 700, textDecoration: 'none' }}>
                 Charge Wealth
               </a>
             </Link>
@@ -246,8 +246,8 @@ function ToolWrapper({ children, title }: { children: React.ReactNode; title: st
           </div>
           <Link href="/dashboard">
             <a style={{
-              background: '#C9A962',
-              color: '#0F1117',
+              background: '#F6DBA6',
+              color: '#121212',
               padding: '8px 16px',
               borderRadius: 6,
               fontWeight: 600,
