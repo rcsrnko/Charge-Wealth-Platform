@@ -30,10 +30,10 @@ const PREMIUM_CATEGORIES = ['financial-planning', 'tax-strategy', 'capital-marke
 
 const CATEGORIES = [
   { id: 'all', label: 'All Posts' },
+  { id: 'finance-dailies', label: 'Finance Dailies', premium: false },
   { id: 'capital-markets', label: 'Capital Markets', premium: true },
   { id: 'tax-strategy', label: 'Tax Strategy', premium: true },
   { id: 'financial-planning', label: 'Financial Planning', premium: true },
-  { id: 'free', label: 'Free Articles', premium: false },
 ];
 
 // Theme hook for dark/light mode - defaults to light (vanilla bean)
@@ -231,12 +231,12 @@ function BlogIndex() {
   const { data: postsData, isLoading, error } = useBlogPosts(selectedCategory);
   const posts: BlogPost[] = postsData?.posts || [];
 
-  // Filter to only show the 3 main categories (not finance-dailies)
+  // Filter to show all main categories
   const filteredPosts = posts.filter(post => 
+    post.category === 'finance-dailies' ||
     post.category === 'capital-markets' || 
     post.category === 'tax-strategy' || 
-    post.category === 'financial-planning' ||
-    post.category === 'free'
+    post.category === 'financial-planning'
   );
 
   const handleSubscribe = async () => {

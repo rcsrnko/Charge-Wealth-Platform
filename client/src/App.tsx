@@ -57,6 +57,13 @@ function App() {
                 <TakeChargeBlog />
               </ErrorBoundary>
             </Route>
+            {/* Redirect /blog to /take-charge */}
+            <Route path="/blog/:rest*">
+              <Redirect to="/take-charge" />
+            </Route>
+            <Route path="/blog">
+              <Redirect to="/take-charge" />
+            </Route>
             <Route path="/demo">
               <ErrorBoundary moduleName="demo">
                 <DemoDashboard />
