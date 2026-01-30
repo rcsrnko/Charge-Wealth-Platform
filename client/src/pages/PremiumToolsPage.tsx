@@ -84,13 +84,14 @@ const premiumTools: PremiumTool[] = [
   }
 ];
 
-// Theme hook for dark/light mode
+// Theme hook for dark/light mode - defaults to light (vanilla bean)
 function useTheme() {
   const [isDark, setIsDark] = useState(() => {
     if (typeof window !== 'undefined') {
       const saved = localStorage.getItem('tools-theme');
       if (saved) return saved === 'dark';
-      return window.matchMedia('(prefers-color-scheme: dark)').matches;
+      // Default to light mode (vanilla bean) instead of system preference
+      return false;
     }
     return false;
   });

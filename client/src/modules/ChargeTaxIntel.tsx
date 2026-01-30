@@ -640,21 +640,6 @@ export default function ChargeTaxIntel() {
                 </div>
               )}
 
-              {/* Quick Stats in left column */}
-              <div className={styles.inlineQuickStats}>
-                <div className={styles.quickStat}>
-                  <span className={styles.quickStatLabel}>Effective Rate</span>
-                  <span className={styles.quickStatValue}>{formatPercent(taxData.effectiveTaxRate || taxProjection?.rates?.effectiveRate)}</span>
-                </div>
-                <div className={styles.quickStat}>
-                  <span className={styles.quickStatLabel}>Marginal Bracket</span>
-                  <span className={styles.quickStatValue}>{formatPercent(taxData.marginalTaxBracket || taxProjection?.rates?.marginalBracket)}</span>
-                </div>
-                <div className={styles.quickStat}>
-                  <span className={styles.quickStatLabel}>Federal Tax</span>
-                  <span className={styles.quickStatValue}>{formatCurrency(taxData.totalFederalTax || taxProjection?.projections?.federalTax)}</span>
-                </div>
-              </div>
             </div>
 
             {/* Right Column: Tax Assistant Chat */}
@@ -737,6 +722,8 @@ export default function ChargeTaxIntel() {
               </div>
             </div>
           </div>
+
+          {/* Quick Stats removed - now shown in Tax Projection Section below */}
 
           {/* Tax Projection Section */}
           {taxProjection?.hasProjection && taxProjection.projections && (
@@ -957,13 +944,39 @@ export default function ChargeTaxIntel() {
               </div>
             )}
 
-            {/* Empty state - improved messaging */}
+            {/* Empty state - improved messaging with re-analyze option */}
             {(!taxData.optimizations || taxData.optimizations.length === 0) && 
              (!taxData.insights || taxData.insights.length === 0) && 
              (!taxData.taxStrategies || taxData.taxStrategies.length === 0) && (
               <div className={styles.noResults}>
-                <p>We're analyzing your document for tax-saving opportunities. If you don't see recommendations, try uploading a clearer paystub or W-2 PDF.</p>
+                <p>We're still processing your document. This can take a moment.</p>
                 <p className={styles.noResultsTip}>💡 Tip: Make sure your document shows gross pay, federal withholding, and any pre-tax deductions like 401(k) or HSA.</p>
+                <button 
+                  className={styles.reanalyzeBtn}
+                  onClick={async () => {
+                    setIsUploading(true);
+                    try {
+                      const analyzeResponse = await fetchWithAuth('/api/tax-intel/analyze', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ documentType: 'paystub' }),
+                      });
+                      if (analyzeResponse.ok) {
+                        const data = await analyzeResponse.json();
+                        setTaxData(data.taxData);
+                        await loadTaxProjection();
+                        showSuccess('Analysis complete!');
+                      }
+                    } catch (err) {
+                      showError('Analysis failed. Please try again.');
+                    } finally {
+                      setIsUploading(false);
+                    }
+                  }}
+                  disabled={isUploading}
+                >
+                  {isUploading ? 'Re-analyzing...' : 'Re-analyze Document'}
+                </button>
               </div>
             )}
           </div>

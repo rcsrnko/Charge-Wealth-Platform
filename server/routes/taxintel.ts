@@ -916,9 +916,9 @@ RULES:
           });
         }
         
-        // HSA optimization if not contributing
-        if (currentHSA < maxPerPaycheckHSA * 0.5) {
-          const suggestedHSA = Math.min(maxPerPaycheckHSA, Math.max(currentHSA + 100, maxPerPaycheckHSA / 2));
+        // HSA optimization - always suggest if not maxing
+        if (currentHSA < maxPerPaycheckHSA * 0.9) {
+          const suggestedHSA = maxPerPaycheckHSA;
           const increase = suggestedHSA - currentHSA;
           const annualSavings = Math.round(increase * payPeriods * (marginalRate / 100));
           defaultOptimizations.push({
@@ -927,8 +927,41 @@ RULES:
             suggestedAmount: suggestedHSA,
             extraPerPaycheck: increase,
             taxSavingsPerYear: annualSavings,
-            howToFix: 'If you have a high-deductible health plan (HDHP), you can contribute to an HSA. Set up payroll deductions through your employer or contribute directly through your HSA provider.',
+            howToFix: 'If you have a high-deductible health plan (HDHP), you can contribute to an HSA. Set up payroll deductions through your employer or contribute directly through your HSA provider. HSA contributions are triple tax-advantaged.',
             priority: 'high' as const
+          });
+        }
+        
+        // FSA optimization - suggest if income is high enough
+        if (income > 75000) {
+          const maxPerPaycheckFSA = Math.round(3200 / payPeriods);
+          const currentFSA = extractedData.fsaContribution || extractedData.preTaxDeductions?.fsa || 0;
+          if (currentFSA < maxPerPaycheckFSA * 0.5) {
+            const suggestedFSA = Math.round(maxPerPaycheckFSA * 0.75); // Suggest 75% to be conservative
+            const increase = suggestedFSA - currentFSA;
+            const annualSavings = Math.round(increase * payPeriods * (marginalRate / 100));
+            defaultOptimizations.push({
+              action: 'Consider a Flexible Spending Account (FSA)',
+              currentAmount: currentFSA,
+              suggestedAmount: suggestedFSA,
+              extraPerPaycheck: increase,
+              taxSavingsPerYear: annualSavings,
+              howToFix: 'During open enrollment, sign up for a healthcare FSA to pay for medical expenses pre-tax. Note: FSA funds typically must be used within the plan year or you lose them.',
+              priority: 'medium' as const
+            });
+          }
+        }
+        
+        // W-4 Optimization insight
+        if (income > 100000) {
+          defaultOptimizations.push({
+            action: 'Review your W-4 withholding',
+            currentAmount: 0,
+            suggestedAmount: 0,
+            extraPerPaycheck: 0,
+            taxSavingsPerYear: Math.round(income * 0.01), // Estimate 1% potential adjustment
+            howToFix: 'Use the IRS Tax Withholding Estimator (irs.gov/W4app) to check if your current withholding is accurate. Adjusting your W-4 can help you avoid a large tax bill or get more money in each paycheck instead of waiting for a refund.',
+            priority: 'medium' as const
           });
         }
         
@@ -950,28 +983,62 @@ RULES:
             business: 0,
             other: 0
           },
-          insights: defaultOptimizations.length === 0 ? [
-            {
-              type: "upload_more",
-              severity: "info",
-              title: "Upload a clearer document for personalized insights",
-              description: "We couldn't fully extract data from your document. Try uploading a clearer PDF paystub with visible gross pay and deduction amounts.",
-              potentialImpact: 0
-            }
-          ] : [],
+          insights: [],
           optimizations: defaultOptimizations,
           totalExtraPerYear: totalSavings,
-          summaryText: defaultOptimizations.length > 0 
-            ? `Based on your income, you could save approximately $${totalSavings.toLocaleString()} per year by optimizing your pre-tax contributions.`
-            : undefined
+          summaryText: `Based on your $${income.toLocaleString()} income in the ${marginalRate}% tax bracket, you could save approximately $${totalSavings.toLocaleString()} per year by optimizing your pre-tax contributions.`
         };
         
         console.log('Using fallback taxData with', defaultOptimizations.length, 'optimizations');
       }
       
-      // Ensure optimizations array exists even if AI returned empty
-      if (!taxData.optimizations) {
+      // Ensure optimizations array exists and has content
+      if (!taxData.optimizations || taxData.optimizations.length === 0) {
+        // Generate default optimizations if AI didn't provide any
+        const income = taxData.totalIncome || estimatedAnnualIncome || 200000;
+        const marginalRate = taxData.marginalTaxBracket || (income > 243725 ? 35 : income > 191950 ? 32 : income > 100525 ? 24 : 22);
+        const current401k = extractedData.retirement401k || extractedData.preTaxDeductions?.retirement401k || taxData.currentPaycheck?.preTaxDeductions?.retirement401k || 0;
+        const currentHSA = extractedData.hsaContribution || extractedData.preTaxDeductions?.hsa || taxData.currentPaycheck?.preTaxDeductions?.hsa || 0;
+        const maxPerPaycheck401k = Math.round(23500 / payPeriods);
+        const maxPerPaycheckHSA = Math.round(4150 / payPeriods);
+        
         taxData.optimizations = [];
+        
+        // 401k optimization
+        if (current401k < maxPerPaycheck401k * 0.9) {
+          const increase = maxPerPaycheck401k - current401k;
+          taxData.optimizations.push({
+            action: 'Maximize your 401(k) contribution',
+            currentAmount: current401k,
+            suggestedAmount: maxPerPaycheck401k,
+            extraPerPaycheck: increase,
+            taxSavingsPerYear: Math.round(increase * payPeriods * (marginalRate / 100)),
+            howToFix: 'Log into your employer benefits portal and increase your 401(k) contribution percentage to reach the $23,500 annual limit. Every dollar you contribute reduces your taxable income.',
+            priority: 'high'
+          });
+        }
+        
+        // HSA optimization
+        if (currentHSA < maxPerPaycheckHSA * 0.9) {
+          const increase = maxPerPaycheckHSA - currentHSA;
+          taxData.optimizations.push({
+            action: 'Max out your HSA contributions',
+            currentAmount: currentHSA,
+            suggestedAmount: maxPerPaycheckHSA,
+            extraPerPaycheck: increase,
+            taxSavingsPerYear: Math.round(increase * payPeriods * (marginalRate / 100)),
+            howToFix: 'If you have an HDHP, increase your HSA contribution to the $4,150 limit ($8,300 for family). HSA contributions are tax-deductible, grow tax-free, and withdrawals for medical expenses are tax-free.',
+            priority: 'high'
+          });
+        }
+        
+        // Recalculate totals
+        taxData.totalExtraPerYear = taxData.optimizations.reduce((sum: number, opt: any) => sum + (opt.taxSavingsPerYear || 0), 0);
+        if (taxData.totalExtraPerYear > 0 && !taxData.summaryText) {
+          taxData.summaryText = `Based on your paystub, you could save $${taxData.totalExtraPerYear.toLocaleString()} per year by maximizing your pre-tax contributions.`;
+        }
+        
+        console.log('Generated fallback optimizations:', taxData.optimizations.length);
       }
 
       // Only save to database if we have valid tax data

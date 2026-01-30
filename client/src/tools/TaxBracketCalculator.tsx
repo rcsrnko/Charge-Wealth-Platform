@@ -90,21 +90,23 @@ export const TaxBracketCalculator: React.FC = () => {
       margin: '0 auto',
       padding: 32,
       fontFamily: 'Inter, -apple-system, sans-serif',
-      background: '#121212',
+      background: 'var(--bg-elevated)',
       borderRadius: 16,
-      color: '#F4F5F7',
+      color: 'var(--text-primary)',
+      border: '1px solid var(--border)',
+      boxShadow: 'var(--shadow-sm)',
     }}>
-      <h1 style={{ color: '#F6DBA6', marginBottom: 8, fontSize: 32 }}>
+      <h1 style={{ color: 'var(--brand-accent)', marginBottom: 8, fontSize: 32 }}>
         Tax Bracket Calculator
       </h1>
-      <p style={{ color: '#A8B0C5', marginBottom: 32 }}>
+      <p style={{ color: 'var(--text-secondary)', marginBottom: 32 }}>
         See exactly how much you'll owe in federal and state taxes for 2026.
       </p>
       
       {/* Inputs */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: 24, marginBottom: 32 }}>
         <div>
-          <label style={{ display: 'block', marginBottom: 8, color: '#A8B0C5', fontSize: 14 }}>
+          <label style={{ display: 'block', marginBottom: 8, color: 'var(--text-secondary)', fontSize: 14 }}>
             Annual Income
           </label>
           <input
@@ -115,17 +117,17 @@ export const TaxBracketCalculator: React.FC = () => {
               width: '100%',
               padding: '12px 16px',
               fontSize: 18,
-              background: '#1E1E1E',
-              border: '1px solid rgba(201, 169, 98, 0.2)',
+              background: 'var(--input-bg)',
+              border: '1px solid var(--input-border)',
               borderRadius: 8,
-              color: '#F4F5F7',
+              color: 'var(--text-primary)',
             }}
             placeholder="150,000"
           />
         </div>
         
         <div>
-          <label style={{ display: 'block', marginBottom: 8, color: '#A8B0C5', fontSize: 14 }}>
+          <label style={{ display: 'block', marginBottom: 8, color: 'var(--text-secondary)', fontSize: 14 }}>
             Filing Status
           </label>
           <select
@@ -135,10 +137,10 @@ export const TaxBracketCalculator: React.FC = () => {
               width: '100%',
               padding: '12px 16px',
               fontSize: 18,
-              background: '#1E1E1E',
-              border: '1px solid rgba(201, 169, 98, 0.2)',
+              background: 'var(--input-bg)',
+              border: '1px solid var(--input-border)',
               borderRadius: 8,
-              color: '#F4F5F7',
+              color: 'var(--text-primary)',
             }}
           >
             <option value="single">Single</option>
@@ -147,7 +149,7 @@ export const TaxBracketCalculator: React.FC = () => {
         </div>
         
         <div>
-          <label style={{ display: 'block', marginBottom: 8, color: '#A8B0C5', fontSize: 14 }}>
+          <label style={{ display: 'block', marginBottom: 8, color: 'var(--text-secondary)', fontSize: 14 }}>
             State
           </label>
           <select
@@ -157,10 +159,10 @@ export const TaxBracketCalculator: React.FC = () => {
               width: '100%',
               padding: '12px 16px',
               fontSize: 18,
-              background: '#1E1E1E',
-              border: '1px solid rgba(201, 169, 98, 0.2)',
+              background: 'var(--input-bg)',
+              border: '1px solid var(--input-border)',
               borderRadius: 8,
-              color: '#F4F5F7',
+              color: 'var(--text-primary)',
             }}
           >
             {Object.keys(STATE_RATES).sort().map(s => (
@@ -172,55 +174,56 @@ export const TaxBracketCalculator: React.FC = () => {
       
       {/* Results */}
       <div style={{
-        background: '#1E1E1E',
+        background: 'var(--bg-secondary)',
         borderRadius: 12,
         padding: 24,
         marginBottom: 24,
+        border: '1px solid var(--border)',
       }}>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: 24 }}>
           <div>
-            <div style={{ color: '#A8B0C5', fontSize: 14, marginBottom: 4 }}>Federal Tax</div>
-            <div style={{ color: '#EF4444', fontSize: 28, fontWeight: 700 }}>
+            <div style={{ color: 'var(--text-secondary)', fontSize: 14, marginBottom: 4 }}>Federal Tax</div>
+            <div style={{ color: 'var(--error)', fontSize: 28, fontWeight: 700 }}>
               {formatCurrency(calculations.federalTax)}
             </div>
           </div>
           <div>
-            <div style={{ color: '#A8B0C5', fontSize: 14, marginBottom: 4 }}>State Tax ({state})</div>
-            <div style={{ color: '#EF4444', fontSize: 28, fontWeight: 700 }}>
+            <div style={{ color: 'var(--text-secondary)', fontSize: 14, marginBottom: 4 }}>State Tax ({state})</div>
+            <div style={{ color: 'var(--error)', fontSize: 28, fontWeight: 700 }}>
               {formatCurrency(calculations.stateTax)}
             </div>
           </div>
           <div>
-            <div style={{ color: '#A8B0C5', fontSize: 14, marginBottom: 4 }}>Total Tax</div>
-            <div style={{ color: '#EF4444', fontSize: 28, fontWeight: 700 }}>
+            <div style={{ color: 'var(--text-secondary)', fontSize: 14, marginBottom: 4 }}>Total Tax</div>
+            <div style={{ color: 'var(--error)', fontSize: 28, fontWeight: 700 }}>
               {formatCurrency(calculations.totalTax)}
             </div>
           </div>
           <div>
-            <div style={{ color: '#A8B0C5', fontSize: 14, marginBottom: 4 }}>Take Home</div>
-            <div style={{ color: '#10B981', fontSize: 28, fontWeight: 700 }}>
+            <div style={{ color: 'var(--text-secondary)', fontSize: 14, marginBottom: 4 }}>Take Home</div>
+            <div style={{ color: 'var(--success)', fontSize: 28, fontWeight: 700 }}>
               {formatCurrency(calculations.takeHome)}
             </div>
           </div>
         </div>
         
-        <div style={{ marginTop: 24, paddingTop: 24, borderTop: '1px solid rgba(201, 169, 98, 0.1)' }}>
+        <div style={{ marginTop: 24, paddingTop: 24, borderTop: '1px solid var(--border)' }}>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))', gap: 16 }}>
             <div>
-              <div style={{ color: '#A8B0C5', fontSize: 12 }}>Effective Tax Rate</div>
-              <div style={{ color: '#F6DBA6', fontSize: 20, fontWeight: 600 }}>
+              <div style={{ color: 'var(--text-secondary)', fontSize: 12 }}>Effective Tax Rate</div>
+              <div style={{ color: 'var(--brand-accent)', fontSize: 20, fontWeight: 600 }}>
                 {formatPercent(calculations.effectiveRate)}
               </div>
             </div>
             <div>
-              <div style={{ color: '#A8B0C5', fontSize: 12 }}>Marginal Tax Rate</div>
-              <div style={{ color: '#F6DBA6', fontSize: 20, fontWeight: 600 }}>
+              <div style={{ color: 'var(--text-secondary)', fontSize: 12 }}>Marginal Tax Rate</div>
+              <div style={{ color: 'var(--brand-accent)', fontSize: 20, fontWeight: 600 }}>
                 {formatPercent(calculations.marginalRate)}
               </div>
             </div>
             <div>
-              <div style={{ color: '#A8B0C5', fontSize: 12 }}>Monthly Take Home</div>
-              <div style={{ color: '#10B981', fontSize: 20, fontWeight: 600 }}>
+              <div style={{ color: 'var(--text-secondary)', fontSize: 12 }}>Monthly Take Home</div>
+              <div style={{ color: 'var(--success)', fontSize: 20, fontWeight: 600 }}>
                 {formatCurrency(calculations.monthlyTakeHome)}
               </div>
             </div>
@@ -230,12 +233,13 @@ export const TaxBracketCalculator: React.FC = () => {
       
       {/* Bracket Visualization */}
       <div style={{
-        background: '#1E1E1E',
+        background: 'var(--bg-secondary)',
         borderRadius: 12,
         padding: 24,
         marginBottom: 24,
+        border: '1px solid var(--border)',
       }}>
-        <h3 style={{ color: '#F4F5F7', marginBottom: 16 }}>Your Tax Brackets</h3>
+        <h3 style={{ color: 'var(--text-primary)', marginBottom: 16 }}>Your Tax Brackets</h3>
         {(filingStatus === 'single' ? FEDERAL_BRACKETS_SINGLE : FEDERAL_BRACKETS_MARRIED)
           .filter(b => calculations.income > b.min)
           .map((bracket, i) => {
@@ -249,17 +253,17 @@ export const TaxBracketCalculator: React.FC = () => {
                 justifyContent: 'space-between',
                 padding: '12px 16px',
                 marginBottom: 8,
-                background: isCurrentBracket ? 'rgba(201, 169, 98, 0.1)' : 'transparent',
+                background: isCurrentBracket ? 'var(--brand-accent-light)' : 'transparent',
                 borderRadius: 8,
-                border: isCurrentBracket ? '1px solid #F6DBA6' : '1px solid transparent',
+                border: isCurrentBracket ? '1px solid var(--brand-accent)' : '1px solid transparent',
               }}>
                 <div>
-                  <span style={{ color: '#F6DBA6', fontWeight: 600 }}>{formatPercent(bracket.rate)}</span>
-                  <span style={{ color: '#A8B0C5', marginLeft: 12 }}>
+                  <span style={{ color: 'var(--brand-accent)', fontWeight: 600 }}>{formatPercent(bracket.rate)}</span>
+                  <span style={{ color: 'var(--text-secondary)', marginLeft: 12 }}>
                     {formatCurrency(bracket.min)} - {bracket.max === Infinity ? '∞' : formatCurrency(bracket.max)}
                   </span>
                 </div>
-                <div style={{ color: '#EF4444', fontWeight: 500 }}>
+                <div style={{ color: 'var(--error)', fontWeight: 500 }}>
                   {formatCurrency(taxInBracket)}
                 </div>
               </div>
@@ -276,8 +280,8 @@ export const TaxBracketCalculator: React.FC = () => {
             padding: '16px 24px',
             fontSize: 18,
             fontWeight: 600,
-            background: '#F6DBA6',
-            color: '#121212',
+            background: 'var(--brand-accent)',
+            color: 'var(--text-on-honey)',
             border: 'none',
             borderRadius: 8,
             cursor: 'pointer',
@@ -287,18 +291,18 @@ export const TaxBracketCalculator: React.FC = () => {
         </button>
       ) : (
         <div style={{
-          background: 'rgba(201, 169, 98, 0.1)',
-          border: '1px solid #F6DBA6',
+          background: 'var(--brand-accent-light)',
+          border: '1px solid var(--brand-accent)',
           borderRadius: 12,
           padding: 24,
         }}>
-          <h3 style={{ color: '#F4F5F7', marginBottom: 8 }}>
+          <h3 style={{ color: 'var(--text-primary)', marginBottom: 8 }}>
             You could save {formatCurrency(calculations.totalTax * 0.15)} or more
           </h3>
-          <p style={{ color: '#A8B0C5', marginBottom: 16, fontSize: 14 }}>
+          <p style={{ color: 'var(--text-secondary)', marginBottom: 16, fontSize: 14 }}>
             Enter your email to get a personalized tax optimization report.
           </p>
-          <div style={{ display: 'flex', gap: 12 }}>
+          <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
             <input
               type="email"
               value={email}
@@ -306,12 +310,13 @@ export const TaxBracketCalculator: React.FC = () => {
               placeholder="your@email.com"
               style={{
                 flex: 1,
+                minWidth: 200,
                 padding: '12px 16px',
                 fontSize: 16,
-                background: '#1E1E1E',
-                border: '1px solid rgba(201, 169, 98, 0.2)',
+                background: 'var(--input-bg)',
+                border: '1px solid var(--input-border)',
                 borderRadius: 8,
-                color: '#F4F5F7',
+                color: 'var(--text-primary)',
               }}
             />
             <button
@@ -319,8 +324,8 @@ export const TaxBracketCalculator: React.FC = () => {
                 padding: '12px 24px',
                 fontSize: 16,
                 fontWeight: 600,
-                background: '#F6DBA6',
-                color: '#121212',
+                background: 'var(--brand-accent)',
+                color: 'var(--text-on-honey)',
                 border: 'none',
                 borderRadius: 8,
                 cursor: 'pointer',
@@ -332,8 +337,8 @@ export const TaxBracketCalculator: React.FC = () => {
         </div>
       )}
       
-      <p style={{ color: '#6B7280', fontSize: 12, marginTop: 24, textAlign: 'center' }}>
-        Powered by <a href="https://chargewealth.co" style={{ color: '#F6DBA6' }}>Charge Wealth</a> • 
+      <p style={{ color: 'var(--text-muted)', fontSize: 12, marginTop: 24, textAlign: 'center' }}>
+        Powered by <a href="https://chargewealth.co" style={{ color: 'var(--brand-accent)' }}>Charge Wealth</a> • 
         This calculator is for informational purposes only and does not constitute tax advice.
       </p>
     </div>

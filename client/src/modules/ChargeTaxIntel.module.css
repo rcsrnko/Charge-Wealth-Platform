@@ -2321,6 +2321,30 @@
   border-radius: 8px;
   display: inline-block;
   text-align: left;
+  margin-bottom: 1rem;
+}
+
+.reanalyzeBtn {
+  display: inline-block;
+  padding: 0.75rem 1.5rem;
+  background: var(--soft-gold);
+  color: var(--midnight-blue);
+  border: none;
+  border-radius: 8px;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.reanalyzeBtn:hover:not(:disabled) {
+  background: #c9a832;
+  transform: translateY(-1px);
+}
+
+.reanalyzeBtn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
 }
 
 /* Chat Column */
