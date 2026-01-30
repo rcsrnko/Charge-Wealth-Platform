@@ -244,8 +244,10 @@ interface PremiumToolsSectionProps {
 }
 
 export function PremiumToolsSection({ isDark, variant = 'sidebar' }: PremiumToolsSectionProps) {
-  const { data: subStatus, isLoading } = useSubscriptionAccess();
+  const { data: subStatus, isLoading, isError } = useSubscriptionAccess();
+  // Default to showing tools (locked) even if API fails
   const hasAccess = subStatus?.hasAccess || false;
+  const showLoading = isLoading && !isError;
 
   const colors = isDark ? {
     bg: '#1E1E1E',
@@ -265,20 +267,7 @@ export function PremiumToolsSection({ isDark, variant = 'sidebar' }: PremiumTool
     accentBg: 'rgba(246,219,166,0.3)',
   };
 
-  if (isLoading) {
-    return (
-      <section style={{
-        padding: variant === 'sidebar' ? '24px' : '48px 32px',
-        background: colors.bg,
-        borderRadius: variant === 'sidebar' ? 16 : 0,
-        border: variant === 'sidebar' ? `1px solid ${colors.border}` : 'none',
-      }}>
-        <div style={{ textAlign: 'center', color: colors.textSecondary, padding: 40 }}>
-          Loading tools...
-        </div>
-      </section>
-    );
-  }
+  // Skip loading state - show tools immediately (locked if not subscribed)
 
   const isSidebar = variant === 'sidebar';
   const displayTools = isSidebar ? PREMIUM_TOOLS.slice(0, 3) : PREMIUM_TOOLS;
