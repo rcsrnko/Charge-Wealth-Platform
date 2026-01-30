@@ -131,7 +131,7 @@ export const RothVsTraditionalCalculator: React.FC = () => {
             }}
           />
           <div style={{ color: '#6B7280', fontSize: 12, marginTop: 4 }}>
-            2024 limit: $7,000 ($8,000 if 50+)
+            2026 limit: $7,000 ($8,000 if 50+)
           </div>
         </div>
         

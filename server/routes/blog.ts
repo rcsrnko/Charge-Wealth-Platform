@@ -56,7 +56,7 @@ export async function registerBlogRoutes(app: Express) {
   app.get('/blog/:slug', async (req, res) => {
     try {
       const { slug } = req.params;
-      const baseUrl = 'https://chargewealth.com';
+      const baseUrl = 'https://chargewealth.co';
       
       const { data: post, error } = await supabase
         .from('blog_posts')
@@ -367,7 +367,7 @@ export async function registerBlogRoutes(app: Express) {
 
   app.get('/sitemap.xml', async (_req, res) => {
     try {
-      const baseUrl = 'https://chargewealth.com';
+      const baseUrl = 'https://chargewealth.co';
       
       const { data: posts } = await supabase
         .from('blog_posts')

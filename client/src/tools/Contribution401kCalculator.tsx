@@ -3,10 +3,10 @@ import React, { useState, useMemo } from 'react';
 const formatCurrency = (num: number) => 
   new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(num);
 
-const LIMITS_2024 = {
-  employee: 23000,
+const LIMITS_2026 = {
+  employee: 23500,
   catchUp: 7500, // if 50+
-  total: 69000, // employee + employer
+  total: 70000, // employee + employer
 };
 
 export const Contribution401kCalculator: React.FC = () => {
@@ -25,7 +25,7 @@ export const Contribution401kCalculator: React.FC = () => {
     const matchLimitPct = parseFloat(matchLimit) / 100 || 0;
     const is50Plus = age >= 50;
     
-    const maxEmployeeLimit = is50Plus ? LIMITS_2024.employee + LIMITS_2024.catchUp : LIMITS_2024.employee;
+    const maxEmployeeLimit = is50Plus ? LIMITS_2026.employee + LIMITS_2026.catchUp : LIMITS_2026.employee;
     
     // Current contribution
     const currentAnnual = salaryNum * contributionPct;
@@ -363,19 +363,19 @@ export const Contribution401kCalculator: React.FC = () => {
         padding: 24,
         marginBottom: 24,
       }}>
-        <h3 style={{ color: '#F4F5F7', marginBottom: 16 }}>2024 Contribution Limits</h3>
+        <h3 style={{ color: '#F4F5F7', marginBottom: 16 }}>2026 Contribution Limits</h3>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))', gap: 12 }}>
           <div style={{ padding: 12, background: '#0F1117', borderRadius: 8 }}>
             <div style={{ color: '#A8B0C5', fontSize: 12 }}>Employee Limit</div>
-            <div style={{ color: '#F4F5F7', fontSize: 18, fontWeight: 600 }}>{formatCurrency(LIMITS_2024.employee)}</div>
+            <div style={{ color: '#F4F5F7', fontSize: 18, fontWeight: 600 }}>{formatCurrency(LIMITS_2026.employee)}</div>
           </div>
           <div style={{ padding: 12, background: '#0F1117', borderRadius: 8 }}>
             <div style={{ color: '#A8B0C5', fontSize: 12 }}>Catch-Up (50+)</div>
-            <div style={{ color: '#F4F5F7', fontSize: 18, fontWeight: 600 }}>+{formatCurrency(LIMITS_2024.catchUp)}</div>
+            <div style={{ color: '#F4F5F7', fontSize: 18, fontWeight: 600 }}>+{formatCurrency(LIMITS_2026.catchUp)}</div>
           </div>
           <div style={{ padding: 12, background: '#0F1117', borderRadius: 8 }}>
             <div style={{ color: '#A8B0C5', fontSize: 12 }}>Total Max (w/ employer)</div>
-            <div style={{ color: '#F4F5F7', fontSize: 18, fontWeight: 600 }}>{formatCurrency(LIMITS_2024.total)}</div>
+            <div style={{ color: '#F4F5F7', fontSize: 18, fontWeight: 600 }}>{formatCurrency(LIMITS_2026.total)}</div>
           </div>
         </div>
       </div>

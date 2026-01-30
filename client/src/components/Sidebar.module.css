@@ -63,8 +63,8 @@
 }
 
 .toggleBtn {
-  width: 32px;
-  height: 32px;
+  width: 44px;
+  height: 44px;
   background: rgba(201, 169, 98, 0.1);
   border: 1px solid rgba(201, 169, 98, 0.2);
   border-radius: 8px;
@@ -465,7 +465,7 @@
 /* AI Advisor Progress Badge */
 .progressBadge {
   margin-left: auto;
-  width: 32px;
+  width: 44px;
   height: 4px;
   background: rgba(201, 169, 98, 0.2);
   border-radius: 2px;

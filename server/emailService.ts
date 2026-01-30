@@ -30,7 +30,7 @@ async function getCredentials() {
     }
     return {
       apiKey: connectionSettings.settings.api_key,
-      fromEmail: connectionSettings.settings.from_email || 'Charge Wealth <hello@chargewealth.com>'
+      fromEmail: connectionSettings.settings.from_email || 'Charge Wealth <hello@chargewealth.co>'
     };
   } catch (error) {
     console.error('Failed to get Resend credentials:', error);
@@ -246,7 +246,7 @@ export const emailTemplates = {
             </p>
           </div>
           
-          <a href="https://chargewealth.com/dashboard" style="display: inline-block; background: #C9A962; color: #0D0F14; text-decoration: none; padding: 16px 48px; border-radius: 8px; font-weight: bold; font-size: 16px; margin-top: 16px;">
+          <a href="https://chargewealth.co/dashboard" style="display: inline-block; background: #C9A962; color: #0D0F14; text-decoration: none; padding: 16px 48px; border-radius: 8px; font-weight: bold; font-size: 16px; margin-top: 16px;">
             Get Lifetime Access Now
           </a>
         </div>

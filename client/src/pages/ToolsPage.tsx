@@ -212,7 +212,7 @@ function ToolsIndex() {
         color: '#6B7280',
         fontSize: 14,
       }}>
-        © 2024 Charge Wealth. All rights reserved.
+        © 2026 Charge Wealth. All rights reserved.
       </footer>
     </div>
   );

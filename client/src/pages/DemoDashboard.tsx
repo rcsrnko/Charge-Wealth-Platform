@@ -12,7 +12,7 @@ const DEMO_CONTEXT = {
     primaryGoal: 'wealth_building'
   },
   tax: {
-    taxYear: 2024,
+    taxYear: 2026,
     totalIncome: 350000,
     agi: 320000,
     taxableIncome: 290000,
@@ -136,7 +136,7 @@ function DemoOverview({ context }: { context: typeof DEMO_CONTEXT }) {
         <div className={styles.statCard}>
           <span className={styles.statLabel}>Total Income</span>
           <span className={styles.statValue}>{formatCurrency(context.tax.totalIncome)}</span>
-          <span className={styles.statSubtext}>2024 Tax Year</span>
+          <span className={styles.statSubtext}>2026 Tax Year</span>
         </div>
         <div className={styles.statCard}>
           <span className={styles.statLabel}>Portfolio Value</span>

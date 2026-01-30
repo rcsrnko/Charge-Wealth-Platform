@@ -100,7 +100,7 @@ Example: Sell your S&P 500 ETF at a loss, immediately buy a Total Market ETF. Sa
 
 If you're close to the standard deduction threshold, consider "bunching" multiple years of donations into one year to exceed it.
 
-In 2024, the standard deduction is $14,600 (single) or $29,200 (married). If your itemized deductions are close, bunching can push you over.
+In 2026, the standard deduction is $15,000 (single) or $30,000 (married). If your itemized deductions are close, bunching can push you over.
 
 ## 5. Review Your HSA Contributions
 
@@ -109,7 +109,7 @@ If you have an HSA-eligible health plan, max it out. The HSA is the only triple-
 - Tax-free growth
 - Tax-free withdrawals (for medical expenses)
 
-2024 limits: $4,150 (individual) or $8,300 (family).
+2026 limits: $4,300 (individual) or $8,550 (family).
 
 ---
 

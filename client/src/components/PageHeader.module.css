@@ -64,8 +64,8 @@
   background: rgba(88, 164, 176, 0.1);
   border: 1px solid rgba(88, 164, 176, 0.3);
   color: var(--ocean-teal);
-  width: 32px;
-  height: 32px;
+  width: 44px;
+  height: 44px;
   border-radius: 50%;
   cursor: pointer;
   transition: all 0.2s;

@@ -1,25 +1,25 @@
 import React, { useState, useMemo } from 'react';
 
-// 2024 Federal Tax Brackets (Single)
+// 2026 Federal Tax Brackets (Single)
 const FEDERAL_BRACKETS_SINGLE = [
-  { min: 0, max: 11600, rate: 0.10 },
-  { min: 11600, max: 47150, rate: 0.12 },
-  { min: 47150, max: 100525, rate: 0.22 },
-  { min: 100525, max: 191950, rate: 0.24 },
-  { min: 191950, max: 243725, rate: 0.32 },
-  { min: 243725, max: 609350, rate: 0.35 },
-  { min: 609350, max: Infinity, rate: 0.37 },
+  { min: 0, max: 11925, rate: 0.10 },
+  { min: 11925, max: 48475, rate: 0.12 },
+  { min: 48475, max: 103350, rate: 0.22 },
+  { min: 103350, max: 197300, rate: 0.24 },
+  { min: 197300, max: 250525, rate: 0.32 },
+  { min: 250525, max: 626350, rate: 0.35 },
+  { min: 626350, max: Infinity, rate: 0.37 },
 ];
 
-// 2024 Federal Tax Brackets (Married Filing Jointly)
+// 2026 Federal Tax Brackets (Married Filing Jointly)
 const FEDERAL_BRACKETS_MARRIED = [
-  { min: 0, max: 23200, rate: 0.10 },
-  { min: 23200, max: 94300, rate: 0.12 },
-  { min: 94300, max: 201050, rate: 0.22 },
-  { min: 201050, max: 383900, rate: 0.24 },
-  { min: 383900, max: 487450, rate: 0.32 },
-  { min: 487450, max: 731200, rate: 0.35 },
-  { min: 731200, max: Infinity, rate: 0.37 },
+  { min: 0, max: 23850, rate: 0.10 },
+  { min: 23850, max: 96950, rate: 0.12 },
+  { min: 96950, max: 206700, rate: 0.22 },
+  { min: 206700, max: 394600, rate: 0.24 },
+  { min: 394600, max: 501050, rate: 0.32 },
+  { min: 501050, max: 751600, rate: 0.35 },
+  { min: 751600, max: Infinity, rate: 0.37 },
 ];
 
 // State tax rates (simplified - flat rates for simplicity)
@@ -98,7 +98,7 @@ export const TaxBracketCalculator: React.FC = () => {
         Tax Bracket Calculator
       </h1>
       <p style={{ color: '#A8B0C5', marginBottom: 32 }}>
-        See exactly how much you'll owe in federal and state taxes for 2024.
+        See exactly how much you'll owe in federal and state taxes for 2026.
       </p>
       
       {/* Inputs */}
