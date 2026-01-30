@@ -152,32 +152,34 @@ export async function registerBlogRoutes(app: Express) {
     
     <style>
         :root {
-            --midnight-blue: #0F1117;
-            --deep-navy: #1A1D28;
-            --gold-sand: #C9A962;
-            --porcelain: #F4F5F7;
-            --muted-gray: #6B7280;
+            --bg-vanilla: #F9F6F0;
+            --card-cream: #FFFDFB;
+            --text-primary: #1F2937;
+            --text-secondary: #6B7280;
+            --accent-honey: #F6DBA6;
+            --accent-honey-dark: #D4A853;
+            --border-light: rgba(31, 41, 55, 0.1);
         }
         * { margin: 0; padding: 0; box-sizing: border-box; }
         html, body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-            background: var(--midnight-blue) !important;
-            background-color: var(--midnight-blue) !important;
-            color: var(--porcelain);
+            background: var(--bg-vanilla);
+            color: var(--text-primary);
             line-height: 1.7;
             min-height: 100%;
         }
         main, article {
-            background: var(--midnight-blue) !important;
+            background: var(--bg-vanilla);
         }
         header {
-            background: rgba(15, 17, 23, 0.95);
-            border-bottom: 1px solid rgba(201, 169, 98, 0.15);
+            background: var(--card-cream);
+            border-bottom: 1px solid var(--border-light);
             padding: 1rem 2rem;
             position: sticky;
             top: 0;
             z-index: 100;
             backdrop-filter: blur(10px);
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
         }
         .header-content {
             max-width: 900px;
@@ -187,40 +189,45 @@ export async function registerBlogRoutes(app: Express) {
             align-items: center;
         }
         .logo {
-            color: var(--gold-sand);
+            color: var(--text-primary);
             font-size: 1.5rem;
             font-weight: 700;
             text-decoration: none;
         }
-        .nav-links { display: flex; gap: 2rem; }
+        .logo:hover { color: var(--accent-honey-dark); }
+        .nav-links { display: flex; gap: 2rem; align-items: center; }
         .nav-links a {
-            color: var(--porcelain);
+            color: var(--text-secondary);
             text-decoration: none;
             font-size: 0.9rem;
+            transition: color 0.2s;
         }
-        .nav-links a:hover { color: var(--gold-sand); }
+        .nav-links a:hover { color: var(--text-primary); }
         main { max-width: 800px; margin: 0 auto; padding: 3rem 2rem; }
         .breadcrumb {
-            color: var(--muted-gray);
+            color: var(--text-secondary);
             font-size: 0.85rem;
             margin-bottom: 2rem;
         }
-        .breadcrumb a { color: var(--gold-sand); text-decoration: none; }
+        .breadcrumb a { color: var(--accent-honey-dark); text-decoration: none; }
+        .breadcrumb a:hover { text-decoration: underline; }
         .featured-image {
             width: 100%;
             max-height: 400px;
             object-fit: cover;
             border-radius: 12px;
             margin-bottom: 2rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
         }
         h1 {
             font-size: 2.5rem;
             font-weight: 700;
             margin-bottom: 1rem;
             line-height: 1.2;
+            color: var(--text-primary);
         }
         .meta {
-            color: var(--muted-gray);
+            color: var(--text-secondary);
             font-size: 0.9rem;
             margin-bottom: 2rem;
             display: flex;
@@ -229,70 +236,77 @@ export async function registerBlogRoutes(app: Express) {
         }
         .content {
             font-size: 1.1rem;
-            background: var(--midnight-blue) !important;
+            background: var(--bg-vanilla);
         }
         .content, .content *, .content div, .content table, .content td, .content tr, .content span, .content p {
-            background: var(--midnight-blue) !important;
-            background-color: var(--midnight-blue) !important;
-            color: var(--porcelain) !important;
+            background: transparent !important;
+            background-color: transparent !important;
+            color: var(--text-primary) !important;
         }
         .content h1, .content h1 * {
-            color: var(--porcelain) !important;
-            background: var(--midnight-blue) !important;
+            color: var(--text-primary) !important;
+            background: transparent !important;
         }
         .content h2, .content h2 * {
             font-size: 1.75rem;
             margin: 2.5rem 0 1rem;
-            color: var(--gold-sand) !important;
-            background: var(--midnight-blue) !important;
+            color: var(--text-primary) !important;
+            background: transparent !important;
+            border-bottom: 2px solid var(--accent-honey);
+            padding-bottom: 0.5rem;
         }
         .content h3, .content h3 * {
             font-size: 1.35rem;
             margin: 2rem 0 0.75rem;
-            color: var(--porcelain) !important;
-            background: var(--midnight-blue) !important;
+            color: var(--text-primary) !important;
+            background: transparent !important;
         }
         .content p { margin-bottom: 1.25rem; }
-        .content a, .content a * { color: var(--gold-sand) !important; }
-        .content strong, .content b { color: var(--gold-sand) !important; }
+        .content a, .content a * { color: var(--accent-honey-dark) !important; }
+        .content strong, .content b { color: var(--text-primary) !important; font-weight: 600; }
         .content ul, .content ol {
             margin: 1rem 0 1.5rem 1.5rem;
         }
         .content li { margin-bottom: 0.5rem; }
-        .content strong { color: var(--gold-sand); }
         .content blockquote {
-            border-left: 3px solid var(--gold-sand);
+            border-left: 3px solid var(--accent-honey);
             padding-left: 1.5rem;
             margin: 1.5rem 0;
-            color: var(--muted-gray);
+            color: var(--text-secondary);
             font-style: italic;
+            background: var(--card-cream) !important;
+            padding: 1rem 1.5rem;
+            border-radius: 0 8px 8px 0;
         }
         .content pre {
-            background: var(--deep-navy);
+            background: var(--card-cream) !important;
             padding: 1rem;
             border-radius: 8px;
             overflow-x: auto;
             margin: 1rem 0;
+            border: 1px solid var(--border-light);
         }
         .content code {
-            background: var(--deep-navy);
+            background: var(--card-cream) !important;
             padding: 0.2rem 0.4rem;
             border-radius: 4px;
             font-size: 0.9em;
+            color: var(--text-primary) !important;
         }
         .content a {
-            color: var(--gold-sand);
+            color: var(--accent-honey-dark);
             text-decoration: underline;
         }
         .content .tldr, .tldr {
-            background: var(--deep-navy);
-            border-left: 4px solid var(--gold-sand);
+            background: var(--card-cream) !important;
+            border-left: 4px solid var(--accent-honey);
             padding: 1.25rem 1.5rem;
             margin: 1.5rem 0 2rem;
             border-radius: 0 8px 8px 0;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
         }
         .tldr h3 {
-            color: var(--gold-sand) !important;
+            color: var(--text-primary) !important;
             margin: 0 0 0.75rem 0 !important;
             font-size: 1.1rem;
         }
@@ -307,41 +321,60 @@ export async function registerBlogRoutes(app: Express) {
             height: auto;
             border-radius: 8px;
             margin: 1.5rem 0;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
         }
         .cta-box {
-            background: var(--deep-navy);
-            border: 1px solid var(--gold-sand);
+            background: var(--card-cream);
+            border: 2px solid var(--accent-honey);
             border-radius: 12px;
             padding: 2rem;
             margin: 3rem 0;
             text-align: center;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
         }
         .cta-box h3 {
-            color: var(--gold-sand);
+            color: var(--text-primary);
             margin-bottom: 1rem;
+        }
+        .cta-box p {
+            color: var(--text-secondary);
         }
         .cta-box a {
             display: inline-block;
-            background: var(--gold-sand);
-            color: var(--midnight-blue);
+            background: var(--accent-honey);
+            color: var(--text-primary);
             padding: 0.875rem 2rem;
             border-radius: 6px;
             text-decoration: none;
             font-weight: 600;
             margin-top: 1rem;
+            transition: background 0.2s, transform 0.2s;
+        }
+        .cta-box a:hover {
+            background: var(--accent-honey-dark);
+            transform: translateY(-1px);
         }
         footer {
-            background: var(--deep-navy);
-            border-top: 1px solid rgba(201, 169, 98, 0.1);
+            background: var(--card-cream);
+            border-top: 1px solid var(--border-light);
             padding: 2rem;
             margin-top: 4rem;
             text-align: center;
         }
-        footer a { color: var(--muted-gray); text-decoration: none; margin: 0 1rem; font-size: 0.85rem; }
-        footer p { color: var(--muted-gray); font-size: 0.8rem; margin-top: 1rem; }
+        footer a { color: var(--text-secondary); text-decoration: none; margin: 0 1rem; font-size: 0.85rem; transition: color 0.2s; }
+        footer a:hover { color: var(--text-primary); }
+        footer p { color: var(--text-secondary); font-size: 0.8rem; margin-top: 1rem; }
         @media (max-width: 768px) {
             h1 { font-size: 1.75rem; }
+            main { padding: 2rem 1rem; }
             .nav-links { display: none; }
+            .meta { flex-direction: column; gap: 0.5rem; }
+            .cta-box { padding: 1.5rem; }
+        }
+        @media (max-width: 480px) {
+            h1 { font-size: 1.5rem; }
+            .content { font-size: 1rem; }
+            .featured-image { border-radius: 8px; }
         }
     </style>
 </head>

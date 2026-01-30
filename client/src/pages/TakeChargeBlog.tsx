@@ -142,12 +142,12 @@ function getColors(isDark: boolean) {
     bgSecondary: '#F5F2ED',
     bgTertiary: '#EFEBE5',
     textPrimary: '#1F2937',
-    textSecondary: '#6B7280',
-    textMuted: '#9CA3AF',
+    textSecondary: '#4B5563',
+    textMuted: '#6B7280',
     accent: '#F6DBA6',
     accentHover: '#E8C88A',
-    border: 'rgba(0,0,0,0.08)',
-    borderHover: 'rgba(0,0,0,0.12)',
+    border: 'rgba(0,0,0,0.12)',
+    borderHover: 'rgba(0,0,0,0.18)',
     card: '#FFFDFB',
   };
 }
@@ -407,19 +407,19 @@ function BlogIndex() {
                     borderRadius: 16,
                     overflow: 'hidden',
                     textDecoration: 'none',
-                    border: `1px solid ${colors.border}`,
+                    border: isDark ? `1px solid ${colors.border}` : '1px solid rgba(0,0,0,0.1)',
                     transition: 'all 0.2s',
-                    boxShadow: isDark ? 'none' : '0 2px 8px rgba(0,0,0,0.04)',
+                    boxShadow: isDark ? 'none' : '0 2px 12px rgba(0,0,0,0.08), 0 1px 3px rgba(0,0,0,0.06)',
                   }}
                   onMouseEnter={(e) => {
                     e.currentTarget.style.borderColor = colors.accent;
                     e.currentTarget.style.transform = 'translateY(-4px)';
-                    e.currentTarget.style.boxShadow = isDark ? '0 8px 24px rgba(0,0,0,0.3)' : '0 8px 24px rgba(0,0,0,0.08)';
+                    e.currentTarget.style.boxShadow = isDark ? '0 8px 24px rgba(0,0,0,0.3)' : '0 12px 32px rgba(0,0,0,0.12), 0 4px 8px rgba(0,0,0,0.08)';
                   }}
                   onMouseLeave={(e) => {
-                    e.currentTarget.style.borderColor = colors.border;
+                    e.currentTarget.style.borderColor = isDark ? colors.border : 'rgba(0,0,0,0.1)';
                     e.currentTarget.style.transform = 'translateY(0)';
-                    e.currentTarget.style.boxShadow = isDark ? 'none' : '0 2px 8px rgba(0,0,0,0.04)';
+                    e.currentTarget.style.boxShadow = isDark ? 'none' : '0 2px 12px rgba(0,0,0,0.08), 0 1px 3px rgba(0,0,0,0.06)';
                   }}
                   >
                     {/* Post image placeholder */}
@@ -444,8 +444,8 @@ function BlogIndex() {
                       <div style={{ display: 'flex', gap: 12, marginBottom: 12, flexWrap: 'wrap' }}>
                         <span style={{
                           padding: '4px 12px',
-                          background: isDark ? 'rgba(246,219,166,0.1)' : 'rgba(246,219,166,0.3)',
-                          color: isDark ? colors.accent : '#8B6914',
+                          background: isDark ? 'rgba(246,219,166,0.15)' : 'rgba(139,105,20,0.12)',
+                          color: isDark ? colors.accent : '#6B4E0F',
                           fontSize: 12,
                           fontWeight: 600,
                           borderRadius: 20,
@@ -468,8 +468,8 @@ function BlogIndex() {
 
                       <p style={{
                         fontSize: 14,
-                        color: colors.textSecondary,
-                        lineHeight: 1.5,
+                        color: isDark ? colors.textSecondary : '#4B5563',
+                        lineHeight: 1.6,
                         marginBottom: 16,
                       }}>
                         {excerpt.length > 150 ? excerpt.substring(0, 150) + '...' : excerpt}
@@ -479,7 +479,7 @@ function BlogIndex() {
                         display: 'flex',
                         justifyContent: 'space-between',
                         fontSize: 12,
-                        color: colors.textMuted,
+                        color: isDark ? colors.textMuted : '#6B7280',
                       }}>
                         <span>{date}</span>
                         <span>{readTime} read</span>
