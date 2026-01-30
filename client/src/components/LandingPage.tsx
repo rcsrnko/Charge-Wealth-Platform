@@ -118,7 +118,14 @@ export function LandingPage({ onShowLogin }: LandingPageProps) {
       await signUpWithEmail(signupData.email, signupData.password, signupData.firstName, signupData.lastName);
       setSignupSuccess(true);
     } catch (error: any) {
-      setSignupError(error.message || 'Signup failed. Please try again.');
+      // Handle Supabase-specific error messages
+      let errorMsg = error.message || 'Signup failed. Please try again.';
+      if (errorMsg.includes('invalid') && errorMsg.includes('Email')) {
+        errorMsg = 'Please enter a valid email address (e.g., name@example.com)';
+      } else if (errorMsg.includes('already registered')) {
+        errorMsg = 'This email is already registered. Please sign in instead.';
+      }
+      setSignupError(errorMsg);
       setSignupLoading(false);
     }
   };
