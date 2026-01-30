@@ -42,7 +42,12 @@ export function registerTaxIntelRoutes(app: Express, isAuthenticated: RequestHan
             type: tr.deductionUsed || 'standard',
             amount: tr.deductionUsed === 'itemized' ? parseNum(tr.itemizedDeductions) : parseNum(tr.standardDeduction),
           },
+          // Ensure arrays are always present to prevent frontend crashes
           insights: [],
+          optimizations: [],
+          taxStrategies: [],
+          totalExtraPerYear: 0,
+          totalPotentialSavings: 0,
         };
       } else if (completedDocs.length > 0) {
         // Build taxData from uploaded documents (paystubs, W-2s, etc)
@@ -114,7 +119,12 @@ export function registerTaxIntelRoutes(app: Express, isAuthenticated: RequestHan
               type: 'standard',
               amount: 14600,
             },
+            // Ensure arrays are always present to prevent frontend crashes
             insights: [],
+            optimizations: [],
+            taxStrategies: [],
+            totalExtraPerYear: 0,
+            totalPotentialSavings: 0,
             isEstimated: true, // Flag to indicate this is estimated from paystubs
           };
         }
@@ -1053,7 +1063,53 @@ RULES:
         });
       }
 
-      res.json({ taxData });
+      // CRITICAL: Normalize and validate taxData before sending to prevent frontend crashes
+      const normalizeNumber = (val: any): number => {
+        if (typeof val === 'number' && !isNaN(val)) return val;
+        if (typeof val === 'string') {
+          const parsed = parseFloat(val);
+          return isNaN(parsed) ? 0 : parsed;
+        }
+        return 0;
+      };
+
+      const normalizeString = (val: any, fallback: string = ''): string => {
+        if (typeof val === 'string') return val;
+        if (val == null) return fallback;
+        return String(val);
+      };
+
+      const normalizedTaxData = {
+        taxYear: normalizeNumber(taxData.taxYear) || new Date().getFullYear(),
+        totalIncome: normalizeNumber(taxData.totalIncome),
+        agi: normalizeNumber(taxData.agi),
+        taxableIncome: normalizeNumber(taxData.taxableIncome),
+        totalFederalTax: normalizeNumber(taxData.totalFederalTax),
+        effectiveTaxRate: normalizeNumber(taxData.effectiveTaxRate),
+        marginalTaxBracket: normalizeNumber(taxData.marginalTaxBracket),
+        filingStatus: normalizeString(taxData.filingStatus, 'single'),
+        incomeBreakdown: taxData.incomeBreakdown || undefined,
+        currentDeductions: taxData.currentDeductions || undefined,
+        currentPaycheck: taxData.currentPaycheck || undefined,
+        insights: Array.isArray(taxData.insights) ? taxData.insights : [],
+        taxStrategies: Array.isArray(taxData.taxStrategies) ? taxData.taxStrategies : [],
+        optimizations: Array.isArray(taxData.optimizations) ? taxData.optimizations.map((opt: any) => ({
+          action: normalizeString(opt?.action, 'Optimization'),
+          currentAmount: normalizeNumber(opt?.currentAmount),
+          suggestedAmount: normalizeNumber(opt?.suggestedAmount),
+          extraPerPaycheck: normalizeNumber(opt?.extraPerPaycheck),
+          taxSavingsPerYear: normalizeNumber(opt?.taxSavingsPerYear),
+          howToFix: normalizeString(opt?.howToFix, 'Contact your HR or benefits administrator.'),
+          priority: ['high', 'medium', 'low'].includes(opt?.priority) ? opt.priority : 'medium',
+        })) : [],
+        totalExtraPerYear: normalizeNumber(taxData.totalExtraPerYear),
+        totalPotentialSavings: normalizeNumber(taxData.totalPotentialSavings),
+        summaryText: taxData.summaryText ? normalizeString(taxData.summaryText) : undefined,
+        summaryRecommendation: taxData.summaryRecommendation ? normalizeString(taxData.summaryRecommendation) : undefined,
+      };
+
+      console.log('Sending normalized taxData with', normalizedTaxData.optimizations.length, 'optimizations');
+      res.json({ taxData: normalizedTaxData });
     } catch (error) {
       console.error("Error analyzing tax return:", error);
       res.status(500).json({ message: "Failed to analyze tax return" });

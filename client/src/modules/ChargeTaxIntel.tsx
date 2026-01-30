@@ -266,7 +266,13 @@ export default function ChargeTaxIntel() {
       if (response.ok) {
         const data = await response.json();
         if (data.taxData) {
-          setTaxData(data.taxData);
+          // Validate the data to prevent render crashes
+          const validatedData = validateTaxData(data.taxData);
+          if (validatedData) {
+            setTaxData(validatedData);
+          } else {
+            console.error('Invalid tax data from /api/tax-intel/current:', data.taxData);
+          }
         }
       }
     } catch (err) {
@@ -352,25 +358,36 @@ export default function ChargeTaxIntel() {
 
       if (analyzeResponse.ok) {
         const data = await analyzeResponse.json();
-        setTaxData(data.taxData);
+        // Validate the response to prevent render crashes
+        const validatedData = validateTaxData(data.taxData);
         
-        const savingsAmount = data.taxData?.totalExtraPerYear || data.taxData?.totalPotentialSavings || 0;
-        if (savingsAmount > 0) {
-          showSuccess(`Analysis complete! Found ${formatCurrency(savingsAmount)} in potential annual savings.`);
+        if (validatedData) {
+          setTaxData(validatedData);
+          
+          const savingsAmount = validatedData.totalExtraPerYear || validatedData.totalPotentialSavings || 0;
+          if (savingsAmount > 0) {
+            showSuccess(`Analysis complete! Found ${formatCurrency(savingsAmount)} in potential annual savings.`);
+          } else {
+            showSuccess('Analysis complete! Your paycheck optimization recommendations are ready.');
+          }
+          
+          // Reload tax projection with new data
+          await loadTaxProjection();
+          
+          // Scroll to results after a short delay
+          setTimeout(() => {
+            resultsRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          }, 300);
         } else {
-          showSuccess('Analysis complete! Your paycheck optimization recommendations are ready.');
+          console.error('Invalid tax data received:', data.taxData);
+          showError('Received invalid analysis data. Please try uploading again.');
+          await loadTaxData();
+          await loadTaxProjection();
         }
-        
-        // Reload tax projection with new data
-        await loadTaxProjection();
-        
-        // Scroll to results after a short delay
-        setTimeout(() => {
-          resultsRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        }, 300);
       } else {
         // Even if analysis fails, try to show extracted data
-        showError('AI analysis failed, but your data was extracted. Try refreshing.');
+        const errorData = await analyzeResponse.json().catch(() => ({}));
+        showError(errorData.message || 'AI analysis failed, but your data was extracted. Try refreshing.');
         await loadTaxData();
         await loadTaxProjection();
       }
@@ -463,13 +480,66 @@ export default function ChargeTaxIntel() {
   };
 
   // Clean up AI-generated text for proper formatting
-  const formatText = (text: string | null | undefined) => {
-    if (!text) return '';
-    return text
+  const formatText = (text: string | number | null | undefined) => {
+    if (text == null) return '';
+    // Handle non-string inputs (AI might return numbers or objects)
+    const str = typeof text === 'string' ? text : String(text);
+    return str
       .replace(/\b401k\b/gi, '401(k)')
       .replace(/\b403b\b/gi, '403(b)')
       .replace(/\bRoth 401\(k\)/gi, 'Roth 401(k)')
       .replace(/\btraditional 401\(k\)/gi, 'Traditional 401(k)');
+  };
+
+  // Validate and normalize tax data from API response
+  const validateTaxData = (data: any): TaxMetrics | null => {
+    if (!data || typeof data !== 'object') return null;
+    
+    // Ensure arrays are actually arrays
+    const normalizeArray = <T,>(arr: any): T[] => {
+      if (!arr) return [];
+      if (!Array.isArray(arr)) return [];
+      return arr;
+    };
+
+    // Ensure numbers are numbers
+    const normalizeNumber = (val: any): number => {
+      if (typeof val === 'number' && !isNaN(val)) return val;
+      if (typeof val === 'string') {
+        const parsed = parseFloat(val);
+        return isNaN(parsed) ? 0 : parsed;
+      }
+      return 0;
+    };
+
+    return {
+      taxYear: normalizeNumber(data.taxYear) || new Date().getFullYear(),
+      totalIncome: normalizeNumber(data.totalIncome),
+      agi: normalizeNumber(data.agi),
+      taxableIncome: normalizeNumber(data.taxableIncome),
+      totalFederalTax: normalizeNumber(data.totalFederalTax),
+      effectiveTaxRate: normalizeNumber(data.effectiveTaxRate),
+      marginalTaxBracket: normalizeNumber(data.marginalTaxBracket),
+      filingStatus: typeof data.filingStatus === 'string' ? data.filingStatus : 'single',
+      incomeBreakdown: data.incomeBreakdown || undefined,
+      currentDeductions: data.currentDeductions || undefined,
+      insights: normalizeArray(data.insights),
+      taxStrategies: normalizeArray(data.taxStrategies),
+      optimizations: normalizeArray(data.optimizations).map((opt: any) => ({
+        action: String(opt?.action || ''),
+        currentAmount: normalizeNumber(opt?.currentAmount),
+        suggestedAmount: normalizeNumber(opt?.suggestedAmount),
+        extraPerPaycheck: normalizeNumber(opt?.extraPerPaycheck),
+        taxSavingsPerYear: normalizeNumber(opt?.taxSavingsPerYear),
+        howToFix: String(opt?.howToFix || ''),
+        priority: ['high', 'medium', 'low'].includes(opt?.priority) ? opt.priority : 'medium',
+      })),
+      currentPaycheck: data.currentPaycheck || undefined,
+      totalExtraPerYear: normalizeNumber(data.totalExtraPerYear),
+      summaryText: typeof data.summaryText === 'string' ? data.summaryText : undefined,
+      totalPotentialSavings: normalizeNumber(data.totalPotentialSavings),
+      summaryRecommendation: typeof data.summaryRecommendation === 'string' ? data.summaryRecommendation : undefined,
+    };
   };
 
   return (
@@ -963,11 +1033,22 @@ export default function ChargeTaxIntel() {
                       });
                       if (analyzeResponse.ok) {
                         const data = await analyzeResponse.json();
-                        setTaxData(data.taxData);
-                        await loadTaxProjection();
-                        showSuccess('Analysis complete!');
+                        // Validate the response to prevent render crashes
+                        const validatedData = validateTaxData(data.taxData);
+                        if (validatedData) {
+                          setTaxData(validatedData);
+                          await loadTaxProjection();
+                          showSuccess('Analysis complete!');
+                        } else {
+                          console.error('Invalid tax data received:', data.taxData);
+                          showError('Received invalid data. Please try uploading your document again.');
+                        }
+                      } else {
+                        const errorData = await analyzeResponse.json().catch(() => ({}));
+                        showError(errorData.message || 'Analysis failed. Please try again.');
                       }
                     } catch (err) {
+                      console.error('Re-analyze error:', err);
                       showError('Analysis failed. Please try again.');
                     } finally {
                       setIsUploading(false);
