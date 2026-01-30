@@ -3,6 +3,13 @@ import { useQuery, useQueryClient } from '@tanstack/react-query';
 import styles from './Settings.module.css';
 import { fetchWithAuth } from '../lib/fetchWithAuth';
 import { useSupabaseAuth } from '../hooks/useSupabaseAuth';
+import { Input } from '../components/ui/input';
+import { Button } from '../components/ui/button';
+import { Label } from '../components/ui/label';
+import { Switch } from '../components/ui/switch';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../components/ui/card';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '../components/ui/tabs';
+import { toast } from 'sonner';
 
 type SettingsTab = 'profile' | 'notifications' | 'connected' | 'password';
 
@@ -180,10 +187,10 @@ function ProfileSection({ profile, isLoading }: { profile?: UserProfile; isLoadi
 
       <div className={styles.formGrid}>
         <div className={styles.field}>
-          <label className={styles.label}>First Name</label>
-          <input
+          <Label htmlFor="firstName">First Name</Label>
+          <Input
+            id="firstName"
             type="text"
-            className={styles.input}
             value={firstName}
             onChange={(e) => setFirstName(e.target.value)}
             placeholder="Enter your first name"
@@ -191,10 +198,10 @@ function ProfileSection({ profile, isLoading }: { profile?: UserProfile; isLoadi
         </div>
 
         <div className={styles.field}>
-          <label className={styles.label}>Last Name</label>
-          <input
+          <Label htmlFor="lastName">Last Name</Label>
+          <Input
+            id="lastName"
             type="text"
-            className={styles.input}
             value={lastName}
             onChange={(e) => setLastName(e.target.value)}
             placeholder="Enter your last name"
@@ -202,10 +209,10 @@ function ProfileSection({ profile, isLoading }: { profile?: UserProfile; isLoadi
         </div>
 
         <div className={styles.field}>
-          <label className={styles.label}>Email</label>
-          <input
+          <Label htmlFor="email">Email</Label>
+          <Input
+            id="email"
             type="email"
-            className={styles.input}
             value={profile?.email || ''}
             disabled
           />
@@ -214,9 +221,9 @@ function ProfileSection({ profile, isLoading }: { profile?: UserProfile; isLoadi
       </div>
 
       <div className={styles.actions}>
-        <button className={styles.primaryBtn} onClick={handleSave} disabled={saving}>
+        <Button onClick={handleSave} disabled={saving}>
           {saving ? 'Saving...' : 'Save Changes'}
-        </button>
+        </Button>
       </div>
 
       <div className={styles.dangerZone}>
@@ -224,7 +231,7 @@ function ProfileSection({ profile, isLoading }: { profile?: UserProfile; isLoadi
         <p className={styles.dangerDesc}>
           Permanently delete your account and all associated data
         </p>
-        <button className={styles.dangerBtn}>Delete Account</button>
+        <Button variant="destructive">Delete Account</Button>
       </div>
     </div>
   );
@@ -330,26 +337,22 @@ function NotificationsSection({ preferences }: { preferences?: NotificationPrefe
           {alertOptions.map((option) => (
             <div key={option.key} className={styles.toggleItem}>
               <div className={styles.toggleInfo}>
-                <span className={styles.toggleLabel}>{option.label}</span>
+                <Label className={styles.toggleLabel}>{option.label}</Label>
                 <span className={styles.toggleDesc}>{option.desc}</span>
               </div>
-              <button
-                className={`${styles.toggle} ${prefs[option.key] ? styles.toggleOn : ''}`}
-                onClick={() => handleToggle(option.key)}
-                role="switch"
-                aria-checked={prefs[option.key]}
-              >
-                <span className={styles.toggleKnob} />
-              </button>
+              <Switch
+                checked={prefs[option.key]}
+                onCheckedChange={() => handleToggle(option.key)}
+              />
             </div>
           ))}
         </div>
       </div>
 
       <div className={styles.actions}>
-        <button className={styles.primaryBtn} onClick={handleSave} disabled={saving}>
+        <Button onClick={handleSave} disabled={saving}>
           {saving ? 'Saving...' : 'Save Preferences'}
-        </button>
+        </Button>
       </div>
     </div>
   );
@@ -401,11 +404,11 @@ function ConnectedAccountsSection({ accounts }: { accounts?: ConnectedAccount[] 
                 )}
               </div>
               {connected ? (
-                <button className={styles.disconnectBtn}>Disconnect</button>
+                <Button variant="outline" size="sm">Disconnect</Button>
               ) : (
-                <button className={styles.connectBtn} onClick={handleConnectGoogle}>
+                <Button variant="outline" size="sm" onClick={handleConnectGoogle}>
                   Connect
-                </button>
+                </Button>
               )}
             </div>
           );
@@ -477,10 +480,10 @@ function PasswordSection({ userEmail: _userEmail }: { userEmail?: string }) {
 
       <div className={styles.passwordForm}>
         <div className={styles.field}>
-          <label className={styles.label}>Current Password</label>
-          <input
+          <Label htmlFor="currentPassword">Current Password</Label>
+          <Input
+            id="currentPassword"
             type="password"
-            className={styles.input}
             value={currentPassword}
             onChange={(e) => setCurrentPassword(e.target.value)}
             placeholder="Enter current password"
@@ -488,10 +491,10 @@ function PasswordSection({ userEmail: _userEmail }: { userEmail?: string }) {
         </div>
 
         <div className={styles.field}>
-          <label className={styles.label}>New Password</label>
-          <input
+          <Label htmlFor="newPassword">New Password</Label>
+          <Input
+            id="newPassword"
             type="password"
-            className={styles.input}
             value={newPassword}
             onChange={(e) => setNewPassword(e.target.value)}
             placeholder="Enter new password"
@@ -500,10 +503,10 @@ function PasswordSection({ userEmail: _userEmail }: { userEmail?: string }) {
         </div>
 
         <div className={styles.field}>
-          <label className={styles.label}>Confirm New Password</label>
-          <input
+          <Label htmlFor="confirmPassword">Confirm New Password</Label>
+          <Input
+            id="confirmPassword"
             type="password"
-            className={styles.input}
             value={confirmPassword}
             onChange={(e) => setConfirmPassword(e.target.value)}
             placeholder="Confirm new password"
@@ -512,9 +515,9 @@ function PasswordSection({ userEmail: _userEmail }: { userEmail?: string }) {
       </div>
 
       <div className={styles.actions}>
-        <button className={styles.primaryBtn} onClick={handleChangePassword} disabled={saving}>
+        <Button onClick={handleChangePassword} disabled={saving}>
           {saving ? 'Changing...' : 'Change Password'}
-        </button>
+        </Button>
       </div>
     </div>
   );

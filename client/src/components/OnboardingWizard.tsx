@@ -1,6 +1,11 @@
 import { useState } from 'react';
 import styles from './OnboardingWizard.module.css';
 import { useToast } from './Toast';
+import { Input } from './ui/input';
+import { Button } from './ui/button';
+import { Label } from './ui/label';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './ui/card';
 
 interface OnboardingWizardProps {
   onComplete: () => void;

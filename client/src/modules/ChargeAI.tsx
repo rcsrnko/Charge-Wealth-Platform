@@ -2,6 +2,12 @@ import { useState, useRef, useEffect } from 'react';
 import styles from './ChargeAI.module.css';
 import LoadingSpinner from '../components/LoadingSpinner';
 import { fetchWithAuth } from '../lib/fetchWithAuth';
+import { Input } from '../components/ui/input';
+import { Button } from '../components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/card';
+import { Badge } from '../components/ui/badge';
+import { ScrollArea } from '../components/ui/scroll-area';
+import { Skeleton } from '../components/ui/skeleton';
 
 interface Message {
   role: 'user' | 'assistant';
@@ -616,7 +622,7 @@ export default function ChargeAI() {
         </div>
 
         <div className={styles.inputArea}>
-          <input
+          <Input
             type="text"
             value={input}
             onChange={(e) => setInput(e.target.value)}
@@ -625,16 +631,17 @@ export default function ChargeAI() {
             className={styles.input}
             disabled={isLoading}
           />
-          <button 
+          <Button 
             onClick={sendMessage} 
             className={styles.sendButton}
             disabled={!input.trim() || isLoading}
+            size="icon"
           >
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <line x1="22" y1="2" x2="11" y2="13"/>
               <polygon points="22 2 15 22 11 13 2 9 22 2"/>
             </svg>
-          </button>
+          </Button>
         </div>
       </div>
 

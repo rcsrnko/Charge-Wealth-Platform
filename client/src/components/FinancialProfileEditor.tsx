@@ -2,6 +2,12 @@ import { useState, useEffect } from 'react';
 import styles from './FinancialProfileEditor.module.css';
 import { useToast } from './Toast';
 import { fetchWithAuth } from '../lib/fetchWithAuth';
+import { Input } from './ui/input';
+import { Button } from './ui/button';
+import { Label } from './ui/label';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select';
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from './ui/dialog';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs';
 
 interface FinancialProfile {
   annualIncome: number;
