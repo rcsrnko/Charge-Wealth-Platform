@@ -51,16 +51,16 @@
   --brand-accent: #D4AF37;       /* Gold accent */
   --brand-accent-hover: #B8960F;
   
-  /* Background Colors - Clean whites */
-  --bg-primary: #FFFFFF;
-  --bg-secondary: #FAFAFA;
-  --bg-tertiary: #F5F5F5;
-  --bg-elevated: #FFFFFF;
+  /* Background Colors - Warm cream palette (easy on the eyes) */
+  --bg-primary: #FAF8F5;         /* Warm cream - main background */
+  --bg-secondary: #F5F2ED;       /* Slightly darker cream */
+  --bg-tertiary: #EFEBE5;        /* Warm stone */
+  --bg-elevated: #FFFDFB;        /* Cards - just slightly brighter */
   
-  /* Sidebar */
-  --sidebar-bg: #FAFAFA;
-  --sidebar-hover: #F0F0F0;
-  --sidebar-active: #E8E8E8;
+  /* Sidebar - Warm tones */
+  --sidebar-bg: #F5F2ED;
+  --sidebar-hover: #EFEBE5;
+  --sidebar-active: #E8E3DB;
   
   /* Text Colors - High contrast */
   --text-primary: #171717;       /* Near black */
@@ -96,8 +96,8 @@
   --info: #0D6EFD;
   --info-light: #EFF6FF;
   
-  /* Borders - Very subtle */
-  --border: rgba(0, 0, 0, 0.06);
+  /* Borders - Warm subtle */
+  --border: rgba(139, 119, 101, 0.12);
   --border-color: rgba(0, 0, 0, 0.08);
   --subtle-border: rgba(0, 0, 0, 0.04);
   --border-strong: rgba(0, 0, 0, 0.12);
