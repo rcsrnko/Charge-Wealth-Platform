@@ -411,7 +411,7 @@ export function PremiumToolsPage() {
                 ⚡ Premium Member
               </span>
             )}
-            <Link href="/dashboard">
+            <Link href={hasPremium ? "/dashboard" : "/take-charge/subscribe"}>
               <a style={{
                 background: hasPremium ? 'transparent' : colors.accent,
                 color: hasPremium ? colors.accentText : '#4A3F2F',
@@ -422,7 +422,7 @@ export function PremiumToolsPage() {
                 textDecoration: 'none',
                 fontSize: 14,
               }}>
-                {hasPremium ? 'Dashboard' : 'Get Premium'}
+                {hasPremium ? 'Dashboard' : 'Subscribe $9/mo'}
               </a>
             </Link>
           </div>
@@ -643,7 +643,7 @@ export function PremiumToolsPage() {
             color: colors.textPrimary,
             marginBottom: 16,
           }}>
-            Get All Premium Tools
+            Unlock Premium Access
           </h2>
           <p style={{
             fontSize: 18,
@@ -652,28 +652,44 @@ export function PremiumToolsPage() {
             margin: '0 auto 32px',
             padding: '0 16px',
           }}>
-            One-time payment of $279 gives you lifetime access to all premium tools,
-            plus AI-powered financial analysis and personalized advice.
+            Get all premium CFO tools, the Take Charge Newsletter, and Discord community access.
           </p>
-          <Link href="/dashboard">
-            <a style={{
-              display: 'inline-flex',
-              alignItems: 'center',
-              gap: 8,
-              background: colors.accent,
-              color: '#4A3F2F',
-              padding: '18px 36px',
-              borderRadius: 8,
-              fontWeight: 700,
-              fontSize: 18,
-              textDecoration: 'none',
-            }}>
-              Get Premium Access
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                <path d="M5 12h14M12 5l7 7-7 7"/>
-              </svg>
-            </a>
-          </Link>
+          <div style={{ display: 'flex', gap: 16, justifyContent: 'center', flexWrap: 'wrap' }}>
+            <Link href="/take-charge/subscribe">
+              <a style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: 8,
+                background: colors.accent,
+                color: '#4A3F2F',
+                padding: '18px 36px',
+                borderRadius: 8,
+                fontWeight: 700,
+                fontSize: 18,
+                textDecoration: 'none',
+                boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
+              }}>
+                Subscribe — $9/mo
+              </a>
+            </Link>
+            <Link href="/take-charge/subscribe">
+              <a style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: 8,
+                background: 'transparent',
+                color: colors.accentText,
+                padding: '18px 36px',
+                borderRadius: 8,
+                fontWeight: 700,
+                fontSize: 18,
+                textDecoration: 'none',
+                border: `2px solid ${colors.accent}`,
+              }}>
+                $87/year (save 20%)
+              </a>
+            </Link>
+          </div>
         </section>
       )}
 
