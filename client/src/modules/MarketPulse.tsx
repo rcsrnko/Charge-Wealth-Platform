@@ -211,10 +211,41 @@ export default function MarketPulse() {
         </div>
       </section>
 
-      {/* What We're Watching - moved up */}
+      {/* Sector Performance - moved above gainers/losers */}
+      <section className={styles.sectorsSection}>
+        <h2 className={styles.sectionTitle}>Sector Performance</h2>
+        <div className={styles.sectorsGrid}>
+          {marketData.sectors.map((sector) => (
+            <div 
+              key={sector.name} 
+              className={`${styles.sectorCard} ${sector.changePercent >= 0 ? styles.sectorPositive : styles.sectorNegative}`}
+            >
+              <span className={styles.sectorName}>{sector.name}</span>
+              <span className={styles.sectorChange}>
+                {formatChange(sector.changePercent)}
+              </span>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* What CFOAnon is Watching */}
       <section className={styles.watchingSection}>
         <div className={styles.watchingHeader}>
-          <h2 className={styles.sectionTitle}>👀 What We're Watching</h2>
+          <div className={styles.watchingTitleGroup}>
+            <h2 className={styles.sectionTitle}>👀 What CFOAnon is Watching</h2>
+            <a 
+              href="https://x.com/CFOAnon" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className={styles.twitterLink}
+            >
+              <svg viewBox="0 0 24 24" fill="currentColor" width="16" height="16">
+                <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+              </svg>
+              @CFOAnon
+            </a>
+          </div>
           <button 
             className={styles.editBtn} 
             onClick={() => setEditMode(!editMode)}
@@ -276,9 +307,9 @@ export default function MarketPulse() {
         </div>
       </section>
 
-      {/* Our Watchlist - stocks/sectors we're tracking */}
+      {/* CFOAnon's Watchlist - stocks/sectors we're tracking */}
       <section className={styles.watchlistSection}>
-        <h2 className={styles.sectionTitle}>📌 Our Watchlist</h2>
+        <h2 className={styles.sectionTitle}>📌 CFOAnon's Watchlist</h2>
         <div className={styles.watchlistGrid}>
           <div className={styles.watchlistCategory}>
             <h3 className={styles.watchlistCategoryTitle}>Stocks</h3>
@@ -416,23 +447,6 @@ export default function MarketPulse() {
           </div>
         </section>
       </div>
-
-      <section className={styles.sectorsSection}>
-        <h2 className={styles.sectionTitle}>Sector Performance</h2>
-        <div className={styles.sectorsGrid}>
-          {marketData.sectors.map((sector) => (
-            <div 
-              key={sector.name} 
-              className={`${styles.sectorCard} ${sector.changePercent >= 0 ? styles.sectorPositive : styles.sectorNegative}`}
-            >
-              <span className={styles.sectorName}>{sector.name}</span>
-              <span className={styles.sectorChange}>
-                {formatChange(sector.changePercent)}
-              </span>
-            </div>
-          ))}
-        </div>
-      </section>
 
     </div>
   );

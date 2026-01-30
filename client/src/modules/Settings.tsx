@@ -138,6 +138,7 @@ function ProfileSection({ profile, isLoading }: { profile?: UserProfile; isLoadi
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [saving, setSaving] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
   const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
   const queryClient = useQueryClient();
 
@@ -159,6 +160,7 @@ function ProfileSection({ profile, isLoading }: { profile?: UserProfile; isLoadi
       });
       if (response.ok) {
         setMessage({ type: 'success', text: 'Profile updated successfully' });
+        setIsEditing(false);
         queryClient.invalidateQueries({ queryKey: ['/api/settings/profile'] });
       } else {
         throw new Error('Failed to update profile');
@@ -170,14 +172,37 @@ function ProfileSection({ profile, isLoading }: { profile?: UserProfile; isLoadi
     }
   };
 
+  const handleCancel = () => {
+    // Reset to original values
+    if (profile) {
+      setFirstName(profile.firstName || '');
+      setLastName(profile.lastName || '');
+    }
+    setIsEditing(false);
+    setMessage(null);
+  };
+
   if (isLoading) {
     return <div className={styles.loading}>Loading profile...</div>;
   }
 
   return (
     <div className={styles.section}>
-      <h2 className={styles.sectionTitle}>Profile Information</h2>
-      <p className={styles.sectionDesc}>Update your personal information</p>
+      <div className={styles.sectionHeader}>
+        <div>
+          <h2 className={styles.sectionTitle}>Profile Information</h2>
+          <p className={styles.sectionDesc}>Your personal information</p>
+        </div>
+        {!isEditing && (
+          <Button variant="outline" onClick={() => setIsEditing(true)}>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{ width: '16px', height: '16px', marginRight: '8px' }}>
+              <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+              <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+            </svg>
+            Edit Profile
+          </Button>
+        )}
+      </div>
 
       {message && (
         <div className={`${styles.message} ${styles[message.type]}`}>
@@ -193,7 +218,9 @@ function ProfileSection({ profile, isLoading }: { profile?: UserProfile; isLoadi
             type="text"
             value={firstName}
             onChange={(e) => setFirstName(e.target.value)}
-            placeholder="Enter your first name"
+            placeholder={isEditing ? "Enter your first name" : "Not set"}
+            disabled={!isEditing}
+            className={!isEditing ? styles.readOnlyInput : ''}
           />
         </div>
 
@@ -204,7 +231,9 @@ function ProfileSection({ profile, isLoading }: { profile?: UserProfile; isLoadi
             type="text"
             value={lastName}
             onChange={(e) => setLastName(e.target.value)}
-            placeholder="Enter your last name"
+            placeholder={isEditing ? "Enter your last name" : "Not set"}
+            disabled={!isEditing}
+            className={!isEditing ? styles.readOnlyInput : ''}
           />
         </div>
 
@@ -215,16 +244,22 @@ function ProfileSection({ profile, isLoading }: { profile?: UserProfile; isLoadi
             type="email"
             value={profile?.email || ''}
             disabled
+            className={styles.readOnlyInput}
           />
           <span className={styles.hint}>Email cannot be changed</span>
         </div>
       </div>
 
-      <div className={styles.actions}>
-        <Button onClick={handleSave} disabled={saving}>
-          {saving ? 'Saving...' : 'Save Changes'}
-        </Button>
-      </div>
+      {isEditing && (
+        <div className={styles.actions}>
+          <Button variant="outline" onClick={handleCancel} disabled={saving}>
+            Cancel
+          </Button>
+          <Button onClick={handleSave} disabled={saving}>
+            {saving ? 'Saving...' : 'Save Changes'}
+          </Button>
+        </div>
+      )}
 
       <div className={styles.dangerZone}>
         <h3 className={styles.dangerTitle}>Danger Zone</h3>
