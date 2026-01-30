@@ -10,6 +10,7 @@ import { TakeChargeBlog } from './pages/TakeChargeBlog';
 import OnboardingWizard from './components/OnboardingWizard';
 import { ToastProvider } from './components/Toast';
 import ErrorBoundary from './components/ErrorBoundary';
+import { LandingPage } from './components/LandingPage';
 import { useState, useEffect } from 'react';
 
 interface MembershipStatus {
@@ -67,22 +68,16 @@ function App() {
   );
 }
 
-function LoginPage() {
-  const { signInWithGoogle, signUpWithEmail, signInWithEmail } = useSupabaseAuth();
+function LoginPage({ onBack }: { onBack?: () => void }) {
+  const { signInWithGoogle, signInWithEmail } = useSupabaseAuth();
   const [socialLoading, setSocialLoading] = useState<string | null>(null);
-  const [showSignup, setShowSignup] = useState(false);
-  const [showEmailSignin, setShowEmailSignin] = useState(false);
-  const [showMemberLogin, setShowMemberLogin] = useState(false);
-  const [signupData, setSignupData] = useState({ firstName: '', lastName: '', email: '', password: '', confirmPassword: '' });
   const [signinData, setSigninData] = useState({ email: '', password: '' });
-  const [memberEmail, setMemberEmail] = useState('');
-  const [signupError, setSignupError] = useState('');
   const [signinError, setSigninError] = useState('');
-  const [memberError, setMemberError] = useState('');
-  const [signupLoading, setSignupLoading] = useState(false);
   const [signinLoading, setSigninLoading] = useState(false);
+  const [showMemberLogin, setShowMemberLogin] = useState(false);
+  const [memberEmail, setMemberEmail] = useState('');
+  const [memberError, setMemberError] = useState('');
   const [memberLoading, setMemberLoading] = useState(false);
-  const [signupSuccess, setSignupSuccess] = useState(false);
 
   const handleMemberLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -104,7 +99,6 @@ function LoginPage() {
       const data = await res.json();
       
       if (res.ok && data.success) {
-        // Store auth in localStorage so frontend recognizes logged-in state
         localStorage.setItem('testUserAuth', JSON.stringify({
           id: data.user.id,
           email: data.user.email,
@@ -131,41 +125,6 @@ function LoginPage() {
     }
   };
 
-  const handleSignup = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setSignupError('');
-    
-    if (!signupData.firstName.trim() || !signupData.lastName.trim() || !signupData.email.trim() || !signupData.password) {
-      setSignupError('Please fill in all fields');
-      return;
-    }
-    
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(signupData.email)) {
-      setSignupError('Please enter a valid email address');
-      return;
-    }
-    
-    if (signupData.password.length < 6) {
-      setSignupError('Password must be at least 6 characters');
-      return;
-    }
-    
-    if (signupData.password !== signupData.confirmPassword) {
-      setSignupError('Passwords do not match');
-      return;
-    }
-    
-    setSignupLoading(true);
-    try {
-      await signUpWithEmail(signupData.email, signupData.password, signupData.firstName, signupData.lastName);
-      setSignupSuccess(true);
-    } catch (error: any) {
-      setSignupError(error.message || 'Signup failed. Please try again.');
-      setSignupLoading(false);
-    }
-  };
-
   const handleEmailSignin = async (e: React.FormEvent) => {
     e.preventDefault();
     setSigninError('');
@@ -177,7 +136,6 @@ function LoginPage() {
     
     setSigninLoading(true);
     try {
-      // Check for test account
       if (signinData.email === 'testuser@test.com') {
         const res = await fetch('/api/test-login', {
           method: 'POST',
@@ -187,7 +145,6 @@ function LoginPage() {
         });
         const data = await res.json();
         if (res.ok && data.success) {
-          // Store test user auth in localStorage
           localStorage.setItem('testUserAuth', JSON.stringify(data.user));
           window.location.href = '/dashboard';
           return;
@@ -204,6 +161,18 @@ function LoginPage() {
     }
   };
 
+  const inputStyle = {
+    width: '100%',
+    padding: '0.875rem 1rem',
+    fontSize: '1rem',
+    border: '1px solid #E5E1DA',
+    borderRadius: '8px',
+    background: '#FFFFFF',
+    color: '#1A1A1A',
+    marginBottom: '0.75rem',
+    outline: 'none',
+  };
+
   const buttonStyle = {
     display: 'inline-flex',
     alignItems: 'center',
@@ -211,26 +180,13 @@ function LoginPage() {
     gap: '0.75rem',
     width: '100%',
     padding: '0.875rem 1.5rem',
-    fontSize: '0.9375rem',
-    fontWeight: '600',
+    fontSize: '1rem',
+    fontWeight: '600' as const,
     border: 'none',
-    borderRadius: '6px',
+    borderRadius: '8px',
     cursor: 'pointer',
     transition: 'all 0.2s',
-    textDecoration: 'none',
     marginBottom: '0.75rem',
-  };
-
-  const inputStyle = {
-    width: '100%',
-    padding: '0.875rem 1rem',
-    fontSize: '0.9375rem',
-    border: '1px solid rgba(255,255,255,0.2)',
-    borderRadius: '6px',
-    background: 'rgba(255,255,255,0.05)',
-    color: '#F4F5F7',
-    marginBottom: '0.75rem',
-    outline: 'none',
   };
 
   return (
@@ -240,8 +196,9 @@ function LoginPage() {
       flexDirection: 'column',
       alignItems: 'center',
       justifyContent: 'center',
-      background: 'linear-gradient(180deg, #0F1117 0%, #1A1D28 100%)',
+      background: '#FAF8F5',
       padding: '2rem',
+      fontFamily: "'Raleway', -apple-system, sans-serif",
     }}>
       <div style={{
         textAlign: 'center',
@@ -249,153 +206,26 @@ function LoginPage() {
         width: '100%',
       }}>
         <h1 style={{
-          fontSize: '2rem',
+          fontSize: '1.75rem',
           fontWeight: '600',
-          color: '#C9A962',
+          color: '#1A1A1A',
           marginBottom: '0.5rem',
-          letterSpacing: '0.05em',
+          fontFamily: "'Lora', Georgia, serif",
         }}>
-          Charge Wealth
+          Welcome Back
         </h1>
         <p style={{
-          fontSize: '1.125rem',
-          color: '#F4F5F7',
-          marginBottom: '0.5rem',
-        }}>
-          {showSignup ? 'Create your account' : 'Welcome back'}
-        </p>
-        <p style={{
-          fontSize: '0.875rem',
-          color: 'rgba(255, 255, 255, 0.6)',
+          fontSize: '1rem',
+          color: '#4B5563',
           marginBottom: '2rem',
-          lineHeight: '1.5',
         }}>
-          {showSignup ? 'Sign up to get lifetime access to your AI CFO.' : 'Sign in to access your financial decision tools.'}
+          Sign in to access your financial tools
         </p>
 
-        {signupSuccess ? (
-          <div style={{ textAlign: 'center' }}>
-            <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>✓</div>
-            <h2 style={{ color: '#C9A962', fontSize: '1.5rem', marginBottom: '0.5rem' }}>Check Your Email</h2>
-            <p style={{ color: 'rgba(255,255,255,0.7)', marginBottom: '1.5rem' }}>
-              We sent a confirmation link to <strong>{signupData.email}</strong>. Click the link to activate your account.
-            </p>
-            <button
-              onClick={() => { setSignupSuccess(false); setShowSignup(false); setShowEmailSignin(true); }}
-              style={{
-                ...buttonStyle,
-                background: '#C9A962',
-                color: '#0F1117',
-              }}
-            >
-              Sign In
-            </button>
-          </div>
-        ) : showSignup ? (
-          <form onSubmit={handleSignup}>
-            <input
-              type="text"
-              placeholder="First Name"
-              value={signupData.firstName}
-              onChange={(e) => setSignupData({ ...signupData, firstName: e.target.value })}
-              style={inputStyle}
-            />
-            <input
-              type="text"
-              placeholder="Last Name"
-              value={signupData.lastName}
-              onChange={(e) => setSignupData({ ...signupData, lastName: e.target.value })}
-              style={inputStyle}
-            />
-            <input
-              type="email"
-              placeholder="Email Address"
-              value={signupData.email}
-              onChange={(e) => setSignupData({ ...signupData, email: e.target.value })}
-              style={inputStyle}
-            />
-            <input
-              type="password"
-              placeholder="Password"
-              value={signupData.password}
-              onChange={(e) => setSignupData({ ...signupData, password: e.target.value })}
-              style={inputStyle}
-            />
-            <input
-              type="password"
-              placeholder="Confirm Password"
-              value={signupData.confirmPassword}
-              onChange={(e) => setSignupData({ ...signupData, confirmPassword: e.target.value })}
-              style={inputStyle}
-            />
-            
-            {signupError && (
-              <p style={{ color: '#ef4444', fontSize: '0.875rem', marginBottom: '1rem' }}>
-                {signupError}
-              </p>
-            )}
-            
-            <button
-              type="submit"
-              disabled={signupLoading}
-              style={{
-                ...buttonStyle,
-                background: '#C9A962',
-                color: '#0F1117',
-                opacity: signupLoading ? 0.7 : 1,
-              }}
-            >
-              {signupLoading ? 'Creating Account...' : 'Create Account'}
-            </button>
-            
-            <div style={{
-              display: 'flex',
-              alignItems: 'center',
-              margin: '1.5rem 0',
-              gap: '1rem',
-            }}>
-              <div style={{ flex: 1, height: '1px', background: 'rgba(255,255,255,0.2)' }} />
-              <span style={{ color: 'rgba(255,255,255,0.4)', fontSize: '0.75rem' }}>or</span>
-              <div style={{ flex: 1, height: '1px', background: 'rgba(255,255,255,0.2)' }} />
-            </div>
-            
-            <button
-              type="button"
-              onClick={handleGoogleLogin}
-              disabled={socialLoading !== null}
-              style={{
-                ...buttonStyle,
-                background: '#fff',
-                color: '#1f2937',
-              }}
-            >
-              <svg width="18" height="18" viewBox="0 0 24 24">
-                <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
-                <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
-                <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
-                <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
-              </svg>
-              {socialLoading === 'google' ? 'Signing up...' : 'Sign Up with Google'}
-            </button>
-            
-            <button
-              type="button"
-              onClick={() => setShowSignup(false)}
-              style={{
-                ...buttonStyle,
-                background: 'transparent',
-                color: 'rgba(255,255,255,0.6)',
-                border: 'none',
-                marginTop: '0.5rem',
-              }}
-            >
-              Already have an account? Sign in
-            </button>
-          </form>
-        ) : showMemberLogin ? (
+        {showMemberLogin ? (
           <form onSubmit={handleMemberLogin}>
-            <p style={{ color: 'rgba(255,255,255,0.7)', marginBottom: '1.5rem', fontSize: '0.875rem' }}>
-              Already paid? Enter the email you used during checkout to access your account.
+            <p style={{ color: '#4B5563', marginBottom: '1.5rem', fontSize: '0.9375rem' }}>
+              Already paid? Enter the email you used during checkout.
             </p>
             <input
               type="email"
@@ -406,7 +236,7 @@ function LoginPage() {
             />
             
             {memberError && (
-              <p style={{ color: '#ef4444', fontSize: '0.875rem', marginBottom: '1rem' }}>
+              <p style={{ color: '#DC2626', fontSize: '0.875rem', marginBottom: '1rem' }}>
                 {memberError}
               </p>
             )}
@@ -416,8 +246,8 @@ function LoginPage() {
               disabled={memberLoading}
               style={{
                 ...buttonStyle,
-                background: '#C9A962',
-                color: '#0F1117',
+                background: '#1A1A1A',
+                color: '#FFFFFF',
                 opacity: memberLoading ? 0.7 : 1,
               }}
             >
@@ -430,137 +260,71 @@ function LoginPage() {
               style={{
                 ...buttonStyle,
                 background: 'transparent',
-                color: 'rgba(255,255,255,0.6)',
+                color: '#4B5563',
                 border: 'none',
-                marginTop: '0.5rem',
               }}
             >
               Back to login options
             </button>
           </form>
-        ) : showEmailSignin ? (
-          <form onSubmit={handleEmailSignin}>
-            <input
-              type="email"
-              placeholder="Email Address"
-              value={signinData.email}
-              onChange={(e) => setSigninData({ ...signinData, email: e.target.value })}
-              style={inputStyle}
-            />
-            <input
-              type="password"
-              placeholder="Password"
-              value={signinData.password}
-              onChange={(e) => setSigninData({ ...signinData, password: e.target.value })}
-              style={inputStyle}
-            />
-            
-            {signinError && (
-              <p style={{ color: '#ef4444', fontSize: '0.875rem', marginBottom: '1rem' }}>
-                {signinError}
-              </p>
-            )}
-            
-            <button
-              type="submit"
-              disabled={signinLoading}
-              style={{
-                ...buttonStyle,
-                background: '#C9A962',
-                color: '#0F1117',
-                opacity: signinLoading ? 0.7 : 1,
-              }}
-            >
-              {signinLoading ? 'Signing In...' : 'Sign In'}
-            </button>
-            
-            <div style={{
-              display: 'flex',
-              alignItems: 'center',
-              margin: '1.5rem 0',
-              gap: '1rem',
-            }}>
-              <div style={{ flex: 1, height: '1px', background: 'rgba(255,255,255,0.2)' }} />
-              <span style={{ color: 'rgba(255,255,255,0.4)', fontSize: '0.75rem' }}>or</span>
-              <div style={{ flex: 1, height: '1px', background: 'rgba(255,255,255,0.2)' }} />
-            </div>
-            
-            <button
-              type="button"
-              onClick={handleGoogleLogin}
-              disabled={socialLoading !== null}
-              style={{
-                ...buttonStyle,
-                background: '#fff',
-                color: '#1f2937',
-              }}
-            >
-              <svg width="18" height="18" viewBox="0 0 24 24">
-                <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
-                <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
-                <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
-                <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
-              </svg>
-              {socialLoading === 'google' ? 'Signing in...' : 'Continue with Google'}
-            </button>
-            
-            <button
-              type="button"
-              onClick={() => { setShowEmailSignin(false); setShowSignup(true); }}
-              style={{
-                ...buttonStyle,
-                background: 'transparent',
-                color: 'rgba(255,255,255,0.6)',
-                border: 'none',
-                marginTop: '0.5rem',
-              }}
-            >
-              Don't have an account? Sign up
-            </button>
-          </form>
         ) : (
           <>
-            <button
-              onClick={() => setShowSignup(true)}
-              style={{
-                ...buttonStyle,
-                background: '#C9A962',
-                color: '#0F1117',
-              }}
-            >
-              Create Account
-            </button>
+            <form onSubmit={handleEmailSignin}>
+              <input
+                type="email"
+                placeholder="Email Address"
+                value={signinData.email}
+                onChange={(e) => setSigninData({ ...signinData, email: e.target.value })}
+                style={inputStyle}
+              />
+              <input
+                type="password"
+                placeholder="Password"
+                value={signinData.password}
+                onChange={(e) => setSigninData({ ...signinData, password: e.target.value })}
+                style={inputStyle}
+              />
+              
+              {signinError && (
+                <p style={{ color: '#DC2626', fontSize: '0.875rem', marginBottom: '1rem' }}>
+                  {signinError}
+                </p>
+              )}
+              
+              <button
+                type="submit"
+                disabled={signinLoading}
+                style={{
+                  ...buttonStyle,
+                  background: '#1A1A1A',
+                  color: '#FFFFFF',
+                  opacity: signinLoading ? 0.7 : 1,
+                }}
+              >
+                {signinLoading ? 'Signing In...' : 'Sign In'}
+              </button>
+            </form>
             
             <div style={{
               display: 'flex',
               alignItems: 'center',
-              margin: '1.5rem 0',
+              margin: '1rem 0',
               gap: '1rem',
             }}>
-              <div style={{ flex: 1, height: '1px', background: 'rgba(255,255,255,0.2)' }} />
-              <span style={{ color: 'rgba(255,255,255,0.4)', fontSize: '0.75rem' }}>or sign in</span>
-              <div style={{ flex: 1, height: '1px', background: 'rgba(255,255,255,0.2)' }} />
+              <div style={{ flex: 1, height: '1px', background: '#E5E1DA' }} />
+              <span style={{ color: '#9CA3AF', fontSize: '0.75rem' }}>or</span>
+              <div style={{ flex: 1, height: '1px', background: '#E5E1DA' }} />
             </div>
             
             <button
-              onClick={() => setShowEmailSignin(true)}
-              style={{
-                ...buttonStyle,
-                background: 'transparent',
-                color: '#F4F5F7',
-                border: '1px solid rgba(255,255,255,0.3)',
-              }}
-            >
-              Sign In with Email
-            </button>
-        
-            <button
+              type="button"
               onClick={handleGoogleLogin}
               disabled={socialLoading !== null}
               style={{
                 ...buttonStyle,
-                background: '#fff',
-                color: '#1f2937',
+                background: '#FFFFFF',
+                color: '#1A1A1A',
+                border: '1px solid #E5E1DA',
               }}
             >
               <svg width="18" height="18" viewBox="0 0 24 24">
@@ -573,13 +337,14 @@ function LoginPage() {
             </button>
             
             <button
+              type="button"
               onClick={() => setShowMemberLogin(true)}
               style={{
                 ...buttonStyle,
                 background: 'transparent',
-                color: '#C9A962',
-                border: '1px solid #C9A962',
-                marginTop: '1rem',
+                color: '#B8860B',
+                border: '1px solid #B8860B',
+                marginTop: '0.5rem',
               }}
             >
               Already Paid? Access Account
@@ -587,13 +352,22 @@ function LoginPage() {
           </>
         )}
         
-        <p style={{
-          marginTop: '2rem',
-          fontSize: '0.75rem',
-          color: 'rgba(255, 255, 255, 0.4)',
-        }}>
-          No 1% AUM fees. No sales. No BS.
-        </p>
+        {onBack && (
+          <button
+            onClick={onBack}
+            style={{
+              background: 'none',
+              border: 'none',
+              color: '#4B5563',
+              fontSize: '0.9375rem',
+              cursor: 'pointer',
+              marginTop: '1.5rem',
+              textDecoration: 'underline',
+            }}
+          >
+            ← Back to home
+          </button>
+        )}
       </div>
     </div>
   );
@@ -606,11 +380,11 @@ function LoadingPage() {
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
-      background: '#0F1117',
+      background: '#FAF8F5',
     }}>
       <div style={{
         textAlign: 'center',
-        color: '#C9A962',
+        color: '#B8860B',
       }}>
         <p>Loading...</p>
       </div>
@@ -639,8 +413,9 @@ function PaywallPage() {
       flexDirection: 'column',
       alignItems: 'center',
       justifyContent: 'center',
-      background: 'linear-gradient(180deg, #0F1117 0%, #1A1D28 100%)',
+      background: '#FAF8F5',
       padding: '2rem',
+      fontFamily: "'Raleway', -apple-system, sans-serif",
     }}>
       <div style={{
         textAlign: 'center',
@@ -649,14 +424,15 @@ function PaywallPage() {
         <h1 style={{
           fontSize: '2rem',
           fontWeight: '600',
-          color: '#C9A962',
+          color: '#1A1A1A',
           marginBottom: '0.5rem',
+          fontFamily: "'Lora', Georgia, serif",
         }}>
           Membership Required
         </h1>
         <p style={{
           fontSize: '1rem',
-          color: 'rgba(255, 255, 255, 0.7)',
+          color: '#4B5563',
           marginBottom: '2rem',
           lineHeight: '1.6',
         }}>
@@ -665,40 +441,40 @@ function PaywallPage() {
         </p>
         
         <div style={{
-          background: 'rgba(201, 169, 98, 0.1)',
-          border: '1px solid rgba(201, 169, 98, 0.3)',
+          background: '#FFFFFF',
+          border: '1px solid #E5E1DA',
           borderRadius: '12px',
           padding: '1.5rem',
           marginBottom: '2rem',
         }}>
-          <h3 style={{ color: '#C9A962', marginBottom: '1rem', fontSize: '1.25rem' }}>
+          <h3 style={{ color: '#B8860B', marginBottom: '1rem', fontSize: '1.25rem' }}>
             Founding Member - $279 Lifetime
           </h3>
           <ul style={{
             textAlign: 'left',
-            color: 'rgba(255, 255, 255, 0.8)',
-            fontSize: '0.9rem',
+            color: '#374151',
+            fontSize: '0.9375rem',
             lineHeight: '1.8',
             listStyle: 'none',
             padding: 0,
           }}>
-            <li>✓ AI Advisor - Your personal financial CFO</li>
-            <li>✓ Tax Optimizer - Find hidden savings</li>
-            <li>✓ Portfolio Monitor - 24/7 opportunity alerts</li>
-            <li>✓ Lifetime access - No recurring fees</li>
+            <li>✓ Save $5,000+ per year on taxes</li>
+            <li>✓ Get instant answers to any financial question</li>
+            <li>✓ 24/7 portfolio monitoring and alerts</li>
+            <li>✓ Lifetime access, no recurring fees</li>
           </ul>
         </div>
 
         <a
-          href="/#founding-members"
+          href="/"
           style={{
             display: 'inline-block',
-            background: '#C9A962',
-            color: '#0F1117',
+            background: '#1A1A1A',
+            color: '#FFFFFF',
             padding: '1rem 2rem',
             fontSize: '1rem',
             fontWeight: '600',
-            borderRadius: '6px',
+            borderRadius: '8px',
             textDecoration: 'none',
             marginBottom: '1rem',
           }}
@@ -712,7 +488,7 @@ function PaywallPage() {
             style={{
               background: 'transparent',
               border: 'none',
-              color: 'rgba(255, 255, 255, 0.5)',
+              color: '#6B7280',
               fontSize: '0.875rem',
               cursor: 'pointer',
               textDecoration: 'underline',
@@ -729,6 +505,7 @@ function PaywallPage() {
 function AppRoutes() {
   const { isLoading: supabaseLoading, isAuthenticated: supabaseAuth } = useSupabaseAuth();
   const [wizardDismissed, setWizardDismissed] = useState(false);
+  const [showLoginPage, setShowLoginPage] = useState(false);
 
   // Check for test user auth in localStorage
   const [testUserAuth, setTestUserAuth] = useState<any>(null);
@@ -767,7 +544,11 @@ function AppRoutes() {
   }
 
   if (!isAuthenticated) {
-    return <LoginPage />;
+    // Show landing page for new visitors, login page if they clicked "Sign In"
+    if (showLoginPage) {
+      return <LoginPage onBack={() => setShowLoginPage(false)} />;
+    }
+    return <LandingPage onShowLogin={() => setShowLoginPage(true)} />;
   }
 
   // Show paywall if user doesn't have membership (after loading)
