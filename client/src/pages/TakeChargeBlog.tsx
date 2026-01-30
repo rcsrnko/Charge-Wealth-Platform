@@ -217,7 +217,7 @@ function BlogHeader() {
     }}>
       <div style={{ maxWidth: 1200, margin: '0 auto', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 24 }}>
-          <Link href="/">
+          <Link href="/take-charge">
             <a style={{ color: '#C9A962', fontSize: 20, fontWeight: 700, textDecoration: 'none' }}>
               Charge Wealth
             </a>

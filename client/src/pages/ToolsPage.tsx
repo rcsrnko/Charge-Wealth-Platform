@@ -62,7 +62,7 @@ function ToolsIndex() {
         borderBottom: '1px solid rgba(201, 169, 98, 0.1)',
       }}>
         <div style={{ maxWidth: 1200, margin: '0 auto', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          <Link href="/">
+          <Link href="/tools">
             <a style={{ color: '#C9A962', fontSize: 24, fontWeight: 700, textDecoration: 'none' }}>
               Charge Wealth
             </a>
@@ -233,7 +233,7 @@ function ToolWrapper({ children, title }: { children: React.ReactNode; title: st
       }}>
         <div style={{ maxWidth: 1200, margin: '0 auto', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 24 }}>
-            <Link href="/">
+            <Link href="/tools">
               <a style={{ color: '#C9A962', fontSize: 20, fontWeight: 700, textDecoration: 'none' }}>
                 Charge Wealth
               </a>
