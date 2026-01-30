@@ -243,7 +243,9 @@ export function registerTaxIntelRoutes(app: Express, isAuthenticated: RequestHan
   "payPeriodStart": "MM/DD/YYYY" or null,
   "payPeriodEnd": "MM/DD/YYYY" or null,
   "payFrequency": "weekly" | "biweekly" | "semimonthly" | "monthly" or null,
-  "grossPay": number or null,
+  "grossPay": number or null (total pay this period),
+  "baseSalary": number or null (regular/salary pay only, NOT including bonus),
+  "bonus": number or null (bonus/commission this period),
   "netPay": number or null,
   "federalWithheld": number or null,
   "stateWithheld": number or null,
@@ -263,13 +265,15 @@ export function registerTaxIntelRoutes(app: Express, isAuthenticated: RequestHan
   "overtimeHours": number or null,
   "regularRate": number or null,
   "ytdGrossPay": number or null,
+  "ytdSalary": number or null (YTD regular salary only),
+  "ytdBonus": number or null (YTD bonus/commission),
   "ytdFederalWithheld": number or null,
   "ytdStateWithheld": number or null,
   "ytdSocialSecurity": number or null,
   "ytdMedicare": number or null,
   "ytd401k": number or null
 }
-Only return the JSON object, no other text.`
+IMPORTANT: Separate base salary/regular pay from bonus/commission. Only return the JSON object, no other text.`
                     },
                     { role: 'user', content: `Extract all paystub data:\n\n${rawText.substring(0, 6000)}` }
                   ],
@@ -1056,6 +1060,8 @@ Return JSON: { "newTax": number, "taxDelta": number, "effectiveRate": number }`;
       
       // Current period values
       const grossPay = paystubData?.grossPay || 0;
+      const baseSalary = paystubData?.baseSalary || paystubData?.regularPay || 0;
+      const bonus = paystubData?.bonus || 0;
       const federalWithheld = paystubData?.federalWithheld || 0;
       const stateWithheld = paystubData?.stateWithheld || 0;
       const socialSecurity = paystubData?.socialSecurityWithheld || 0;
@@ -1066,9 +1072,31 @@ Return JSON: { "newTax": number, "taxDelta": number, "effectiveRate": number }`;
       // YTD values if available
       const ytdGross = paystubData?.ytdGrossPay || null;
       const ytdFederal = paystubData?.ytdFederalWithheld || null;
+      const ytdSalary = paystubData?.ytdSalary || null;
+      const ytdBonus = paystubData?.ytdBonus || null;
       
-      // Project annual income
-      const projectedAnnualGross = grossPay * periods;
+      // Smart annual income projection
+      // Priority: 1) Base salary * periods + YTD bonus, 2) YTD-based projection, 3) Current gross * periods
+      let projectedAnnualGross: number;
+      
+      if (baseSalary > 0) {
+        // Best case: We have separate base salary - annualize that and add YTD bonus
+        const annualBaseSalary = baseSalary * periods;
+        const totalBonus = ytdBonus || bonus || 0;
+        projectedAnnualGross = annualBaseSalary + totalBonus;
+        console.log(`Projection using base salary: ${baseSalary} * ${periods} + bonus ${totalBonus} = ${projectedAnnualGross}`);
+      } else if (ytdGross && ytdGross > grossPay) {
+        // Second best: Use YTD to estimate periods elapsed and project
+        // Estimate periods elapsed from YTD (rough: YTD / current gross pay)
+        const estimatedPeriodsElapsed = Math.max(1, Math.round(ytdGross / grossPay));
+        const avgPerPeriod = ytdGross / estimatedPeriodsElapsed;
+        projectedAnnualGross = avgPerPeriod * periods;
+        console.log(`Projection using YTD average: ${ytdGross} / ${estimatedPeriodsElapsed} periods * ${periods} = ${projectedAnnualGross}`);
+      } else {
+        // Fallback: Use current gross (may include one-time items)
+        projectedAnnualGross = grossPay * periods;
+        console.log(`Projection using current gross: ${grossPay} * ${periods} = ${projectedAnnualGross}`);
+      }
       
       // Pre-tax deductions that reduce AGI
       const annual401k = retirement401k * periods;
