@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Route, Switch, Link, useRoute } from 'wouter';
+import { SEO } from '../components/SEO';
 
 // Types
 interface BlogPost {
@@ -562,6 +563,13 @@ function BlogPost() {
       background: '#0F1117',
       fontFamily: 'Inter, -apple-system, sans-serif',
     }}>
+      <SEO 
+        title={`${post.title} | Charge Wealth`}
+        description={post.excerpt}
+        url={`https://chargewealth.co/take-charge/${post.slug}`}
+        type="article"
+        publishedTime={post.date}
+      />
       <BlogHeader />
 
       <article style={{
