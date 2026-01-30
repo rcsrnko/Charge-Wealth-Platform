@@ -26,7 +26,8 @@ let postsCache: { posts: BeehiivPost[]; timestamp: number } | null = null;
 const CACHE_TTL = 60 * 60 * 1000; // 1 hour
 
 function generateSlug(title: string, guid: string): string {
-  const baseSlug = title
+  const cleanTitle = stripDatePrefix(title);
+  const baseSlug = cleanTitle
     .toLowerCase()
     .replace(/[^a-z0-9]+/g, '-')
     .replace(/^-|-$/g, '')
@@ -34,6 +35,13 @@ function generateSlug(title: string, guid: string): string {
   
   const shortId = guid.split('/').pop()?.substring(0, 8) || Math.random().toString(36).substring(2, 8);
   return `${baseSlug}-${shortId}`;
+}
+
+// Strip date prefix from titles like "January 28, 2026 - Fed Holds, Markets Shrug"
+function stripDatePrefix(title: string): string {
+  // Pattern: "Month DD, YYYY - " or "Month DD, YYYY: "
+  const datePattern = /^(January|February|March|April|May|June|July|August|September|October|November|December)\s+\d{1,2},?\s+\d{4}\s*[-:–]\s*/i;
+  return title.replace(datePattern, '').trim();
 }
 
 export async function getBeehiivPosts(limit: number = 20): Promise<BeehiivPost[]> {
@@ -69,7 +77,7 @@ export async function getBeehiivPosts(limit: number = 20): Promise<BeehiivPost[]
       return {
         id: item.guid || item.link || slug,
         slug,
-        title: item.title || 'Untitled',
+        title: stripDatePrefix(item.title || 'Untitled'),
         subtitle: snippet.substring(0, 150),
         content,
         contentSnippet: snippet,
