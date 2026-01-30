@@ -7,333 +7,31 @@ import { apiRequest } from '../lib/queryClient';
 
 // Types
 interface BlogPost {
+  id?: string;
   slug: string;
   title: string;
-  excerpt: string;
-  content: string;
-  category: 'financial-planning' | 'tax-strategy' | 'capital-markets' | 'free';
-  date: string;
-  readTime: string;
-  isPremium: boolean;
+  preview?: string;
+  excerpt?: string;
+  content_html?: string;
+  content_markdown?: string;
+  content?: string;
+  category: 'financial-planning' | 'tax-strategy' | 'capital-markets' | 'finance-dailies' | 'free';
+  published_at?: string;
+  date?: string;
+  readTime?: string;
+  isPremium?: boolean;
+  featured_image?: string;
   image?: string;
 }
 
 // Premium categories that require subscription
 const PREMIUM_CATEGORIES = ['financial-planning', 'tax-strategy', 'capital-markets'];
 
-// Sample blog posts (would come from CMS/API in production)
-const BLOG_POSTS: BlogPost[] = [
-  {
-    slug: 'the-real-cost-of-financial-advisor-fees',
-    title: 'The Real Cost of Financial Advisor Fees (It\'s Worse Than You Think)',
-    excerpt: 'A 1% fee sounds small. But over 30 years, it could cost you hundreds of thousands of dollars. Here\'s the math most advisors don\'t want you to see.',
-    content: `
-# The Real Cost of Financial Advisor Fees
-
-A 1% AUM (Assets Under Management) fee sounds reasonable, right? It's just one percent. 
-
-**Wrong.**
-
-## The Math That Will Make You Sick
-
-Let's say you have $500,000 invested. A 1% fee means you're paying $5,000 per year. But that's not the real cost.
-
-The real cost is what that $5,000 **would have earned** if it stayed invested.
-
-Over 30 years at 7% returns:
-- **Without the 1% fee:** $3,806,128
-- **With the 1% fee:** $2,806,794
-- **Total cost of fees:** $999,334
-
-That's right. A "small" 1% fee costs you **nearly a million dollars** over 30 years.
-
-## Why Advisors Don't Talk About This
-
-Financial advisors are incentivized to keep your money under management. The more you have, the more they earn. There's nothing inherently wrong with this, but it creates a conflict of interest.
-
-They're not incentivized to:
-- Help you pay off your mortgage faster
-- Maximize your 401(k) match
-- Find tax-loss harvesting opportunities
-
-They're incentivized to keep your assets where they can charge you 1%.
-
-## What To Do Instead
-
-1. **Max out tax-advantaged accounts first** - 401(k), IRA, HSA
-2. **Use low-cost index funds** - Vanguard, Fidelity, Schwab (0.03-0.10% expense ratios)
-3. **Automate everything** - Set it and forget it
-4. **Get advice when you need it** - Pay for a flat-fee financial plan, not ongoing AUM
-
-## The Bottom Line
-
-You don't need to pay 1% of your wealth every year for basic financial advice. The math simply doesn't work in your favor.
-
----
-
-*Want to see exactly how much you're paying in fees? Try our [Advisor Fee Calculator](/tools/advisor-fee-calculator).*
-    `,
-    category: 'free',
-    date: '2026-01-27',
-    readTime: '5 min',
-    isPremium: false,
-  },
-  {
-    slug: '5-tax-moves-before-april',
-    title: '5 Tax Moves to Make Before April (Most People Miss #3)',
-    excerpt: 'Tax season is coming. Here are 5 strategies that could save you thousands, and most people don\'t know about #3.',
-    content: `
-# 5 Tax Moves to Make Before April
-
-Tax season is coming. Most people just file and hope for the best. But there are legitimate strategies that can save you thousands.
-
-## 1. Max Out Your IRA ($7,000 limit)
-
-You have until April 15th to contribute to your IRA for the previous tax year. If you're in the 24% bracket, a $7,000 Traditional IRA contribution saves you $1,680 in taxes.
-
-## 2. Check Your Withholding
-
-Are you getting a big refund? That means you gave the government an interest-free loan. Adjust your W-4 to keep more money in your pocket throughout the year.
-
-## 3. Harvest Your Tax Losses (This One's Overlooked)
-
-If you have investments that are down, you can sell them to "harvest" the loss. This loss offsets your gains and up to $3,000 of ordinary income.
-
-**The key:** You can immediately buy a similar (but not identical) investment to maintain your market exposure.
-
-Example: Sell your S&P 500 ETF at a loss, immediately buy a Total Market ETF. Same exposure, but you get the tax benefit.
-
-## 4. Bunch Your Charitable Donations
-
-If you're close to the standard deduction threshold, consider "bunching" multiple years of donations into one year to exceed it.
-
-In 2026, the standard deduction is $15,000 (single) or $30,000 (married). If your itemized deductions are close, bunching can push you over.
-
-## 5. Review Your HSA Contributions
-
-If you have an HSA-eligible health plan, max it out. The HSA is the only triple-tax-advantaged account:
-- Tax-deductible contributions
-- Tax-free growth
-- Tax-free withdrawals (for medical expenses)
-
-2026 limits: $4,300 (individual) or $8,550 (family).
-
----
-
-*Want a personalized tax analysis? [Get started with Charge Wealth](/dashboard) - we'll find every deduction you're missing.*
-    `,
-    category: 'tax-strategy',
-    date: '2026-01-25',
-    readTime: '4 min',
-    isPremium: true,
-  },
-  {
-    slug: 'roth-vs-traditional-definitive-guide',
-    title: 'Roth vs. Traditional: The Definitive Guide',
-    excerpt: 'Should you contribute to a Roth or Traditional account? The answer depends on one key factor most people get wrong.',
-    content: `
-# Roth vs. Traditional: The Definitive Guide
-
-This is one of the most common financial questions. And most of the advice you'll find online is wrong, or at least incomplete.
-
-## The Simple Version
-
-- **Traditional:** Pay taxes later (in retirement)
-- **Roth:** Pay taxes now
-
-## The Actual Decision Framework
-
-The question isn't "Roth or Traditional?" 
-
-The question is: **"Will my tax rate be higher now, or in retirement?"**
-
-### Choose Roth if:
-- You're early in your career (lower tax bracket now)
-- You expect your income to increase significantly
-- You're already in a low tax bracket
-- You want tax-free withdrawals in retirement
-
-### Choose Traditional if:
-- You're in your peak earning years
-- You're in the 24%+ tax bracket
-- You expect to be in a lower bracket in retirement
-- You want to reduce your taxable income now
-
-## The Nuance Most People Miss
-
-Your **marginal tax rate** matters, not your average rate.
-
-If you're at the top of the 22% bracket, a Traditional contribution saves you 22 cents per dollar. But if your first dollar in retirement is taxed at 10%, you win.
-
-However, if you expect to have significant retirement income (Social Security, pensions, large 401k), your retirement tax rate might be higher than you think.
-
-## The Hedge Strategy
-
-If you're unsure, split the difference:
-- Max out your Roth IRA
-- Contribute to your Traditional 401(k)
-
-This gives you tax diversification, you'll have both tax-free and tax-deferred buckets to draw from in retirement.
-
----
-
-*Not sure which is right for you? Use our [Roth vs. Traditional Calculator](/tools/roth-vs-traditional) to see the math for your situation.*
-    `,
-    category: 'financial-planning',
-    date: '2026-01-23',
-    readTime: '6 min',
-    isPremium: true,
-  },
-  {
-    slug: 'daily-tax-tip-backdoor-roth',
-    title: 'Daily Tip: The Backdoor Roth Strategy Explained',
-    excerpt: 'High earners can\'t contribute directly to a Roth IRA. But there\'s a legal loophole that lets you do it anyway.',
-    content: `
-# The Backdoor Roth Strategy Explained
-
-If you earn too much to contribute directly to a Roth IRA, don't worry. There's a completely legal way around it.
-
-## The Income Limits
-
-In 2026, you can't contribute directly to a Roth IRA if your income exceeds:
-- $161,000 (single)
-- $240,000 (married filing jointly)
-
-## The Backdoor Strategy
-
-Here's how it works:
-
-1. **Contribute to a Traditional IRA** - There are no income limits for non-deductible contributions
-2. **Convert to a Roth IRA** - You can convert any Traditional IRA funds to Roth
-3. **Pay taxes on any gains** - If you convert immediately, there's essentially no gain to tax
-
-## The Pro-Rata Rule Warning
-
-If you have existing Traditional IRA funds (from rollovers, etc.), the conversion is taxed proportionally. This can make the backdoor strategy less attractive.
-
-**Solution:** Roll your Traditional IRA into your 401(k) before doing the backdoor Roth.
-
-## Step-by-Step
-
-1. Open a Traditional IRA (if you don't have one)
-2. Contribute $7,000 (the 2026 limit)
-3. Wait a few days for the funds to settle
-4. Convert the entire balance to your Roth IRA
-5. Report the conversion on Form 8606
-
----
-
-*Need help executing this strategy? Our AI advisor can walk you through it step by step.*
-    `,
-    category: 'tax-strategy',
-    date: '2026-01-27',
-    readTime: '3 min',
-    isPremium: true,
-  },
-  {
-    slug: 'weekly-market-outlook-jan-27',
-    title: 'Weekly Market Outlook: What to Watch This Week',
-    excerpt: 'Fed meeting, earnings season, and key economic data. Here\'s what smart investors are watching.',
-    content: `
-# Weekly Market Outlook: What to Watch This Week
-
-Another packed week in the markets. Here's what's moving and what matters.
-
-## Fed Meeting
-
-The Federal Reserve meets this week. Markets are pricing in a pause on rate cuts, but the language in Powell's statement will be scrutinized.
-
-**Watch for:** Any hints about the pace of future cuts.
-
-## Earnings Season Continues
-
-Big tech reports this week:
-- **Microsoft** (Tuesday after close)
-- **Meta** (Wednesday after close)
-- **Apple** (Thursday after close)
-- **Amazon** (Thursday after close)
-
-These four companies represent a massive portion of the S&P 500. Their guidance will set the tone for Q1.
-
-## Economic Data
-
-- **Tuesday:** Consumer Confidence
-- **Wednesday:** GDP (advance estimate)
-- **Friday:** PCE Inflation (the Fed's preferred measure)
-
-## Our Take
-
-The market is pricing in a soft landing. If we get hot inflation data or weak guidance from big tech, expect volatility.
-
-For long-term investors: stay the course. This is noise.
-
----
-
-*Want real-time market insights? Upgrade to Take Charge Pro for daily analysis.*
-    `,
-    category: 'capital-markets',
-    date: '2026-01-27',
-    readTime: '4 min',
-    isPremium: true,
-  },
-  {
-    slug: 'emergency-fund-calculator-guide',
-    title: 'How Much Emergency Fund Do You Really Need?',
-    excerpt: 'The standard advice is 3-6 months. But that one-size-fits-all approach might be wrong for you.',
-    content: `
-# How Much Emergency Fund Do You Really Need?
-
-Everyone says save 3-6 months of expenses. But that number might be too low, or too high, depending on your situation.
-
-## The Variables That Matter
-
-**Job Security**
-- Stable government job? 3 months might be fine.
-- Freelancer or startup employee? 6-12 months is safer.
-
-**Income Sources**
-- Single income household? More buffer needed.
-- Dual income? You have built-in redundancy.
-
-**Fixed vs. Variable Expenses**
-- High mortgage payment? You need more liquid cash.
-- Renting with flexibility? You can adjust faster.
-
-## A Better Framework
-
-Instead of "months of expenses," think about **recovery time**.
-
-How long would it take you to find a new job at similar pay if you lost your current one?
-
-- Easy to replace income: 3 months
-- Moderate difficulty: 6 months
-- Specialized/senior role: 9-12 months
-
-## Where to Keep It
-
-Your emergency fund should be:
-- Liquid (accessible within days)
-- Safe (not in the stock market)
-- Earning something (high-yield savings)
-
-Current high-yield savings rates: 4.5%+ APY
-
----
-
-*Calculate your personalized emergency fund target with our [Emergency Fund Calculator](/tools/emergency-fund-calculator).*
-    `,
-    category: 'free',
-    date: '2026-01-22',
-    readTime: '4 min',
-    isPremium: false,
-  },
-];
-
 const CATEGORIES = [
   { id: 'all', label: 'All Posts' },
+  { id: 'capital-markets', label: 'Capital Markets', premium: true },
   { id: 'tax-strategy', label: 'Tax Strategy', premium: true },
   { id: 'financial-planning', label: 'Financial Planning', premium: true },
-  { id: 'capital-markets', label: 'Capital Markets', premium: true },
   { id: 'free', label: 'Free Articles', premium: false },
 ];
 
@@ -344,6 +42,25 @@ function useBlogSubscription() {
     queryFn: () => apiRequest('/api/blog/subscription-status'),
     retry: false,
     staleTime: 60000, // Cache for 1 minute
+  });
+}
+
+// Hook to fetch all blog posts
+function useBlogPosts(category?: string) {
+  return useQuery({
+    queryKey: ['blog-posts', category],
+    queryFn: () => apiRequest(`/api/blog/posts?limit=100${category && category !== 'all' ? `&category=${category}` : ''}`),
+    staleTime: 300000, // Cache for 5 minutes
+  });
+}
+
+// Hook to fetch single blog post
+function useBlogPost(slug: string) {
+  return useQuery({
+    queryKey: ['blog-post', slug],
+    queryFn: () => apiRequest(`/api/blog/posts/${slug}`),
+    enabled: !!slug,
+    staleTime: 300000,
   });
 }
 
@@ -398,7 +115,7 @@ function BlogHeader() {
                 background: '#C9A962',
                 color: '#0F1117',
                 padding: '8px 16px',
-                borderRadius: 6,
+                borderRadius: 8,
                 fontWeight: 600,
                 textDecoration: 'none',
                 fontSize: 14,
@@ -417,9 +134,17 @@ function BlogIndex() {
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [email, setEmail] = useState('');
   const [, setLocation] = useLocation();
+  
+  // Fetch posts from API
+  const { data: postsData, isLoading, error } = useBlogPosts(selectedCategory);
+  const posts: BlogPost[] = postsData?.posts || [];
 
-  const filteredPosts = BLOG_POSTS.filter(
-    post => selectedCategory === 'all' || post.category === selectedCategory
+  // Filter to only show the 3 main categories (not finance-dailies)
+  const filteredPosts = posts.filter(post => 
+    post.category === 'capital-markets' || 
+    post.category === 'tax-strategy' || 
+    post.category === 'financial-planning' ||
+    post.category === 'free'
   );
 
   const handleSubscribe = async () => {
@@ -547,96 +272,119 @@ function BlogIndex() {
         maxWidth: 1200,
         margin: '0 auto',
       }}>
-        <div style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(350px, 1fr))',
-          gap: 32,
-        }}>
-          {filteredPosts.map(post => (
-            <Link key={post.slug} href={`/take-charge/${post.slug}`}>
-              <a style={{
-                display: 'block',
-                background: '#1A1D28',
-                borderRadius: 16,
-                overflow: 'hidden',
-                textDecoration: 'none',
-                border: '1px solid rgba(201, 169, 98, 0.1)',
-                transition: 'all 0.2s',
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.borderColor = '#C9A962';
-                e.currentTarget.style.transform = 'translateY(-4px)';
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.borderColor = 'rgba(201, 169, 98, 0.1)';
-                e.currentTarget.style.transform = 'translateY(0)';
-              }}
-              >
-                {/* Post image placeholder */}
-                <div style={{
-                  height: 200,
-                  background: 'linear-gradient(135deg, #1A1D28 0%, #242838 100%)',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                }}>
-                  <span style={{ fontSize: 64 }}>
-                    {post.category === 'tax-strategy' ? '📋' : 
-                     post.category === 'capital-markets' ? '📈' : 
-                     post.category === 'financial-planning' ? '🎯' : '🛠️'}
-                  </span>
-                </div>
-
-                <div style={{ padding: 24 }}>
-                  {/* Meta */}
-                  <div style={{ display: 'flex', gap: 12, marginBottom: 12 }}>
-                    <span style={{
-                      padding: '4px 12px',
-                      background: post.category === 'financial-planning' || post.category === 'free' ? '#DBEAFE' : 'rgba(201, 169, 98, 0.1)',
-                      color: post.category === 'financial-planning' || post.category === 'free' ? '#3B82F6' : '#C9A962',
-                      fontSize: 12,
-                      fontWeight: 600,
-                      borderRadius: 20,
-                      textTransform: 'capitalize',
+        {isLoading ? (
+          <div style={{ textAlign: 'center', color: '#A8B0C5', padding: 60 }}>
+            Loading posts...
+          </div>
+        ) : error ? (
+          <div style={{ textAlign: 'center', color: '#EF4444', padding: 60 }}>
+            Failed to load posts. Please try again.
+          </div>
+        ) : filteredPosts.length === 0 ? (
+          <div style={{ textAlign: 'center', color: '#A8B0C5', padding: 60 }}>
+            No posts found in this category.
+          </div>
+        ) : (
+          <div style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(350px, 1fr))',
+            gap: 32,
+          }}>
+            {filteredPosts.map(post => {
+              const excerpt = post.preview || post.excerpt || '';
+              const date = post.published_at ? new Date(post.published_at).toLocaleDateString('en-US', { 
+                year: 'numeric', month: 'short', day: 'numeric' 
+              }) : post.date || '';
+              const readTime = post.readTime || '5 min';
+              const isPremium = post.isPremium ?? PREMIUM_CATEGORIES.includes(post.category);
+              
+              return (
+                <Link key={post.slug} href={`/take-charge/${post.slug}`}>
+                  <a style={{
+                    display: 'block',
+                    background: '#1A1D28',
+                    borderRadius: 16,
+                    overflow: 'hidden',
+                    textDecoration: 'none',
+                    border: '1px solid rgba(201, 169, 98, 0.1)',
+                    transition: 'all 0.2s',
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.borderColor = '#C9A962';
+                    e.currentTarget.style.transform = 'translateY(-4px)';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.borderColor = 'rgba(201, 169, 98, 0.1)';
+                    e.currentTarget.style.transform = 'translateY(0)';
+                  }}
+                  >
+                    {/* Post image placeholder */}
+                    <div style={{
+                      height: 200,
+                      background: 'linear-gradient(135deg, #1A1D28 0%, #242838 100%)',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
                     }}>
-                      {post.category.replace('-', ' ')}
-                    </span>
-                    {post.isPremium && <PaywallBadge />}
-                  </div>
+                      <span style={{ fontSize: 64 }}>
+                        {post.category === 'tax-strategy' ? '📋' : 
+                         post.category === 'capital-markets' ? '📈' : 
+                         post.category === 'financial-planning' ? '🎯' : '🛠️'}
+                      </span>
+                    </div>
 
-                  <h2 style={{
-                    fontSize: 20,
-                    fontWeight: 600,
-                    color: '#F4F5F7',
-                    marginBottom: 8,
-                    lineHeight: 1.3,
-                  }}>
-                    {post.title}
-                  </h2>
+                    <div style={{ padding: 24 }}>
+                      {/* Meta */}
+                      <div style={{ display: 'flex', gap: 12, marginBottom: 12 }}>
+                        <span style={{
+                          padding: '4px 12px',
+                          background: 'rgba(201, 169, 98, 0.1)',
+                          color: '#C9A962',
+                          fontSize: 12,
+                          fontWeight: 600,
+                          borderRadius: 20,
+                          textTransform: 'capitalize',
+                        }}>
+                          {post.category.replace(/-/g, ' ')}
+                        </span>
+                        {isPremium && <PaywallBadge />}
+                      </div>
 
-                  <p style={{
-                    fontSize: 14,
-                    color: '#A8B0C5',
-                    lineHeight: 1.5,
-                    marginBottom: 16,
-                  }}>
-                    {post.excerpt}
-                  </p>
+                      <h2 style={{
+                        fontSize: 20,
+                        fontWeight: 600,
+                        color: '#F4F5F7',
+                        marginBottom: 8,
+                        lineHeight: 1.3,
+                      }}>
+                        {post.title}
+                      </h2>
 
-                  <div style={{
-                    display: 'flex',
-                    justifyContent: 'space-between',
-                    fontSize: 12,
-                    color: '#6B7280',
-                  }}>
-                    <span>{post.date}</span>
-                    <span>{post.readTime} read</span>
-                  </div>
-                </div>
-              </a>
-            </Link>
-          ))}
-        </div>
+                      <p style={{
+                        fontSize: 14,
+                        color: '#A8B0C5',
+                        lineHeight: 1.5,
+                        marginBottom: 16,
+                      }}>
+                        {excerpt.length > 150 ? excerpt.substring(0, 150) + '...' : excerpt}
+                      </p>
+
+                      <div style={{
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        fontSize: 12,
+                        color: '#6B7280',
+                      }}>
+                        <span>{date}</span>
+                        <span>{readTime} read</span>
+                      </div>
+                    </div>
+                  </a>
+                </Link>
+              );
+            })}
+          </div>
+        )}
       </section>
 
       {/* CTA */}
@@ -672,33 +420,19 @@ function BlogIndex() {
 
 function BlogPost() {
   const [, params] = useRoute('/take-charge/:slug');
-  const post = BLOG_POSTS.find(p => p.slug === params?.slug);
-  const { data: subStatus, isLoading } = useBlogSubscription();
+  const slug = params?.slug || '';
+  
+  // Fetch post from API
+  const { data: postData, isLoading: postLoading } = useBlogPost(slug);
+  const post = postData?.post as BlogPost | undefined;
+  
+  const { data: subStatus, isLoading: subLoading } = useBlogSubscription();
   
   const hasAccess = subStatus?.hasAccess || false;
-  const isPremiumContent = post?.isPremium || false;
+  const isPremiumContent = post?.isPremium ?? (post?.category ? PREMIUM_CATEGORIES.includes(post.category) : false);
   const needsPaywall = isPremiumContent && !hasAccess;
 
-  if (!post) {
-    return (
-      <div style={{
-        minHeight: '100vh',
-        background: '#0F1117',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        color: '#F4F5F7',
-      }}>
-        Post not found
-      </div>
-    );
-  }
-
-  // Extract first paragraph for preview
-  const contentLines = post.content.trim().split('\n').filter(line => line.trim());
-  const firstParagraph = contentLines.find(line => !line.startsWith('#') && line.trim().length > 50) || post.excerpt;
-
-  if (isLoading) {
+  if (postLoading || subLoading) {
     return (
       <div style={{
         minHeight: '100vh',
@@ -713,6 +447,35 @@ function BlogPost() {
     );
   }
 
+  if (!post) {
+    return (
+      <div style={{
+        minHeight: '100vh',
+        background: '#0F1117',
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
+        color: '#F4F5F7',
+        gap: 24,
+      }}>
+        <div style={{ fontSize: 64 }}>📝</div>
+        <h1>Post not found</h1>
+        <Link href="/take-charge">
+          <a style={{ color: '#C9A962' }}>Back to Blog</a>
+        </Link>
+      </div>
+    );
+  }
+
+  // Get content (prefer markdown for rendering, fall back to html)
+  const content = post.content_html || post.content_markdown || post.content || '';
+  const excerpt = post.preview || post.excerpt || '';
+  const date = post.published_at ? new Date(post.published_at).toLocaleDateString('en-US', { 
+    year: 'numeric', month: 'long', day: 'numeric' 
+  }) : post.date || '';
+  const readTime = post.readTime || '5 min';
+
   return (
     <div style={{
       minHeight: '100vh',
@@ -721,10 +484,10 @@ function BlogPost() {
     }}>
       <SEO 
         title={`${post.title} | Charge Wealth`}
-        description={post.excerpt}
+        description={excerpt}
         url={`https://chargewealth.co/take-charge/${post.slug}`}
         type="article"
-        publishedTime={post.date}
+        publishedTime={post.published_at || post.date}
       />
       <BlogHeader />
 
@@ -734,21 +497,21 @@ function BlogPost() {
         padding: '60px 32px',
       }}>
         {/* Meta */}
-        <div style={{ display: 'flex', gap: 12, marginBottom: 24 }}>
+        <div style={{ display: 'flex', gap: 12, marginBottom: 24, flexWrap: 'wrap' }}>
           <span style={{
             padding: '6px 16px',
-            background: post.category === 'financial-planning' || post.category === 'free' ? '#DBEAFE' : 'rgba(201, 169, 98, 0.1)',
-            color: post.category === 'financial-planning' || post.category === 'free' ? '#3B82F6' : '#C9A962',
+            background: 'rgba(201, 169, 98, 0.1)',
+            color: '#C9A962',
             fontSize: 14,
             fontWeight: 600,
             borderRadius: 20,
             textTransform: 'capitalize',
           }}>
-            {post.category.replace('-', ' ')}
+            {post.category.replace(/-/g, ' ')}
           </span>
-          {post.isPremium && <PaywallBadge />}
+          {isPremiumContent && <PaywallBadge />}
           <span style={{ color: '#6B7280', fontSize: 14, lineHeight: '28px' }}>
-            {post.date} · {post.readTime} read
+            {date} · {readTime} read
           </span>
         </div>
 
@@ -766,7 +529,7 @@ function BlogPost() {
         {/* Content with paywall */}
         {needsPaywall ? (
           <PaywallGate
-            contentPreview={firstParagraph}
+            contentPreview={excerpt}
             title={post.title}
             hasAccess={false}
           >
@@ -774,49 +537,16 @@ function BlogPost() {
           </PaywallGate>
         ) : (
           <>
-            {/* Full Content */}
-            <div style={{
-              color: '#D1D5DB',
-              fontSize: 18,
-              lineHeight: 1.8,
-            }}>
-              {post.content.split('\n').map((line, i) => {
-                if (line.startsWith('# ')) {
-                  return <h1 key={i} style={{ fontSize: 32, fontWeight: 700, color: '#F4F5F7', marginTop: 48, marginBottom: 24 }}>{line.slice(2)}</h1>;
-                }
-                if (line.startsWith('## ')) {
-                  return <h2 key={i} style={{ fontSize: 24, fontWeight: 600, color: '#F4F5F7', marginTop: 40, marginBottom: 16 }}>{line.slice(3)}</h2>;
-                }
-                if (line.startsWith('### ')) {
-                  return <h3 key={i} style={{ fontSize: 20, fontWeight: 600, color: '#F4F5F7', marginTop: 32, marginBottom: 12 }}>{line.slice(4)}</h3>;
-                }
-                if (line.startsWith('- ')) {
-                  return <li key={i} style={{ marginLeft: 24, marginBottom: 8 }}>{line.slice(2)}</li>;
-                }
-                if (line.startsWith('**') && line.endsWith('**')) {
-                  return <p key={i} style={{ fontWeight: 600, color: '#F4F5F7', marginBottom: 16 }}>{line.slice(2, -2)}</p>;
-                }
-                if (line.trim() === '') {
-                  return <br key={i} />;
-                }
-                if (line.startsWith('---')) {
-                  return <hr key={i} style={{ border: 'none', borderTop: '2px solid #DBEAFE', margin: '40px 0' }} />;
-                }
-                // Handle links
-                const linkMatch = line.match(/\[([^\]]+)\]\(([^)]+)\)/);
-                if (linkMatch) {
-                  const parts = line.split(/\[([^\]]+)\]\(([^)]+)\)/);
-                  return (
-                    <p key={i} style={{ marginBottom: 16 }}>
-                      {parts[0]}
-                      <a href={linkMatch[2]} style={{ color: '#3B82F6', textDecoration: 'underline' }}>{linkMatch[1]}</a>
-                      {parts[3]}
-                    </p>
-                  );
-                }
-                return <p key={i} style={{ marginBottom: 16 }}>{line}</p>;
-              })}
-            </div>
+            {/* Full Content - render HTML */}
+            <div 
+              style={{
+                color: '#D1D5DB',
+                fontSize: 18,
+                lineHeight: 1.8,
+              }}
+              className="blog-content"
+              dangerouslySetInnerHTML={{ __html: content }}
+            />
 
             {/* CTA */}
             <div style={{
@@ -850,6 +580,23 @@ function BlogPost() {
           </>
         )}
       </article>
+      
+      {/* Add styles for blog content */}
+      <style>{`
+        .blog-content h1 { font-size: 32px; font-weight: 700; color: #F4F5F7; margin-top: 48px; margin-bottom: 24px; }
+        .blog-content h2 { font-size: 24px; font-weight: 600; color: #C9A962; margin-top: 40px; margin-bottom: 16px; }
+        .blog-content h3 { font-size: 20px; font-weight: 600; color: #F4F5F7; margin-top: 32px; margin-bottom: 12px; }
+        .blog-content p { margin-bottom: 16px; }
+        .blog-content ul, .blog-content ol { margin: 16px 0 16px 24px; }
+        .blog-content li { margin-bottom: 8px; }
+        .blog-content strong { color: #C9A962; }
+        .blog-content a { color: #C9A962; text-decoration: underline; }
+        .blog-content blockquote { border-left: 3px solid #C9A962; padding-left: 16px; margin: 16px 0; color: #A8B0C5; font-style: italic; }
+        .blog-content hr { border: none; border-top: 1px solid rgba(201, 169, 98, 0.2); margin: 40px 0; }
+        .blog-content .tldr { background: #1A1D28; border-left: 4px solid #C9A962; padding: 20px 24px; margin: 24px 0; border-radius: 0 8px 8px 0; }
+        .blog-content .tldr h3 { color: #C9A962; margin: 0 0 12px 0; font-size: 18px; }
+        .blog-content .tldr ul { margin: 0 0 0 20px; }
+      `}</style>
     </div>
   );
 }

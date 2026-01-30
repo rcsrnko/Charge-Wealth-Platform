@@ -5,14 +5,31 @@ const supabaseUrl = process.env.SUPABASE_URL!;
 const supabaseAnonKey = process.env.SUPABASE_ANON_KEY!;
 const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
+// Derive category from slug
+function getCategoryFromSlug(slug: string): string {
+  if (slug.startsWith('capital-markets-')) return 'capital-markets';
+  if (slug.startsWith('tax-strategy-')) return 'tax-strategy';
+  if (slug.startsWith('financial-planning-')) return 'financial-planning';
+  if (slug.startsWith('finance-dailies-')) return 'finance-dailies';
+  return 'free';
+}
+
+// Estimate read time from content
+function getReadTime(contentHtml: string | null): string {
+  if (!contentHtml) return '3 min';
+  const wordCount = contentHtml.replace(/<[^>]+>/g, '').split(/\s+/).length;
+  const minutes = Math.ceil(wordCount / 200);
+  return `${minutes} min`;
+}
+
 export async function registerBlogRoutes(app: Express) {
   app.get('/api/blog/posts', async (req, res) => {
     try {
-      const { limit = 20 } = req.query;
+      const { limit = 50, category } = req.query;
       
       const { data: posts, error } = await supabase
         .from('blog_posts')
-        .select('id, slug, title, preview, featured_image, published_at')
+        .select('id, slug, title, preview, featured_image, published_at, content_html')
         .order('published_at', { ascending: false })
         .limit(Number(limit));
       
@@ -21,7 +38,22 @@ export async function registerBlogRoutes(app: Express) {
         return res.status(500).json({ message: 'Failed to fetch posts' });
       }
       
-      res.json({ posts: posts || [], source: 'supabase' });
+      // Add category and readTime to each post
+      const enrichedPosts = (posts || []).map(post => ({
+        ...post,
+        category: getCategoryFromSlug(post.slug),
+        readTime: getReadTime(post.content_html),
+        isPremium: !post.slug.startsWith('finance-dailies-') && getCategoryFromSlug(post.slug) !== 'free',
+        // Remove content_html from list response (too large)
+        content_html: undefined,
+      }));
+      
+      // Filter by category if specified
+      const filteredPosts = category && category !== 'all'
+        ? enrichedPosts.filter(p => p.category === category)
+        : enrichedPosts;
+      
+      res.json({ posts: filteredPosts, source: 'supabase' });
     } catch (error) {
       console.error('Get blog posts error:', error);
       res.status(500).json({ message: 'Failed to get blog posts' });
@@ -42,7 +74,15 @@ export async function registerBlogRoutes(app: Express) {
         return res.status(404).json({ message: 'Post not found' });
       }
       
-      res.json({ post, source: 'supabase' });
+      // Enrich with category and readTime
+      const enrichedPost = {
+        ...post,
+        category: getCategoryFromSlug(post.slug),
+        readTime: getReadTime(post.content_html),
+        isPremium: !post.slug.startsWith('finance-dailies-') && getCategoryFromSlug(post.slug) !== 'free',
+      };
+      
+      res.json({ post: enrichedPost, source: 'supabase' });
     } catch (error) {
       console.error('Get blog post error:', error);
       res.status(500).json({ message: 'Failed to get blog post' });
