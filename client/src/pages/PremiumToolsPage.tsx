@@ -166,12 +166,32 @@ function ThemeToggle({ isDark, onToggle }: { isDark: boolean; onToggle: () => vo
   );
 }
 
-// Check if user has premium access
+// Check if user has premium access via blog subscription
 function usePremiumAccess(): { hasPremium: boolean; loading: boolean } {
-  // This would connect to your auth system
-  // For now, returning true for demo
-  const [hasPremium] = useState(true);
-  return { hasPremium, loading: false };
+  const [hasPremium, setHasPremium] = useState(false);
+  const [loading, setLoading] = useState(true);
+  
+  useEffect(() => {
+    async function checkAccess() {
+      try {
+        const response = await fetch('/api/blog/subscription-status', {
+          credentials: 'include',
+        });
+        if (response.ok) {
+          const data = await response.json();
+          setHasPremium(data.hasAccess || false);
+        }
+      } catch (error) {
+        console.error('Failed to check premium access:', error);
+        setHasPremium(false);
+      } finally {
+        setLoading(false);
+      }
+    }
+    checkAccess();
+  }, []);
+  
+  return { hasPremium, loading };
 }
 
 function ToolCard({ tool, hasPremium, colors, isDark }: { tool: PremiumTool; hasPremium: boolean; colors: ReturnType<typeof getColors>; isDark: boolean }) {
@@ -450,6 +470,63 @@ export function PremiumToolsPage() {
           Download CFO-grade Excel templates used by financial professionals.
           Fully customizable, offline-ready, and built for high earners.
         </p>
+        
+        {/* Paywall Banner for non-subscribers */}
+        {!hasPremium && !loading && (
+          <div style={{
+            marginTop: 32,
+            padding: '24px 32px',
+            background: isDark 
+              ? 'linear-gradient(135deg, rgba(246,219,166,0.15) 0%, rgba(246,219,166,0.05) 100%)'
+              : 'linear-gradient(135deg, rgba(246,219,166,0.4) 0%, rgba(246,219,166,0.2) 100%)',
+            borderRadius: 16,
+            border: `2px solid ${colors.accent}`,
+            maxWidth: 600,
+            margin: '32px auto 0',
+          }}>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, marginBottom: 12 }}>
+              <span style={{ fontSize: 24 }}>🔒</span>
+              <span style={{ fontSize: 18, fontWeight: 700, color: colors.textPrimary }}>
+                Premium Content
+              </span>
+            </div>
+            <p style={{ color: colors.textSecondary, marginBottom: 20, fontSize: 15 }}>
+              Unlock all 5 CFO-grade spreadsheets + Take Charge Newsletter for just $9/month
+            </p>
+            <div style={{ display: 'flex', gap: 12, justifyContent: 'center', flexWrap: 'wrap' }}>
+              <Link href="/take-charge/subscribe">
+                <a style={{
+                  display: 'inline-block',
+                  background: colors.accent,
+                  color: '#4A3F2F',
+                  padding: '14px 28px',
+                  borderRadius: 8,
+                  fontWeight: 700,
+                  textDecoration: 'none',
+                  fontSize: 15,
+                  boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
+                }}>
+                  Subscribe — $9/mo
+                </a>
+              </Link>
+              <Link href="/take-charge/subscribe">
+                <a style={{
+                  display: 'inline-block',
+                  background: 'transparent',
+                  color: colors.accentText,
+                  padding: '14px 28px',
+                  borderRadius: 8,
+                  fontWeight: 600,
+                  textDecoration: 'none',
+                  fontSize: 15,
+                  border: `1px solid ${colors.accent}`,
+                }}>
+                  $87/year (save 20%)
+                </a>
+              </Link>
+            </div>
+          </div>
+        )}
       </section>
 
       {/* Tools Grid */}
