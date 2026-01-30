@@ -459,7 +459,7 @@ function BlogIndex() {
                       <h2 style={{
                         fontSize: 20,
                         fontWeight: 600,
-                        color: colors.textPrimary,
+                        color: isDark ? colors.textPrimary : '#111827',
                         marginBottom: 8,
                         lineHeight: 1.3,
                       }}>
@@ -617,8 +617,8 @@ function BlogPost() {
         <div style={{ display: 'flex', gap: 12, marginBottom: 24, flexWrap: 'wrap', alignItems: 'center' }}>
           <span style={{
             padding: '6px 16px',
-            background: isDark ? 'rgba(246,219,166,0.1)' : 'rgba(246,219,166,0.3)',
-            color: isDark ? colors.accent : '#8B6914',
+            background: isDark ? 'rgba(246,219,166,0.15)' : 'rgba(139,105,20,0.12)',
+            color: isDark ? colors.accent : '#6B4E0F',
             fontSize: 14,
             fontWeight: 600,
             borderRadius: 20,
