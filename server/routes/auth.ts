@@ -161,19 +161,24 @@ export function registerAuthRoutes(app: Express, isAuthenticated: RequestHandler
         expires_at: Math.floor(Date.now() / 1000) + 86400 * 7
       };
       
-      req.login(sessionUser, (err) => {
+      req.login(sessionUser, async (err) => {
         if (err) {
           console.error('[Supabase Sync] Session login error:', err);
-          return res.status(500).json({ message: 'Failed to sync session' });
+          return res.status(500).json({ success: false, message: 'Failed to sync session' });
         }
-        // Explicitly save session before responding
-        req.session.save((saveErr) => {
-          if (saveErr) {
-            console.error('[Supabase Sync] Session save error:', saveErr);
-          }
-          console.log('[Supabase Sync] SUCCESS - User synced:', dbUser?.email, 'subscription:', dbUser?.subscriptionStatus);
-          res.json({ success: true, user: dbUser });
+        
+        // Save session and wait for it
+        await new Promise<void>((resolve) => {
+          req.session.save((saveErr) => {
+            if (saveErr) {
+              console.error('[Supabase Sync] Session save error:', saveErr);
+            }
+            resolve();
+          });
         });
+        
+        console.log('[Supabase Sync] SUCCESS - User synced:', dbUser?.email, 'subscription:', dbUser?.subscriptionStatus);
+        return res.json({ success: true, user: dbUser });
       });
     } catch (error) {
       console.error('[Supabase Sync] Error:', error);
