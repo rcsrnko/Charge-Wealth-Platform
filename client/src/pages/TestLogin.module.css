@@ -31,7 +31,7 @@
 }
 
 .subtitle {
-  color: rgba(255, 255, 255, 0.5);
+  color: var(--text-muted);
   font-size: 0.6875rem;
   margin: 0;
   padding: 0.25rem 0.625rem;
@@ -56,7 +56,7 @@
 }
 
 .field label {
-  color: rgba(255, 255, 255, 0.6);
+  color: var(--text-secondary);
   font-size: 0.8125rem;
   font-weight: 400;
 }
@@ -66,7 +66,7 @@
   border: 1px solid var(--border-strong);
   border-radius: 4px;
   padding: 0.75rem 1rem;
-  color: #fff;
+  color: var(--text-primary);
   font-size: 0.9375rem;
   transition: all 0.2s ease;
 }
@@ -123,12 +123,12 @@
   border: 1px solid var(--sidebar-active);
   border-radius: 4px;
   font-size: 0.75rem;
-  color: rgba(255, 255, 255, 0.5);
+  color: var(--text-muted);
 }
 
 .testCredentials strong {
   display: block;
-  color: rgba(255, 255, 255, 0.7);
+  color: var(--text-secondary);
   margin-bottom: 0.5rem;
   font-size: 0.75rem;
 }
@@ -136,5 +136,5 @@
 .testCredentials p {
   margin: 0.25rem 0;
   font-family: monospace;
-  color: rgba(255, 255, 255, 0.5);
+  color: var(--text-muted);
 }

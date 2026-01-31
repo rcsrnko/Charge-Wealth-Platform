@@ -75,13 +75,13 @@
 
 .stepDot.active {
   background: linear-gradient(135deg, #58A4B0 0%, #D7B98C 100%);
-  color: white;
+  color: var(--text-primary);
   transform: scale(1.1);
 }
 
 .stepDot.completed {
   background: var(--ocean-teal, #58A4B0);
-  color: white;
+  color: var(--text-primary);
 }
 
 .header h2 {
@@ -203,7 +203,7 @@
 .completeButton {
   background: linear-gradient(135deg, #58A4B0 0%, #4A9299 100%);
   border: none;
-  color: white;
+  color: var(--text-primary);
   padding: 0.75rem 2rem;
   border-radius: 8px;
   font-weight: 600;

@@ -91,7 +91,7 @@
   gap: 0.5rem;
   padding: 1rem;
   background: var(--input-bg);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid var(--border-subtle, rgba(0,0,0,0.1));
   border-radius: 10px;
   color: var(--muted-gray, #6b7280);
   cursor: pointer;
@@ -160,7 +160,7 @@
   display: flex;
   align-items: center;
   background: var(--input-bg-hover);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid var(--border-subtle, rgba(0,0,0,0.1));
   border-radius: 8px;
   overflow: hidden;
 }
@@ -188,7 +188,7 @@
 .simpleInput {
   padding: 0.75rem;
   background: var(--input-bg-hover);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid var(--border-subtle, rgba(0,0,0,0.1));
   border-radius: 8px;
   color: var(--porcelain, #f4f5f7);
   font-size: 1rem;

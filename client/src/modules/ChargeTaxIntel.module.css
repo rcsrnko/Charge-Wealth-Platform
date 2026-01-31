@@ -1788,7 +1788,7 @@
 }
 
 .expandBtn:hover {
-  background: rgba(255, 255, 255, 0.1);
+  background: var(--border-subtle, rgba(0,0,0,0.1));
 }
 
 .optimizationExpanded {
@@ -2195,7 +2195,7 @@
   font-size: 0.75rem;
   font-weight: 600;
   text-transform: uppercase;
-  color: white;
+  color: var(--text-primary);
   flex-shrink: 0;
 }
 

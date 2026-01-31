@@ -74,7 +74,7 @@
 .sectionTitle:not(:first-child) {
   margin-top: 1.5rem;
   padding-top: 1.5rem;
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  border-top: 1px solid var(--border-subtle, rgba(0,0,0,0.1));
 }
 
 .inputGroup {
@@ -92,7 +92,7 @@
   display: flex;
   align-items: center;
   background: var(--input-bg-hover);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid var(--border-subtle, rgba(0,0,0,0.1));
   border-radius: 8px;
   overflow: hidden;
 }
@@ -240,7 +240,7 @@
 
 .comparisonCard {
   background: var(--deep-navy, #1a1d28);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid var(--border-subtle, rgba(0,0,0,0.1));
   border-radius: 12px;
   padding: 1.25rem;
 }
@@ -343,7 +343,7 @@
   justify-content: space-between;
   align-items: center;
   padding-top: 1rem;
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  border-top: 1px solid var(--border-subtle, rgba(0,0,0,0.1));
 }
 
 .totalBenefit span:first-child {
@@ -359,7 +359,7 @@
 
 .maxOutCard {
   background: var(--deep-navy, #1a1d28);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid var(--border-subtle, rgba(0,0,0,0.1));
   border-radius: 12px;
   padding: 1.5rem;
 }

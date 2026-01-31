@@ -100,7 +100,7 @@
 }
 
 .checkmark {
-  color: white;
+  color: var(--text-primary);
   font-weight: bold;
 }
 
@@ -135,7 +135,7 @@
 .itemAction {
   padding: 0.5rem 1rem;
   background: var(--ocean-teal);
-  color: white;
+  color: var(--text-primary);
   border-radius: 6px;
   font-size: 0.8125rem;
   font-weight: 500;
@@ -173,7 +173,7 @@
 
 .expandBtn:hover {
   background: var(--ocean-teal);
-  color: white;
+  color: var(--text-primary);
   border-color: var(--ocean-teal);
 }
 
@@ -238,7 +238,7 @@
 
 .formSubmit {
   background: var(--ocean-teal);
-  color: white;
+  color: var(--text-primary);
   border: none;
   border-radius: 6px;
   padding: 0.75rem 1.5rem;
