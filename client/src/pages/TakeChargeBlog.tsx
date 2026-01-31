@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Route, Switch, Link, useRoute, useLocation } from 'wouter';
 import { useQuery, useMutation } from '@tanstack/react-query';
-import { SEO } from '../components/SEO';
+import { SEO, BlogSEO } from '../components/SEO';
 import { PaywallGate, PaywallBadge } from '../components/PaywallGate';
 import { PremiumToolsSection } from '../components/PremiumToolsSection';
 import { apiRequest } from '../lib/queryClient';
@@ -677,12 +677,13 @@ function BlogPost() {
       background: colors.bg,
       fontFamily: 'Inter, -apple-system, sans-serif',
     }}>
-      <SEO 
-        title={`${post.title} | Charge Wealth`}
+      <BlogSEO 
+        title={post.title}
         description={excerpt}
-        url={`https://chargewealth.co/take-charge/${post.slug}`}
-        type="article"
+        slug={post.slug}
         publishedTime={post.published_at || post.date}
+        category={post.category}
+        image={post.featured_image || getPostImage(post)}
       />
       <BlogHeader isDark={isDark} onToggleTheme={toggleTheme} />
 
