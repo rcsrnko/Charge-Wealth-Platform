@@ -341,6 +341,15 @@ export default function AccountSetup() {
           }}>
             <span style={{ color: 'var(--text-secondary)', fontSize: '0.875rem' }}>Account email: </span>
             <span style={{ color: 'var(--text-primary)', fontWeight: 500 }}>{email}</span>
+            <p style={{ 
+              color: 'var(--text-secondary)', 
+              fontSize: '0.75rem', 
+              marginTop: '0.5rem',
+              marginBottom: 0,
+              opacity: 0.8,
+            }}>
+              💡 Use the same email you used for payment
+            </p>
           </div>
         )}
         
