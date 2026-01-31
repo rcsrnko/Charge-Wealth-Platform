@@ -4,7 +4,7 @@ import { useSupabaseAuth } from '../hooks/useSupabaseAuth';
 
 export default function AccountSetup() {
   const [, setLocation] = useLocation();
-  const { signInWithGoogle, linkGoogleAccount } = useSupabaseAuth();
+  const { signInWithGoogle, session, isLoading: authLoading } = useSupabaseAuth();
   
   const [step, setStep] = useState<'choice' | 'password' | 'success'>('choice');
   const [email, setEmail] = useState('');
@@ -13,6 +13,7 @@ export default function AccountSetup() {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const [googleLoading, setGoogleLoading] = useState(false);
+  const [waitingForGoogleSync, setWaitingForGoogleSync] = useState(false);
   
   // Get email from URL params (passed from payment success)
   useEffect(() => {
@@ -28,7 +29,24 @@ export default function AccountSetup() {
       // If no successful payment, redirect to home
       setLocation('/');
     }
+    
+    // Check if returning from Google OAuth
+    const googlePending = params.get('google');
+    if (googlePending === 'pending') {
+      setWaitingForGoogleSync(true);
+    }
   }, [setLocation]);
+  
+  // Handle Google OAuth completion - wait for session then redirect
+  useEffect(() => {
+    if (waitingForGoogleSync && !authLoading && session) {
+      // Session is ready, give backend sync time to complete
+      setStep('success');
+      setTimeout(() => {
+        window.location.href = '/dashboard';
+      }, 2500); // Slightly longer delay to ensure sync completes
+    }
+  }, [waitingForGoogleSync, authLoading, session]);
 
   const handlePasswordSetup = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -79,8 +97,9 @@ export default function AccountSetup() {
     setGoogleLoading(true);
     setError('');
     try {
-      // Sign in with Google - this will link to the existing account by email
-      await signInWithGoogle();
+      // Sign in with Google - redirect back to /setup to complete the flow
+      const returnUrl = `${window.location.origin}/setup?payment=success&email=${encodeURIComponent(email)}&google=pending`;
+      await signInWithGoogle(returnUrl);
       // The OAuth redirect will handle the rest
     } catch (err: any) {
       setError(err.message || 'Failed to connect Google');

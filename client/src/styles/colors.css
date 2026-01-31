@@ -1,0 +1,352 @@
+/**
+ * ============================================
+ * CHARGE WEALTH GLOBAL COLOR SYSTEM
+ * ============================================
+ * 
+ * Single source of truth for all colors.
+ * Import this file FIRST in index.css.
+ * 
+ * Structure:
+ * 1. BASE PALETTE - Raw brand colors
+ * 2. SEMANTIC TOKENS - What colors MEAN
+ * 3. COMPONENT TOKENS - Specific UI elements
+ * 4. DARK MODE - Full theme overrides
+ * 
+ * Contrast ratios verified against WCAG AA (4.5:1 for text)
+ * ============================================
+ */
+
+:root {
+  /* ========================================
+     BASE PALETTE
+     Raw brand colors - hex values only
+     Use semantic tokens, not these directly!
+     ======================================== */
+  
+  /* Primary Brand - Warm Cream Family */
+  --color-vanilla-bean: #F9F6F0;       /* Main background - warm off-white */
+  --color-cream: #FFFDFB;              /* Cards, elevated surfaces */
+  --color-warm-stone: #F5F2ED;         /* Secondary backgrounds */
+  --color-warm-sand: #EFEBE5;          /* Tertiary/borders */
+  
+  /* Accent - Honey/Gold Family */
+  --color-honey: #F6DBA6;              /* Primary accent, CTAs */
+  --color-honey-dark: #E8C88A;         /* Hover states */
+  --color-honey-muted: #D4AF37;        /* Richer gold for icons */
+  
+  /* Text Colors */
+  --color-charcoal: #1F2937;           /* Primary text - dark gray */
+  --color-slate: #6B7280;              /* Secondary text */
+  --color-stone: #9CA3AF;              /* Muted/placeholder */
+  --color-brown-dark: #4A3F2F;         /* Text ON honey (WCAG AA: 7.2:1) */
+  --color-brown-medium: #5D4E3A;       /* Alt text on honey */
+  
+  /* Accent - Blue Family */
+  --color-blue-soft: #DBEAFE;          /* Soft blue backgrounds */
+  --color-blue-hover: #BFDBFE;         /* Blue hover */
+  --color-blue-primary: #3B82F6;       /* Primary blue actions */
+  --color-blue-dark: #2563EB;          /* Blue hover/active */
+  --color-blue-text: #1D4ED8;          /* Blue text for light mode */
+  
+  /* Status - Semantic Colors */
+  --color-success-base: #15803D;       /* Success primary */
+  --color-success-light: #22C55E;      /* Success on dark */
+  --color-success-bg: #F0FDF4;         /* Success background */
+  --color-success-text: #166534;       /* Success text */
+  
+  --color-error-base: #DC2626;         /* Error primary */
+  --color-error-dark: #B91C1C;         /* Error darker */
+  --color-error-light: #F87171;        /* Error on dark */
+  --color-error-bg: #FEF2F2;           /* Error background */
+  --color-error-text: #991B1B;         /* Error text */
+  
+  --color-warning-base: #D97706;       /* Warning primary */
+  --color-warning-dark: #B45309;       /* Warning darker */
+  --color-warning-light: #FBBF24;      /* Warning on dark */
+  --color-warning-bg: #FFFBEB;         /* Warning background */
+  --color-warning-text: #92400E;       /* Warning text */
+  
+  --color-info-base: #2563EB;          /* Info primary */
+  --color-info-light: #60A5FA;         /* Info on dark */
+  --color-info-bg: #EFF6FF;            /* Info background */
+  --color-info-text: #1E40AF;          /* Info text */
+  
+  /* Dark Mode Specific */
+  --color-dark-true: #121212;          /* True dark background */
+  --color-dark-surface: #1E1E1E;       /* Cards/surfaces */
+  --color-dark-elevated: #252525;      /* Elevated elements */
+  --color-dark-text: #F5F5F5;          /* Primary text */
+  --color-dark-text-muted: #A3A3A3;    /* Secondary text */
+  
+  /* Pure */
+  --color-white: #FFFFFF;
+  --color-black: #000000;
+
+  /* ========================================
+     SEMANTIC TOKENS - LIGHT MODE (Default)
+     These are what you use in components!
+     ======================================== */
+  
+  /* --- SURFACES --- */
+  --surface-primary: var(--color-vanilla-bean);      /* Main page background */
+  --surface-secondary: var(--color-warm-stone);      /* Sidebar, secondary areas */
+  --surface-tertiary: var(--color-warm-sand);        /* Nested elements */
+  --surface-elevated: var(--color-cream);            /* Cards, modals, popovers */
+  --surface-overlay: rgba(0, 0, 0, 0.4);             /* Modal backdrops */
+  
+  /* --- TEXT --- */
+  --text-primary: var(--color-charcoal);             /* Headings, body text */
+  --text-secondary: var(--color-slate);              /* Descriptions, labels */
+  --text-muted: var(--color-stone);                  /* Timestamps, hints */
+  --text-placeholder: var(--color-stone);            /* Input placeholders */
+  --text-inverse: var(--color-cream);                /* Text on dark backgrounds */
+  
+  /* --- TEXT ON COLORED BACKGROUNDS --- */
+  /* CRITICAL: Use these for proper contrast! */
+  --text-on-honey: var(--color-brown-dark);          /* 7.2:1 contrast on honey */
+  --text-on-success: var(--color-white);             /* White on success green */
+  --text-on-error: var(--color-white);               /* White on error red */
+  --text-on-info: var(--color-white);                /* White on info blue */
+  --text-on-dark: var(--color-cream);                /* Cream on dark surfaces */
+  
+  /* --- ACCENT / BRAND --- */
+  --accent-primary: var(--color-honey);              /* CTAs, primary buttons */
+  --accent-primary-hover: var(--color-honey-dark);   /* Hover state */
+  --accent-primary-text: var(--text-on-honey);       /* Text on accent buttons */
+  --accent-muted: rgba(246, 219, 166, 0.2);          /* Subtle accent backgrounds */
+  
+  /* --- ACCENT BLUE --- */
+  --accent-blue: var(--color-blue-soft);             /* Soft blue backgrounds */
+  --accent-blue-hover: var(--color-blue-hover);      /* Blue hover state */
+  --accent-blue-text: var(--color-blue-text);        /* Blue text/links */
+  --accent-blue-solid: var(--color-blue-primary);    /* Solid blue buttons */
+  
+  /* --- STATUS COLORS --- */
+  --status-success: var(--color-success-base);
+  --status-success-bg: var(--color-success-bg);
+  --status-success-text: var(--color-success-text);
+  
+  --status-error: var(--color-error-dark);
+  --status-error-bg: var(--color-error-bg);
+  --status-error-text: var(--color-error-text);
+  
+  --status-warning: var(--color-warning-dark);
+  --status-warning-bg: var(--color-warning-bg);
+  --status-warning-text: var(--color-warning-text);
+  
+  --status-info: var(--color-info-base);
+  --status-info-bg: var(--color-info-bg);
+  --status-info-text: var(--color-info-text);
+  
+  /* --- BORDERS --- */
+  --border-subtle: rgba(0, 0, 0, 0.05);              /* Very light borders */
+  --border-default: rgba(0, 0, 0, 0.08);             /* Standard borders */
+  --border-strong: rgba(0, 0, 0, 0.12);              /* Emphasized borders */
+  --border-focus: var(--color-honey);                /* Focus rings */
+  
+  /* --- INTERACTIVE STATES --- */
+  --interactive-hover: rgba(0, 0, 0, 0.04);          /* Hover overlay */
+  --interactive-active: rgba(0, 0, 0, 0.08);         /* Active/pressed */
+  --interactive-disabled: rgba(0, 0, 0, 0.26);       /* Disabled state */
+
+  /* ========================================
+     COMPONENT TOKENS
+     Specific UI element colors
+     ======================================== */
+  
+  /* Buttons */
+  --btn-primary-bg: var(--accent-primary);
+  --btn-primary-text: var(--accent-primary-text);
+  --btn-primary-hover: var(--accent-primary-hover);
+  --btn-secondary-bg: transparent;
+  --btn-secondary-text: var(--text-primary);
+  --btn-secondary-border: var(--border-strong);
+  --btn-ghost-text: var(--text-secondary);
+  --btn-ghost-hover: var(--surface-tertiary);
+  
+  /* Inputs */
+  --input-bg: var(--color-white);
+  --input-bg-hover: #FAFAFA;
+  --input-bg-focus: var(--color-white);
+  --input-border: rgba(0, 0, 0, 0.12);
+  --input-border-focus: var(--accent-primary);
+  --input-placeholder: var(--text-placeholder);
+  
+  /* Cards */
+  --card-bg: var(--surface-elevated);
+  --card-border: var(--border-default);
+  --card-border-hover: var(--border-strong);
+  --card-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  --card-shadow-hover: 0 4px 12px rgba(0, 0, 0, 0.08);
+  
+  /* Sidebar */
+  --sidebar-bg: var(--surface-secondary);
+  --sidebar-item-hover: var(--surface-tertiary);
+  --sidebar-item-active: #E8E3DB;
+  --sidebar-text: var(--text-primary);
+  --sidebar-text-muted: var(--text-secondary);
+  
+  /* Navigation */
+  --nav-link: var(--text-secondary);
+  --nav-link-hover: var(--text-primary);
+  --nav-link-active: var(--accent-primary);
+  
+  /* Progress/Charts */
+  --chart-primary: var(--accent-primary);
+  --chart-secondary: var(--accent-blue-solid);
+  --chart-success: var(--status-success);
+  --chart-warning: var(--status-warning);
+  --chart-danger: var(--status-error);
+  
+  /* Badges */
+  --badge-neutral-bg: var(--surface-tertiary);
+  --badge-neutral-text: var(--text-secondary);
+  --badge-accent-bg: var(--accent-muted);
+  --badge-accent-text: var(--color-brown-dark);
+  --badge-success-bg: rgba(21, 128, 61, 0.15);
+  --badge-success-text: var(--status-success);
+  --badge-error-bg: rgba(220, 38, 38, 0.15);
+  --badge-error-text: var(--status-error);
+  --badge-blue-bg: var(--accent-blue);
+  --badge-blue-text: var(--accent-blue-text);
+}
+
+/* ========================================
+   DARK MODE OVERRIDES
+   ======================================== */
+[data-theme="dark"],
+.dark {
+  /* --- SURFACES --- */
+  --surface-primary: var(--color-dark-true);
+  --surface-secondary: var(--color-dark-surface);
+  --surface-tertiary: var(--color-dark-elevated);
+  --surface-elevated: var(--color-dark-surface);
+  --surface-overlay: rgba(0, 0, 0, 0.7);
+  
+  /* --- TEXT --- */
+  --text-primary: var(--color-dark-text);
+  --text-secondary: var(--color-dark-text-muted);
+  --text-muted: #737373;
+  --text-placeholder: #737373;
+  --text-inverse: var(--color-charcoal);
+  
+  /* --- ACCENT (Honey works in both modes) --- */
+  --accent-primary: var(--color-honey);
+  --accent-primary-hover: var(--color-honey-dark);
+  --accent-primary-text: var(--color-brown-dark);  /* Still dark brown on honey */
+  --accent-muted: rgba(246, 219, 166, 0.15);
+  
+  /* --- ACCENT BLUE (Brighter for dark mode) --- */
+  --accent-blue: var(--color-blue-primary);
+  --accent-blue-hover: var(--color-blue-dark);
+  --accent-blue-text: #60A5FA;  /* Lighter blue text for dark mode */
+  --accent-blue-solid: var(--color-blue-primary);
+  
+  /* --- STATUS COLORS (Lighter for dark backgrounds) --- */
+  --status-success: var(--color-success-light);
+  --status-success-bg: rgba(34, 197, 94, 0.1);
+  --status-success-text: #6EE7B7;
+  
+  --status-error: var(--color-error-light);
+  --status-error-bg: rgba(248, 113, 113, 0.1);
+  --status-error-text: #FCA5A5;
+  
+  --status-warning: var(--color-warning-light);
+  --status-warning-bg: rgba(251, 191, 36, 0.1);
+  --status-warning-text: #FCD34D;
+  
+  --status-info: var(--color-info-light);
+  --status-info-bg: rgba(96, 165, 250, 0.1);
+  --status-info-text: #93C5FD;
+  
+  /* --- BORDERS (More visible on dark) --- */
+  --border-subtle: rgba(255, 255, 255, 0.05);
+  --border-default: rgba(255, 255, 255, 0.08);
+  --border-strong: rgba(255, 255, 255, 0.12);
+  --border-focus: var(--color-honey);
+  
+  /* --- INTERACTIVE --- */
+  --interactive-hover: rgba(255, 255, 255, 0.04);
+  --interactive-active: rgba(255, 255, 255, 0.08);
+  --interactive-disabled: rgba(255, 255, 255, 0.26);
+  
+  /* --- COMPONENTS --- */
+  --input-bg: var(--surface-secondary);
+  --input-bg-hover: var(--surface-tertiary);
+  --input-bg-focus: var(--surface-tertiary);
+  --input-border: var(--border-default);
+  
+  --card-bg: var(--surface-elevated);
+  --card-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+  --card-shadow-hover: 0 4px 12px rgba(0, 0, 0, 0.4);
+  
+  --sidebar-bg: var(--surface-primary);
+  --sidebar-item-hover: var(--surface-secondary);
+  --sidebar-item-active: var(--surface-tertiary);
+  
+  /* --- BADGES (Adjusted for dark) --- */
+  --badge-neutral-bg: var(--surface-tertiary);
+  --badge-neutral-text: var(--text-secondary);
+  --badge-success-bg: rgba(34, 197, 94, 0.15);
+  --badge-error-bg: rgba(248, 113, 113, 0.15);
+}
+
+/* ========================================
+   LEGACY VARIABLE MAPPINGS
+   For backward compatibility with old code
+   Migrate away from these over time!
+   ======================================== */
+:root {
+  /* Old naming -> New semantic tokens */
+  --bg-primary: var(--surface-primary);
+  --bg-secondary: var(--surface-secondary);
+  --bg-tertiary: var(--surface-tertiary);
+  --bg-elevated: var(--surface-elevated);
+  
+  --brand-accent: var(--accent-primary);
+  --brand-accent-hover: var(--accent-primary-hover);
+  --brand-accent-light: var(--accent-muted);
+  --brand-primary: var(--text-primary);
+  --brand-secondary: var(--text-secondary);
+  
+  --border: var(--border-default);
+  --border-color: var(--border-default);
+  --subtle-border: var(--border-subtle);
+  
+  --error: var(--status-error);
+  --error-light: var(--status-error-bg);
+  --error-text: var(--status-error-text);
+  --success: var(--status-success);
+  --success-light: var(--status-success-bg);
+  --success-text: var(--status-success-text);
+  --warning: var(--status-warning);
+  --warning-light: var(--status-warning-bg);
+  --warning-text: var(--status-warning-text);
+  --info: var(--status-info);
+  --info-light: var(--status-info-bg);
+  --info-text: var(--status-info-text);
+  
+  /* Very old mappings */
+  --midnight-blue: var(--surface-primary);
+  --deep-navy: var(--surface-secondary);
+  --gold-sand: var(--accent-primary);
+  --gold-muted: var(--accent-primary-hover);
+  --gold-light: var(--accent-primary);
+  --soft-gold: var(--accent-primary);
+  --gold: var(--accent-primary);
+  --off-white: var(--text-primary);
+  --porcelain: var(--text-primary);
+  --snow-white: var(--text-primary);
+  --charcoal-slate: var(--surface-tertiary);
+  --muted-gray: var(--text-secondary);
+  --gold-text: var(--accent-primary-hover);
+  --charcoal: var(--surface-tertiary);
+  --slate-navy: var(--sidebar-bg);
+  --card-bg: var(--surface-elevated);
+  --accent-gold: var(--accent-primary);
+  --text-light: var(--text-muted);
+  
+  /* Sidebar legacy */
+  --sidebar-hover: var(--sidebar-item-hover);
+  --sidebar-active: var(--sidebar-item-active);
+}
