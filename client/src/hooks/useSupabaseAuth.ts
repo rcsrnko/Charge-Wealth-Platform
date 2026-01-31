@@ -165,6 +165,9 @@ export function useSupabaseAuth() {
       provider: 'google',
       options: {
         redirectTo: returnTo || `${window.location.origin}/dashboard`,
+        queryParams: {
+          prompt: 'select_account'
+        }
       }
     });
     if (error) throw error;
