@@ -11,6 +11,13 @@
   transition: width 0.3s ease;
   z-index: 100;
   overflow-x: hidden;
+  overflow-y: auto;
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE/Edge */
+}
+
+.sidebar::-webkit-scrollbar {
+  display: none; /* Chrome/Safari/Opera */
 }
 
 .sidebar.collapsed {
