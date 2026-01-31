@@ -612,7 +612,7 @@ function PaywallPage() {
 }
 
 function AppRoutes() {
-  const { isLoading: supabaseLoading, isAuthenticated: supabaseAuth } = useSupabaseAuth();
+  const { isLoading: supabaseLoading, isAuthenticated: supabaseAuth, syncStatus } = useSupabaseAuth();
   const [wizardDismissed, setWizardDismissed] = useState(false);
   const [showLoginPage, setShowLoginPage] = useState(false);
 
@@ -623,6 +623,31 @@ function AppRoutes() {
   const [serverSessionAuth, setServerSessionAuth] = useState<boolean | null>(null);
   const [serverSessionUser, setServerSessionUser] = useState<any>(null);
   const [serverSessionLoading, setServerSessionLoading] = useState(true);
+  
+  // ============================================================
+  // CRITICAL: Check for /setup flow BEFORE any async operations
+  // This must be synchronous to prevent race conditions
+  // ============================================================
+  const urlParams = new URLSearchParams(window.location.search);
+  const isSetupPage = window.location.pathname === '/setup';
+  const hasPaymentSuccess = urlParams.get('payment') === 'success';
+  const isGoogleReturn = urlParams.get('google') === 'pending';
+  const isSetupFlow = isSetupPage && (hasPaymentSuccess || isGoogleReturn);
+  
+  console.log('[AppRoutes] Route check:', { 
+    path: window.location.pathname, 
+    isSetupFlow, 
+    hasPaymentSuccess, 
+    isGoogleReturn,
+    syncStatus 
+  });
+  
+  // RENDER ACCOUNT SETUP IMMEDIATELY if in setup flow
+  // This bypasses ALL auth/membership checks
+  if (isSetupFlow) {
+    console.log('[AppRoutes] Rendering AccountSetup - setup flow detected');
+    return <AccountSetup />;
+  }
   
   useEffect(() => {
     const storedAuth = localStorage.getItem('testUserAuth');
@@ -640,6 +665,7 @@ function AppRoutes() {
     fetch('/api/auth/session', { credentials: 'include' })
       .then(res => res.json())
       .then(data => {
+        console.log('[AppRoutes] Server session check:', data);
         setServerSessionAuth(data.authenticated === true);
         if (data.authenticated && data.user) {
           setServerSessionUser(data.user);
@@ -675,9 +701,14 @@ function AppRoutes() {
   if (isLoading) {
     return <LoadingPage />;
   }
+  
+  // Wait for sync to complete before checking membership (for Google OAuth flow)
+  if (supabaseAuth && syncStatus === 'syncing') {
+    console.log('[AppRoutes] Waiting for Supabase sync to complete...');
+    return <LoadingPage />;
+  }
 
-  // Check for payment errors FIRST
-  const urlParams = new URLSearchParams(window.location.search);
+  // Check for payment errors (urlParams already defined at top of function)
   const paymentStatus = urlParams.get('payment');
   if (paymentStatus === 'error' || paymentStatus === 'failed' || paymentStatus === 'cancelled') {
     return (
@@ -747,15 +778,9 @@ function AppRoutes() {
     );
   }
 
-  // Check for /setup page FIRST - before auth checks
-  // This ensures users who just paid can set up their account even if they have an old session
-  if (window.location.pathname === '/setup') {
-    const params = new URLSearchParams(window.location.search);
-    if (params.get('payment') === 'success') {
-      return <AccountSetup />;
-    }
-  }
-
+  // Note: /setup page check has been moved to the TOP of this function
+  // to ensure it's checked BEFORE any async loading states
+  
   if (!isAuthenticated) {
     // Show landing page for new visitors, login page if they clicked "Sign In"
     if (showLoginPage) {
@@ -768,10 +793,12 @@ function AppRoutes() {
   // For test user, use stored subscription status
   if (testUserAuth) {
     if (!testUserHasMembership) {
+      console.log('[AppRoutes] Showing paywall - test user without membership');
       return <PaywallPage />;
     }
   } else if (!membershipLoading) {
     if (!membershipStatus || !membershipStatus.hasMembership) {
+      console.log('[AppRoutes] Showing paywall - no membership found:', { membershipStatus, syncStatus });
       return <PaywallPage />;
     }
   }

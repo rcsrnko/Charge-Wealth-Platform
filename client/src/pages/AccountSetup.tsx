@@ -1,10 +1,10 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useLocation } from 'wouter';
 import { useSupabaseAuth } from '../hooks/useSupabaseAuth';
 
 export default function AccountSetup() {
   const [, setLocation] = useLocation();
-  const { signInWithGoogle, session, isLoading: authLoading } = useSupabaseAuth();
+  const { signInWithGoogle, session, isLoading: authLoading, syncStatus, triggerSync } = useSupabaseAuth();
   
   const [step, setStep] = useState<'choice' | 'password' | 'success'>('choice');
   const [email, setEmail] = useState('');
@@ -14,6 +14,7 @@ export default function AccountSetup() {
   const [loading, setLoading] = useState(false);
   const [googleLoading, setGoogleLoading] = useState(false);
   const [waitingForGoogleSync, setWaitingForGoogleSync] = useState(false);
+  const syncTriggeredRef = useRef(false);
   
   // Get email from URL params (passed from payment success)
   useEffect(() => {
@@ -26,6 +27,7 @@ export default function AccountSetup() {
     // Check if payment was successful
     const paymentStatus = params.get('payment');
     if (paymentStatus !== 'success') {
+      console.log('[AccountSetup] No payment=success, redirecting to home');
       // If no successful payment, redirect to home
       setLocation('/');
     }
@@ -33,20 +35,62 @@ export default function AccountSetup() {
     // Check if returning from Google OAuth
     const googlePending = params.get('google');
     if (googlePending === 'pending') {
+      console.log('[AccountSetup] Google OAuth return detected');
       setWaitingForGoogleSync(true);
     }
   }, [setLocation]);
   
-  // Handle Google OAuth completion - wait for session then redirect
+  // Handle Google OAuth completion - wait for session AND sync completion
   useEffect(() => {
-    if (waitingForGoogleSync && !authLoading && session) {
-      // Session is ready, give backend sync time to complete
-      setStep('success');
-      setTimeout(() => {
-        window.location.href = '/dashboard';
-      }, 2500); // Slightly longer delay to ensure sync completes
+    async function handleGoogleReturn() {
+      if (!waitingForGoogleSync) return;
+      
+      console.log('[AccountSetup] Google sync check:', { 
+        authLoading, 
+        hasSession: !!session, 
+        syncStatus,
+        syncTriggered: syncTriggeredRef.current 
+      });
+      
+      // Wait for Supabase session to be ready
+      if (authLoading || !session) {
+        return;
+      }
+      
+      // Trigger sync if not already done
+      if (!syncTriggeredRef.current && syncStatus !== 'synced') {
+        syncTriggeredRef.current = true;
+        console.log('[AccountSetup] Triggering manual backend sync...');
+        const result = await triggerSync();
+        console.log('[AccountSetup] Sync result:', result);
+        
+        if (result?.success) {
+          setStep('success');
+          // Small delay to show success message, then redirect
+          setTimeout(() => {
+            console.log('[AccountSetup] Redirecting to dashboard after Google sync');
+            window.location.href = '/dashboard';
+          }, 1500);
+        } else {
+          setError('Failed to sync account. Please try again or use password setup.');
+          setWaitingForGoogleSync(false);
+          syncTriggeredRef.current = false;
+        }
+        return;
+      }
+      
+      // If already synced, redirect immediately
+      if (syncStatus === 'synced') {
+        console.log('[AccountSetup] Already synced, redirecting to dashboard');
+        setStep('success');
+        setTimeout(() => {
+          window.location.href = '/dashboard';
+        }, 1500);
+      }
     }
-  }, [waitingForGoogleSync, authLoading, session]);
+    
+    handleGoogleReturn();
+  }, [waitingForGoogleSync, authLoading, session, syncStatus, triggerSync]);
 
   const handlePasswordSetup = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -63,6 +107,8 @@ export default function AccountSetup() {
     }
     
     setLoading(true);
+    console.log('[AccountSetup] Setting password for:', email);
+    
     try {
       const response = await fetch('/api/auth/set-password', {
         method: 'POST',
@@ -72,6 +118,7 @@ export default function AccountSetup() {
       });
       
       const data = await response.json();
+      console.log('[AccountSetup] Set password response:', data);
       
       if (!response.ok) {
         throw new Error(data.message || 'Failed to set password');
@@ -80,14 +127,18 @@ export default function AccountSetup() {
       // Store user in localStorage immediately so Dashboard can access it
       if (data.user) {
         localStorage.setItem('serverSessionUser', JSON.stringify(data.user));
+        console.log('[AccountSetup] Stored user in localStorage:', data.user.email);
       }
       
       setStep('success');
       // Full page reload to pick up new session
+      // Slightly longer delay to ensure cookie is properly set
+      console.log('[AccountSetup] Password set successfully, redirecting to dashboard...');
       setTimeout(() => {
         window.location.href = '/dashboard';
-      }, 2000);
+      }, 1500);
     } catch (err: any) {
+      console.error('[AccountSetup] Password setup error:', err);
       setError(err.message || 'Failed to set password');
       setLoading(false);
     }
@@ -96,12 +147,15 @@ export default function AccountSetup() {
   const handleGoogleConnect = async () => {
     setGoogleLoading(true);
     setError('');
+    console.log('[AccountSetup] Starting Google OAuth flow for:', email);
     try {
       // Sign in with Google - redirect back to /setup to complete the flow
       const returnUrl = `${window.location.origin}/setup?payment=success&email=${encodeURIComponent(email)}&google=pending`;
+      console.log('[AccountSetup] Google OAuth return URL:', returnUrl);
       await signInWithGoogle(returnUrl);
       // The OAuth redirect will handle the rest
     } catch (err: any) {
+      console.error('[AccountSetup] Google connect error:', err);
       setError(err.message || 'Failed to connect Google');
       setGoogleLoading(false);
     }

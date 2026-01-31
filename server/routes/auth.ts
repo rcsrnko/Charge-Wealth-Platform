@@ -112,6 +112,7 @@ export function registerAuthRoutes(app: Express, isAuthenticated: RequestHandler
       console.log('[Supabase Sync] Incoming user:', user?.id, user?.email);
       
       if (!user || !user.id || !user.email) {
+        console.log('[Supabase Sync] Invalid user data received');
         return res.status(400).json({ message: 'Invalid user data' });
       }
       
@@ -121,7 +122,7 @@ export function registerAuthRoutes(app: Express, isAuthenticated: RequestHandler
       
       // First check if a user with this email already exists (may have paid before OAuth)
       let dbUser = await storage.getUserByEmail(user.email);
-      console.log('[Supabase Sync] Existing user by email:', dbUser?.id, dbUser?.subscriptionStatus);
+      console.log('[Supabase Sync] Existing user by email:', dbUser?.id, 'status:', dbUser?.subscriptionStatus);
       
       if (dbUser) {
         // User exists by email - use the existing user (don't change ID to avoid FK issues)
@@ -136,8 +137,12 @@ export function registerAuthRoutes(app: Express, isAuthenticated: RequestHandler
           `);
         }
         console.log('[Supabase Sync] Using existing user:', dbUser.id, 'subscription:', dbUser.subscriptionStatus);
+        
+        // Re-fetch to get updated user
+        dbUser = await storage.getUser(dbUser.id);
       } else {
         // Create new user with Supabase ID
+        console.log('[Supabase Sync] Creating new user with Supabase ID:', user.id);
         dbUser = await storage.upsertUser({
           id: user.id,
           email: user.email,
@@ -147,6 +152,7 @@ export function registerAuthRoutes(app: Express, isAuthenticated: RequestHandler
       }
       
       if (!dbUser) {
+        console.log('[Supabase Sync] Failed to create/update user');
         return res.status(500).json({ message: 'Failed to create/update user' });
       }
       
@@ -157,13 +163,20 @@ export function registerAuthRoutes(app: Express, isAuthenticated: RequestHandler
       
       req.login(sessionUser, (err) => {
         if (err) {
-          console.error('Supabase session sync error:', err);
+          console.error('[Supabase Sync] Session login error:', err);
           return res.status(500).json({ message: 'Failed to sync session' });
         }
-        res.json({ success: true, user: dbUser });
+        // Explicitly save session before responding
+        req.session.save((saveErr) => {
+          if (saveErr) {
+            console.error('[Supabase Sync] Session save error:', saveErr);
+          }
+          console.log('[Supabase Sync] SUCCESS - User synced:', dbUser?.email, 'subscription:', dbUser?.subscriptionStatus);
+          res.json({ success: true, user: dbUser });
+        });
       });
     } catch (error) {
-      console.error('Supabase auth sync error:', error);
+      console.error('[Supabase Sync] Error:', error);
       res.status(500).json({ message: 'Failed to sync authentication' });
     }
   });
@@ -239,13 +252,15 @@ export function registerAuthRoutes(app: Express, isAuthenticated: RequestHandler
   app.get('/api/user/membership-status', isAuthenticated, async (req: any, res) => {
     try {
       const userId = req.user.claims.sub;
-      console.log('[Membership Check] User ID:', userId);
+      console.log('[Membership Check] Checking for user ID:', userId);
       const user = await storage.getUser(userId);
-      console.log('[Membership Check] Found user:', user?.id, user?.email, user?.subscriptionStatus);
       
       if (!user) {
+        console.log('[Membership Check] User not found for ID:', userId);
         return res.status(404).json({ message: 'User not found' });
       }
+      
+      console.log('[Membership Check] Found user:', user.email, 'status:', user.subscriptionStatus, 'type:', user.subscriptionType);
 
       // Test user always has access for development
       const isTestUser = userId === 'test-user-001';
@@ -261,15 +276,18 @@ export function registerAuthRoutes(app: Express, isAuthenticated: RequestHandler
         hasExpired = new Date(user.subscriptionEndDate) < new Date();
       }
 
-      res.json({
+      const result = {
         hasMembership: isActive && !hasExpired,
         subscriptionStatus: isTestUser ? 'active' : (user.subscriptionStatus || 'none'),
         subscriptionType: isTestUser ? 'lifetime' : user.subscriptionType,
         expiresAt: user.subscriptionEndDate,
         isTestUser
-      });
+      };
+      
+      console.log('[Membership Check] Result:', result.hasMembership ? 'HAS_MEMBERSHIP' : 'NO_MEMBERSHIP', result);
+      res.json(result);
     } catch (error) {
-      console.error("Error fetching membership status:", error);
+      console.error("[Membership Check] Error:", error);
       res.status(500).json({ message: "Failed to fetch membership status" });
     }
   });
@@ -347,8 +365,10 @@ export function registerAuthRoutes(app: Express, isAuthenticated: RequestHandler
   app.get('/api/auth/payment-success', async (req, res) => {
     try {
       const { session_id } = req.query;
+      console.log('[Payment Success] Processing session:', session_id);
       
       if (!session_id || typeof session_id !== 'string') {
+        console.log('[Payment Success] Invalid session_id');
         return res.redirect('/dashboard?payment=error');
       }
       
@@ -356,52 +376,73 @@ export function registerAuthRoutes(app: Express, isAuthenticated: RequestHandler
       const session = await stripe.checkout.sessions.retrieve(session_id);
       
       if (session.payment_status !== 'paid') {
+        console.log('[Payment Success] Payment not completed:', session.payment_status);
         return res.redirect('/dashboard?payment=failed');
       }
       
       const { firstName, lastName, email, planType, referralCode, referrerId } = session.metadata || {};
+      console.log('[Payment Success] Creating user for:', email);
       
       if (!email) {
+        console.log('[Payment Success] No email in metadata');
         return res.redirect('/dashboard?payment=error');
       }
       
-      const userId = `email-${email.replace(/[^a-zA-Z0-9]/g, '-')}-${Date.now()}`;
-      const user = await storage.upsertUser({
-        id: userId,
-        email,
-        firstName: firstName || '',
-        lastName: lastName || '',
-      });
+      // Check if user already exists (e.g., retrying after error)
+      let user = await storage.getUserByEmail(email);
       
-      await storage.updateUserSubscription(user.id, {
-        subscriptionStatus: 'active',
-        subscriptionType: planType || 'lifetime',
-        stripeCustomerId: session.customer as string || null,
-        subscriptionStartDate: new Date(),
-        subscriptionEndDate: null,
-      });
+      if (user) {
+        console.log('[Payment Success] User already exists:', user.id, 'status:', user.subscriptionStatus);
+        // Just update subscription if not already active
+        if (user.subscriptionStatus !== 'active') {
+          await storage.updateUserSubscription(user.id, {
+            subscriptionStatus: 'active',
+            subscriptionType: planType || 'lifetime',
+            stripeCustomerId: session.customer as string || null,
+            subscriptionStartDate: new Date(),
+            subscriptionEndDate: null,
+          });
+          console.log('[Payment Success] Updated existing user subscription');
+        }
+      } else {
+        // Create new user
+        const userId = `email-${email.replace(/[^a-zA-Z0-9]/g, '-')}-${Date.now()}`;
+        user = await storage.upsertUser({
+          id: userId,
+          email,
+          firstName: firstName || '',
+          lastName: lastName || '',
+        });
+        console.log('[Payment Success] Created new user:', user.id);
+        
+        await storage.updateUserSubscription(user.id, {
+          subscriptionStatus: 'active',
+          subscriptionType: planType || 'lifetime',
+          stripeCustomerId: session.customer as string || null,
+          subscriptionStartDate: new Date(),
+          subscriptionEndDate: null,
+        });
+        console.log('[Payment Success] Set subscription to active');
+      }
       
       if (referralCode && referrerId) {
         try {
           await storage.completeReferral(referralCode, user.id, 30);
         } catch (e) {
-          console.log('Referral completion skipped:', e);
+          console.log('[Payment Success] Referral completion skipped:', e);
         }
       }
       
       // Trigger welcome email for new paid member
       triggerWelcomeEmail(user.id, email, firstName || undefined);
       
-      const sessionUser = {
-        claims: { sub: user.id },
-        expires_at: Math.floor(Date.now() / 1000) + 86400 * 30
-      };
-      
       // Don't auto-login - redirect to setup page where user sets password or connects Google
       const encodedEmail = encodeURIComponent(email);
-      res.redirect(`/setup?payment=success&email=${encodedEmail}`);
+      const redirectUrl = `/setup?payment=success&email=${encodedEmail}`;
+      console.log('[Payment Success] Redirecting to:', redirectUrl);
+      res.redirect(redirectUrl);
     } catch (error) {
-      console.error('Payment success handler error:', error);
+      console.error('[Payment Success] Error:', error);
       res.redirect('/dashboard?payment=error');
     }
   });

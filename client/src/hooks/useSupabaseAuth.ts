@@ -1,8 +1,10 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { supabase } from '../lib/supabase';
 import type { User, Session } from '@supabase/supabase-js';
 
-async function syncSessionWithBackend(session: Session) {
+export type SyncStatus = 'idle' | 'syncing' | 'synced' | 'error';
+
+async function syncSessionWithBackend(session: Session): Promise<{ success: boolean; user?: any }> {
   try {
     console.log('[Auth] Syncing session with backend for:', session.user.email);
     const response = await fetch('/api/auth/supabase-sync', {
@@ -21,10 +23,10 @@ async function syncSessionWithBackend(session: Session) {
     });
     const data = await response.json();
     console.log('[Auth] Backend sync result:', data);
-    return data;
+    return { success: data.success === true, user: data.user };
   } catch (error) {
     console.error('[Auth] Failed to sync session with backend:', error);
-    return null;
+    return { success: false };
   }
 }
 
@@ -32,18 +34,55 @@ export function useSupabaseAuth() {
   const [user, setUser] = useState<User | null>(null);
   const [session, setSession] = useState<Session | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [syncStatus, setSyncStatus] = useState<SyncStatus>('idle');
+  const [syncedUser, setSyncedUser] = useState<any>(null);
   const syncedRef = useRef(false);
+  const syncingRef = useRef(false);
+
+  // Expose a manual sync function for AccountSetup to use
+  const triggerSync = useCallback(async () => {
+    if (!session || syncingRef.current) {
+      console.log('[Auth] triggerSync: no session or already syncing');
+      return null;
+    }
+    
+    syncingRef.current = true;
+    setSyncStatus('syncing');
+    
+    const result = await syncSessionWithBackend(session);
+    
+    if (result.success) {
+      setSyncStatus('synced');
+      setSyncedUser(result.user);
+      syncedRef.current = true;
+    } else {
+      setSyncStatus('error');
+    }
+    
+    syncingRef.current = false;
+    return result;
+  }, [session]);
 
   useEffect(() => {
     // Get initial session and sync if exists
     supabase.auth.getSession().then(async ({ data: { session } }) => {
+      console.log('[Auth] Initial session:', session?.user?.email);
       setSession(session);
       setUser(session?.user ?? null);
       
       // Sync on initial load if session exists and hasn't been synced
-      if (session && !syncedRef.current) {
-        syncedRef.current = true;
-        await syncSessionWithBackend(session);
+      if (session && !syncedRef.current && !syncingRef.current) {
+        syncingRef.current = true;
+        setSyncStatus('syncing');
+        const result = await syncSessionWithBackend(session);
+        if (result.success) {
+          setSyncStatus('synced');
+          setSyncedUser(result.user);
+          syncedRef.current = true;
+        } else {
+          setSyncStatus('error');
+        }
+        syncingRef.current = false;
       }
       
       setIsLoading(false);
@@ -58,14 +97,26 @@ export function useSupabaseAuth() {
 
         // Sync on sign in or token refresh
         if ((event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED' || event === 'INITIAL_SESSION') && session) {
-          if (!syncedRef.current) {
-            syncedRef.current = true;
-            await syncSessionWithBackend(session);
+          if (!syncedRef.current && !syncingRef.current) {
+            syncingRef.current = true;
+            setSyncStatus('syncing');
+            const result = await syncSessionWithBackend(session);
+            if (result.success) {
+              setSyncStatus('synced');
+              setSyncedUser(result.user);
+              syncedRef.current = true;
+            } else {
+              setSyncStatus('error');
+            }
+            syncingRef.current = false;
           }
         }
         
         if (event === 'SIGNED_OUT') {
           syncedRef.current = false;
+          syncingRef.current = false;
+          setSyncStatus('idle');
+          setSyncedUser(null);
         }
       }
     );
@@ -120,6 +171,9 @@ export function useSupabaseAuth() {
     session,
     isLoading,
     isAuthenticated: !!session,
+    syncStatus,
+    syncedUser,
+    triggerSync,
     signInWithGoogle,
     signUpWithEmail,
     signInWithEmail,
