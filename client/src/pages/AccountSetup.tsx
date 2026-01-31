@@ -60,9 +60,9 @@ export default function AccountSetup() {
       }
       
       setStep('success');
-      // Redirect to dashboard after short delay
+      // Full page reload to pick up new session
       setTimeout(() => {
-        setLocation('/dashboard');
+        window.location.href = '/dashboard';
       }, 2000);
     } catch (err: any) {
       setError(err.message || 'Failed to set password');
