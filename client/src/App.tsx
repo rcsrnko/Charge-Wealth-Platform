@@ -676,11 +676,16 @@ function AppRoutes() {
     return <LoadingPage />;
   }
 
-  if (!isAuthenticated) {
-    // Check if user is on account setup page (just paid, setting up auth)
-    if (window.location.pathname === '/setup') {
+  // Check for /setup page FIRST - before auth checks
+  // This ensures users who just paid can set up their account even if they have an old session
+  if (window.location.pathname === '/setup') {
+    const params = new URLSearchParams(window.location.search);
+    if (params.get('payment') === 'success') {
       return <AccountSetup />;
     }
+  }
+
+  if (!isAuthenticated) {
     // Show landing page for new visitors, login page if they clicked "Sign In"
     if (showLoginPage) {
       return <LoginPage onBack={() => setShowLoginPage(false)} />;
