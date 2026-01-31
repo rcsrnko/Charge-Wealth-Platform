@@ -2653,36 +2653,81 @@
         }
         
         // ============================================
-        // STRIPE CHECKOUT
+        // SIGNUP MODAL & STRIPE CHECKOUT
         // ============================================
-        async function startCheckout(planType) {
-            // Check for referral code in URL
+        let selectedPlanType = 'lifetime';
+        
+        function startCheckout(planType) {
+            selectedPlanType = planType;
+            document.getElementById('signupModal').style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+        }
+        
+        function closeSignupModal() {
+            document.getElementById('signupModal').style.display = 'none';
+            document.body.style.overflow = '';
+        }
+        
+        async function submitSignup(e) {
+            e.preventDefault();
+            
+            const firstName = document.getElementById('signupFirstName').value.trim();
+            const lastName = document.getElementById('signupLastName').value.trim();
+            const email = document.getElementById('signupEmail').value.trim();
+            const submitBtn = document.getElementById('signupSubmitBtn');
+            const errorEl = document.getElementById('signupError');
+            
+            errorEl.textContent = '';
+            
+            if (!firstName || !lastName || !email) {
+                errorEl.textContent = 'Please fill in all fields';
+                return;
+            }
+            
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(email)) {
+                errorEl.textContent = 'Please enter a valid email address';
+                return;
+            }
+            
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Redirecting to checkout...';
+            
+            // Check for referral code
             const urlParams = new URLSearchParams(window.location.search);
-            const referralCode = urlParams.get('ref') || '';
+            const referralCode = urlParams.get('ref') || localStorage.getItem('charge_referral_code') || '';
             
             try {
-                const res = await fetch('/api/stripe/checkout', {
+                const res = await fetch('/api/auth/signup-checkout', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ planType, referralCode })
+                    body: JSON.stringify({ firstName, lastName, email, referralCode })
                 });
                 
-                if (res.ok) {
-                    const data = await res.json();
-                    if (data.url) {
-                        window.location.href = data.url;
-                    } else {
-                        alert('Checkout failed. Please try again.');
-                    }
+                const data = await res.json();
+                
+                if (res.ok && data.url) {
+                    window.location.href = data.url;
                 } else {
-                    const errData = await res.json().catch(() => ({}));
-                    alert(errData.message || 'Checkout failed. Please try again.');
+                    errorEl.textContent = data.message || 'Checkout failed. Please try again.';
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = 'Become a Founding Member — $279';
                 }
             } catch (e) {
                 console.error('Checkout error:', e);
-                alert('Checkout failed. Please try again.');
+                errorEl.textContent = 'Checkout failed. Please try again.';
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Become a Founding Member — $279';
             }
         }
+        
+        // Close modal when clicking outside
+        document.addEventListener('click', function(e) {
+            const modal = document.getElementById('signupModal');
+            if (e.target === modal) {
+                closeSignupModal();
+            }
+        });
         
         // ============================================
         // INITIALIZATION
@@ -2722,5 +2767,33 @@
             }
         });
     </script>
+    
+    <!-- Signup Modal -->
+    <div id="signupModal" style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.8); z-index: 10000; align-items: center; justify-content: center; padding: 20px;">
+        <div style="background: var(--charcoal); border-radius: 16px; padding: 2.5rem; max-width: 440px; width: 100%; position: relative; box-shadow: 0 4px 24px rgba(0,0,0,0.4);">
+            <button onclick="closeSignupModal()" style="position: absolute; top: 16px; right: 16px; background: none; border: none; color: var(--text-muted); font-size: 1.5rem; cursor: pointer; line-height: 1;">&times;</button>
+            
+            <div style="text-align: center; margin-bottom: 1.5rem;">
+                <h2 style="font-size: 1.5rem; font-weight: 600; color: var(--text-primary); margin-bottom: 0.5rem;">Become a Founding Member</h2>
+                <p style="color: var(--text-muted); font-size: 0.9375rem;">Lifetime access for $279 — no recurring fees</p>
+            </div>
+            
+            <form onsubmit="submitSignup(event)">
+                <div style="display: flex; gap: 0.75rem; margin-bottom: 0.75rem;">
+                    <input type="text" id="signupFirstName" placeholder="First Name" style="flex: 1; padding: 0.875rem 1rem; background: var(--deep-charcoal); border: 1px solid var(--border-subtle); border-radius: 8px; color: var(--text-primary); font-size: 1rem; outline: none;" />
+                    <input type="text" id="signupLastName" placeholder="Last Name" style="flex: 1; padding: 0.875rem 1rem; background: var(--deep-charcoal); border: 1px solid var(--border-subtle); border-radius: 8px; color: var(--text-primary); font-size: 1rem; outline: none;" />
+                </div>
+                <input type="email" id="signupEmail" placeholder="Email Address" style="width: 100%; padding: 0.875rem 1rem; background: var(--deep-charcoal); border: 1px solid var(--border-subtle); border-radius: 8px; color: var(--text-primary); font-size: 1rem; margin-bottom: 1rem; outline: none; box-sizing: border-box;" />
+                
+                <p id="signupError" style="color: #EF4444; font-size: 0.875rem; margin-bottom: 1rem; min-height: 1.25rem;"></p>
+                
+                <button type="submit" id="signupSubmitBtn" style="width: 100%; padding: 0.875rem 1.5rem; background: var(--gold-sand); color: #4A3F2F; border: none; border-radius: 8px; font-size: 1rem; font-weight: 600; cursor: pointer;">Become a Founding Member — $279</button>
+            </form>
+            
+            <p style="text-align: center; margin-top: 1rem; font-size: 0.75rem; color: var(--text-muted);">
+                Already have an account? <a href="/dashboard" style="color: var(--gold-sand);">Sign in</a>
+            </p>
+        </div>
+    </div>
 </body>
 </html>
