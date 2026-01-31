@@ -4,7 +4,7 @@ import type { User, Session } from '@supabase/supabase-js';
 
 export type SyncStatus = 'idle' | 'syncing' | 'synced' | 'error';
 
-async function syncSessionWithBackend(session: Session): Promise<{ success: boolean; user?: any }> {
+async function syncSessionWithBackend(session: Session): Promise<{ success: boolean; user?: any; error?: string }> {
   try {
     console.log('[Auth] Syncing session with backend for:', session.user.email);
     const response = await fetch('/api/auth/supabase-sync', {
@@ -22,11 +22,17 @@ async function syncSessionWithBackend(session: Session): Promise<{ success: bool
       })
     });
     const data = await response.json();
-    console.log('[Auth] Backend sync result:', data);
-    return { success: data.success === true, user: data.user };
+    console.log('[Auth] Backend sync result:', response.status, data);
+    
+    if (!response.ok) {
+      console.error('[Auth] Sync failed with status:', response.status, data.message);
+      return { success: false, error: data.message || 'Server error' };
+    }
+    
+    return { success: data.success === true, user: data.user, error: data.message };
   } catch (error) {
     console.error('[Auth] Failed to sync session with backend:', error);
-    return { success: false };
+    return { success: false, error: String(error) };
   }
 }
 
