@@ -8,7 +8,7 @@
 .loading {
   padding: 2rem;
   text-align: center;
-  color: var(--muted-gray, #6b7280);
+  color: var(--muted-gray, var(--text-secondary));
 }
 
 .header {

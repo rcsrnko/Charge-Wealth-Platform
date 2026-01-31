@@ -81,6 +81,13 @@
   /* Pure */
   --color-white: #FFFFFF;
   --color-black: #000000;
+  
+  /* Chart Colors - Distinct colors for data visualization */
+  --chart-purple: #6c5ce7;             /* Fixed income segment */
+  --chart-gray: #95a5a6;               /* Cash segment */
+  --chart-violet: #9b59b6;             /* Alternative investments */
+  --chart-teal: #58A4B0;               /* Teal accent for charts */
+  --chart-warm: #D7B98C;               /* Warm gold for charts */
 
   /* ========================================
      SEMANTIC TOKENS - LIGHT MODE (Default)

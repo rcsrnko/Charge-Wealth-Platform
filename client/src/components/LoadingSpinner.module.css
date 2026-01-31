@@ -95,7 +95,7 @@
 }
 
 .text {
-  color: var(--muted-gray, #94A3B8);
+  color: var(--muted-gray, var(--text-secondary));
   font-size: 0.875rem;
   margin: 0;
   animation: text-pulse 2s ease-in-out infinite;

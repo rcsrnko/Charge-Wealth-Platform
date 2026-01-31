@@ -204,7 +204,7 @@
 .breakdownCost {
   font-size: 0.9375rem;
   font-weight: 600;
-  color: #ef4444;
+  color: var(--status-error);
 }
 
 .breakdownDesc {

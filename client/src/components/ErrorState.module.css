@@ -23,13 +23,13 @@
 .errorMessage {
   font-size: 1.0625rem;
   font-weight: 600;
-  color: var(--porcelain, #F5F5F5);
+  color: var(--porcelain, var(--text-primary));
   margin: 0 0 0.5rem 0;
 }
 
 .errorHint {
   font-size: 0.875rem;
-  color: var(--muted-gray, #94A3B8);
+  color: var(--muted-gray, var(--text-secondary));
   margin: 0 0 1.25rem 0;
 }
 
@@ -65,14 +65,14 @@
   background: rgba(239, 68, 68, 0.1);
   border: 1px solid rgba(239, 68, 68, 0.2);
   border-radius: 8px;
-  color: var(--porcelain, #F5F5F5);
+  color: var(--porcelain, var(--text-primary));
   font-size: 0.875rem;
 }
 
 .compactError svg {
   width: 18px;
   height: 18px;
-  color: #EF4444;
+  color: var(--status-error);
   flex-shrink: 0;
 }
 

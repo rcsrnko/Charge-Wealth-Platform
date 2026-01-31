@@ -136,7 +136,7 @@
 }
 
 .copyButton:hover {
-  background: #b8983d;
+  background: var(--accent-primary-hover);
 }
 
 .shareButtons {
@@ -307,7 +307,7 @@
 .activityReward {
   font-size: 0.9375rem;
   font-weight: 600;
-  color: #22c55e;
+  color: var(--status-success);
 }
 
 @media (max-width: 768px) {

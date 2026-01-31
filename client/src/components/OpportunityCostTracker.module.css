@@ -15,13 +15,13 @@
 .title {
   font-size: 16px;
   font-weight: 600;
-  color: var(--off-white, #F4F5F7);
+  color: var(--off-white, var(--surface-secondary));
   margin-bottom: 2px;
 }
 
 .subtitle {
   font-size: 12px;
-  color: var(--text-muted, #8B92A5);
+  color: var(--text-muted, var(--text-muted));
 }
 
 .totals {
@@ -42,7 +42,7 @@
 
 .totalLabel {
   font-size: 10px;
-  color: var(--text-muted, #8B92A5);
+  color: var(--text-muted, var(--text-muted));
   text-transform: uppercase;
   letter-spacing: 0.5px;
 }
@@ -79,7 +79,7 @@
 .costTitle {
   font-size: 13px;
   font-weight: 600;
-  color: var(--off-white, #F4F5F7);
+  color: var(--off-white, var(--surface-secondary));
 }
 
 .daysCounter {
@@ -93,7 +93,7 @@
 
 .costDescription {
   font-size: 12px;
-  color: var(--text-muted, #8B92A5);
+  color: var(--text-muted, var(--text-muted));
   line-height: 1.4;
 }
 
@@ -123,7 +123,7 @@
 }
 
 .costAction:hover {
-  background: var(--gold-light, #D4B873);
+  background: var(--gold-light, var(--accent-primary));
 }
 
 .footer {
@@ -135,7 +135,7 @@
 
 .footerText {
   font-size: 12px;
-  color: var(--text-muted, #8B92A5);
+  color: var(--text-muted, var(--text-muted));
 }
 
 .footerText strong {
@@ -150,7 +150,7 @@
 
 .emptyText {
   font-size: 13px;
-  color: var(--text-muted, #8B92A5);
+  color: var(--text-muted, var(--text-muted));
   margin-bottom: 12px;
 }
 

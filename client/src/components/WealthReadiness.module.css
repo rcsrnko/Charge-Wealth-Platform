@@ -209,7 +209,7 @@ button.nextCard {
 .stepCheck svg {
   width: 16px;
   height: 16px;
-  color: #2ECC71;
+  color: var(--status-success);
 }
 
 .stepPoints {

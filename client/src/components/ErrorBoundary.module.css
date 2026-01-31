@@ -30,13 +30,13 @@
 .errorTitle {
   font-size: 1.125rem;
   font-weight: 600;
-  color: var(--porcelain, #F5F5F5);
+  color: var(--porcelain, var(--text-primary));
   margin: 0 0 0.5rem 0;
 }
 
 .errorSubtitle {
   font-size: 0.9375rem;
-  color: var(--muted-gray, #94A3B8);
+  color: var(--muted-gray, var(--text-secondary));
   margin: 0 0 1.5rem 0;
   line-height: 1.5;
 }
@@ -46,7 +46,7 @@
   align-items: center;
   gap: 0.5rem;
   padding: 0.75rem 1.5rem;
-  background: linear-gradient(135deg, var(--soft-gold, var(--brand-accent)) 0%, #B8963F 100%);
+  background: linear-gradient(135deg, var(--soft-gold, var(--brand-accent)) 0%, var(--accent-primary-hover) 100%);
   border: none;
   border-radius: 8px;
   color: var(--midnight-blue, #0F172A);

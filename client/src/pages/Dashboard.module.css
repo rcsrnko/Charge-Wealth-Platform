@@ -342,7 +342,7 @@
 }
 
 .startButton:hover {
-  background: #D4B77A;
+  background: var(--accent-primary);
   transform: translateY(-1px);
 }
 
@@ -617,7 +617,7 @@
 .sectionLabel {
   font-size: 0.75rem;
   font-weight: 600;
-  color: #3B82F6;
+  color: var(--accent-blue-solid);
   text-transform: uppercase;
   letter-spacing: 0.08em;
   margin: 0 0 1rem 0;
@@ -737,7 +737,7 @@
 .antiAmount {
   font-size: 1.25rem;
   font-weight: 700;
-  color: #E74C3C;
+  color: var(--status-error);
   margin-bottom: 0.5rem;
 }
 
@@ -960,7 +960,7 @@
   top: 0;
   left: 0;
   right: 0;
-  background: linear-gradient(90deg, var(--brand-accent) 0%, #B8943E 100%);
+  background: linear-gradient(90deg, var(--brand-accent) 0%, var(--accent-primary-hover) 100%);
   color: var(--bg-primary);
   text-align: center;
   padding: 0.5rem 1rem;
@@ -1084,7 +1084,7 @@
 }
 
 .opportunityCard.medium {
-  border-left: 3px solid #3B82F6;
+  border-left: 3px solid var(--accent-blue-solid);
 }
 
 .oppHeader {

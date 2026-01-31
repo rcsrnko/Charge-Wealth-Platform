@@ -225,11 +225,11 @@
 }
 
 .deadlineCard.now {
-  border-left-color: #EF4444;
+  border-left-color: var(--status-error);
 }
 
 .deadlineCard.soon {
-  border-left-color: #FBBF24;
+  border-left-color: var(--status-warning);
 }
 
 .deadlineCard.plan {
@@ -258,7 +258,7 @@
 
 .deadlineImpact {
   font-size: 0.75rem;
-  color: #4ADE80;
+  color: var(--status-success-text);
   font-weight: 500;
 }
 
@@ -341,8 +341,8 @@
 }
 
 .removeFile:hover {
-  border-color: #e74c3c;
-  color: #e74c3c;
+  border-color: var(--status-error);
+  color: var(--status-error);
 }
 
 .analyzeButton {
@@ -361,7 +361,7 @@
 }
 
 .analyzeButton:hover:not(:disabled) {
-  background: #b8983f;
+  background: var(--accent-primary-hover);
 }
 
 .analyzeButton:disabled {
@@ -544,7 +544,7 @@
 .insightImpact {
   font-size: 0.875rem;
   font-weight: 600;
-  color: #4ADE80;
+  color: var(--status-success-text);
 }
 
 .insightCta {
@@ -560,7 +560,7 @@
 }
 
 .insightCta:hover {
-  background: #b8983f;
+  background: var(--accent-primary-hover);
 }
 
 .insightCard.opportunity {
@@ -568,11 +568,11 @@
 }
 
 .insightCard.warning {
-  border-left-color: #f39c12;
+  border-left-color: var(--status-warning);
 }
 
 .insightCard.info {
-  border-left-color: #3498db;
+  border-left-color: var(--accent-blue-solid);
 }
 
 .insightHeader {
@@ -681,7 +681,7 @@
 }
 
 .newScenarioButton:hover {
-  background: #b8983f;
+  background: var(--accent-primary-hover);
 }
 
 .scenarioBuilder {
@@ -874,11 +874,11 @@
 }
 
 .scenarioMetrics .positive {
-  color: #27ae60;
+  color: var(--status-success);
 }
 
 .scenarioMetrics .negative {
-  color: #e74c3c;
+  color: var(--status-error);
 }
 
 @media (max-width: 768px) {
@@ -1047,17 +1047,17 @@
 
 .uploadedDocStatus.completed {
   background: rgba(39, 174, 96, 0.15);
-  color: #27AE60;
+  color: var(--status-success);
 }
 
 .uploadedDocStatus.processing {
   background: rgba(241, 196, 15, 0.15);
-  color: #F1C40F;
+  color: var(--accent-primary);
 }
 
 .uploadedDocStatus.failed {
   background: rgba(231, 76, 60, 0.15);
-  color: #E74C3C;
+  color: var(--status-error);
 }
 
 /* Right Column Layout */
@@ -1247,7 +1247,7 @@
 }
 
 .chatSendButton:hover:not(:disabled) {
-  background: #d4b87a;
+  background: var(--accent-primary);
 }
 
 .chatSendButton:disabled {
@@ -1414,7 +1414,7 @@
 .savingsValue {
   font-size: 1.5rem;
   font-weight: 700;
-  color: #10B981;
+  color: var(--status-success);
 }
 
 .summaryBox {
@@ -1459,7 +1459,7 @@
 }
 
 .strategyCard.high {
-  border-left: 3px solid #10B981;
+  border-left: 3px solid var(--status-success);
 }
 
 .strategyCard.medium {
@@ -1488,7 +1488,7 @@
 
 .priorityBadge.high {
   background: rgba(16, 185, 129, 0.15);
-  color: #10B981;
+  color: var(--status-success);
 }
 
 .priorityBadge.medium {
@@ -1504,7 +1504,7 @@
 .strategySavings {
   font-size: 0.875rem;
   font-weight: 600;
-  color: #10B981;
+  color: var(--status-success);
 }
 
 .strategyTitle {
@@ -1573,11 +1573,11 @@
 }
 
 .paycheckImpact .positive {
-  color: #10B981;
+  color: var(--status-success);
 }
 
 .paycheckImpact .negative {
-  color: #EF4444;
+  color: var(--status-error);
 }
 
 /* Data Prompt Card - Replaces blurred preview with clear call to action */
@@ -1686,7 +1686,7 @@
 .heroAmount {
   font-size: 1.5rem;
   font-weight: 700;
-  color: #10b981;
+  color: var(--status-success);
   line-height: 1.1;
 }
 
@@ -1758,7 +1758,7 @@
 
 .optimizationSavings {
   font-size: 0.875rem;
-  color: #10b981;
+  color: var(--status-success);
 }
 
 .optimizationSavings strong {
@@ -1810,7 +1810,7 @@
 }
 
 .optSuggested {
-  color: #10b981;
+  color: var(--status-success);
   font-weight: 600;
 }
 
@@ -1892,7 +1892,7 @@
 .savingsHeroAmount {
   font-size: 2.5rem;
   font-weight: 700;
-  color: #10b981;
+  color: var(--status-success);
   line-height: 1;
 }
 
@@ -1940,7 +1940,7 @@
 .problemHeroAmount {
   font-size: 2rem;
   font-weight: 700;
-  color: #f59e0b;
+  color: var(--status-warning);
   line-height: 1.2;
 }
 
@@ -1979,7 +1979,7 @@
   align-items: center;
   justify-content: center;
   background: rgba(245, 158, 11, 0.2);
-  color: #f59e0b;
+  color: var(--status-warning);
   border-radius: 50%;
   font-weight: 600;
   font-size: 0.8rem;
@@ -1994,7 +1994,7 @@
 }
 
 .actionSavings {
-  color: #10b981;
+  color: var(--status-success);
   font-weight: 500;
   font-size: 0.8rem;
 }
@@ -2047,7 +2047,7 @@
 .rangeAmount {
   font-size: 1.5rem;
   font-weight: 700;
-  color: #10b981;
+  color: var(--status-success);
 }
 
 .rangeLabel {
@@ -2181,7 +2181,7 @@
 .resultCardSavings {
   display: block;
   font-size: 0.875rem;
-  color: #10b981;
+  color: var(--status-success);
   margin-top: 0.25rem;
 }
 
@@ -2233,7 +2233,7 @@
 
 .amountValueHighlight {
   font-size: 1rem;
-  color: #10b981;
+  color: var(--status-success);
   font-weight: 600;
 }
 
@@ -2338,7 +2338,7 @@
 }
 
 .reanalyzeBtn:hover:not(:disabled) {
-  background: #c9a832;
+  background: var(--accent-primary);
   transform: translateY(-1px);
 }
 
@@ -2626,7 +2626,7 @@
 }
 
 .singleUploadCard .removeFile:hover {
-  color: #ef4444;
+  color: var(--status-error);
 }
 
 .singleUploadCard .analyzeButton {
@@ -2648,7 +2648,7 @@
 }
 
 .singleUploadCard .analyzeButton:hover:not(:disabled) {
-  background: #c9a832;
+  background: var(--accent-primary);
   transform: translateY(-1px);
 }
 
@@ -2785,7 +2785,7 @@
 }
 
 .inlineAnalyzeBtn:hover:not(:disabled) {
-  background: #c9a832;
+  background: var(--accent-primary);
 }
 
 .inlineAnalyzeBtn:disabled {
@@ -2924,11 +2924,11 @@
 }
 
 .withholdingAlert.over .withholdingDiff {
-  color: #10b981;
+  color: var(--status-success);
 }
 
 .withholdingAlert.under .withholdingDiff {
-  color: #f59e0b;
+  color: var(--status-warning);
 }
 
 .ratesRow {

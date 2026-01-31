@@ -45,7 +45,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  background: linear-gradient(135deg, var(--brand-accent) 0%, #B8954F 100%);
+  background: linear-gradient(135deg, var(--brand-accent) 0%, var(--accent-primary-hover) 100%);
   border-radius: 12px;
   padding: 10px 16px;
   min-width: 70px;
@@ -81,7 +81,7 @@
 }
 
 .levelBadge {
-  background: linear-gradient(135deg, var(--brand-accent) 0%, #B8954F 100%);
+  background: linear-gradient(135deg, var(--brand-accent) 0%, var(--accent-primary-hover) 100%);
   color: var(--bg-primary);
   font-weight: 600;
   font-size: 12px;
@@ -90,7 +90,7 @@
 }
 
 .levelProgress {
-  color: #9ca3af;
+  color: var(--text-muted);
   font-size: 12px;
 }
 
@@ -104,7 +104,7 @@
 
 .progressFill {
   height: 100%;
-  background: linear-gradient(90deg, var(--brand-accent), #E0C088);
+  background: linear-gradient(90deg, var(--brand-accent), var(--accent-primary));
   border-radius: 3px;
   transition: width 0.5s ease;
 }
@@ -127,14 +127,14 @@
 
 .statLabel {
   font-size: 11px;
-  color: #6b7280;
+  color: var(--text-secondary);
   text-transform: uppercase;
   letter-spacing: 0.5px;
 }
 
 .loading {
   text-align: center;
-  color: #9ca3af;
+  color: var(--text-muted);
   padding: 40px;
 }
 
@@ -157,13 +157,13 @@
 }
 
 .emptyState p {
-  color: #9ca3af;
+  color: var(--text-muted);
   font-size: 14px;
   margin: 0 0 20px 0;
 }
 
 .generateButton {
-  background: linear-gradient(135deg, var(--brand-accent) 0%, #B8954F 100%);
+  background: linear-gradient(135deg, var(--brand-accent) 0%, var(--accent-primary-hover) 100%);
   color: var(--bg-primary);
   font-weight: 600;
   font-size: 14px;
@@ -299,7 +299,7 @@
 .expandIcon {
   width: 20px;
   height: 20px;
-  color: #6b7280;
+  color: var(--text-secondary);
   transition: transform 0.2s;
   flex-shrink: 0;
 }
@@ -349,7 +349,7 @@
   display: flex;
   align-items: center;
   gap: 6px;
-  background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+  background: linear-gradient(135deg, var(--status-success) 0%, var(--status-success) 100%);
   color: var(--text-primary);
   font-weight: 500;
   font-size: 13px;
@@ -371,7 +371,7 @@
 
 .dismissButton {
   background: transparent;
-  color: #6b7280;
+  color: var(--text-secondary);
   font-size: 13px;
   padding: 10px 16px;
   border: 1px solid var(--border-subtle, rgba(0,0,0,0.1));
@@ -382,7 +382,7 @@
 
 .dismissButton:hover {
   border-color: var(--border, rgba(0,0,0,0.15));
-  color: #9ca3af;
+  color: var(--text-muted);
 }
 
 .completedList {
@@ -401,13 +401,13 @@
 }
 
 .completedTitle {
-  color: #9ca3af;
+  color: var(--text-muted);
   font-size: 13px;
   text-decoration: line-through;
 }
 
 .completedPoints {
-  color: #22c55e;
+  color: var(--status-success);
   font-size: 12px;
   font-weight: 600;
 }
@@ -415,7 +415,7 @@
 .refreshButton {
   width: 100%;
   background: var(--input-bg-hover);
-  color: #9ca3af;
+  color: var(--text-muted);
   font-size: 13px;
   padding: 12px;
   border: 1px solid var(--border-subtle, rgba(0,0,0,0.1));

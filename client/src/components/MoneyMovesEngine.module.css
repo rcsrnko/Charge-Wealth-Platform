@@ -199,7 +199,7 @@
 }
 
 .moveCta:hover {
-  background: var(--gold-light, #D4B873);
+  background: var(--gold-light, var(--accent-primary));
 }
 
 /* Empty State */
@@ -228,13 +228,13 @@
 .emptyTitle {
   font-size: 20px;
   font-weight: 600;
-  color: var(--off-white, #F4F5F7);
+  color: var(--off-white, var(--surface-secondary));
   margin-bottom: 8px;
 }
 
 .emptyDescription {
   font-size: 14px;
-  color: var(--text-muted, #8B92A5);
+  color: var(--text-muted, var(--text-muted));
   max-width: 400px;
   margin: 0 auto 16px;
   line-height: 1.5;

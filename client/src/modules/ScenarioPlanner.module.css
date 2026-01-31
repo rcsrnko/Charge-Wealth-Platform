@@ -26,7 +26,7 @@
 .loading {
   text-align: center;
   padding: 4rem;
-  color: var(--muted-gray, #6b7280);
+  color: var(--muted-gray, var(--text-secondary));
 }
 
 .baseline {
@@ -42,12 +42,12 @@
 
 .baselineLabel {
   font-size: 0.85rem;
-  color: var(--muted-gray, #6b7280);
+  color: var(--muted-gray, var(--text-secondary));
 }
 
 .baselineValue {
   font-size: 0.9rem;
-  color: var(--porcelain, #f4f5f7);
+  color: var(--porcelain, var(--surface-secondary));
   font-weight: 500;
 }
 
@@ -93,7 +93,7 @@
   background: var(--input-bg);
   border: 1px solid var(--border-subtle, rgba(0,0,0,0.1));
   border-radius: 10px;
-  color: var(--muted-gray, #6b7280);
+  color: var(--muted-gray, var(--text-secondary));
   cursor: pointer;
   transition: all 0.2s;
 }
@@ -101,13 +101,13 @@
 .scenarioBtn:hover {
   background: var(--sidebar-hover);
   border-color: var(--border-strong);
-  color: var(--porcelain, #f4f5f7);
+  color: var(--porcelain, var(--surface-secondary));
 }
 
 .scenarioBtn.active {
   background: var(--sidebar-active);
-  border-color: var(--gold-sand, #c9a962);
-  color: var(--porcelain, #f4f5f7);
+  border-color: var(--gold-sand, var(--accent-primary));
+  color: var(--porcelain, var(--surface-secondary));
 }
 
 .scenarioIcon {
@@ -166,12 +166,12 @@
 }
 
 .inputWrapper:focus-within {
-  border-color: var(--gold-sand, #c9a962);
+  border-color: var(--gold-sand, var(--accent-primary));
 }
 
 .inputPrefix, .inputSuffix {
   padding: 0.75rem;
-  color: var(--muted-gray, #6b7280);
+  color: var(--muted-gray, var(--text-secondary));
   background: var(--input-bg);
 }
 
@@ -180,7 +180,7 @@
   padding: 0.75rem;
   background: transparent;
   border: none;
-  color: var(--porcelain, #f4f5f7);
+  color: var(--porcelain, var(--surface-secondary));
   font-size: 1rem;
   outline: none;
 }
@@ -190,13 +190,13 @@
   background: var(--input-bg-hover);
   border: 1px solid var(--border-subtle, rgba(0,0,0,0.1));
   border-radius: 8px;
-  color: var(--porcelain, #f4f5f7);
+  color: var(--porcelain, var(--surface-secondary));
   font-size: 1rem;
   outline: none;
 }
 
 .simpleInput:focus {
-  border-color: var(--gold-sand, #c9a962);
+  border-color: var(--gold-sand, var(--accent-primary));
 }
 
 .checkboxLabel {
@@ -204,7 +204,7 @@
   align-items: center;
   gap: 0.5rem;
   cursor: pointer;
-  color: var(--porcelain, #f4f5f7) !important;
+  color: var(--porcelain, var(--surface-secondary)) !important;
 }
 
 .checkboxLabel input[type="checkbox"] {
@@ -231,7 +231,7 @@
   background: var(--input-bg);
   border-radius: 8px;
   font-size: 0.9rem;
-  color: var(--porcelain, #f4f5f7);
+  color: var(--porcelain, var(--surface-secondary));
   line-height: 1.5;
 }
 
@@ -257,13 +257,13 @@
 
 .stateNote span:last-child {
   font-size: 0.8125rem;
-  color: var(--gold-sand, #c9a962);
+  color: var(--gold-sand, var(--accent-primary));
   line-height: 1.4;
 }
 
 .inputHint {
   font-size: 0.75rem;
-  color: var(--muted-gray, #6b7280);
+  color: var(--muted-gray, var(--text-secondary));
   margin-top: 0.25rem;
 }
 

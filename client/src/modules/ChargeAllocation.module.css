@@ -43,7 +43,7 @@
 }
 
 .addButton:hover {
-  background: #b8983f;
+  background: var(--accent-primary-hover);
 }
 
 .content {
@@ -88,16 +88,16 @@
 }
 
 .summaryValue.positive {
-  color: #4ADE80;
+  color: var(--status-success-text);
 }
 
 .summaryValue.warning {
-  color: #FBBF24;
+  color: var(--status-warning);
 }
 
 .summaryChange {
   font-size: 0.75rem;
-  color: #4ADE80;
+  color: var(--status-success-text);
   font-weight: 500;
   margin-top: 0.25rem;
 }
@@ -138,11 +138,11 @@
 }
 
 .insightCard.warning {
-  border-left-color: #FBBF24;
+  border-left-color: var(--status-warning);
 }
 
 .insightCard.opportunity {
-  border-left-color: #4ADE80;
+  border-left-color: var(--status-success-text);
 }
 
 .insightCard.action {
@@ -177,7 +177,7 @@
 .insightImpact {
   font-size: 0.875rem;
   font-weight: 600;
-  color: #4ADE80;
+  color: var(--status-success-text);
 }
 
 .insightCta {
@@ -193,7 +193,7 @@
 }
 
 .insightCta:hover {
-  background: #b8983f;
+  background: var(--accent-primary-hover);
 }
 
 .allocationSection {
@@ -230,31 +230,31 @@
 }
 
 .weightWarning {
-  color: #FBBF24 !important;
+  color: var(--status-warning) !important;
 }
 
 .highRisk {
-  border-color: #e74c3c;
+  border-color: var(--status-error);
 }
 
 .highRisk .summaryValue {
-  color: #e74c3c;
+  color: var(--status-error);
 }
 
 .mediumRisk {
-  border-color: #f39c12;
+  border-color: var(--status-warning);
 }
 
 .mediumRisk .summaryValue {
-  color: #f39c12;
+  color: var(--status-warning);
 }
 
 .lowRisk {
-  border-color: #27ae60;
+  border-color: var(--status-success);
 }
 
 .lowRisk .summaryValue {
-  color: #27ae60;
+  color: var(--status-success);
 }
 
 .allocationBar {
@@ -365,11 +365,11 @@
 }
 
 .tableRow .positive {
-  color: #27ae60;
+  color: var(--status-success);
 }
 
 .tableRow .negative {
-  color: #e74c3c;
+  color: var(--status-error);
 }
 
 .tableRow span small {
@@ -465,7 +465,7 @@
 }
 
 .addButtonLarge:hover {
-  background: #b8983f;
+  background: var(--accent-primary-hover);
 }
 
 .emptyFootnote {
@@ -645,7 +645,7 @@
   width: 100px;
   height: 100px;
   border-radius: 50%;
-  background: linear-gradient(135deg, var(--soft-gold), #b8983f);
+  background: linear-gradient(135deg, var(--soft-gold), var(--accent-primary-hover));
   color: var(--midnight-blue);
 }
 
@@ -691,15 +691,15 @@
 }
 
 .riskItem.high {
-  border-left-color: #e74c3c;
+  border-left-color: var(--status-error);
 }
 
 .riskItem.medium {
-  border-left-color: #f39c12;
+  border-left-color: var(--status-warning);
 }
 
 .riskItem.low {
-  border-left-color: #27ae60;
+  border-left-color: var(--status-success);
 }
 
 .riskFactor {
@@ -919,7 +919,7 @@
 }
 
 .alertDelete:hover {
-  color: #EF4444;
+  color: var(--status-error);
 }
 
 .priceCell {
@@ -944,11 +944,11 @@
 }
 
 .dailyCell.positive span:first-child {
-  color: #4ADE80;
+  color: var(--status-success-text);
 }
 
 .dailyCell.negative span:first-child {
-  color: #EF4444;
+  color: var(--status-error);
 }
 
 .dailyCell small {
@@ -956,11 +956,11 @@
 }
 
 .dailyCell.positive small {
-  color: #4ADE80;
+  color: var(--status-success-text);
 }
 
 .dailyCell.negative small {
-  color: #EF4444;
+  color: var(--status-error);
 }
 
 .priceChartSection {
@@ -1023,11 +1023,11 @@
 }
 
 .summaryChange.positive {
-  color: #4ADE80;
+  color: var(--status-success-text);
 }
 
 .summaryChange.negative {
-  color: #EF4444;
+  color: var(--status-error);
 }
 
 .blurredChartPreview {
@@ -1163,11 +1163,11 @@
   }
   
   .positionCardChange.positive {
-    color: #4ADE80;
+    color: var(--status-success-text);
   }
   
   .positionCardChange.negative {
-    color: #EF4444;
+    color: var(--status-error);
   }
   
   .positionCardStats {
@@ -1197,11 +1197,11 @@
   }
   
   .positionCardStatValue.positive {
-    color: #4ADE80;
+    color: var(--status-success-text);
   }
   
   .positionCardStatValue.negative {
-    color: #EF4444;
+    color: var(--status-error);
   }
   
   .positionCardActions {

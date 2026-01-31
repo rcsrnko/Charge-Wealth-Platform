@@ -142,7 +142,7 @@
 }
 
 .categoryHeader:hover {
-  background: #DBEAFE;
+  background: var(--accent-blue);
   color: var(--text-primary);
 }
 
@@ -169,7 +169,7 @@
 }
 
 .navItem:hover {
-  background: #DBEAFE;
+  background: var(--accent-blue);
   color: var(--text-primary);
 }
 
@@ -179,9 +179,9 @@
 }
 
 .navItem.active {
-  background: #DBEAFE;
-  color: #3B82F6;
-  border-left: 3px solid #3B82F6;
+  background: var(--accent-blue);
+  color: var(--accent-blue-solid);
+  border-left: 3px solid var(--accent-blue-solid);
   padding-left: calc(1rem - 3px);
 }
 
@@ -223,7 +223,7 @@
 }
 
 .navItem.active .description {
-  color: #3B82F6;
+  color: var(--accent-blue-solid);
   opacity: 0.7;
 }
 
@@ -286,8 +286,8 @@
   font-size: 0.625rem;
   font-weight: 600;
   padding: 0.125rem 0.375rem;
-  background: #DBEAFE;
-  color: #3B82F6;
+  background: var(--accent-blue);
+  color: var(--accent-blue-solid);
   border-radius: 4px;
   text-transform: uppercase;
   letter-spacing: 0.03em;
@@ -353,8 +353,8 @@
 }
 
 .scorePreview:hover {
-  background: #DBEAFE;
-  border-color: #3B82F6;
+  background: var(--accent-blue);
+  border-color: var(--accent-blue-solid);
   transform: translateY(-1px);
 }
 
@@ -481,13 +481,13 @@
 }
 
 .subItem:hover {
-  background: #DBEAFE;
+  background: var(--accent-blue);
   color: var(--text-primary);
 }
 
 .subItem.active {
-  color: #3B82F6;
-  background: #DBEAFE;
+  color: var(--accent-blue-solid);
+  background: var(--accent-blue);
 }
 
 .subItem.active::before {

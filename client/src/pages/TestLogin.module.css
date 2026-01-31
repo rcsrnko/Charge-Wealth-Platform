@@ -84,7 +84,7 @@
 .error {
   background: rgba(239, 68, 68, 0.1);
   border: 1px solid rgba(239, 68, 68, 0.3);
-  color: #ef4444;
+  color: var(--status-error);
   padding: 0.625rem 1rem;
   border-radius: 4px;
   font-size: 0.8125rem;
@@ -106,7 +106,7 @@
 }
 
 .submitBtn:hover:not(:disabled) {
-  background: #D4B76D;
+  background: var(--accent-primary);
   transform: translateY(-1px);
   box-shadow: 0 4px 12px var(--border-strong);
 }

@@ -215,7 +215,7 @@
   background: rgba(239, 68, 68, 0.1);
   border-radius: 6px;
   font-size: 0.813rem;
-  color: #ef4444;
+  color: var(--status-error);
 }
 
 .summaryAlert svg {
@@ -263,7 +263,7 @@
 }
 
 .saveButton:hover:not(:disabled) {
-  background: #d4b87a;
+  background: var(--accent-primary);
 }
 
 .saveButton:disabled {
