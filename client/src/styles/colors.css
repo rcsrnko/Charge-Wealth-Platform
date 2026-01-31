@@ -33,11 +33,12 @@
   --color-honey: #F6DBA6;              /* Primary accent, CTAs */
   --color-honey-dark: #E8C88A;         /* Hover states */
   --color-honey-muted: #D4AF37;        /* Richer gold for icons */
+  --color-honey-text: #B8860B;         /* Dark gold for text on light bg (WCAG AA) */
   
   /* Text Colors */
   --color-charcoal: #1F2937;           /* Primary text - dark gray */
-  --color-slate: #6B7280;              /* Secondary text */
-  --color-stone: #9CA3AF;              /* Muted/placeholder */
+  --color-slate: #4B5563;              /* Secondary text - darker for readability */
+  --color-stone: #6B7280;              /* Muted/placeholder - was too light */
   --color-brown-dark: #4A3F2F;         /* Text ON honey (WCAG AA: 7.2:1) */
   --color-brown-medium: #5D4E3A;       /* Alt text on honey */
   
@@ -120,6 +121,7 @@
   --accent-primary: var(--color-honey);              /* CTAs, primary buttons */
   --accent-primary-hover: var(--color-honey-dark);   /* Hover state */
   --accent-primary-text: var(--text-on-honey);       /* Text on accent buttons */
+  --accent-text: var(--color-honey-text);            /* Gold text on light backgrounds */
   --accent-muted: rgba(246, 219, 166, 0.2);          /* Subtle accent backgrounds */
   
   /* --- ACCENT BLUE --- */
@@ -313,6 +315,7 @@
   --brand-accent: var(--accent-primary);
   --brand-accent-hover: var(--accent-primary-hover);
   --brand-accent-light: var(--accent-muted);
+  --brand-accent-text: var(--accent-text);           /* Dark gold for text */
   --brand-primary: var(--text-primary);
   --brand-secondary: var(--text-secondary);
   
