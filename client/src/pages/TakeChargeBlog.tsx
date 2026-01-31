@@ -181,8 +181,9 @@ function BlogHeader({ isDark, onToggleTheme }: { isDark: boolean; onToggleTheme:
     }}>
       <div style={{ maxWidth: 1200, margin: '0 auto', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 16 }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 24 }}>
-          <Link href="/take-charge">
-            <a style={{ color: colors.accent, fontSize: 20, fontWeight: 700, textDecoration: 'none' }}>
+          <Link href="/">
+            <a style={{ color: colors.accent, fontSize: 20, fontWeight: 700, textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 8 }}>
+              <span style={{ fontSize: 14, opacity: 0.7 }}>←</span>
               Charge Wealth
             </a>
           </Link>
