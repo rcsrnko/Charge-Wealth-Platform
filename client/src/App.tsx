@@ -607,6 +607,10 @@ function AppRoutes() {
   // Check for test user auth in localStorage
   const [testUserAuth, setTestUserAuth] = useState<any>(null);
   
+  // Check for server session (set after Stripe payment)
+  const [serverSessionAuth, setServerSessionAuth] = useState<boolean | null>(null);
+  const [serverSessionLoading, setServerSessionLoading] = useState(true);
+  
   useEffect(() => {
     const storedAuth = localStorage.getItem('testUserAuth');
     if (storedAuth) {
@@ -617,11 +621,25 @@ function AppRoutes() {
       }
     }
   }, []);
+  
+  // Check server session on mount (handles Stripe payment flow)
+  useEffect(() => {
+    fetch('/api/auth/session', { credentials: 'include' })
+      .then(res => res.json())
+      .then(data => {
+        setServerSessionAuth(data.authenticated === true);
+        setServerSessionLoading(false);
+      })
+      .catch(() => {
+        setServerSessionAuth(false);
+        setServerSessionLoading(false);
+      });
+  }, []);
 
   const TESTING_MODE = false;
   
-  const isLoading = TESTING_MODE ? false : supabaseLoading;
-  const isAuthenticated = TESTING_MODE ? true : (supabaseAuth || !!testUserAuth);
+  const isLoading = TESTING_MODE ? false : (supabaseLoading || serverSessionLoading);
+  const isAuthenticated = TESTING_MODE ? true : (supabaseAuth || serverSessionAuth || !!testUserAuth);
 
   const { data: onboardingStatus, isLoading: onboardingLoading, refetch } = useQuery<{ onboardingCompleted: boolean }>({
     queryKey: ['/api/user/onboarding-status'],
