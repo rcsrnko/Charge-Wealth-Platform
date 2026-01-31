@@ -431,7 +431,8 @@ export function registerAuthRoutes(app: Express, isAuthenticated: RequestHandler
       }
       
       // Hash password and store
-      const bcrypt = await import('bcryptjs');
+      const bcryptModule = await import('bcryptjs');
+      const bcrypt = bcryptModule.default || bcryptModule;
       const hashedPassword = await bcrypt.hash(password, 12);
       
       await db.execute(sql`
@@ -480,7 +481,8 @@ export function registerAuthRoutes(app: Express, isAuthenticated: RequestHandler
         return res.status(401).json({ message: 'Please sign in with Google or reset your password' });
       }
       
-      const bcrypt = await import('bcryptjs');
+      const bcryptModule = await import('bcryptjs');
+      const bcrypt = bcryptModule.default || bcryptModule;
       const isValid = await bcrypt.compare(password, user.passwordHash);
       
       if (!isValid) {
