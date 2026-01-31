@@ -59,6 +59,11 @@ export default function AccountSetup() {
         throw new Error(data.message || 'Failed to set password');
       }
       
+      // Store user in localStorage immediately so Dashboard can access it
+      if (data.user) {
+        localStorage.setItem('serverSessionUser', JSON.stringify(data.user));
+      }
+      
       setStep('success');
       // Full page reload to pick up new session
       setTimeout(() => {

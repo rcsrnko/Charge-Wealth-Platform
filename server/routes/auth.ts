@@ -454,7 +454,14 @@ export function registerAuthRoutes(app: Express, isAuthenticated: RequestHandler
           console.error('Login after password set error:', err);
           return res.status(500).json({ message: 'Password set but login failed. Please sign in.' });
         }
-        res.json({ success: true, user });
+        // Explicitly save session to database before responding
+        req.session.save((saveErr) => {
+          if (saveErr) {
+            console.error('Session save error:', saveErr);
+          }
+          console.log('[Set Password] Session saved for:', email);
+          res.json({ success: true, user });
+        });
       });
     } catch (error) {
       console.error('Set password error:', error);
