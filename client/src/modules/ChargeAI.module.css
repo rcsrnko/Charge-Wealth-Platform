@@ -1348,7 +1348,7 @@
 }
 
 .typingText {
-  color: var(--soft-gold);
+  color: var(--text-on-honey);
   font-size: 0.9375rem;
   font-style: italic;
 }
@@ -1357,7 +1357,7 @@
   display: inline-block;
   width: 2px;
   height: 1.2em;
-  background: var(--soft-gold);
+  background: var(--text-on-honey);
   margin-left: 2px;
   animation: blink 1s step-end infinite;
 }
