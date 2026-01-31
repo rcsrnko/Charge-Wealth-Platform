@@ -316,7 +316,7 @@ function ToolCard({ tool, hasPremium, colors, isDark }: { tool: PremiumTool; has
           {downloading ? 'Downloading...' : 'Download Excel'}
         </button>
       ) : (
-        <Link href="/dashboard">
+        <Link href="/take-charge/subscribe">
           <a style={{
             display: 'flex',
             alignItems: 'center',
@@ -705,7 +705,7 @@ export function PremiumToolsPage() {
           <Link href="/tools">
             <a style={{ color: colors.textSecondary, textDecoration: 'none', marginRight: 24 }}>Free Tools</a>
           </Link>
-          <Link href="/dashboard">
+          <Link href="/take-charge/subscribe">
             <a style={{ color: colors.textSecondary, textDecoration: 'none', marginRight: 24 }}>Dashboard</a>
           </Link>
           <Link href="/take-charge">
