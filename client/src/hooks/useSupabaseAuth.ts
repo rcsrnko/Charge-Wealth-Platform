@@ -21,15 +21,30 @@ async function syncSessionWithBackend(session: Session): Promise<{ success: bool
         }
       })
     });
-    const data = await response.json();
-    console.log('[Auth] Backend sync result:', response.status, data);
+    
+    const text = await response.text();
+    console.log('[Auth] Backend sync raw response:', response.status, text);
+    
+    let data;
+    try {
+      data = JSON.parse(text);
+    } catch (e) {
+      console.error('[Auth] Failed to parse sync response:', text);
+      return { success: false, error: 'Invalid server response' };
+    }
     
     if (!response.ok) {
       console.error('[Auth] Sync failed with status:', response.status, data.message);
       return { success: false, error: data.message || 'Server error' };
     }
     
-    return { success: data.success === true, user: data.user, error: data.message };
+    // Check for success explicitly
+    if (data.success === true || data.user) {
+      console.log('[Auth] Sync succeeded, user:', data.user?.email);
+      return { success: true, user: data.user };
+    }
+    
+    return { success: false, error: data.message || 'Unknown error' };
   } catch (error) {
     console.error('[Auth] Failed to sync session with backend:', error);
     return { success: false, error: String(error) };
