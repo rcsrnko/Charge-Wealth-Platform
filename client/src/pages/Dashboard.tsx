@@ -83,7 +83,15 @@ export default function Dashboard() {
     }
   }, []);
   
-  // Get user data from Supabase auth or test user
+  // Get server session user from localStorage (for password-based login)
+  const serverSessionUser = (() => {
+    try {
+      const stored = localStorage.getItem('serverSessionUser');
+      return stored ? JSON.parse(stored) : null;
+    } catch { return null; }
+  })();
+  
+  // Get user data from Supabase auth, test user, or server session
   const user = supabaseUser ? {
     firstName: supabaseUser.user_metadata?.first_name || supabaseUser.user_metadata?.full_name?.split(' ')[0] || supabaseUser.user_metadata?.name?.split(' ')[0] || '',
     lastName: supabaseUser.user_metadata?.last_name || supabaseUser.user_metadata?.full_name?.split(' ').slice(1).join(' ') || '',
@@ -92,6 +100,10 @@ export default function Dashboard() {
     firstName: testUserAuth.firstName || testUserAuth.email?.split('@')[0] || '',
     lastName: testUserAuth.lastName || '',
     email: testUserAuth.email,
+  } : serverSessionUser ? {
+    firstName: serverSessionUser.firstName || serverSessionUser.first_name || '',
+    lastName: serverSessionUser.lastName || serverSessionUser.last_name || '',
+    email: serverSessionUser.email,
   } : null;
   
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);

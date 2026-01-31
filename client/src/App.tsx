@@ -621,6 +621,7 @@ function AppRoutes() {
   
   // Check for server session (set after Stripe payment)
   const [serverSessionAuth, setServerSessionAuth] = useState<boolean | null>(null);
+  const [serverSessionUser, setServerSessionUser] = useState<any>(null);
   const [serverSessionLoading, setServerSessionLoading] = useState(true);
   
   useEffect(() => {
@@ -640,6 +641,11 @@ function AppRoutes() {
       .then(res => res.json())
       .then(data => {
         setServerSessionAuth(data.authenticated === true);
+        if (data.authenticated && data.user) {
+          setServerSessionUser(data.user);
+          // Store in localStorage so Dashboard can access it
+          localStorage.setItem('serverSessionUser', JSON.stringify(data.user));
+        }
         setServerSessionLoading(false);
       })
       .catch(() => {
