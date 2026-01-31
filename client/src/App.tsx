@@ -676,6 +676,77 @@ function AppRoutes() {
     return <LoadingPage />;
   }
 
+  // Check for payment errors FIRST
+  const urlParams = new URLSearchParams(window.location.search);
+  const paymentStatus = urlParams.get('payment');
+  if (paymentStatus === 'error' || paymentStatus === 'failed' || paymentStatus === 'cancelled') {
+    return (
+      <div style={{
+        minHeight: '100vh',
+        background: 'var(--bg-primary)',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        padding: '2rem',
+      }}>
+        <div style={{
+          background: 'var(--bg-card)',
+          borderRadius: '16px',
+          padding: '2.5rem',
+          maxWidth: '500px',
+          width: '100%',
+          textAlign: 'center',
+          boxShadow: '0 4px 24px rgba(0, 0, 0, 0.1)',
+        }}>
+          <div style={{ fontSize: '4rem', marginBottom: '1rem' }}>
+            {paymentStatus === 'cancelled' ? '🔙' : '⚠️'}
+          </div>
+          <h1 style={{ color: 'var(--text-primary)', fontSize: '1.75rem', marginBottom: '0.5rem' }}>
+            {paymentStatus === 'cancelled' ? 'Payment Cancelled' : 'Payment Error'}
+          </h1>
+          <p style={{ color: 'var(--text-secondary)', marginBottom: '1.5rem', lineHeight: 1.6 }}>
+            {paymentStatus === 'cancelled' 
+              ? "No worries! Your card wasn't charged. Ready to try again when you are."
+              : "Something went wrong processing your payment. Please try again or contact support if the issue persists."}
+          </p>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+            <a
+              href="/"
+              style={{
+                padding: '0.875rem 1.5rem',
+                background: 'var(--honey)',
+                color: 'var(--text-on-honey)',
+                border: 'none',
+                borderRadius: '8px',
+                fontSize: '1rem',
+                fontWeight: 600,
+                textDecoration: 'none',
+                display: 'block',
+              }}
+            >
+              Try Again
+            </a>
+            <a
+              href="mailto:support@chargewealth.co"
+              style={{
+                padding: '0.875rem 1.5rem',
+                background: 'transparent',
+                color: 'var(--text-secondary)',
+                border: '1px solid var(--border)',
+                borderRadius: '8px',
+                fontSize: '1rem',
+                textDecoration: 'none',
+                display: 'block',
+              }}
+            >
+              Contact Support
+            </a>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   // Check for /setup page FIRST - before auth checks
   // This ensures users who just paid can set up their account even if they have an old session
   if (window.location.pathname === '/setup') {
