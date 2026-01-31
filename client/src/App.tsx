@@ -5,6 +5,7 @@ import { ThemeProvider } from './contexts/ThemeContext';
 import { useSupabaseAuth } from './hooks/useSupabaseAuth';
 import Dashboard from './pages/Dashboard';
 import DemoDashboard from './pages/DemoDashboard';
+import AccountSetup from './pages/AccountSetup';
 import { ToolsPage } from './pages/ToolsPage';
 import { PremiumToolsPage } from './pages/PremiumToolsPage';
 import { TakeChargeBlog } from './pages/TakeChargeBlog';
@@ -149,25 +150,36 @@ function LoginPage({ onBack }: { onBack?: () => void }) {
     
     setSigninLoading(true);
     try {
-      if (signinData.email === 'testuser@test.com') {
-        const res = await fetch('/api/test-login', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          credentials: 'include',
-          body: JSON.stringify({ email: signinData.email, password: signinData.password }),
-        });
-        const data = await res.json();
-        if (res.ok && data.success) {
-          localStorage.setItem('testUserAuth', JSON.stringify(data.user));
-          window.location.href = '/dashboard';
+      // First try our password-based login (for users who set password after Stripe payment)
+      const res = await fetch('/api/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({ email: signinData.email, password: signinData.password }),
+      });
+      const data = await res.json();
+      
+      if (res.ok && data.success) {
+        // Server session created, reload to pick it up
+        window.location.href = '/dashboard';
+        return;
+      }
+      
+      // If our API says no password hash, try Supabase auth
+      if (data.message?.includes('Google') || data.message?.includes('reset')) {
+        try {
+          await signInWithEmail(signinData.email, signinData.password);
           return;
-        } else {
-          setSigninError(data.message || 'Sign in failed. Please check your credentials.');
+        } catch (supabaseError: any) {
+          setSigninError(supabaseError.message || 'Sign in failed. Please check your credentials.');
           setSigninLoading(false);
           return;
         }
       }
-      await signInWithEmail(signinData.email, signinData.password);
+      
+      // Otherwise show the error from our API
+      setSigninError(data.message || 'Sign in failed. Please check your credentials.');
+      setSigninLoading(false);
     } catch (error: any) {
       setSigninError(error.message || 'Sign in failed. Please check your credentials.');
       setSigninLoading(false);
@@ -659,6 +671,10 @@ function AppRoutes() {
   }
 
   if (!isAuthenticated) {
+    // Check if user is on account setup page (just paid, setting up auth)
+    if (window.location.pathname === '/setup') {
+      return <AccountSetup />;
+    }
     // Show landing page for new visitors, login page if they clicked "Sign In"
     if (showLoginPage) {
       return <LoginPage onBack={() => setShowLoginPage(false)} />;

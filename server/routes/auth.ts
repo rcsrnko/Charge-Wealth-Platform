@@ -397,16 +397,117 @@ export function registerAuthRoutes(app: Express, isAuthenticated: RequestHandler
         expires_at: Math.floor(Date.now() / 1000) + 86400 * 30
       };
       
-      req.login(sessionUser, (err) => {
-        if (err) {
-          console.error('Login after payment error:', err);
-          return res.redirect('/dashboard?payment=success&login=pending');
-        }
-        res.redirect('/dashboard?payment=success');
-      });
+      // Don't auto-login - redirect to setup page where user sets password or connects Google
+      const encodedEmail = encodeURIComponent(email);
+      res.redirect(`/setup?payment=success&email=${encodedEmail}`);
     } catch (error) {
       console.error('Payment success handler error:', error);
       res.redirect('/dashboard?payment=error');
+    }
+  });
+
+  // Set password for newly paid user
+  app.post('/api/auth/set-password', async (req, res) => {
+    try {
+      const { email, password } = req.body;
+      
+      if (!email || !password) {
+        return res.status(400).json({ message: 'Email and password are required' });
+      }
+      
+      if (password.length < 8) {
+        return res.status(400).json({ message: 'Password must be at least 8 characters' });
+      }
+      
+      // Find user by email
+      const user = await storage.getUserByEmail(email);
+      
+      if (!user) {
+        return res.status(404).json({ message: 'Account not found. Please complete payment first.' });
+      }
+      
+      if (user.subscriptionStatus !== 'active') {
+        return res.status(403).json({ message: 'No active membership found. Please complete payment first.' });
+      }
+      
+      // Hash password and store
+      const bcrypt = await import('bcryptjs');
+      const hashedPassword = await bcrypt.hash(password, 12);
+      
+      await db.execute(sql`
+        UPDATE users 
+        SET password_hash = ${hashedPassword}, updated_at = NOW()
+        WHERE id = ${user.id}
+      `);
+      
+      console.log('[Set Password] Password set for:', email);
+      
+      // Create session for the user
+      const sessionUser = {
+        claims: { sub: user.id },
+        expires_at: Math.floor(Date.now() / 1000) + 86400 * 30
+      };
+      
+      req.login(sessionUser, (err) => {
+        if (err) {
+          console.error('Login after password set error:', err);
+          return res.status(500).json({ message: 'Password set but login failed. Please sign in.' });
+        }
+        res.json({ success: true, user });
+      });
+    } catch (error) {
+      console.error('Set password error:', error);
+      res.status(500).json({ message: 'Failed to set password' });
+    }
+  });
+
+  // Login with email/password
+  app.post('/api/auth/login', authLimiter, async (req, res) => {
+    try {
+      const { email, password } = req.body;
+      
+      if (!email || !password) {
+        return res.status(400).json({ message: 'Email and password are required' });
+      }
+      
+      const user = await storage.getUserByEmail(email);
+      
+      if (!user) {
+        return res.status(401).json({ message: 'Invalid email or password' });
+      }
+      
+      if (!user.passwordHash) {
+        return res.status(401).json({ message: 'Please sign in with Google or reset your password' });
+      }
+      
+      const bcrypt = await import('bcryptjs');
+      const isValid = await bcrypt.compare(password, user.passwordHash);
+      
+      if (!isValid) {
+        return res.status(401).json({ message: 'Invalid email or password' });
+      }
+      
+      if (user.subscriptionStatus !== 'active') {
+        return res.status(403).json({ message: 'No active membership. Please renew your subscription.' });
+      }
+      
+      console.log('[Login] User logged in:', email);
+      
+      const sessionUser = {
+        claims: { sub: user.id },
+        expires_at: Math.floor(Date.now() / 1000) + 86400 * 30
+      };
+      
+      req.login(sessionUser, (err) => {
+        if (err) {
+          console.error('Login error:', err);
+          return res.status(500).json({ message: 'Login failed' });
+        }
+        res.json({ success: true, user });
+      });
+    } catch (error) {
+      console.error('Login error:', error);
+      res.status(500).json({ message: 'Login failed' });
     }
   });
 }

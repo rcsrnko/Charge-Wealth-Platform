@@ -180,24 +180,14 @@ export function registerStripeRoutes(app: Express, isAuthenticated: RequestHandl
         }
       }
       
-      // If user is already logged in, redirect directly
+      // If user is already logged in (e.g. upgrading from free), redirect to dashboard
       if (req.isAuthenticated && req.isAuthenticated()) {
         return res.redirect('/dashboard?payment=success');
       }
       
-      // Auto-login the user
-      const sessionUser = {
-        claims: { sub: user.id },
-        expires_at: Math.floor(Date.now() / 1000) + 86400 * 30
-      };
-      
-      req.login(sessionUser, (err: any) => {
-        if (err) {
-          console.error('Auto-login after payment failed:', err);
-          return res.redirect('/dashboard?payment=success&login=pending');
-        }
-        res.redirect('/dashboard?payment=success');
-      });
+      // User is not logged in - redirect to setup page to create password or connect Google
+      const encodedEmail = encodeURIComponent(customerEmail);
+      res.redirect(`/setup?payment=success&email=${encodedEmail}`);
     } catch (error) {
       console.error('Payment callback error:', error);
       res.redirect('/dashboard?payment=error');
