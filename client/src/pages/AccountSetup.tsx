@@ -72,7 +72,7 @@ export default function AccountSetup() {
             window.location.href = '/dashboard';
           }, 1500);
         } else {
-          setError('Failed to sync account. Please try again or use password setup.');
+          setError(`Failed to sync account (status: ${syncStatus}). Please try again or use password setup.`);
           setWaitingForGoogleSync(false);
           syncTriggeredRef.current = false;
         }

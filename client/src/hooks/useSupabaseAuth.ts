@@ -62,9 +62,24 @@ export function useSupabaseAuth() {
 
   // Expose a manual sync function for AccountSetup to use
   const triggerSync = useCallback(async () => {
-    if (!session || syncingRef.current) {
-      console.log('[Auth] triggerSync: no session or already syncing');
-      return null;
+    if (!session) {
+      console.log('[Auth] triggerSync: no session');
+      return { success: false, error: 'No session' };
+    }
+    
+    // If already syncing, wait for it to complete
+    if (syncingRef.current) {
+      console.log('[Auth] triggerSync: already syncing, waiting...');
+      // Wait up to 5 seconds for sync to complete
+      for (let i = 0; i < 50; i++) {
+        await new Promise(r => setTimeout(r, 100));
+        if (!syncingRef.current) break;
+      }
+      // Return current status
+      if (syncedRef.current) {
+        return { success: true, user: syncedUser };
+      }
+      return { success: false, error: 'Sync timeout' };
     }
     
     syncingRef.current = true;
